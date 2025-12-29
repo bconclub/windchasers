@@ -27,10 +27,10 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-6"
+            className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-6"
           >
-            <div className="relative max-w-4xl w-full">
-              <div className="bg-accent-dark border-0 md:border-2 border-gold/50 rounded-lg max-h-[90vh] overflow-y-auto relative">
+            <div className="relative max-w-4xl w-full h-full md:h-auto">
+              <div className="bg-accent-dark border-0 md:border-2 border-gold/50 rounded-none md:rounded-lg h-full md:max-h-[90vh] overflow-y-auto relative">
                 {/* Close Button */}
                 <button
                   onClick={onClose}
@@ -39,13 +39,9 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
                   ×
                 </button>
                 <div className="p-6 md:p-12">
-                  <h2 className="text-3xl md:text-4xl font-bold text-gold text-center mb-4 md:mb-8">
-                    Choose Your Airplane Path
+                  <h2 className="text-3xl md:text-4xl font-bold text-gold text-center mb-6 md:mb-12 pt-[30px] md:pt-0">
+                    Choose Your Pilot Training Path
                   </h2>
-
-                  <p className="text-white/70 mb-6 md:mb-12 text-base md:text-lg text-center">
-                    Select the path that matches your current status
-                  </p>
 
                   <div className="grid md:grid-cols-2 gap-4 md:gap-8">
                     {/* Starting Fresh */}
@@ -70,10 +66,6 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
                       <div className="flex items-start">
                         <span className="text-gold mr-3">•</span>
                         <span className="text-white/60">400+ hours of training</span>
-                      </div>
-                      <div className="flex items-start">
-                        <span className="text-gold mr-3">•</span>
-                        <span className="text-white/60">Mock tests & exam prep</span>
                       </div>
                     </div>
 
@@ -104,10 +96,6 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
                       <div className="flex items-start">
                         <span className="text-gold mr-3">•</span>
                         <span className="text-white/60">Complete visa support</span>
-                      </div>
-                      <div className="flex items-start">
-                        <span className="text-gold mr-3">•</span>
-                        <span className="text-white/60">Transparent cost breakdown</span>
                       </div>
                     </div>
 
