@@ -31,7 +31,12 @@ export default function ImageCarousel({ images, title, subtitle }: ImageCarousel
 
     updateVisibleCount();
     window.addEventListener("resize", updateVisibleCount);
-    return () => window.removeEventListener("resize", updateVisibleCount);
+    return () => {
+      window.removeEventListener("resize", updateVisibleCount);
+      if (wheelTimeoutRef.current) {
+        clearTimeout(wheelTimeoutRef.current);
+      }
+    };
   }, []);
 
   const maxIndex = Math.max(0, images.length - visibleCount);
@@ -42,6 +47,43 @@ export default function ImageCarousel({ images, title, subtitle }: ImageCarousel
 
   const prevSlide = () => {
     setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+  };
+
+  // Throttle wheel events for smooth scrolling
+  const wheelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastWheelTimeRef = useRef<number>(0);
+
+  const handleWheel = (e: React.WheelEvent) => {
+    // Check if horizontal scroll
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      e.preventDefault();
+      
+      const now = Date.now();
+      const timeSinceLastWheel = now - lastWheelTimeRef.current;
+      
+      // Throttle to prevent jittery scrolling (minimum 100ms between scrolls)
+      if (timeSinceLastWheel < 100) {
+        return;
+      }
+      
+      lastWheelTimeRef.current = now;
+      
+      // Clear any pending timeout
+      if (wheelTimeoutRef.current) {
+        clearTimeout(wheelTimeoutRef.current);
+      }
+      
+      // Use timeout to debounce rapid scrolls
+      wheelTimeoutRef.current = setTimeout(() => {
+        if (Math.abs(e.deltaX) > 10) {
+          if (e.deltaX > 0) {
+            nextSlide();
+          } else if (e.deltaX < 0) {
+            prevSlide();
+          }
+        }
+      }, 50);
+    }
   };
 
   return (
@@ -61,7 +103,7 @@ export default function ImageCarousel({ images, title, subtitle }: ImageCarousel
 
           {/* Desktop & Tablet Carousel */}
           <div className="hidden md:block relative">
-            <div className="overflow-hidden">
+            <div className="overflow-hidden" onWheel={handleWheel}>
               <motion.div
                 className="flex gap-4"
                 animate={{
