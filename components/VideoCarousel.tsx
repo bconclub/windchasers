@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Image from "next/image";
 
 interface Video {
   id: string;
@@ -18,20 +17,124 @@ interface VideoCarouselProps {
 
 export default function VideoCarousel({ videos, title, subtitle }: VideoCarouselProps) {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
-  const [isMuted, setIsMuted] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(5);
+  const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const itemsPerPage = {
-    mobile: 1,
-    desktop: 1,
-  };
+
+  // Lock scroll when modal is open
+  useEffect(() => {
+    if (selectedVideo) {
+      // Lock scroll
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Unlock scroll
+      document.body.style.overflow = '';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedVideo]);
+
+  // Listen for video end events to close modal
+  useEffect(() => {
+    if (!selectedVideo) return;
+
+    const handleMessage = (event: MessageEvent) => {
+      // Vimeo sends events when video ends
+      if (event.origin !== 'https://player.vimeo.com') return;
+      
+      try {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+        if (data && (data.event === 'ended' || data.method === 'ended')) {
+          setSelectedVideo(null);
+        }
+      } catch (e) {
+        // Not JSON, check for string match
+        if (typeof event.data === 'string' && event.data.includes('ended')) {
+          setSelectedVideo(null);
+        }
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [selectedVideo]);
+
+  // Determine how many videos to show based on screen size
+  useEffect(() => {
+    const updateVisibleCount = () => {
+      if (window.innerWidth >= 768) {
+        setVisibleCount(4); // Desktop: 4 videos initially
+      } else {
+        setVisibleCount(2); // Mobile: 2 videos
+      }
+    };
+
+    updateVisibleCount();
+    window.addEventListener("resize", updateVisibleCount);
+    return () => {
+      window.removeEventListener("resize", updateVisibleCount);
+      if (wheelTimeoutRef.current) {
+        clearTimeout(wheelTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Calculate max index based on visible count to prevent scrolling past the end
+  // Each scroll reveals one more video, so max index is total videos minus visible count
+  const maxIndex = Math.max(0, videos.length - visibleCount);
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev + 1) % videos.length);
+    setCurrentIndex((prev) => {
+      const newIndex = prev + 1;
+      const calculatedMax = Math.max(0, videos.length - visibleCount);
+      return Math.min(newIndex, calculatedMax);
+    });
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? videos.length - 1 : prev - 1));
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
+  };
+
+  // Throttle wheel events for smooth scrolling
+  const wheelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastWheelTimeRef = useRef<number>(0);
+
+  const handleWheel = (e: React.WheelEvent) => {
+    // Check if horizontal scroll
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+      e.preventDefault();
+      
+      const now = Date.now();
+      const timeSinceLastWheel = now - lastWheelTimeRef.current;
+      
+      // Throttle to prevent jittery scrolling (minimum 100ms between scrolls)
+      if (timeSinceLastWheel < 100) {
+        return;
+      }
+      
+      lastWheelTimeRef.current = now;
+      
+      // Clear any pending timeout
+      if (wheelTimeoutRef.current) {
+        clearTimeout(wheelTimeoutRef.current);
+      }
+      
+      // Use timeout to debounce rapid scrolls
+      wheelTimeoutRef.current = setTimeout(() => {
+        if (Math.abs(e.deltaX) > 10) {
+          if (e.deltaX > 0) {
+            nextSlide();
+          } else if (e.deltaX < 0) {
+            prevSlide();
+          }
+        }
+      }, 50);
+    }
   };
 
   return (
@@ -50,103 +153,176 @@ export default function VideoCarousel({ videos, title, subtitle }: VideoCarousel
           )}
 
           {/* Desktop Carousel */}
-          <div className="hidden md:block relative">
-            <div className="flex justify-center">
-              <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.3 }}
-                whileHover={{ scale: 1.02 }}
-                className="relative rounded-lg overflow-hidden cursor-pointer group w-full max-w-sm"
-                style={{ aspectRatio: "9/16" }}
-                onClick={() => setSelectedVideo(videos[currentIndex])}
-              >
-                <div className="relative w-full h-full bg-dark">
-                  <iframe
-                    src={`${videos[currentIndex].embedUrl}?background=1&autoplay=1&loop=1&byline=0&title=0&portrait=0&muted=1`}
-                    className="absolute inset-0 w-full h-full"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    style={{ pointerEvents: "none" }}
-                  />
-                </div>
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
-                  <div className="w-12 h-12 rounded-full bg-gold/90 flex items-center justify-center transform group-hover:scale-110 transition-transform">
-                    <svg className="w-6 h-6 text-dark ml-1" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-
-            {videos.length > 1 && (
-              <>
+          <div className="hidden md:block">
+            <div className="flex items-center gap-4">
+              {videos.length > 1 && (
                 <button
                   onClick={prevSlide}
-                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-12 w-10 h-10 rounded-full bg-gold/20 hover:bg-gold/40 flex items-center justify-center transition-colors"
+                  disabled={currentIndex === 0}
+                  className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors flex-shrink-0 ${
+                    currentIndex === 0
+                      ? "bg-gold/10 cursor-not-allowed opacity-50"
+                      : "bg-gold/20 hover:bg-gold/40 cursor-pointer"
+                  }`}
                   aria-label="Previous"
                 >
                   <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                   </svg>
                 </button>
+              )}
+              
+              <div className="flex-1 overflow-hidden" onWheel={handleWheel}>
+                <motion.div
+                  className="flex gap-6"
+                  animate={{
+                    x: `-${currentIndex * (100 / visibleCount)}%`,
+                  }}
+                  transition={{ 
+                    duration: 0.6, 
+                    ease: [0.25, 0.1, 0.25, 1],
+                    type: "tween"
+                  }}
+                >
+                  {videos.map((video, idx) => (
+                    <motion.div
+                      key={video.id}
+                      whileHover={{ scale: 1.02 }}
+                      className="relative rounded-lg overflow-hidden cursor-pointer group flex-shrink-0"
+                      style={{
+                        width: `calc(${100 / visibleCount}% - ${(visibleCount - 1) * 24 / visibleCount}px)`,
+                        aspectRatio: "9/16",
+                      }}
+                      onClick={() => setSelectedVideo(video)}
+                    >
+                      <div className="relative w-full h-full bg-dark">
+                        <iframe
+                          src={`${video.embedUrl}?background=1&autoplay=0&loop=0&byline=0&title=0&portrait=0&muted=1&rel=0&controls=0`}
+                          className="absolute inset-0 w-full h-full"
+                          allow="fullscreen; picture-in-picture"
+                          style={{ pointerEvents: "none" }}
+                        />
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                          <div className="w-16 h-16 rounded-full bg-gold/90 flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => setSelectedVideo(video)}>
+                            <svg className="w-8 h-8 text-dark ml-1" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
+
+              {videos.length > 1 && (
                 <button
                   onClick={nextSlide}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-12 w-10 h-10 rounded-full bg-gold/20 hover:bg-gold/40 flex items-center justify-center transition-colors"
+                  disabled={currentIndex >= maxIndex}
+                  className={`w-12 h-12 rounded-full flex items-center justify-center transition-colors flex-shrink-0 ${
+                    currentIndex >= maxIndex
+                      ? "bg-gold/10 cursor-not-allowed opacity-50"
+                      : "bg-gold/20 hover:bg-gold/40 cursor-pointer"
+                  }`}
                   aria-label="Next"
                 >
                   <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </button>
-              </>
+              )}
+            </div>
+
+            {/* Dots Indicator */}
+            {videos.length > 1 && (
+              <div className="flex justify-center gap-2 mt-8">
+                {videos.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`h-2 rounded-full transition-all ${
+                      currentIndex === idx ? "bg-gold w-8" : "bg-white/30 w-2"
+                    }`}
+                    aria-label={`Go to slide ${idx + 1}`}
+                  />
+                ))}
+              </div>
             )}
           </div>
 
           {/* Mobile Carousel */}
           <div className="md:hidden relative">
-            <div className="flex justify-center">
+            <div className="overflow-hidden -mx-6 px-6" ref={containerRef} onWheel={handleWheel}>
               <motion.div
-                key={currentIndex}
-                initial={{ opacity: 0, x: 100 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -100 }}
-                transition={{ duration: 0.3 }}
+                className="flex gap-4"
                 drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                dragElastic={0.2}
+                dragConstraints={{ 
+                  left: `-${maxIndex * (100 / visibleCount)}%`, 
+                  right: 0 
+                }}
+                dragElastic={0.1}
+                dragMomentum={false}
+                onDragStart={() => setIsDragging(true)}
                 onDragEnd={(e, { offset, velocity }) => {
+                  setIsDragging(false);
                   const swipe = offset.x;
                   const swipeVelocity = velocity.x;
+                  const threshold = 50;
+                  const velocityThreshold = 500;
 
-                  if (swipe < -50 || swipeVelocity < -500) {
+                  if (swipe < -threshold || swipeVelocity < -velocityThreshold) {
                     nextSlide();
-                  } else if (swipe > 50 || swipeVelocity > 500) {
+                  } else if (swipe > threshold || swipeVelocity > velocityThreshold) {
                     prevSlide();
+                  } else {
+                    // Snap back to current position if not enough swipe
+                    // No need to set currentIndex, it will animate back automatically
                   }
                 }}
-                whileTap={{ scale: 0.98 }}
-                className="relative rounded-lg overflow-hidden cursor-pointer group w-full max-w-xs"
-                style={{ aspectRatio: "9/16" }}
-                onClick={() => setSelectedVideo(videos[currentIndex])}
+                animate={{
+                  x: `-${currentIndex * (100 / visibleCount)}%`,
+                }}
+                transition={{ 
+                  duration: 0.4,
+                  ease: [0.25, 0.1, 0.25, 1],
+                  type: "tween"
+                }}
+                style={{ 
+                  touchAction: "pan-x",
+                  WebkitUserSelect: "none",
+                  userSelect: "none",
+                  cursor: "grab"
+                }}
+                whileDrag={{ cursor: "grabbing" }}
               >
-                <div className="relative w-full h-full bg-dark">
-                  <iframe
-                    src={`${videos[currentIndex].embedUrl}?background=1&autoplay=1&loop=1&byline=0&title=0&portrait=0&muted=1`}
-                    className="absolute inset-0 w-full h-full"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    style={{ pointerEvents: "none" }}
-                  />
-                </div>
-                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                  <div className="w-10 h-10 rounded-full bg-gold/90 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-dark ml-1" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M8 5v14l11-7z" />
-                    </svg>
-                  </div>
-                </div>
+                {videos.map((video, idx) => (
+                  <motion.div
+                    key={video.id}
+                    whileTap={{ scale: 0.98 }}
+                    className="relative rounded-lg overflow-hidden cursor-pointer group flex-shrink-0"
+                    style={{ 
+                      aspectRatio: "9/16",
+                      width: `calc(${100 / visibleCount}% - ${(visibleCount - 1) * 16 / visibleCount}px)`,
+                    }}
+                    onClick={() => setSelectedVideo(video)}
+                  >
+                    <div className="relative w-full h-full bg-dark">
+                        <iframe
+                          src={`${video.embedUrl}?background=1&autoplay=0&loop=0&byline=0&title=0&portrait=0&muted=1&rel=0&controls=0`}
+                          className="absolute inset-0 w-full h-full"
+                          allow="fullscreen; picture-in-picture"
+                          style={{ pointerEvents: "none" }}
+                        />
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                          <div className="w-12 h-12 rounded-full bg-gold/90 flex items-center justify-center cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => setSelectedVideo(video)}>
+                            <svg className="w-6 h-6 text-dark ml-1" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
+                        </div>
+                    </div>
+                  </motion.div>
+                ))}
               </motion.div>
             </div>
 
@@ -178,7 +354,7 @@ export default function VideoCarousel({ videos, title, subtitle }: VideoCarousel
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelectedVideo(null)}
-              className="fixed inset-0 bg-black/90 backdrop-blur-sm z-50"
+              className="fixed inset-0 bg-black/80 backdrop-blur-md z-50"
             />
 
             {/* Modal */}
@@ -186,44 +362,32 @@ export default function VideoCarousel({ videos, title, subtitle }: VideoCarousel
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
-              className="fixed inset-0 z-50 flex items-center justify-center p-4"
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8"
+              onClick={(e) => {
+                // Close modal when clicking backdrop
+                if (e.target === e.currentTarget) {
+                  setSelectedVideo(null);
+                }
+              }}
             >
               <div className="relative w-full max-w-6xl">
                 {/* Close Button */}
                 <button
                   onClick={() => setSelectedVideo(null)}
-                  className="absolute -top-12 right-0 text-white hover:text-gold transition-colors text-4xl"
+                  className="absolute -top-10 md:-top-12 right-0 text-white hover:text-gold transition-colors text-4xl z-10"
                   aria-label="Close video"
                 >
                   ×
                 </button>
 
                 {/* Video Player */}
-                <div className="relative bg-black rounded-lg overflow-hidden max-h-[80vh] mx-auto" style={{ aspectRatio: "9/16" }}>
+                <div className="relative bg-black rounded-lg overflow-hidden w-full mx-auto md:max-h-[80vh]" style={{ height: "70vh", aspectRatio: "9/16" }}>
                   <iframe
-                    src={`${selectedVideo.embedUrl}?autoplay=1&loop=0&byline=0&title=0&portrait=0&muted=${isMuted ? 1 : 0}`}
+                    src={`${selectedVideo.embedUrl}?autoplay=1&loop=0&byline=0&title=0&portrait=0&muted=1&rel=0&controls=0`}
                     className="absolute inset-0 w-full h-full"
                     allow="autoplay; fullscreen; picture-in-picture"
                     allowFullScreen
                   />
-
-                  {/* Mute Button */}
-                  <button
-                    onClick={() => setIsMuted(!isMuted)}
-                    className="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-black/60 hover:bg-black/80 flex items-center justify-center transition-colors z-10"
-                    aria-label={isMuted ? "Unmute" : "Mute"}
-                  >
-                    {isMuted ? (
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                      </svg>
-                    ) : (
-                      <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                      </svg>
-                    )}
-                  </button>
                 </div>
               </div>
             </motion.div>

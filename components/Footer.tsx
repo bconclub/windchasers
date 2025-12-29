@@ -32,8 +32,16 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-white/60">
-              <li>Email: info@windchasers.aero</li>
-              <li>Phone: +91 XXX XXX XXXX</li>
+              <li>
+                <a href="mailto:aviators@windchasers.in" className="hover:text-gold transition-colors">
+                  aviators@windchasers.in
+                </a>
+              </li>
+              <li>
+                <a href="tel:+919591004043" className="hover:text-gold transition-colors">
+                  +91 9591004043
+                </a>
+              </li>
             </ul>
           </div>
         </div>

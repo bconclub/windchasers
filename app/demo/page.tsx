@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import BookingForm from "@/components/BookingForm";
 
 export default function DemoPage() {
@@ -101,7 +102,9 @@ export default function DemoPage() {
           </div>
         </div>
 
-        <BookingForm />
+        <Suspense fallback={<div className="text-center py-8">Loading form...</div>}>
+          <BookingForm />
+        </Suspense>
       </div>
     </div>
   );

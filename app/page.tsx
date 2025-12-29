@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState } from "react";
 import AirplanePathModal from "@/components/AirplanePathModal";
 import VideoCarousel from "@/components/VideoCarousel";
+import ImageCarousel from "@/components/ImageCarousel";
 
 export default function Home() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
@@ -73,7 +74,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* YouTube Video Background */}
-        <div className="absolute inset-0 w-full h-full">
+        <div className="absolute inset-0 w-full h-full overflow-hidden">
           <iframe
             className="absolute top-1/2 left-[70%] md:left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2"
             src="https://www.youtube.com/embed/a9o-PE-DLNA?autoplay=1&mute=1&loop=1&playlist=a9o-PE-DLNA&start=334&end=394&controls=0&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1"
@@ -86,12 +87,12 @@ export default function Home() {
         {/* Background overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/80 to-dark z-10" />
 
-        <div className="relative z-20 max-w-5xl mx-auto px-6 lg:px-8 text-center pt-20">
+        <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-8 text-center pt-20">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-7xl lg:text-8xl font-bold mb-8 leading-tight pt-10"
+            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight pt-10"
           >
             Your Career Path to the <span className="text-gold">Cockpit</span>
           </motion.h1>
@@ -112,7 +113,7 @@ export default function Home() {
           >
             <button
               onClick={scrollToPathSelection}
-              className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
+              className="bg-gold text-dark px-8 py-3 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
             >
               Choose Your Path
             </button>
@@ -123,7 +124,7 @@ export default function Home() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-20 pt-12 border-t border-white/10"
+            className="mt-8 pt-8 border-t border-white/10"
           >
             <div className="grid grid-cols-3 gap-4 md:gap-8 text-center">
               <div className="flex flex-col items-center">
@@ -185,7 +186,7 @@ export default function Home() {
                 <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-md mx-auto">
                   Private Pilot License / Commercial Pilot License
                 </p>
-                <div className="inline-block bg-gold text-dark px-8 py-4 rounded-lg font-semibold hover:bg-gold/90 transition-colors">
+                <div className="inline-block bg-gold text-dark px-6 py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors">
                   <span>Explore Path</span>
                 </div>
               </motion.div>
@@ -222,7 +223,7 @@ export default function Home() {
                 <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-md mx-auto">
                   Private Pilot License (Helicopter)
                 </p>
-                <div className="inline-block bg-gold text-dark px-8 py-4 rounded-lg font-semibold hover:bg-gold/90 transition-colors">
+                <div className="inline-block bg-gold text-dark px-6 py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors">
                   <span>Explore Path</span>
                 </div>
               </motion.div>
@@ -246,8 +247,8 @@ export default function Home() {
       {/* Video Gallery */}
       <VideoCarousel
         videos={videos}
-        title="Training in Action"
-        subtitle="Watch our students master the skies. Real training moments at WindChasers."
+        title="Student to Pilot"
+        subtitle="Real journeys. Real results."
       />
 
       {/* Why WindChasers */}
@@ -257,186 +258,136 @@ export default function Home() {
             Why WindChasers
           </h2>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="p-8">
-              <div className="w-12 h-12 mb-4 flex items-center justify-center rounded-lg bg-gold/10">
-                <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="group p-8 rounded-xl bg-gradient-to-br from-accent-dark to-dark border-2 border-white/10 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20 hover:-translate-y-1"
+            >
+              <div className="w-14 h-14 mb-6 flex items-center justify-center rounded-xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Expert Guidance</h3>
-              <p className="text-white/60">
+              <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gold transition-colors">Expert Guidance</h3>
+              <p className="text-white/60 leading-relaxed">
                 Ex-Air Force instructors with thousands of flight hours. Real-world experience in the cockpit.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="p-8">
-              <div className="w-12 h-12 mb-4 flex items-center justify-center rounded-lg bg-gold/10">
-                <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="group p-8 rounded-xl bg-gradient-to-br from-accent-dark to-dark border-2 border-white/10 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20 hover:-translate-y-1"
+            >
+              <div className="w-14 h-14 mb-6 flex items-center justify-center rounded-xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Flexible Paths</h3>
-              <p className="text-white/60">
+              <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gold transition-colors">Flexible Paths</h3>
+              <p className="text-white/60 leading-relaxed">
                 DGCA ground classes in India or fly abroad. Choose the path that fits your goals and budget.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="p-8">
-              <div className="w-12 h-12 mb-4 flex items-center justify-center rounded-lg bg-gold/10">
-                <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="group p-8 rounded-xl bg-gradient-to-br from-accent-dark to-dark border-2 border-white/10 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20 hover:-translate-y-1"
+            >
+              <div className="w-14 h-14 mb-6 flex items-center justify-center rounded-xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Career Support</h3>
-              <p className="text-white/60">
+              <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gold transition-colors">Career Support</h3>
+              <p className="text-white/60 leading-relaxed">
                 Placement assistance with partner airlines. We help you from training to cockpit.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="p-8">
-              <div className="w-12 h-12 mb-4 flex items-center justify-center rounded-lg bg-gold/10">
-                <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="group p-8 rounded-xl bg-gradient-to-br from-accent-dark to-dark border-2 border-white/10 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20 hover:-translate-y-1"
+            >
+              <div className="w-14 h-14 mb-6 flex items-center justify-center rounded-xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Advanced Simulators</h3>
-              <p className="text-white/60">
+              <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gold transition-colors">Advanced Simulators</h3>
+              <p className="text-white/60 leading-relaxed">
                 Train on industry-standard flight simulators. Professional-grade equipment for realistic training.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="p-8">
-              <div className="w-12 h-12 mb-4 flex items-center justify-center rounded-lg bg-gold/10">
-                <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="group p-8 rounded-xl bg-gradient-to-br from-accent-dark to-dark border-2 border-white/10 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20 hover:-translate-y-1"
+            >
+              <div className="w-14 h-14 mb-6 flex items-center justify-center rounded-xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Honest Pricing</h3>
-              <p className="text-white/60">
+              <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gold transition-colors">Honest Pricing</h3>
+              <p className="text-white/60 leading-relaxed">
                 Complete cost breakdown upfront. No surprises, no hidden fees. Know exactly what you're investing.
               </p>
-            </div>
+            </motion.div>
 
-            <div className="p-8">
-              <div className="w-12 h-12 mb-4 flex items-center justify-center rounded-lg bg-gold/10">
-                <svg className="w-6 h-6 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+              className="group p-8 rounded-xl bg-gradient-to-br from-accent-dark to-dark border-2 border-white/10 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20 hover:-translate-y-1"
+            >
+              <div className="w-14 h-14 mb-6 flex items-center justify-center rounded-xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold mb-4">Proven Track Record</h3>
-              <p className="text-white/60">
+              <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gold transition-colors">Proven Track Record</h3>
+              <p className="text-white/60 leading-relaxed">
                 Graduates flying with major airlines. Real success stories, not marketing fluff.
               </p>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Facility Gallery */}
-      <section className="py-20 px-6 lg:px-8 bg-dark">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-gold">
-            Our Facility
-          </h2>
-          <p className="text-xl text-white/70 text-center mb-16 max-w-3xl mx-auto">
-            State-of-the-art training infrastructure with advanced simulators and modern classrooms.
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {[1, 2, 3, 4, 5, 6, 7].map((num) => (
-              <motion.div
-                key={num}
-                whileHover={{ scale: 1.05 }}
-                className="relative aspect-square rounded-lg overflow-hidden cursor-pointer group"
-              >
-                <Image
-                  src={`/facility/WC${num}.webp`}
-                  alt={`WindChasers facility ${num}`}
-                  fill
-                  className="object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-dark/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-20 px-6 lg:px-8 bg-accent-dark">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl md:text-5xl font-bold text-center mb-6 text-gold">
-            From Students to Pilots
-          </h2>
-          <p className="text-xl text-white/70 text-center mb-3">
-            Stories from our cockpit.
-          </p>
-          <p className="text-lg text-white/60 text-center mb-20">
-            Real journeys. Real results.
-          </p>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {/* Testimonial 1 */}
-            <div className="bg-dark p-10 rounded-lg border border-white/10 hover:border-gold/50 transition-all">
-              <div className="flex items-center mb-6">
-                <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mr-4">
-                  <svg className="w-7 h-7 text-gold" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white text-lg">Student Name</h4>
-                  <p className="text-sm text-white/60">First Officer, Airline Name</p>
-                </div>
-              </div>
-              <p className="text-white/70 italic leading-relaxed">
-                "WindChasers transformed my dream into reality. The instructors' expertise and honest guidance made all the difference in my journey to the cockpit."
-              </p>
-            </div>
-
-            {/* Testimonial 2 */}
-            <div className="bg-dark p-10 rounded-lg border border-white/10 hover:border-gold/50 transition-all">
-              <div className="flex items-center mb-6">
-                <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mr-4">
-                  <svg className="w-7 h-7 text-gold" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white text-lg">Student Name</h4>
-                  <p className="text-sm text-white/60">Commercial Pilot</p>
-                </div>
-              </div>
-              <p className="text-white/70 italic leading-relaxed">
-                "The transparent cost breakdown and personalized career guidance helped me make informed decisions. Flying with a major airline now thanks to WindChasers."
-              </p>
-            </div>
-
-            {/* Testimonial 3 */}
-            <div className="bg-dark p-10 rounded-lg border border-white/10 hover:border-gold/50 transition-all">
-              <div className="flex items-center mb-6">
-                <div className="w-14 h-14 rounded-full bg-gold/10 flex items-center justify-center mr-4">
-                  <svg className="w-7 h-7 text-gold" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                  </svg>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white text-lg">Student Name</h4>
-                  <p className="text-sm text-white/60">Captain, Airline Name</p>
-                </div>
-              </div>
-              <p className="text-white/70 italic leading-relaxed">
-                "From ground school to my first command, WindChasers was with me every step. The ex-Air Force instructors bring real-world experience that you can't find elsewhere."
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ImageCarousel
+        images={[
+          "/facility/WC1.webp",
+          "/facility/WC2.webp",
+          "/facility/WC3.webp",
+          "/facility/WC4.webp",
+          "/facility/WC5.webp",
+          "/facility/WC6.webp",
+          "/facility/WC7.webp",
+        ]}
+        title="Our Facility"
+        subtitle="State-of-the-art training infrastructure with advanced simulators and modern classrooms."
+      />
 
       {/* CTA Section */}
       <section className="py-20 px-6 lg:px-8">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-7xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
             Ready to Start Your Journey?
           </h2>
