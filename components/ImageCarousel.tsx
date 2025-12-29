@@ -139,7 +139,7 @@ export default function ImageCarousel({ images, title, subtitle }: ImageCarousel
                 className="flex"
                 drag="x"
                 dragConstraints={{ 
-                  left: `-${(images.length - 1) * 100}%`, 
+                  left: -((images.length - 1) * 100), 
                   right: 0 
                 }}
                 dragElastic={0.2}
