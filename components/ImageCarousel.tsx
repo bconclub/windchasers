@@ -42,16 +42,28 @@ export default function ImageCarousel({ images, title, subtitle }: ImageCarousel
   const maxIndex = Math.max(0, images.length - visibleCount);
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+    setCurrentIndex((prev) => {
+      const newIndex = prev + 1;
+      const calculatedMax = Math.max(0, images.length - visibleCount);
+      return Math.min(newIndex, calculatedMax);
+    });
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+    setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
 
   // Throttle wheel events for smooth scrolling
   const wheelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastWheelTimeRef = useRef<number>(0);
+  const currentIndexRef = useRef(currentIndex);
+  const maxIndexRef = useRef(maxIndex);
+
+  // Keep refs in sync
+  useEffect(() => {
+    currentIndexRef.current = currentIndex;
+    maxIndexRef.current = maxIndex;
+  }, [currentIndex, maxIndex]);
 
   const handleWheel = (e: React.WheelEvent) => {
     // Check if horizontal scroll
@@ -61,8 +73,8 @@ export default function ImageCarousel({ images, title, subtitle }: ImageCarousel
       const now = Date.now();
       const timeSinceLastWheel = now - lastWheelTimeRef.current;
       
-      // Throttle to prevent jittery scrolling (minimum 100ms between scrolls)
-      if (timeSinceLastWheel < 100) {
+      // Throttle to prevent jittery scrolling (minimum 300ms between scrolls)
+      if (timeSinceLastWheel < 300) {
         return;
       }
       
@@ -75,14 +87,17 @@ export default function ImageCarousel({ images, title, subtitle }: ImageCarousel
       
       // Use timeout to debounce rapid scrolls
       wheelTimeoutRef.current = setTimeout(() => {
-        if (Math.abs(e.deltaX) > 10) {
-          if (e.deltaX > 0) {
+        const currentIdx = currentIndexRef.current;
+        const maxIdx = maxIndexRef.current;
+        
+        if (Math.abs(e.deltaX) > 30) {
+          if (e.deltaX > 0 && currentIdx < maxIdx) {
             nextSlide();
-          } else if (e.deltaX < 0) {
+          } else if (e.deltaX < 0 && currentIdx > 0) {
             prevSlide();
           }
         }
-      }, 50);
+      }, 150);
     }
   };
 
@@ -109,7 +124,11 @@ export default function ImageCarousel({ images, title, subtitle }: ImageCarousel
                 animate={{
                   x: `-${currentIndex * (100 / visibleCount)}%`,
                 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
+                transition={{ 
+                  duration: 0.6, 
+                  ease: [0.25, 0.1, 0.25, 1],
+                  type: "tween"
+                }}
               >
                 {images.map((image, idx) => (
                   <motion.div
