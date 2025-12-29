@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 
+const MotionLink = motion(Link);
+
 export default function PathSelector() {
   const [selectedPath, setSelectedPath] = useState<"airplane" | "helicopter" | null>(null);
 
@@ -31,23 +33,19 @@ export default function PathSelector() {
             </div>
           </motion.div>
 
-          <motion.div
+          <MotionLink
+            href="/helicopter"
             whileHover={{ scale: 1.02 }}
-            asChild
+            className="bg-accent-dark border-2 border-white/10 hover:border-white/30 transition-all p-8 rounded-lg block"
           >
-            <Link
-              href="/helicopter"
-              className="bg-accent-dark border-2 border-white/10 hover:border-white/30 transition-all p-8 rounded-lg block"
-            >
-              <h3 className="text-2xl font-bold mb-4">Helicopter</h3>
-              <p className="text-white/60 mb-6">
-                Helicopter Pilot License (HPL) track. Specialized training.
-              </p>
-              <div className="text-sm text-gold">
-                View details →
-              </div>
-            </Link>
-          </motion.div>
+            <h3 className="text-2xl font-bold mb-4">Helicopter</h3>
+            <p className="text-white/60 mb-6">
+              Helicopter Pilot License (HPL) track. Specialized training.
+            </p>
+            <div className="text-sm text-gold">
+              View details →
+            </div>
+          </MotionLink>
         </div>
 
         {selectedPath === "airplane" && (
