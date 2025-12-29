@@ -130,12 +130,12 @@ export default function Home() {
         {/* Background overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/80 to-dark z-10" />
 
-        <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-8 text-center pt-20">
+        <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-8 text-center pt-12">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight pt-10"
+            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight"
           >
             Your Career Path to the <span className="text-gold">Cockpit</span>
           </motion.h1>
