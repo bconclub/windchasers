@@ -19,7 +19,7 @@ const countries = [
   },
   {
     name: "Canada",
-    flagImage: "/images/flags/flag-jpg-xl-9-2048x1024.jpg",
+    flagImage: "/images/flags/canada-flag-png-large.png",
     duration: "6-8 months",
     highlights: [
       "Transport Canada approved",
@@ -63,7 +63,7 @@ const countries = [
   },
   {
     name: "Australia",
-    flagImage: "/images/flags/australia-flag-png-large.png",
+    flagImage: "/images/flags/Australia Flag.jpg",
     duration: "6-9 months",
     highlights: [
       "CASA approved training",
@@ -115,46 +115,54 @@ export default function InternationalPage() {
         {/* Country Selection */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold mb-8 text-center text-gold">Choose Your Destination</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
             {countries.map((country) => (
               <motion.div
                 key={country.name}
-                whileHover={{ scale: 1.02 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.03, y: -4 }}
                 onClick={() => setSelectedCountry(selectedCountry === country.name ? null : country.name)}
-                className={`bg-accent-dark p-8 rounded-lg border-2 cursor-pointer transition-all ${
+                className={`group bg-gradient-to-br from-accent-dark to-dark p-6 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
                   selectedCountry === country.name
-                    ? "border-gold"
-                    : "border-white/10 hover:border-white/30"
+                    ? "border-gold shadow-lg shadow-gold/20"
+                    : "border-white/10 hover:border-gold/50 hover:shadow-lg hover:shadow-gold/10"
                 }`}
               >
-                <div className="mb-4 flex justify-center">
-                  <div className="relative w-24 h-16 rounded-md overflow-hidden shadow-lg">
+                <div className="mb-6 flex justify-center">
+                  <div className="relative w-28 h-20 rounded-lg overflow-hidden shadow-xl ring-2 ring-white/10 group-hover:ring-gold/30 transition-all">
                     <Image
                       src={country.flagImage}
                       alt={`${country.name} flag`}
                       fill
-                      className="object-cover"
+                      className="object-cover group-hover:scale-110 transition-transform duration-300"
                     />
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-center">{country.name}</h3>
-                <div className="space-y-2 mb-6">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-white/60">Duration:</span>
-                    <span className="font-semibold text-gold">{country.duration}</span>
+                <h3 className="text-2xl font-bold mb-4 text-center text-white group-hover:text-gold transition-colors">
+                  {country.name}
+                </h3>
+                <div className="flex items-center justify-center mb-6">
+                  <div className="flex items-center gap-2 bg-gold/10 px-4 py-2 rounded-lg border border-gold/20">
+                    <svg className="w-4 h-4 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-sm font-semibold text-gold">{country.duration}</span>
                   </div>
                 </div>
                 {selectedCountry === country.name && (
                   <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
-                    className="pt-6 border-t border-white/10"
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="pt-6 border-t border-gold/30"
                   >
-                    <h4 className="font-semibold mb-3">Highlights:</h4>
-                    <ul className="space-y-2 text-sm text-white/70">
+                    <ul className="space-y-3 text-sm text-white/70">
                       {country.highlights.map((highlight, index) => (
-                        <li key={index} className="flex items-start">
-                          <span className="text-gold mr-2">•</span>
+                        <li key={index} className="flex items-start gap-2">
+                          <span className="text-gold mt-1">✓</span>
                           <span>{highlight}</span>
                         </li>
                       ))}
