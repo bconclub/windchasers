@@ -257,7 +257,7 @@ export default function VideoCarousel({ videos, title, subtitle }: VideoCarousel
                 className="flex gap-4"
                 drag="x"
                 dragConstraints={{ 
-                  left: `-${maxIndex * (100 / visibleCount)}%`, 
+                  left: -maxIndex * (100 / visibleCount), 
                   right: 0 
                 }}
                 dragElastic={0.1}
