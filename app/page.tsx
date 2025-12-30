@@ -10,6 +10,7 @@ import ImageCarousel from "@/components/ImageCarousel";
 
 export default function Home() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const videoRef = useRef<HTMLIFrameElement>(null);
 
   const scrollToPathSelection = () => {
@@ -17,40 +18,35 @@ export default function Home() {
     pathSection?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Handle video looping within timeframe
+  // Ensure video loops by listening for end events
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      // Only accept messages from YouTube
-      if (event.origin !== 'https://www.youtube.com') return;
+      // Only accept messages from Vimeo
+      if (event.origin !== 'https://player.vimeo.com') return;
       
       try {
         const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
         
-        // When video reaches end (394 seconds), restart at 334 seconds
-        if (data && data.event === 'onStateChange' && data.info === 0) {
-          // Video ended, seek to start time
+        // When video ends, restart it
+        if (data && (data.event === 'ended' || data.method === 'ended')) {
           if (videoRef.current?.contentWindow) {
+            // Restart the video by sending play command
             videoRef.current.contentWindow.postMessage(
-              JSON.stringify({
-                event: 'command',
-                func: 'seekTo',
-                args: [334, true]
-              }),
-              'https://www.youtube.com'
-            );
-            // Play the video
-            videoRef.current.contentWindow.postMessage(
-              JSON.stringify({
-                event: 'command',
-                func: 'playVideo',
-                args: []
-              }),
-              'https://www.youtube.com'
+              JSON.stringify({ method: 'play' }),
+              'https://player.vimeo.com'
             );
           }
         }
       } catch (e) {
-        // Not JSON, ignore
+        // Not JSON, check for string match
+        if (typeof event.data === 'string' && event.data.includes('ended')) {
+          if (videoRef.current?.contentWindow) {
+            videoRef.current.contentWindow.postMessage(
+              JSON.stringify({ method: 'play' }),
+              'https://player.vimeo.com'
+            );
+          }
+        }
       }
     };
 
@@ -115,15 +111,28 @@ export default function Home() {
     <>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* YouTube Video Background */}
+        {/* Fallback Image Background */}
+        <div 
+          className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ${
+            videoLoaded ? 'opacity-0' : 'opacity-100'
+          }`}
+          style={{ 
+            backgroundImage: "url('/WC HEro.webp')",
+            zIndex: videoLoaded ? 0 : 1
+          }}
+        />
+        
+        {/* Vimeo Video Background */}
         <div className="absolute inset-0 w-full h-full overflow-hidden">
           <iframe
             ref={videoRef}
-            className="absolute top-1/2 left-[70%] md:left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2"
-            src="https://www.youtube.com/embed/a9o-PE-DLNA?autoplay=1&mute=1&loop=1&playlist=a9o-PE-DLNA&start=334&end=394&controls=0&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1"
+            onLoad={() => setVideoLoaded(true)}
+            className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2"
+            src="https://player.vimeo.com/video/1150417989?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1"
             title="Aviation Background"
-            allow="autoplay; encrypted-media"
+            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
             style={{ pointerEvents: 'none' }}
+            frameBorder="0"
           />
         </div>
 
