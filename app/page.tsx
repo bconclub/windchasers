@@ -155,7 +155,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-white/70 mb-12 max-w-3xl mx-auto"
           >
-            No false promises. Real costs. Real guidance. DGCA approved training with ex-Air Force instructors.
+            No false promises. Real costs. Real guidance. DGCA approved training with Commercial Pilot Instructors.
           </motion.p>
 
           <motion.div
@@ -167,7 +167,7 @@ export default function Home() {
               onClick={scrollToPathSelection}
               className="bg-gold text-dark px-8 py-3 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
             >
-              Choose Your Path
+              Choose your Path
             </button>
           </motion.div>
 
@@ -193,7 +193,7 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
-                <div className="text-gold font-semibold text-sm md:text-base mb-2">DGCA Approved</div>
+                <div className="text-gold font-semibold text-sm md:text-base mb-2">DGCA Approved Curriculum</div>
               </div>
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 mb-4 flex items-center justify-center rounded-full bg-gold/10 border-2 border-gold/30">
@@ -325,7 +325,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gold transition-colors">Expert Guidance</h3>
               <p className="text-white/60 leading-relaxed">
-                Ex-Air Force instructors with thousands of flight hours. Real-world experience in the cockpit.
+                Commercial Pilot Instructors with thousands of flight hours. Real-world experience in the cockpit.
               </p>
             </motion.div>
 

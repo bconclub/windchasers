@@ -11,7 +11,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "WindChasers Aviation Academy | Honest Pilot Training",
-  description: "DGCA approved pilot training with real cost transparency. Ex-Air Force instructors. No false promises.",
+  description: "DGCA approved pilot training with real cost transparency. Commercial Pilot Instructors. No false promises.",
 };
 
 export default function RootLayout({
