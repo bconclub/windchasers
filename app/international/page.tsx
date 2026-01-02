@@ -238,10 +238,10 @@ export default function InternationalPage() {
           </p>
           <div className="flex justify-center">
             <Link
-              href="/assessment?from=abroad"
+              href="/demo?source=abroad"
               className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
             >
-              Take Assessment
+              Book a Demo
             </Link>
           </div>
         </div>
