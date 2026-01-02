@@ -2773,3 +2773,59 @@
 {"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767359935343},"timestamp":1767359935343,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
 {"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767359935343},"timestamp":1767359935343,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
 {"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767359935346},"timestamp":1767359935346,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360050603},"timestamp":1767360050603,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360050606},"timestamp":1767360050606,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360050606},"timestamp":1767360050606,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360050612},"timestamp":1767360050612,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360050613},"timestamp":1767360050613,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360050615},"timestamp":1767360050615,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360050623},"timestamp":1767360050623,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360050625},"timestamp":1767360050625,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360053439},"timestamp":1767360053439,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360053440},"timestamp":1767360053440,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360053440},"timestamp":1767360053440,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360053440},"timestamp":1767360053440,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360053441},"timestamp":1767360053441,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360053441},"timestamp":1767360053441,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360053443},"timestamp":1767360053443,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360053444},"timestamp":1767360053444,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360056393},"timestamp":1767360056393,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360056393},"timestamp":1767360056393,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360056393},"timestamp":1767360056393,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360056393},"timestamp":1767360056393,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360056393},"timestamp":1767360056393,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360056394},"timestamp":1767360056394,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360056396},"timestamp":1767360056396,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360056395},"timestamp":1767360056395,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360064208},"timestamp":1767360064208,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360064208},"timestamp":1767360064208,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360064208},"timestamp":1767360064208,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360064208},"timestamp":1767360064208,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360064208},"timestamp":1767360064208,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360064209},"timestamp":1767360064209,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360064208},"timestamp":1767360064208,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360064210},"timestamp":1767360064210,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360085608},"timestamp":1767360085608,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360085609},"timestamp":1767360085609,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360085614},"timestamp":1767360085614,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360085615},"timestamp":1767360085615,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360085618},"timestamp":1767360085618,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360085619},"timestamp":1767360085619,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360085626},"timestamp":1767360085626,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360085627},"timestamp":1767360085627,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360212726},"timestamp":1767360212726,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360212730},"timestamp":1767360212730,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360212730},"timestamp":1767360212730,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360212744},"timestamp":1767360212744,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"app/layout.tsx:26","message":"RootLayout HTML rendering","data":{"timestamp":1767360213247},"timestamp":1767360213247,"sessionId":"debug-session","runId":"run1","hypothesisId":"A"}
+{"location":"app/layout.tsx:38","message":"Body rendering","data":{"timestamp":1767360213247},"timestamp":1767360213247,"sessionId":"debug-session","runId":"run1","hypothesisId":"B"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360213609},"timestamp":1767360213609,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360213610},"timestamp":1767360213610,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:6","message":"TrackingProvider rendering","data":{"timestamp":1767360213611},"timestamp":1767360213611,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/TrackingProvider.tsx:10","message":"useTracking called successfully","data":{"timestamp":1767360213611},"timestamp":1767360213611,"sessionId":"debug-session","runId":"run1","hypothesisId":"F"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360213611},"timestamp":1767360213611,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"components/Navbar.tsx:8","message":"Navbar rendering","data":{"timestamp":1767360213611},"timestamp":1767360213611,"sessionId":"debug-session","runId":"run1","hypothesisId":"G"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360213618},"timestamp":1767360213618,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"app/page.tsx:11","message":"Home component rendering","data":{"timestamp":1767360213620},"timestamp":1767360213620,"sessionId":"debug-session","runId":"run1","hypothesisId":"C"}
+{"location":"app/page.tsx:16","message":"Home useEffect running","data":{"timestamp":1767360213686},"timestamp":1767360213686,"sessionId":"debug-session","runId":"run1","hypothesisId":"D"}
+{"location":"app/page.tsx:16","message":"Home useEffect running","data":{"timestamp":1767360213693},"timestamp":1767360213693,"sessionId":"debug-session","runId":"run1","hypothesisId":"D"}

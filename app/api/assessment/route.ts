@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 
     // Send to webhook
     try {
-      await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
+      await fetch("https://build.goproxe.com/webhook-test/pilot-windchasers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
