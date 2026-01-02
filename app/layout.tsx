@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import ConditionalFooter from "@/components/ConditionalFooter";
 import Analytics from "@/components/Analytics";
 import TrackingProvider from "@/components/TrackingProvider";
 import FloatingActionButtons from "@/components/FloatingActionButtons";
@@ -37,7 +37,7 @@ export default function RootLayout({
           <main className="min-h-screen">
             {children}
           </main>
-          <Footer />
+          <ConditionalFooter />
           <FloatingActionButtons />
         </TrackingProvider>
       </body>
