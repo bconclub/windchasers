@@ -37,7 +37,7 @@ export interface AssessmentTracking {
 }
 
 export interface FormSubmission {
-  type: "booking" | "assessment" | "lead";
+  type: "booking" | "assessment" | "lead" | "pricing";
   source?: string;
   interest?: string;
   timestamp: string;
@@ -128,7 +128,7 @@ export function trackPageView(path: string, timeSpent?: number): void {
 
 // Track form submission
 export function trackFormSubmission(
-  type: "booking" | "assessment" | "lead",
+  type: "booking" | "assessment" | "lead" | "pricing",
   data: any,
   source?: string,
   interest?: string
@@ -259,4 +259,5 @@ export async function sendTrackingData(endpoint: string, additionalData?: any): 
     console.error("Error sending tracking data:", error);
   }
 }
+
 
