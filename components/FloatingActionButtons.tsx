@@ -77,18 +77,18 @@ export default function FloatingActionButtons() {
             className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex shadow-2xl"
           >
             <Link
-              href="/assessment"
-              className="flex-1 bg-dark border-t-2 border-gold h-16 flex items-center justify-center gap-2 text-white font-semibold active:bg-accent-dark transition-colors"
-            >
-              <ClipboardCheck className="w-5 h-5 text-gold" />
-              <span className="text-sm">Take Assessment</span>
-            </Link>
-            <Link
               href="/demo"
               className="flex-1 bg-gold text-dark h-16 flex items-center justify-center gap-2 font-semibold active:bg-gold/90 transition-colors"
             >
               <Calendar className="w-5 h-5" />
               <span className="text-sm">Book a Demo</span>
+            </Link>
+            <Link
+              href="/assessment"
+              className="flex-1 bg-dark border-t-2 border-gold h-16 flex items-center justify-center gap-2 text-white font-semibold active:bg-accent-dark transition-colors"
+            >
+              <ClipboardCheck className="w-5 h-5 text-gold" />
+              <span className="text-sm">Take Assessment</span>
             </Link>
           </motion.div>
         </>
