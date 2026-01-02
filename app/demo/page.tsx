@@ -1,5 +1,11 @@
 import { Suspense } from "react";
 import BookingForm from "@/components/BookingForm";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Book Free Demo | WindChasers Aviation Academy",
+  description: "Get personalized guidance from our experts. Choose between an online consultation or visit our campus with simulator access.",
+};
 
 export default function DemoPage() {
   return (

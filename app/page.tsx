@@ -12,6 +12,10 @@ export default function Home() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
   const videoRef = useRef<HTMLIFrameElement>(null);
 
+  useEffect(() => {
+    document.title = "WindChasers Aviation Academy | Honest Pilot Training";
+  }, []);
+
   const scrollToPathSelection = () => {
     const pathSection = document.getElementById("path-selection");
     pathSection?.scrollIntoView({ behavior: "smooth" });
@@ -441,7 +445,7 @@ export default function Home() {
             href="/demo"
             className="inline-block bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
           >
-            Book Free Demo
+            Book a Demo
           </Link>
         </div>
       </section>

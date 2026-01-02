@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { CheckCircle } from "lucide-react";
 
 const countries = [
   {
@@ -77,6 +78,10 @@ const countries = [
 export default function InternationalPage() {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
+  useEffect(() => {
+    document.title = "Fly Abroad | WindChasers Aviation Academy";
+  }, []);
+
   return (
     <div className="pt-32 pb-20 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -94,19 +99,19 @@ export default function InternationalPage() {
           <h2 className="text-2xl font-bold mb-4 text-gold">Prerequisites</h2>
           <ul className="space-y-2 text-white/80">
             <li className="flex items-start">
-              <span className="text-gold mr-3">✓</span>
+              <CheckCircle className="w-5 h-5 text-gold mr-3 flex-shrink-0 mt-0.5" strokeWidth={2} />
               <span>DGCA exams cleared (all 6 papers)</span>
             </li>
             <li className="flex items-start">
-              <span className="text-gold mr-3">✓</span>
+              <CheckCircle className="w-5 h-5 text-gold mr-3 flex-shrink-0 mt-0.5" strokeWidth={2} />
               <span>Class 1 Medical certificate</span>
             </li>
             <li className="flex items-start">
-              <span className="text-gold mr-3">✓</span>
+              <CheckCircle className="w-5 h-5 text-gold mr-3 flex-shrink-0 mt-0.5" strokeWidth={2} />
               <span>Valid passport (minimum 2 years validity)</span>
             </li>
             <li className="flex items-start">
-              <span className="text-gold mr-3">✓</span>
+              <CheckCircle className="w-5 h-5 text-gold mr-3 flex-shrink-0 mt-0.5" strokeWidth={2} />
               <span>Age 18+ years</span>
             </li>
           </ul>
@@ -162,7 +167,7 @@ export default function InternationalPage() {
                     <ul className="space-y-3 text-sm text-white/70">
                       {country.highlights.map((highlight, index) => (
                         <li key={index} className="flex items-start gap-2">
-                          <span className="text-gold mt-1">✓</span>
+                          <CheckCircle className="w-4 h-4 text-gold mt-1 flex-shrink-0" strokeWidth={2} />
                           <span>{highlight}</span>
                         </li>
                       ))}
@@ -234,13 +239,13 @@ export default function InternationalPage() {
               href="/demo?source=abroad"
               className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
             >
-              Book Consultation
+              Book a Demo
             </Link>
             <Link
               href="/assessment"
               className="bg-white/10 text-white px-12 py-5 rounded-lg font-semibold text-lg hover:bg-white/20 transition-colors border border-white/20 inline-block"
             >
-              Take Pilot Assessment Test
+              Take Assessment
             </Link>
           </div>
         </div>

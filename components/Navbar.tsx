@@ -12,8 +12,8 @@ export default function Navbar() {
     { href: "/dgca", label: "DGCA Ground" },
     { href: "/international", label: "Fly Abroad" },
     { href: "/helicopter", label: "Helicopter" },
-    { href: "/assessment", label: "Pilot Assessment Test" },
-    { href: "/demo", label: "Book Demo" },
+    { href: "/assessment", label: "Take Assessment" },
+    { href: "/demo", label: "Book a Demo" },
   ];
 
   return (

@@ -1,4 +1,11 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+import { CheckCircle } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Helicopter Pilot License | WindChasers Aviation Academy",
+  description: "HPL training for specialized aviation careers. Offshore operations, medical evacuation, VIP transport, and more.",
+};
 
 export default function HelicopterPage() {
   return (
@@ -52,29 +59,29 @@ export default function HelicopterPage() {
           <div className="grid md:grid-cols-2 gap-6">
             <ul className="space-y-3 text-white/80">
               <li className="flex items-start">
-                <span className="text-gold mr-3">✓</span>
+                <CheckCircle className="w-5 h-5 text-gold mr-3 flex-shrink-0 mt-0.5" strokeWidth={2} />
                 <span>Age: 18 years minimum</span>
               </li>
               <li className="flex items-start">
-                <span className="text-gold mr-3">✓</span>
+                <CheckCircle className="w-5 h-5 text-gold mr-3 flex-shrink-0 mt-0.5" strokeWidth={2} />
                 <span>Education: 10+2 with Physics & Maths</span>
               </li>
               <li className="flex items-start">
-                <span className="text-gold mr-3">✓</span>
+                <CheckCircle className="w-5 h-5 text-gold mr-3 flex-shrink-0 mt-0.5" strokeWidth={2} />
                 <span>English proficiency required</span>
               </li>
             </ul>
             <ul className="space-y-3 text-white/80">
               <li className="flex items-start">
-                <span className="text-gold mr-3">✓</span>
+                <CheckCircle className="w-5 h-5 text-gold mr-3 flex-shrink-0 mt-0.5" strokeWidth={2} />
                 <span>Class 1 Medical certificate</span>
               </li>
               <li className="flex items-start">
-                <span className="text-gold mr-3">✓</span>
+                <CheckCircle className="w-5 h-5 text-gold mr-3 flex-shrink-0 mt-0.5" strokeWidth={2} />
                 <span>No flying experience needed</span>
               </li>
               <li className="flex items-start">
-                <span className="text-gold mr-3">✓</span>
+                <CheckCircle className="w-5 h-5 text-gold mr-3 flex-shrink-0 mt-0.5" strokeWidth={2} />
                 <span>Valid government ID</span>
               </li>
             </ul>
@@ -140,13 +147,13 @@ export default function HelicopterPage() {
               href="/demo?source=helicopter"
               className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
             >
-              Book Free Demo
+              Book a Demo
             </Link>
             <Link
               href="/assessment"
               className="bg-white/10 text-white px-12 py-5 rounded-lg font-semibold text-lg hover:bg-white/20 transition-colors border border-white/20 inline-block"
             >
-              Take Pilot Assessment Test
+              Take Assessment
             </Link>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { trackAssessment, trackFormSubmission, getReadinessScore, sendTrackingData } from "@/lib/tracking";
 
 interface Question {
   id: number;
@@ -139,25 +140,59 @@ export default function AssessmentForm() {
   };
 
   const getScoreTier = (score: number) => {
-    if (score >= 80) return { tier: "Excellent", color: "text-green-400", description: "You have strong aptitude for pilot training. Excellent foundation to begin your aviation career." };
-    if (score >= 60) return { tier: "Good", color: "text-gold", description: "You show good potential for pilot training. With dedication, you can excel in aviation." };
-    if (score >= 40) return { tier: "Fair", color: "text-yellow-400", description: "You have basic aptitude. Additional preparation and focus on weak areas will help you succeed." };
-    return { tier: "Needs Improvement", color: "text-red-400", description: "Consider additional preparation before starting training. We can guide you on areas to develop." };
+    const readiness = getReadinessScore(score);
+    const colorMap = {
+      excellent: "text-green-400",
+      good: "text-gold",
+      fair: "text-yellow-400",
+      "needs-improvement": "text-red-400",
+    };
+    return {
+      tier: readiness.status,
+      color: colorMap[readiness.tier],
+      description: readiness.description,
+      readinessTier: readiness.tier,
+    };
   };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
     const score = calculateScore();
+    const readiness = getReadinessScore(score);
+
+    // Track assessment with readiness score
+    const assessmentData = trackAssessment(score, answers);
 
     try {
-      await fetch("/api/assessment", {
+      // Send to API with tracking data
+      const response = await fetch("/api/assessment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...userInfo,
           score,
           answers,
+          readinessTier: readiness.tier,
+          readinessStatus: readiness.status,
         }),
+      });
+
+      // Track form submission
+      trackFormSubmission("assessment", {
+        name: userInfo.name,
+        email: userInfo.email,
+        score,
+        readinessTier: readiness.tier,
+        readinessStatus: readiness.status,
+      });
+
+      // Send complete tracking data
+      await sendTrackingData("/api/assessment", {
+        assessmentData,
+        userInfo: {
+          name: userInfo.name,
+          email: userInfo.email,
+        },
       });
     } catch (error) {
       console.error("Failed to save assessment:", error);
@@ -238,7 +273,7 @@ export default function AssessmentForm() {
               href="/demo"
               className="bg-gold text-dark px-8 py-4 rounded-lg font-semibold hover:bg-gold/90 transition-colors block"
             >
-              Book Free Demo
+              Book a Demo
             </a>
             <a
               href="/"

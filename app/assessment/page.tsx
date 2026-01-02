@@ -1,4 +1,10 @@
 import AssessmentForm from "@/components/AssessmentForm";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pilot Aptitude Test | WindChasers Aviation Academy",
+  description: "20 questions to assess your natural aptitude for pilot training. Takes 5-10 minutes. Get instant results and personalized guidance.",
+};
 
 export default function AssessmentPage() {
   return (

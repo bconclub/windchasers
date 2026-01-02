@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
+import { trackFormSubmission, sendTrackingData } from "@/lib/tracking";
 
 type DemoType = "online" | "offline";
 type EducationLevel = "pursuing_10_2" | "completed_10_2" | "graduate";
@@ -10,7 +11,7 @@ type InterestSource = "dgca_ground" | "pilot_training_abroad" | "helicopter_lice
 
 const interestOptions = [
   { value: "dgca_ground", label: "DGCA Ground Classes" },
-  { value: "pilot_training_abroad", label: "Pilot Training Abroad" },
+  { value: "pilot_training_abroad", label: "Fly Abroad" },
   { value: "helicopter_license", label: "Helicopter License" },
   { value: "other", label: "Other" },
 ];
@@ -111,13 +112,27 @@ export default function BookingForm() {
     setSubmitStatus("idle");
 
     try {
+      const source = searchParams?.get("source") || undefined;
+      
+      // Track form submission
+      trackFormSubmission("booking", formData, source, formData.interest);
+
       const response = await fetch("/api/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          source,
+        }),
       });
 
       if (response.ok) {
+        // Send complete tracking data
+        await sendTrackingData("/api/booking", {
+          formData,
+          source,
+        });
+
         setSubmitStatus("success");
         setFormData({
           name: "",

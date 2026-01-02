@@ -7,11 +7,8 @@ export async function POST(request: NextRequest) {
       name, 
       email, 
       phone, 
+      startTimeline,
       interest, 
-      demoType, 
-      preferredDate, 
-      preferredTime, 
-      message,
       source,
       // Tracking data
       sessionId,
@@ -22,25 +19,22 @@ export async function POST(request: NextRequest) {
       assessmentData,
     } = body;
 
-    // Validate required fields
-    if (!name || !email || !phone || !interest || !demoType || !preferredDate) {
+    // Validate required fields (email is optional)
+    if (!name || !phone || !startTimeline) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    // Save booking data with full tracking
-    const bookingRecord = {
+    // Save pricing inquiry data with full tracking
+    const pricingRecord = {
       name,
-      email,
+      email: email || null, // Email is optional
       phone,
-      interest,
-      source,
-      demoType,
-      preferredDate,
-      preferredTime,
-      message,
+      startTimeline,
+      interest: interest || "dgca_ground", // Default to DGCA since pricing is only for DGCA
+      source: source || "dgca",
       timestamp: new Date().toISOString(),
       // Tracking data
       sessionId,
@@ -51,33 +45,26 @@ export async function POST(request: NextRequest) {
       assessmentData,
     };
 
-    console.log("Demo booking with tracking:", JSON.stringify(bookingRecord, null, 2));
+    console.log("Pricing inquiry with tracking:", JSON.stringify(pricingRecord, null, 2));
 
     // TODO: Store in database
-    // TODO: Send to PROXe CRM as a demo booking
-    // TODO: Send confirmation email to user
+    // TODO: Send to PROXe CRM as a pricing inquiry
+    // TODO: Send confirmation email to user with pricing details
     // TODO: Send notification to admin/sales team
-    // TODO: Integrate with calendar system for slot management
-
-    // TODO: Check availability for the preferred date
-    // For now, accept all bookings
 
     return NextResponse.json(
       {
         success: true,
-        message: "Demo session booked successfully",
-        booking: {
-          demoType,
-          preferredDate,
-        },
+        message: "Pricing inquiry submitted successfully",
       },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error booking demo:", error);
+    console.error("Error submitting pricing inquiry:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
     );
   }
 }
+
