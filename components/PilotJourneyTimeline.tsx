@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 interface Step {
   number: string;
@@ -55,46 +55,110 @@ const steps: Step[] = [
 export default function PilotJourneyTimeline() {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: false, amount: 0.3 });
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024); // lg breakpoint
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <div className="mb-16">
       <h2 className="text-3xl font-bold mb-12 text-center text-gold">Pilot Journey</h2>
       <div className="relative max-w-6xl mx-auto" ref={containerRef}>
-        {/* Timeline line - hidden on mobile, visible on desktop */}
-        <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-0.5 transform -translate-x-1/2 overflow-hidden">
+        {/* Runway line - Desktop */}
+        <div className="hidden lg:block absolute left-1/2 top-0 bottom-0 w-3 transform -translate-x-1/2 overflow-hidden">
+          {/* Runway base */}
           <motion.div
-            className="absolute top-0 left-0 w-full bg-gold/30"
+            className="absolute top-0 left-0 w-full bg-gradient-to-r from-gold/20 via-gold/30 to-gold/20"
             style={{ height: "100%" }}
             initial={{ scaleY: 0, transformOrigin: "top" }}
             animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
           />
+          {/* Runway center line */}
           <motion.div
-            className="absolute top-0 left-0 w-full bg-gold"
+            className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0.5 bg-gold"
             style={{ height: "100%" }}
             initial={{ scaleY: 0, transformOrigin: "top" }}
             animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
             transition={{ duration: 2, ease: "easeInOut", delay: 0.3 }}
           />
+          {/* Runway dashed markings */}
+          <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'repeating-linear-gradient(to bottom, transparent, transparent 20px, rgba(197, 165, 114, 0.3) 20px, rgba(197, 165, 114, 0.3) 25px)' }} />
         </div>
 
-        {/* Mobile timeline line */}
-        <div className="lg:hidden absolute left-8 top-0 bottom-0 w-0.5 overflow-hidden">
+        {/* Runway line - Mobile */}
+        <div className="lg:hidden absolute left-8 top-0 bottom-0 w-2 overflow-hidden">
+          {/* Runway base */}
           <motion.div
-            className="absolute top-0 left-0 w-full bg-gold/30"
+            className="absolute top-0 left-0 w-full bg-gradient-to-r from-gold/20 via-gold/30 to-gold/20"
             style={{ height: "100%" }}
             initial={{ scaleY: 0, transformOrigin: "top" }}
             animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
           />
+          {/* Runway center line */}
           <motion.div
-            className="absolute top-0 left-0 w-full bg-gold"
+            className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0.5 bg-gold"
             style={{ height: "100%" }}
             initial={{ scaleY: 0, transformOrigin: "top" }}
             animate={isInView ? { scaleY: 1 } : { scaleY: 0 }}
             transition={{ duration: 2, ease: "easeInOut", delay: 0.3 }}
           />
+          {/* Runway dashed markings */}
+          <div className="absolute top-0 left-0 w-full h-full" style={{ backgroundImage: 'repeating-linear-gradient(to bottom, transparent, transparent 20px, rgba(197, 165, 114, 0.3) 20px, rgba(197, 165, 114, 0.3) 25px)' }} />
         </div>
+
+        {/* Airplane taking off - Desktop */}
+        <motion.div
+          className="hidden lg:block absolute left-1/2 z-20"
+          style={{ transform: 'translateX(-50%)' }}
+          initial={{ top: "0%", rotate: 180, opacity: 0 }}
+          animate={isInView ? { 
+            top: "100%", 
+            rotate: 180,
+            opacity: [0, 1, 1, 1, 0],
+            scale: [0.8, 1, 1.2, 1.5, 2]
+          } : { top: "0%", rotate: 180, opacity: 0 }}
+          transition={{ 
+            duration: 3, 
+            ease: "easeOut",
+            delay: 0.5,
+            times: [0, 0.3, 0.6, 0.8, 1]
+          }}
+        >
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" className="text-gold" style={{ display: 'block' }}>
+            <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="currentColor"/>
+          </svg>
+        </motion.div>
+
+        {/* Airplane taking off - Mobile */}
+        <motion.div
+          className="lg:hidden absolute left-8 z-20"
+          style={{ transform: 'translateX(-50%)' }}
+          initial={{ top: "0%", rotate: 180, opacity: 0 }}
+          animate={isInView ? { 
+            top: "100%", 
+            rotate: 180,
+            opacity: [0, 1, 1, 1, 0],
+            scale: [0.8, 1, 1.2, 1.5, 2]
+          } : { top: "0%", rotate: 180, opacity: 0 }}
+          transition={{ 
+            duration: 3, 
+            ease: "easeOut",
+            delay: 0.5,
+            times: [0, 0.3, 0.6, 0.8, 1]
+          }}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-gold" style={{ display: 'block' }}>
+            <path d="M21 16v-2l-8-5V3.5c0-.83-.67-1.5-1.5-1.5S10 2.67 10 3.5V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z" fill="currentColor"/>
+          </svg>
+        </motion.div>
 
         {/* Timeline Steps */}
         <div className="space-y-12 lg:space-y-16">
@@ -163,8 +227,17 @@ export default function PilotJourneyTimeline() {
                       ? "lg:ml-auto lg:w-[45%] lg:pl-8"
                       : "lg:mr-auto lg:w-[45%] lg:pr-8 lg:text-right"
                   }`}
-                  initial={{ opacity: 0, x: isEven ? 50 : -50 }}
-                  animate={stepInView ? { opacity: 1, x: 0 } : { opacity: 0, x: isEven ? 50 : -50 }}
+                  initial={{ 
+                    opacity: 0, 
+                    x: isMobile ? 100 : (isEven ? 50 : -50) // Mobile: always from right, Desktop: alternating
+                  }}
+                  animate={stepInView ? { 
+                    opacity: 1, 
+                    x: 0 
+                  } : { 
+                    opacity: 0, 
+                    x: isMobile ? 100 : (isEven ? 50 : -50) // Mobile: always from right, Desktop: alternating
+                  }}
                   transition={{ duration: 0.6, delay: index * 0.1 + 0.3 }}
                 >
                   <div className="bg-accent-dark p-6 rounded-lg border border-white/10">

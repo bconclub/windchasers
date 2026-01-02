@@ -149,10 +149,11 @@ export default function WhyChooseUsCarousel() {
   };
 
   return (
-    <div className="mb-16">
-      <h2 className="text-3xl font-bold mb-12 text-center text-gold">Why Choose Us</h2>
-      
-      <div className="relative flex items-center justify-center min-h-[400px] md:min-h-[550px]">
+    <section className="min-h-screen py-20 px-6 lg:px-8 flex flex-col justify-center">
+      <div className="max-w-7xl mx-auto w-full">
+        <h2 className="text-3xl font-bold mb-6 text-center text-gold">Why Choose Us</h2>
+        
+        <div className="relative flex items-center justify-center min-h-[400px] md:min-h-[550px]">
         {/* Card Stack Container */}
         <div className="relative w-full max-w-md md:max-w-[28rem] mx-auto perspective-1000">
           <motion.div
@@ -327,7 +328,8 @@ export default function WhyChooseUsCarousel() {
           ))}
         </div>
       )}
-    </div>
+      </div>
+    </section>
   );
 }
 

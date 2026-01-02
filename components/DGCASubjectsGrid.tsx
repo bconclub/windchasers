@@ -9,6 +9,7 @@ import {
   Cog,
   Settings,
   Radio,
+  ChevronDown,
 } from "lucide-react";
 
 interface Subject {
@@ -102,7 +103,7 @@ export default function DGCASubjectsGrid() {
             >
               <motion.div
                 className={`
-                  bg-accent-dark border-2 rounded-lg p-6 cursor-pointer
+                  bg-accent-dark border-2 rounded-lg p-6 cursor-pointer relative
                   transition-all duration-300
                   ${isExpanded ? "border-gold bg-dark" : "border-gold/30 hover:border-gold"}
                 `}
@@ -126,6 +127,17 @@ export default function DGCASubjectsGrid() {
                       </span>
                     </div>
                   </div>
+                </div>
+
+                {/* Expandable Indicator Arrow - Mobile Only */}
+                <div className="md:hidden absolute bottom-3 right-3">
+                  <motion.div
+                    animate={{ rotate: isExpanded ? 180 : 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="text-gold/70"
+                  >
+                    <ChevronDown className="w-5 h-5" />
+                  </motion.div>
                 </div>
 
                 {/* Expandable Description */}

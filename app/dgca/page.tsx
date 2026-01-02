@@ -2,17 +2,73 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import WhyChooseUsCarousel from "@/components/WhyChooseUsCarousel";
 import PilotJourneyTimeline from "@/components/PilotJourneyTimeline";
 import PricingFormModal from "@/components/PricingFormModal";
 import DGCASubjectsGrid from "@/components/DGCASubjectsGrid";
+import VideoCarousel from "@/components/VideoCarousel";
 
 export default function DGCAPage() {
   const [showPricingModal, setShowPricingModal] = useState(false);
+  const [expandedCard, setExpandedCard] = useState<string | null>(null);
 
   useEffect(() => {
     document.title = "DGCA Ground Classes | WindChasers Aviation Academy";
   }, []);
+
+  const videos = [
+    {
+      id: "1",
+      thumbnail: "",
+      embedUrl: "https://player.vimeo.com/video/1150072244",
+    },
+    {
+      id: "2",
+      thumbnail: "",
+      embedUrl: "https://player.vimeo.com/video/1150072000",
+    },
+    {
+      id: "3",
+      thumbnail: "",
+      embedUrl: "https://player.vimeo.com/video/1150070765",
+    },
+    {
+      id: "4",
+      thumbnail: "",
+      embedUrl: "https://player.vimeo.com/video/1150070605",
+    },
+    {
+      id: "5",
+      thumbnail: "",
+      embedUrl: "https://player.vimeo.com/video/1150070400",
+    },
+    {
+      id: "6",
+      thumbnail: "",
+      embedUrl: "https://player.vimeo.com/video/1150071458",
+    },
+    {
+      id: "7",
+      thumbnail: "",
+      embedUrl: "https://player.vimeo.com/video/1150071201",
+    },
+    {
+      id: "8",
+      thumbnail: "",
+      embedUrl: "https://player.vimeo.com/video/1150072494",
+    },
+    {
+      id: "9",
+      thumbnail: "",
+      embedUrl: "https://player.vimeo.com/video/1150070211",
+    },
+    {
+      id: "10",
+      thumbnail: "",
+      embedUrl: "https://player.vimeo.com/video/1150069889",
+    },
+  ];
 
   return (
     <div className="pt-32 pb-20 px-6 lg:px-8">
@@ -28,21 +84,29 @@ export default function DGCAPage() {
         </div>
 
         {/* 6 DGCA Subjects - Expandable Grid */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold mb-12 text-center text-gold">
+        <section className="mb-16 py-12 md:py-12 h-[90vh] md:h-auto">
+          <h2 className="text-3xl font-bold mb-4 md:mb-12 text-center text-gold">
             6 DGCA Subjects Breakdown
           </h2>
           <div className="max-w-6xl mx-auto">
             <DGCASubjectsGrid />
           </div>
-        </div>
+        </section>
 
         {/* Why Choose Us */}
         <WhyChooseUsCarousel />
 
         {/* 8-Step Journey */}
-        <PilotJourneyTimeline />
+        <section className="py-16">
+          <PilotJourneyTimeline />
+        </section>
 
+        {/* Student Video Carousel */}
+        <VideoCarousel
+          videos={videos}
+          title="Student to Pilot"
+          subtitle="Real journeys. Real results."
+        />
         {/* Pricing Section */}
         <div className="mb-16">
           <h2 className="text-3xl font-bold mb-12 text-center text-gold">Course Pricing</h2>
@@ -50,11 +114,10 @@ export default function DGCAPage() {
           {/* Package Cards */}
           <div className="grid md:grid-cols-2 gap-8 mb-12 max-w-6xl mx-auto">
             {/* Package 1 - 4 Subjects */}
-            <div className="bg-gradient-to-br from-gold/20 to-gold/5 border-2 border-gold/50 rounded-lg p-8 relative overflow-hidden">
-              <div className="relative z-10">
+            <div className="bg-gradient-to-br from-gold/20 to-gold/5 border-2 border-gold/50 rounded-lg p-8 relative overflow-hidden flex flex-col h-full">
+              <div className="relative z-10 flex flex-col flex-grow">
                 <div className="mb-4">
-                  <h3 className="text-2xl font-bold text-gold mb-2">Package 1</h3>
-                  <p className="text-white/80 text-lg font-semibold">4 Subjects</p>
+                  <h3 className="text-2xl font-bold text-gold mb-2">4 Subjects</h3>
                 </div>
                 
                 <div className="mb-6">
@@ -77,31 +140,62 @@ export default function DGCAPage() {
                   </div>
                 </div>
 
-                <div className="mb-6">
-                  <h4 className="text-lg font-bold text-gold mb-3">Subjects:</h4>
-                  <ul className="space-y-2 text-white/80">
-                    <li className="flex items-start">
-                      <span className="text-gold mr-2">•</span>
-                      <span>Air Navigation</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-gold mr-2">•</span>
-                      <span>Air Regulations</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-gold mr-2">•</span>
-                      <span>Aviation Meteorology</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-gold mr-2">•</span>
-                      <span>RTR</span>
-                    </li>
-                  </ul>
+                {/* Accordion for More Details */}
+                <div className="mb-6 flex-grow">
+                  <button
+                    onClick={() => setExpandedCard(expandedCard === "package1" ? null : "package1")}
+                    className="w-full flex items-center justify-between text-left mb-3"
+                  >
+                    <h4 className="text-lg font-bold text-gold">More Details</h4>
+                    <motion.svg
+                      className="w-5 h-5 text-gold"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      animate={{ rotate: expandedCard === "package1" ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </motion.svg>
+                  </button>
+                  <AnimatePresence>
+                    {expandedCard === "package1" && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden"
+                      >
+                        <div>
+                          <h5 className="text-md font-semibold text-gold mb-2">Subjects:</h5>
+                          <ul className="space-y-2 text-white/80">
+                            <li className="flex items-start">
+                              <span className="text-gold mr-2">•</span>
+                              <span>Air Navigation</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-gold mr-2">•</span>
+                              <span>Air Regulations</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-gold mr-2">•</span>
+                              <span>Aviation Meteorology</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-gold mr-2">•</span>
+                              <span>RTR</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <button
                   onClick={() => setShowPricingModal(true)}
-                  className="w-full bg-gold text-dark py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors"
+                  className="w-full bg-gold text-dark py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors mt-auto"
                 >
                   Get Pricing
                 </button>
@@ -109,14 +203,14 @@ export default function DGCAPage() {
             </div>
 
             {/* Package 2 - 6 Subjects (Complete DGCA) */}
-            <div className="bg-gradient-to-br from-gold/20 to-gold/5 border-2 border-gold/50 rounded-lg p-8 relative overflow-hidden">
-              <div className="absolute top-4 right-4 bg-gold text-dark px-3 py-1 rounded-full text-xs font-bold">
+            <div className="bg-gradient-to-br from-gold/20 to-gold/5 border-2 border-gold/50 rounded-lg p-8 relative overflow-hidden flex flex-col h-full">
+              <div className="absolute top-4 right-4 bg-gold text-dark px-3 py-1 rounded-full text-xs font-bold z-20">
                 POPULAR
               </div>
-              <div className="relative z-10">
+              <div className="relative z-10 flex flex-col flex-grow">
                 <div className="mb-4">
-                  <h3 className="text-2xl font-bold text-gold mb-2">Package 2</h3>
-                  <p className="text-white/80 text-lg font-semibold">6 Subjects (Complete DGCA)</p>
+                  <h3 className="text-2xl font-bold text-gold mb-2">6 Subjects</h3>
+                  <p className="text-white/80 text-lg font-semibold">Complete DGCA</p>
                 </div>
                 
                 <div className="mb-6">
@@ -139,39 +233,70 @@ export default function DGCAPage() {
                   </div>
                 </div>
 
-                <div className="mb-6">
-                  <h4 className="text-lg font-bold text-gold mb-3">Subjects:</h4>
-                  <ul className="space-y-2 text-white/80">
-                    <li className="flex items-start">
-                      <span className="text-gold mr-2">•</span>
-                      <span>Air Navigation</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-gold mr-2">•</span>
-                      <span>Air Regulations</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-gold mr-2">•</span>
-                      <span>Aviation Meteorology</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-gold mr-2">•</span>
-                      <span>Technical General</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-gold mr-2">•</span>
-                      <span>Technical Specific</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-gold mr-2">•</span>
-                      <span>RTR</span>
-                    </li>
-                  </ul>
+                {/* Accordion for More Details */}
+                <div className="mb-6 flex-grow">
+                  <button
+                    onClick={() => setExpandedCard(expandedCard === "package2" ? null : "package2")}
+                    className="w-full flex items-center justify-between text-left mb-3"
+                  >
+                    <h4 className="text-lg font-bold text-gold">More Details</h4>
+                    <motion.svg
+                      className="w-5 h-5 text-gold"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      animate={{ rotate: expandedCard === "package2" ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </motion.svg>
+                  </button>
+                  <AnimatePresence>
+                    {expandedCard === "package2" && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden"
+                      >
+                        <div>
+                          <h5 className="text-md font-semibold text-gold mb-2">Subjects:</h5>
+                          <ul className="space-y-2 text-white/80">
+                            <li className="flex items-start">
+                              <span className="text-gold mr-2">•</span>
+                              <span>Air Navigation</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-gold mr-2">•</span>
+                              <span>Air Regulations</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-gold mr-2">•</span>
+                              <span>Aviation Meteorology</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-gold mr-2">•</span>
+                              <span>Technical General</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-gold mr-2">•</span>
+                              <span>Technical Specific</span>
+                            </li>
+                            <li className="flex items-start">
+                              <span className="text-gold mr-2">•</span>
+                              <span>RTR</span>
+                            </li>
+                          </ul>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <button
                   onClick={() => setShowPricingModal(true)}
-                  className="w-full bg-gold text-dark py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors"
+                  className="w-full bg-gold text-dark py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors mt-auto"
                 >
                   Get Pricing
                 </button>

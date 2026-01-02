@@ -139,7 +139,7 @@ export default function VideoCarousel({ videos, title, subtitle }: VideoCarousel
 
   return (
     <>
-      <section className="py-20 px-6 lg:px-8 bg-accent-dark">
+      <section className="py-20 px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           {title && (
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-gold">
