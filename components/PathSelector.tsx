@@ -26,7 +26,7 @@ export default function PathSelector() {
           >
             <h3 className="text-2xl font-bold mb-4">Airplane</h3>
             <p className="text-white/60 mb-6">
-              Commercial Pilot License training. DGCA ground classes or fly abroad.
+              Commercial Pilot License training. DGCA ground classes or pilot training abroad.
             </p>
             <div className="text-sm text-white/40">
               Click to see options

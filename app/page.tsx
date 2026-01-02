@@ -338,7 +338,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gold transition-colors">Flexible Paths</h3>
               <p className="text-white/60 leading-relaxed">
-                DGCA ground classes in India or fly abroad. Choose the path that fits your goals and budget.
+                DGCA ground classes in India or pilot training abroad. Choose the path that fits your goals and budget.
               </p>
             </motion.div>
 

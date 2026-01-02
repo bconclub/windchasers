@@ -81,7 +81,7 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
                     >
                     <h3 className="text-2xl font-bold mb-4 text-gold">DGCA Completed</h3>
                     <p className="text-white/70 mb-6">
-                      Already cleared DGCA exams? Fly abroad to complete your CPL hours.
+                      Already cleared DGCA exams? Get pilot training abroad to complete your CPL hours.
                     </p>
 
                     <div className="space-y-3 mb-6 text-sm">

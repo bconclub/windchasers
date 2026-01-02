@@ -75,7 +75,7 @@ function PricingContent() {
               link: "/pricing?source=dgca",
             },
             {
-              name: "Fly Abroad Programs",
+              name: "Pilot Training Abroad Programs",
               price: "Contact for pricing",
               description: "Training in USA, Canada, Hungary, NZ, Australia, Thailand",
               link: "/pricing?source=abroad",

@@ -79,7 +79,7 @@ export default function InternationalPage() {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
 
   useEffect(() => {
-    document.title = "Fly Abroad | WindChasers Aviation Academy";
+    document.title = "Pilot Training Abroad | WindChasers Aviation Academy";
   }, []);
 
   return (
@@ -230,7 +230,7 @@ export default function InternationalPage() {
 
         {/* CTA */}
         <div className="text-center">
-          <h2 className="text-3xl font-bold mb-6">Ready to Fly Abroad?</h2>
+          <h2 className="text-3xl font-bold mb-6">Ready for Pilot Training Abroad?</h2>
           <p className="text-white/70 mb-8 max-w-2xl mx-auto">
             Book a consultation to discuss the best country for your goals and budget. We'll handle everything from admission to visa.
           </p>

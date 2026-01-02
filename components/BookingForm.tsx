@@ -12,7 +12,7 @@ type InterestSource = "dgca_ground" | "pilot_training_abroad" | "helicopter_lice
 
 const interestOptions = [
   { value: "dgca_ground", label: "DGCA Ground Classes" },
-  { value: "pilot_training_abroad", label: "Fly Abroad" },
+  { value: "pilot_training_abroad", label: "Pilot Training Abroad" },
   { value: "helicopter_license", label: "Helicopter License" },
   { value: "other", label: "Other" },
 ];
@@ -67,14 +67,16 @@ export default function BookingForm() {
 
   // Prefill interest from URL params
   useEffect(() => {
-    if (searchParams) {
-      const source = searchParams.get("source");
+    try {
+      const source = searchParams?.get("source");
       if (source) {
         const mappedSource = mapSourceToInterest(source);
         if (mappedSource) {
           setFormData((prev) => ({ ...prev, interest: mappedSource }));
         }
       }
+    } catch (error) {
+      console.error("Error reading search params:", error);
     }
   }, [searchParams]);
 
@@ -113,7 +115,13 @@ export default function BookingForm() {
     setSubmitStatus("idle");
 
     try {
-      const source = searchParams?.get("source") || undefined;
+      let source: string | undefined;
+      try {
+        source = searchParams?.get("source") || undefined;
+      } catch (error) {
+        console.error("Error accessing search params:", error);
+        source = undefined;
+      }
       
       // Track form submission
       trackFormSubmission("booking", formData, source, formData.interest);

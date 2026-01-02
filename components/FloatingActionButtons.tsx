@@ -11,23 +11,20 @@ export default function FloatingActionButtons() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   
-  // Hide floating buttons completely on assessment and demo pages
-  if (pathname === "/assessment" || pathname === "/demo") {
-    return null;
-  }
-  
   // Show both buttons on all other pages
   const showAssessment = true;
   const showDemo = true;
 
   useEffect(() => {
-    // Bounce animation on mount
-    setIsVisible(true);
+    // Don't set up scroll listener on assessment/demo pages
+    if (pathname === "/assessment" || pathname === "/demo") {
+      return;
+    }
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // Show on scroll up, hide on scroll down
+      // Show on scroll up, hide on scroll down (applies to both mobile and desktop)
       if (currentScrollY < lastScrollY || currentScrollY < 100) {
         setIsVisible(true);
       } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
@@ -38,8 +35,15 @@ export default function FloatingActionButtons() {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [lastScrollY, pathname]);
+
+  // Hide floating buttons completely on assessment and demo pages
+  if (pathname === "/assessment" || pathname === "/demo") {
+    return null;
+  }
 
   return (
     <AnimatePresence>
@@ -50,13 +54,17 @@ export default function FloatingActionButtons() {
             <div className="hidden md:block fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
             <motion.div
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
+              animate={{ 
+                opacity: isVisible ? 1 : 0, 
+                scale: isVisible ? 1 : 0.8, 
+                y: isVisible ? 0 : 20 
+              }}
               exit={{ opacity: 0, scale: 0.8, y: 20 }}
               transition={{
                 type: "spring",
                 stiffness: 300,
-                damping: 20,
-                delay: 0.2,
+                damping: 25,
+                duration: 0.3,
               }}
               className="flex flex-row gap-3"
             >
@@ -86,13 +94,16 @@ export default function FloatingActionButtons() {
           {(showAssessment || showDemo) && (
             <motion.div
             initial={{ opacity: 0, y: 100 }}
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ 
+              opacity: isVisible ? 1 : 0, 
+              y: isVisible ? 0 : 100 
+            }}
             exit={{ opacity: 0, y: 100 }}
             transition={{
               type: "spring",
               stiffness: 300,
-              damping: 20,
-              delay: 0.2,
+              damping: 25,
+              duration: 0.3,
             }}
             className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex shadow-2xl"
           >

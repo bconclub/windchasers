@@ -523,7 +523,10 @@ export default function AssessmentForm() {
         className="max-w-4xl mx-auto"
       >
         <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">Your PAT - Pilot Aptitude Test Results</h2>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">
+            Your PAT<br />
+            <span className="text-gold">Pilot Aptitude Test</span> Results
+          </h2>
           <div className={`text-7xl font-bold mb-4 ${tierInfo.color}`}>
             {scores.total}/150
           </div>
