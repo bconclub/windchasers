@@ -45,9 +45,21 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-16 pt-12 pb-8 text-center text-sm text-white/40">
-          <p>&copy; {new Date().getFullYear()} WindChasers Aviation Academy. All rights reserved.</p>
-          <p className="mt-2">DGCA Approved | Ex-Air Force Instructors</p>
+        <div className="border-t border-white/10 mt-16 pt-12 pb-8">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-white/40">
+            <p>&copy; {new Date().getFullYear()} WindChasers Aviation Academy. All rights reserved.</p>
+            <p className="text-center sm:text-right">
+              Built with <span className="text-gold">❤️</span> at{" "}
+              <a 
+                href="https://bconclub.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-gold underline hover:text-gold/80 transition-colors"
+              >
+                BCON Club
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

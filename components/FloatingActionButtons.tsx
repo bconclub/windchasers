@@ -12,13 +12,13 @@ export default function FloatingActionButtons() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [hasScrolledUp, setHasScrolledUp] = useState(false);
   
-  // Show assessment button on all other pages
+  // Show both buttons everywhere except demo and thank-you pages
   const showAssessment = true;
-  const showDemo = false;
+  const showDemo = true;
 
   useEffect(() => {
-    // Don't set up scroll listener on assessment/demo pages
-    if (pathname === "/assessment" || pathname === "/demo") {
+    // Don't set up scroll listener on assessment, demo, or thank-you pages
+    if (pathname === "/assessment" || pathname === "/demo" || pathname === "/thank-you") {
       return;
     }
 
@@ -52,8 +52,8 @@ export default function FloatingActionButtons() {
     };
   }, [lastScrollY, pathname, hasScrolledUp]);
 
-  // Hide floating buttons completely on assessment and demo pages
-  if (pathname === "/assessment" || pathname === "/demo") {
+  // Hide floating buttons completely on assessment, demo, and thank-you pages
+  if (pathname === "/assessment" || pathname === "/demo" || pathname === "/thank-you") {
     return null;
   }
 
