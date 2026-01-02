@@ -53,6 +53,23 @@ export async function POST(request: NextRequest) {
 
     console.log("Demo booking with tracking:", JSON.stringify(bookingRecord, null, 2));
 
+    // Send to webhook
+    try {
+      await fetch("https://build.goproxe.com/webhook-test/pilot-windchasers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "booking",
+          ...bookingRecord,
+        }),
+      });
+    } catch (webhookError) {
+      console.error("Error sending to webhook:", webhookError);
+      // Don't fail the request if webhook fails
+    }
+
     // TODO: Store in database
     // TODO: Send to PROXe CRM as a demo booking
     // TODO: Send confirmation email to user
