@@ -186,6 +186,7 @@ export default function BookingForm() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleStep1Next = () => {
     // Validate step 1 fields
@@ -215,6 +216,7 @@ export default function BookingForm() {
     
     setIsSubmitting(true);
     setSubmitStatus("idle");
+    setErrorMessage("");
 
     try {
       let source: string | undefined;
@@ -228,13 +230,17 @@ export default function BookingForm() {
       // Track form submission
       trackFormSubmission("booking", formData, source, formData.interest);
 
+      const requestBody = {
+        ...formData,
+        source,
+      };
+      
+      console.log("Submitting booking form:", requestBody);
+
       const response = await fetch("/api/booking", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          source,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       if (response.ok) {
@@ -269,9 +275,23 @@ export default function BookingForm() {
         const dataParam = encodeURIComponent(JSON.stringify(thankYouData));
         window.location.href = `/thank-you?type=booking&data=${dataParam}`;
       } else {
+        // Try to get error message from response
+        let errorMsg = "Something went wrong. Please try again.";
+        try {
+          const errorData = await response.json();
+          if (errorData.error) {
+            errorMsg = errorData.error;
+          }
+        } catch (e) {
+          // If we can't parse the error, use default message
+        }
+        console.error("Booking form error:", response.status, errorMsg);
+        setErrorMessage(errorMsg);
         setSubmitStatus("error");
       }
     } catch (error) {
+      console.error("Booking form submission error:", error);
+      setErrorMessage("Network error. Please check your connection and try again.");
       setSubmitStatus("error");
     } finally {
       setIsSubmitting(false);
@@ -682,7 +702,7 @@ export default function BookingForm() {
             animate={{ opacity: 1, y: 0 }}
             className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-center"
           >
-            Something went wrong. Please try again.
+            {errorMessage || "Something went wrong. Please try again."}
           </motion.div>
         )}
       </form>

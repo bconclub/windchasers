@@ -25,9 +25,17 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields (email and city are optional)
-    if (!name || !phone || !interest || !demoType || !preferredDate) {
+    const missingFields = [];
+    if (!name) missingFields.push("name");
+    if (!phone) missingFields.push("phone");
+    if (!interest) missingFields.push("interest");
+    if (!demoType) missingFields.push("demoType");
+    if (!preferredDate) missingFields.push("preferredDate");
+    
+    if (missingFields.length > 0) {
+      console.error("Missing required fields:", missingFields, "Body received:", body);
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: `Missing required fields: ${missingFields.join(", ")}` },
         { status: 400 }
       );
     }
@@ -57,7 +65,7 @@ export async function POST(request: NextRequest) {
 
     // Send to webhook
     try {
-      await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
+      const webhookResponse = await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,9 +75,16 @@ export async function POST(request: NextRequest) {
           ...bookingRecord,
         }),
       });
+      
+      if (webhookResponse.ok) {
+        console.log("Booking webhook sent successfully");
+      } else {
+        const errorText = await webhookResponse.text().catch(() => "Unknown error");
+        console.error("Webhook returned error status:", webhookResponse.status, errorText);
+      }
     } catch (webhookError) {
-      console.error("Error sending to webhook:", webhookError);
-      // Don't fail the request if webhook fails
+      console.error("Error sending booking to webhook:", webhookError);
+      // Don't fail the request if webhook fails - booking is still considered successful
     }
 
     // TODO: Store in database
