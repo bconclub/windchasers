@@ -168,7 +168,7 @@ function ThankYouContent() {
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gold/20 mb-6">
             <IconComponent className="w-10 h-10 text-gold" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+          <h1 className="text-[2.5rem] md:text-5xl font-bold mb-4 text-white">
             {content.title}
           </h1>
           <p className="text-xl text-white/70 max-w-2xl mx-auto">

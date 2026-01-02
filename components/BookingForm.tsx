@@ -57,6 +57,7 @@ export default function BookingForm() {
   const searchParams = useSearchParams();
   const [currentStep, setCurrentStep] = useState(1);
   const [userType, setUserType] = useState<'student' | 'parent'>('student');
+  const [showDemoTypeModal, setShowDemoTypeModal] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -400,48 +401,113 @@ export default function BookingForm() {
               </select>
             </div>
 
+            {/* Section below interest select - shows when interest is selected */}
+            {formData.interest && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                className="p-4 bg-gold/10 border border-gold/30 rounded-lg"
+              >
+                <p className="text-sm text-white/80">
+                  <span className="font-semibold text-gold">Selected:</span> {interestOptions.find(opt => opt.value === formData.interest)?.label}
+                </p>
+              </motion.div>
+            )}
+
             <div>
               <label className="block text-sm font-medium mb-3 sm:mb-4">Demo Type</label>
-              {/* Side by side on all screens, or stacked with scroll effect on mobile */}
-              <div className="grid grid-cols-2 md:grid-cols-2 gap-3 sm:gap-4">
-                {/* Mobile: Can be side by side or use scroll effect */}
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    setFormData({ ...formData, demoType: "online" });
-                    saveUserSessionData({ demoType: "online" });
-                  }}
-                  className={`p-3 sm:p-4 rounded-lg border-2 transition-all text-left ${
-                    formData.demoType === "online"
-                      ? "border-gold bg-gold/10"
-                      : "border-white/20 hover:border-white/40"
-                  }`}
-                >
-                  <div className="font-semibold mb-1 text-sm sm:text-base">Online</div>
-                  <div className="text-xs sm:text-sm text-white/60">15-30 min consultation</div>
-                </motion.button>
-
-                <motion.button
-                  type="button"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    setFormData({ ...formData, demoType: "offline" });
-                    saveUserSessionData({ demoType: "offline" });
-                  }}
-                  className={`p-3 sm:p-4 rounded-lg border-2 transition-all text-left ${
-                    formData.demoType === "offline"
-                      ? "border-gold bg-gold/10"
-                      : "border-white/20 hover:border-white/40"
-                  }`}
-                >
-                  <div className="font-semibold mb-1 text-sm sm:text-base">Campus Visit</div>
-                  <div className="text-xs sm:text-sm text-white/60">30-60 min with simulator</div>
-                </motion.button>
-              </div>
+              {/* Button to open modal */}
+              <button
+                type="button"
+                onClick={() => setShowDemoTypeModal(true)}
+                className="w-full p-3 sm:p-4 rounded-lg border-2 border-white/20 hover:border-gold/50 transition-all text-left bg-accent-dark"
+              >
+                <div className="font-semibold mb-1 text-sm sm:text-base">
+                  {formData.demoType === "online" ? "Online" : "Campus Visit"}
+                </div>
+                <div className="text-xs sm:text-sm text-white/60">
+                  {formData.demoType === "online" ? "15-30 min consultation" : "30-60 min with simulator"}
+                </div>
+              </button>
             </div>
+
+            {/* Demo Type Selection Modal */}
+            <AnimatePresence>
+              {showDemoTypeModal && (
+                <>
+                  {/* Backdrop */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setShowDemoTypeModal(false)}
+                    className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+                  />
+                  
+                  {/* Modal */}
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                    onClick={(e) => e.stopPropagation()}
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4"
+                  >
+                    <div className="bg-accent-dark border-2 border-gold/50 rounded-lg max-w-md w-full p-6 relative">
+                      {/* Close Button */}
+                      <button
+                        onClick={() => setShowDemoTypeModal(false)}
+                        className="absolute top-4 right-4 text-white/60 hover:text-white transition-colors text-2xl"
+                      >
+                        ×
+                      </button>
+                      
+                      <h3 className="text-xl font-bold text-gold mb-6">Select Demo Type</h3>
+                      
+                      <div className="space-y-4">
+                        <motion.button
+                          type="button"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => {
+                            setFormData({ ...formData, demoType: "online" });
+                            saveUserSessionData({ demoType: "online" });
+                            setShowDemoTypeModal(false);
+                          }}
+                          className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
+                            formData.demoType === "online"
+                              ? "border-gold bg-gold/10"
+                              : "border-white/20 hover:border-white/40"
+                          }`}
+                        >
+                          <div className="font-semibold mb-1 text-base">Online</div>
+                          <div className="text-sm text-white/60">15-30 min consultation</div>
+                        </motion.button>
+
+                        <motion.button
+                          type="button"
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => {
+                            setFormData({ ...formData, demoType: "offline" });
+                            saveUserSessionData({ demoType: "offline" });
+                            setShowDemoTypeModal(false);
+                          }}
+                          className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
+                            formData.demoType === "offline"
+                              ? "border-gold bg-gold/10"
+                              : "border-white/20 hover:border-white/40"
+                          }`}
+                        >
+                          <div className="font-semibold mb-1 text-base">Campus Visit</div>
+                          <div className="text-sm text-white/60">30-60 min with simulator</div>
+                        </motion.button>
+                      </div>
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
 
             <div>
               <label className="block text-sm font-medium mb-2">

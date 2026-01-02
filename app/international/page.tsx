@@ -88,7 +88,7 @@ export default function InternationalPage() {
     <div className="pt-32 pb-20 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+          <h1 className="text-[2.5rem] md:text-6xl font-bold mb-6 text-white">
             Fly <span className="text-gold">Abroad</span>
           </h1>
           <p className="text-xl text-white/70 max-w-3xl mx-auto">

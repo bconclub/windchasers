@@ -176,7 +176,7 @@ function PricingPageContent() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-16"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-[2.5rem] md:text-6xl font-bold mb-6">
               Course Pricing & Packages
             </h1>
             <p className="text-xl text-white/70 max-w-3xl mx-auto">

@@ -91,7 +91,7 @@ export default function DGCAPage() {
       <div className="max-w-7xl mx-auto">
         {/* Hero */}
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+          <h1 className="text-[2.5rem] md:text-6xl font-bold mb-6 text-white">
             DGCA <span className="text-gold">Ground Classes</span>
           </h1>
           <p className="text-xl text-white/70 max-w-3xl mx-auto">
