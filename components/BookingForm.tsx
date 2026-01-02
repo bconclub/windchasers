@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
+import { Calendar } from "lucide-react";
 import { trackFormSubmission, sendTrackingData } from "@/lib/tracking";
 
 type DemoType = "online" | "offline";
@@ -276,34 +277,37 @@ export default function BookingForm() {
           <label htmlFor="preferredDate" className="block text-sm font-medium mb-2">
             Preferred Date (Monday - Saturday)
           </label>
-          <input
-            type="date"
-            id="preferredDate"
-            required
-            min={getMinDate()}
-            value={formData.preferredDate}
-            onChange={(e) => {
-              const selectedDate = e.target.value;
-              if (selectedDate) {
-                if (isPastDate(selectedDate)) {
-                  setDateError("Please select a future date.");
-                  setFormData({ ...formData, preferredDate: "", preferredTime: "" });
-                } else if (!isWeekday(selectedDate)) {
-                  setDateError("Please select a date from Monday to Saturday. We are closed on Sundays.");
-                  setFormData({ ...formData, preferredDate: "", preferredTime: "" });
+          <div className="relative">
+            <input
+              type="date"
+              id="preferredDate"
+              required
+              min={getMinDate()}
+              value={formData.preferredDate}
+              onChange={(e) => {
+                const selectedDate = e.target.value;
+                if (selectedDate) {
+                  if (isPastDate(selectedDate)) {
+                    setDateError("Please select a future date.");
+                    setFormData({ ...formData, preferredDate: "", preferredTime: "" });
+                  } else if (!isWeekday(selectedDate)) {
+                    setDateError("Please select a date from Monday to Saturday. We are closed on Sundays.");
+                    setFormData({ ...formData, preferredDate: "", preferredTime: "" });
+                  } else {
+                    setDateError("");
+                    setFormData({ ...formData, preferredDate: selectedDate, preferredTime: "" });
+                  }
                 } else {
                   setDateError("");
-                  setFormData({ ...formData, preferredDate: selectedDate, preferredTime: "" });
+                  setFormData({ ...formData, preferredDate: "", preferredTime: "" });
                 }
-              } else {
-                setDateError("");
-                setFormData({ ...formData, preferredDate: "", preferredTime: "" });
-              }
-            }}
-            className={`w-full px-4 py-3 bg-accent-dark border rounded-lg focus:outline-none transition-colors ${
-              dateError ? "border-red-500" : "border-white/20 focus:border-gold"
-            }`}
-          />
+              }}
+              className={`w-full px-4 py-3 pr-12 bg-accent-dark border rounded-lg focus:outline-none transition-colors ${
+                dateError ? "border-red-500" : "border-white/20 focus:border-gold"
+              }`}
+            />
+            <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/60 pointer-events-none" />
+          </div>
           {dateError && (
             <p className="mt-2 text-sm text-red-400">{dateError}</p>
           )}
