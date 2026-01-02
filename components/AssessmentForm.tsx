@@ -628,24 +628,9 @@ export default function AssessmentForm() {
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link
-            href={(() => {
-              const params = new URLSearchParams();
-              if (sourceFrom) params.set("source", sourceFrom);
-              params.set("prefill", "assessment");
-              params.set("score", scores.total.toString());
-              params.set("tier", tier);
-              params.set("name", `${contactInfo.firstName} ${contactInfo.lastName}`.trim());
-              params.set("email", contactInfo.email);
-              return `/demo?${params.toString()}`;
-            })()}
-            className="bg-gold text-dark px-8 py-4 rounded-lg font-semibold hover:bg-gold/90 transition-colors text-center"
-          >
-            Book a Demo
-          </Link>
           <button
             onClick={() => window.print()}
-            className="bg-white/10 text-white px-8 py-4 rounded-lg font-semibold hover:bg-white/20 transition-colors border border-white/20"
+            className="bg-gold text-dark px-8 py-4 rounded-lg font-semibold hover:bg-gold/90 transition-colors"
           >
             Download Detailed Report
           </button>

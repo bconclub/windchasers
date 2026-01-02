@@ -3,7 +3,12 @@ export interface UserSessionData {
   lastName?: string;
   email?: string;
   phone?: string;
+  city?: string;
   interest?: string;
+  demoType?: string;
+  education?: string;
+  preferredDate?: string;
+  preferredTime?: string;
   assessmentScore?: number;
   tier?: string;
 }

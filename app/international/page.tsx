@@ -234,18 +234,12 @@ export default function InternationalPage() {
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6">Ready for Pilot Training Abroad?</h2>
           <p className="text-white/70 mb-8 max-w-2xl mx-auto">
-            Book a consultation to discuss the best country for your goals and budget. We&apos;ll handle everything from admission to visa.
+            Take our assessment to discover the best country for your goals and budget. We&apos;ll handle everything from admission to visa.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/demo?source=abroad"
-              className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
-            >
-              Book a Demo
-            </Link>
+          <div className="flex justify-center">
             <Link
               href="/assessment?from=abroad"
-              className="bg-white/10 text-white px-12 py-5 rounded-lg font-semibold text-lg hover:bg-white/20 transition-colors border border-white/20 inline-block"
+              className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
             >
               Take Assessment
             </Link>

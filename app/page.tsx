@@ -445,13 +445,13 @@ export default function Home() {
             Ready to Start Your Journey?
           </h2>
           <p className="text-xl text-white/70 mb-8">
-            Book a free demo session. Online consultation or visit our campus with simulator access.
+            Discover your path to becoming a pilot. Take our free assessment to get personalized guidance.
           </p>
           <Link
-            href="/demo"
+            href="/assessment"
             className="inline-block bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
           >
-            Book a Demo
+            Take Assessment
           </Link>
         </div>
       </section>

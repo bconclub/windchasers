@@ -211,14 +211,6 @@ function ThankYouContent() {
               Take Assessment
             </Link>
           )}
-          {formType === "assessment" && (
-            <Link
-              href="/demo"
-              className="bg-gold text-dark px-8 py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors text-center"
-            >
-              Book a Demo
-            </Link>
-          )}
           {formType === "pricing" && (
             <Link
               href="/pricing"

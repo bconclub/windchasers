@@ -16,7 +16,6 @@ export default function Navbar() {
     { href: "/international", label: "Pilot Training Abroad" },
     { href: "/helicopter", label: "Helicopter" },
     { href: "/assessment", label: "Take Assessment" },
-    { href: "/demo", label: "Book a Demo" },
   ];
 
   return (

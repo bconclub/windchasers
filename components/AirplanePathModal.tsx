@@ -107,7 +107,7 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
 
                   <div className="mt-8 pt-8 border-t border-white/10 text-center">
                     <p className="text-white/50 text-sm">
-                      Not sure which path? <Link href="/assessment" className="text-gold hover:underline">Take Assessment</Link> or <Link href="/demo" className="text-gold hover:underline">Book a Demo</Link>
+                      Not sure which path? <Link href="/assessment" className="text-gold hover:underline">Take Assessment</Link>
                     </p>
                   </div>
                 </div>

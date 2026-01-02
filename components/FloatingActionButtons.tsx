@@ -12,9 +12,9 @@ export default function FloatingActionButtons() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [hasScrolledUp, setHasScrolledUp] = useState(false);
   
-  // Show both buttons on all other pages
+  // Show assessment button on all other pages
   const showAssessment = true;
-  const showDemo = true;
+  const showDemo = false;
 
   useEffect(() => {
     // Don't set up scroll listener on assessment/demo pages

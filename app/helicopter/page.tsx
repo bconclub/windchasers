@@ -141,18 +141,12 @@ export default function HelicopterPage() {
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6">Start Your Helicopter Career</h2>
           <p className="text-white/70 mb-8 max-w-2xl mx-auto">
-            Specialized training for a unique aviation career. Book a demo to experience our helicopter simulator.
+            Specialized training for a unique aviation career. Take our assessment to discover your path.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/demo?source=helicopter"
-              className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
-            >
-              Book a Demo
-            </Link>
+          <div className="flex justify-center">
             <Link
               href="/assessment?from=helicopter"
-              className="bg-white/10 text-white px-12 py-5 rounded-lg font-semibold text-lg hover:bg-white/20 transition-colors border border-white/20 inline-block"
+              className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
             >
               Take Assessment
             </Link>

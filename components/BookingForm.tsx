@@ -61,13 +61,13 @@ export default function BookingForm() {
     name: "",
     email: "",
     phone: "",
+    city: "",
     parentGuardianName: "",
     interest: "" as InterestSource | "",
     demoType: "online" as DemoType,
     education: "pursuing_10_2" as EducationLevel,
     preferredDate: "",
     preferredTime: "",
-    message: "",
   });
   const [dateError, setDateError] = useState("");
 
@@ -112,36 +112,46 @@ export default function BookingForm() {
         
         if (userData.email) updates.email = userData.email;
         if (userData.phone) updates.phone = userData.phone;
+        if (userData.city) updates.city = userData.city;
         if (userData.interest) updates.interest = userData.interest as InterestSource;
+        if (userData.demoType === "online" || userData.demoType === "offline") {
+          updates.demoType = userData.demoType as DemoType;
+        }
+        if (userData.education) {
+          updates.education = userData.education as EducationLevel;
+        }
+        if (userData.preferredDate) updates.preferredDate = userData.preferredDate;
+        if (userData.preferredTime) updates.preferredTime = userData.preferredTime;
         
         if (Object.keys(updates).length > 0) {
           setFormData((prev) => ({ ...prev, ...updates }));
         }
       }
       
-      // Then check URL params (they take precedence over sessionStorage for interest)
+      // Then check URL params (they take precedence over sessionStorage)
       const prefill = searchParams?.get("prefill");
       const source = searchParams?.get("source");
       const demoTypeParam = searchParams?.get("demoType");
       
-      // Handle demoType from URL params
+      // Handle demoType from URL params (takes precedence)
       if (demoTypeParam === "online" || demoTypeParam === "offline") {
         setFormData((prev) => ({ ...prev, demoType: demoTypeParam as DemoType }));
+        saveUserSessionData({ demoType: demoTypeParam });
       }
       
-      // If prefill=assessment, auto-fill interest from source
+      // Handle interest from URL params (takes precedence)
       if (prefill === "assessment" && source) {
         const mappedSource = mapSourceToInterest(source);
         if (mappedSource) {
           setFormData((prev) => ({ ...prev, interest: mappedSource }));
+          saveUserSessionData({ interest: mappedSource });
         }
-      }
-      
-      // Also handle source param even without prefill (for backward compatibility)
-      if (!prefill && source) {
+      } else if (!prefill && source) {
+        // Also handle source param even without prefill (for backward compatibility)
         const mappedSource = mapSourceToInterest(source);
         if (mappedSource) {
           setFormData((prev) => ({ ...prev, interest: mappedSource }));
+          saveUserSessionData({ interest: mappedSource });
         }
       }
       
@@ -151,10 +161,22 @@ export default function BookingForm() {
         const email = searchParams?.get("email");
         
         if (name) {
-          setFormData((prev) => ({ ...prev, name: decodeURIComponent(name) }));
+          const decodedName = decodeURIComponent(name);
+          setFormData((prev) => ({ ...prev, name: decodedName }));
+          // Try to split and save to sessionStorage
+          const nameParts = decodedName.trim().split(/\s+/);
+          if (nameParts.length >= 2) {
+            const lastName = nameParts.pop() || "";
+            const firstName = nameParts.join(" ");
+            saveUserSessionData({ firstName, lastName });
+          } else if (nameParts.length === 1) {
+            saveUserSessionData({ firstName: nameParts[0], lastName: "" });
+          }
         }
         if (email) {
-          setFormData((prev) => ({ ...prev, email: decodeURIComponent(email) }));
+          const decodedEmail = decodeURIComponent(email);
+          setFormData((prev) => ({ ...prev, email: decodedEmail }));
+          saveUserSessionData({ email: decodedEmail });
         }
       }
     } catch (error) {
@@ -312,7 +334,7 @@ export default function BookingForm() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
-              className="space-y-4 sm:space-y-6 pt-12 sm:pt-0"
+              className="space-y-4 sm:space-y-6"
             >
             <div>
               <label htmlFor="interest" className="block text-sm font-medium mb-2">
@@ -350,7 +372,10 @@ export default function BookingForm() {
                   type="button"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setFormData({ ...formData, demoType: "online" })}
+                  onClick={() => {
+                    setFormData({ ...formData, demoType: "online" });
+                    saveUserSessionData({ demoType: "online" });
+                  }}
                   className={`p-3 sm:p-4 rounded-lg border-2 transition-all text-left ${
                     formData.demoType === "online"
                       ? "border-gold bg-gold/10"
@@ -365,7 +390,10 @@ export default function BookingForm() {
                   type="button"
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => setFormData({ ...formData, demoType: "offline" })}
+                  onClick={() => {
+                    setFormData({ ...formData, demoType: "offline" });
+                    saveUserSessionData({ demoType: "offline" });
+                  }}
                   className={`p-3 sm:p-4 rounded-lg border-2 transition-all text-left ${
                     formData.demoType === "offline"
                       ? "border-gold bg-gold/10"
@@ -385,7 +413,11 @@ export default function BookingForm() {
               <select
                 required
                 value={formData.education}
-                onChange={(e) => setFormData({ ...formData, education: e.target.value as EducationLevel })}
+                  onChange={(e) => {
+                    const newValue = e.target.value as EducationLevel;
+                    setFormData({ ...formData, education: newValue });
+                    saveUserSessionData({ education: newValue });
+                  }}
                 className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-sm sm:text-base cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23C5A572%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22%3E%3C/polyline%3E%3C/svg%3E')] bg-[length:1.5em_1.5em] bg-[right_0.75rem_center] bg-no-repeat pr-10 sm:pr-12 hover:border-gold/50"
                 style={{
                   colorScheme: 'dark',
@@ -426,6 +458,7 @@ export default function BookingForm() {
                       } else {
                         setDateError("");
                         setFormData({ ...formData, preferredDate: selectedDate, preferredTime: "" });
+                        saveUserSessionData({ preferredDate: selectedDate, preferredTime: "" });
                       }
                     } else {
                       setDateError("");
@@ -480,6 +513,7 @@ export default function BookingForm() {
                       onClick={() => {
                         setDateError("");
                         setFormData({ ...formData, preferredTime: slot.value });
+                        saveUserSessionData({ preferredTime: slot.value });
                       }}
                       className={`p-3 rounded-lg border-2 transition-all ${
                         formData.preferredTime === slot.value
@@ -511,7 +545,7 @@ export default function BookingForm() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="space-y-4 sm:space-y-6 pt-12 sm:pt-0"
+              className="space-y-4 sm:space-y-6"
             >
             <div>
               <label htmlFor="name" className="block text-sm font-medium mb-2">
@@ -560,12 +594,11 @@ export default function BookingForm() {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium mb-2">
-                  Your Email
+                  Your Email (Optional)
                 </label>
                 <input
                   type="email"
                   id="email"
-                  required
                   value={formData.email}
                   onChange={(e) => {
                     const newValue = e.target.value;
@@ -595,21 +628,23 @@ export default function BookingForm() {
               </div>
             </div>
 
-            {userType === 'student' && (
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium mb-2">
-                  Additional Message (Optional)
-                </label>
-                <textarea
-                  id="message"
-                  rows={4}
-                  value={formData.message}
-                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors resize-none"
-                  placeholder="Any additional information or questions..."
-                />
-              </div>
-            )}
+            <div>
+              <label htmlFor="city" className="block text-sm font-medium mb-2">
+                City (Optional)
+              </label>
+              <input
+                type="text"
+                id="city"
+                value={formData.city}
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  setFormData({ ...formData, city: newValue });
+                  saveUserSessionData({ city: newValue });
+                }}
+                className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors"
+                placeholder="Enter your city"
+              />
+            </div>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <button

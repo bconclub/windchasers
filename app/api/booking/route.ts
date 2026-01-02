@@ -7,11 +7,13 @@ export async function POST(request: NextRequest) {
       name, 
       email, 
       phone, 
+      city,
+      parentGuardianName,
       interest, 
-      demoType, 
+      demoType,
+      education,
       preferredDate, 
       preferredTime, 
-      message,
       source,
       // Tracking data
       sessionId,
@@ -22,25 +24,27 @@ export async function POST(request: NextRequest) {
       assessmentData,
     } = body;
 
-    // Validate required fields
-    if (!name || !email || !phone || !interest || !demoType || !preferredDate) {
+    // Validate required fields (email and city are optional)
+    if (!name || !phone || !interest || !demoType || !preferredDate) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    // Save booking data with full tracking
+    // Save booking data with full tracking - send ALL form details to webhook
     const bookingRecord = {
       name,
-      email,
+      email: email || "",
       phone,
+      city: city || "",
+      parentGuardianName: parentGuardianName || "",
       interest,
-      source,
       demoType,
+      education: education || "",
       preferredDate,
-      preferredTime,
-      message,
+      preferredTime: preferredTime || "",
+      source: source || "",
       timestamp: new Date().toISOString(),
       // Tracking data
       sessionId,

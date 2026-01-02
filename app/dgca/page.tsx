@@ -289,16 +289,10 @@ export default function DGCAPage() {
         {/* CTA */}
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6 text-white">Ready to Start?</h2>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/demo?source=dgca"
-              className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-[0.9rem] hover:bg-gold/90 transition-colors inline-block"
-            >
-              Book a Demo
-            </Link>
+          <div className="flex justify-center">
             <Link
               href="/assessment?from=dgca"
-              className="bg-white/10 text-white px-12 py-5 rounded-lg font-semibold text-lg hover:bg-white/20 transition-colors border border-white/20 inline-block"
+              className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
             >
               Take Assessment
             </Link>
