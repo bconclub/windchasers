@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { DollarSign } from "lucide-react";
 import WhyChooseUsCarousel from "@/components/WhyChooseUsCarousel";
 import PilotJourneyTimeline from "@/components/PilotJourneyTimeline";
 import PricingFormModal from "@/components/PricingFormModal";
@@ -537,6 +538,75 @@ export default function DGCAPage() {
           source="dgca"
         />
       </div>
+
+      {/* Pricing Section CTA */}
+      <section className="w-full bg-dark border-t-2 border-b-2 border-gold/30 py-20">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          <div className="flex flex-col items-center text-center space-y-6">
+            {/* Icon */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <DollarSign className="w-12 h-12 text-gold mx-auto" />
+            </motion.div>
+
+            {/* Heading */}
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="text-4xl md:text-5xl font-bold text-gold"
+            >
+              Course Pricing & Packages
+            </motion.h2>
+
+            {/* Subtext */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-lg text-white/80 max-w-[600px] mx-auto"
+            >
+              Real numbers. Real transparency. Get complete pricing breakdown 
+              for our DGCA Ground Classes - no hidden costs, no surprises.
+            </motion.p>
+
+            {/* Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link
+                href="/pricing?source=dgca"
+                className="inline-block w-[200px] h-14 bg-gold text-dark rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-gold/90 transition-colors"
+              >
+                View Pricing Details
+                <span>→</span>
+              </Link>
+            </motion.div>
+
+            {/* Trust Line */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="text-sm text-white/60"
+            >
+              Join 100+ students who chose honest pricing
+            </motion.p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
