@@ -380,12 +380,13 @@ export default function VideoCarousel({ videos, title, subtitle }: VideoCarousel
                 </button>
 
                 {/* Video Player */}
-                <div className="relative bg-black rounded-lg overflow-hidden w-full mx-auto md:max-h-[80vh]" style={{ height: "70vh", aspectRatio: "9/16" }}>
+                <div className="relative bg-black rounded-lg overflow-hidden w-full mx-auto" style={{ paddingBottom: "56.25%", height: 0, maxHeight: "80vh" }}>
                   <iframe
-                    src={`${selectedVideo.embedUrl}?autoplay=1&loop=0&byline=0&title=0&portrait=0&muted=1&rel=0&controls=0`}
-                    className="absolute inset-0 w-full h-full"
-                    allow="autoplay; fullscreen; picture-in-picture"
+                    src={`${selectedVideo.embedUrl}?autoplay=1&loop=0&byline=0&title=0&portrait=0&muted=1&controls=1&responsive=1`}
+                    className="absolute top-0 left-0 w-full h-full border-0"
+                    allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
                     allowFullScreen
+                    title={selectedVideo.id || "Video player"}
                   />
                 </div>
               </div>

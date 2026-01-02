@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { Calendar } from "lucide-react";
-import { trackFormSubmission, sendTrackingData } from "@/lib/tracking";
-import { getUserSessionData, saveUserSessionData } from "@/lib/sessionStorage";
+import { trackFormSubmission, sendTrackingData, getStoredUTMParams, getLandingPage, getStoredReferrer } from "@/lib/tracking";
+import { getUserSessionData, saveUserSessionData, markBookingCompleted } from "@/lib/sessionStorage";
 import { trackPilotLead } from "@/lib/analytics";
 
 type DemoType = "online" | "offline";
@@ -230,9 +230,23 @@ export default function BookingForm() {
       // Track form submission
       trackFormSubmission("booking", formData, source, formData.interest);
 
+      // Get stored UTM params, landing page, and referrer
+      const utmParams = getStoredUTMParams();
+      const landingPage = getLandingPage();
+      const referrer = getStoredReferrer();
+
       const requestBody = {
         ...formData,
         source,
+        // Include UTM parameters
+        utm_source: utmParams.utm_source || "",
+        utm_medium: utmParams.utm_medium || "",
+        utm_campaign: utmParams.utm_campaign || "",
+        utm_term: utmParams.utm_term || "",
+        utm_content: utmParams.utm_content || "",
+        // Include referrer and landing page
+        referrer: referrer || "",
+        landing_page: landingPage || "",
       };
       
       console.log("Submitting booking form:", requestBody);
@@ -264,6 +278,9 @@ export default function BookingForm() {
           formData,
           source,
         });
+
+        // Mark booking as completed
+        markBookingCompleted();
 
         // Redirect to thank you page with form data
         const thankYouData = {

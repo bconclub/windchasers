@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { trackFormSubmission } from "@/lib/tracking";
-import { getUserSessionData, saveUserSessionData } from "@/lib/sessionStorage";
+import { getUserSessionData, saveUserSessionData, markAssessmentCompleted } from "@/lib/sessionStorage";
 import { trackPilotLead } from "@/lib/analytics";
 
 interface Question {
@@ -448,6 +448,9 @@ export default function AssessmentForm() {
         assessmentScore: scores.total,
         tier,
       });
+
+      // Mark assessment as completed
+      markAssessmentCompleted();
 
       setIsSubmitting(false);
       

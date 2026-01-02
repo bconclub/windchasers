@@ -74,6 +74,92 @@ export function getUTMParams(): UTMParams {
   return utmParams;
 }
 
+const UTM_STORAGE_KEY = "utm_params";
+const LANDING_PAGE_KEY = "landing_page";
+const REFERRER_KEY = "referrer";
+
+/**
+ * Capture and store UTM parameters, landing page, and referrer on initial page load
+ * This should be called once when the user first lands on the site
+ */
+export function captureAndStoreUTMParams(): void {
+  if (typeof window === "undefined") return;
+  
+  try {
+    // Only store if we don't already have UTM params (preserve first touch)
+    const existingUTM = sessionStorage.getItem(UTM_STORAGE_KEY);
+    if (!existingUTM) {
+      const utmParams = getUTMParams();
+      // Only store if we have at least one UTM parameter
+      if (Object.keys(utmParams).length > 0) {
+        sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(utmParams));
+      }
+    }
+    
+    // Store landing page (first page visited) - only on first visit
+    const existingLandingPage = sessionStorage.getItem(LANDING_PAGE_KEY);
+    if (!existingLandingPage) {
+      sessionStorage.setItem(LANDING_PAGE_KEY, window.location.pathname);
+    }
+    
+    // Store referrer (only on first visit, and only if not empty)
+    const existingReferrer = sessionStorage.getItem(REFERRER_KEY);
+    if (!existingReferrer && document.referrer) {
+      sessionStorage.setItem(REFERRER_KEY, document.referrer);
+    }
+  } catch (error) {
+    console.error("Error storing UTM params:", error);
+  }
+}
+
+/**
+ * Get stored UTM parameters (from first touch)
+ * Falls back to current URL params if not stored
+ */
+export function getStoredUTMParams(): UTMParams {
+  if (typeof window === "undefined") return {};
+  
+  try {
+    const stored = sessionStorage.getItem(UTM_STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored) as UTMParams;
+    }
+    // Fallback to current URL params if not stored
+    return getUTMParams();
+  } catch (error) {
+    console.error("Error reading stored UTM params:", error);
+    return getUTMParams();
+  }
+}
+
+/**
+ * Get landing page (first page visited in session)
+ */
+export function getLandingPage(): string {
+  if (typeof window === "undefined") return "";
+  
+  try {
+    return sessionStorage.getItem(LANDING_PAGE_KEY) || window.location.pathname;
+  } catch (error) {
+    console.error("Error reading landing page:", error);
+    return window.location.pathname;
+  }
+}
+
+/**
+ * Get referrer (where user came from)
+ */
+export function getStoredReferrer(): string {
+  if (typeof window === "undefined") return "";
+  
+  try {
+    return sessionStorage.getItem(REFERRER_KEY) || document.referrer || "";
+  } catch (error) {
+    console.error("Error reading referrer:", error);
+    return document.referrer || "";
+  }
+}
+
 // Get all tracking data
 export function getTrackingData(): TrackingData {
   const sessionId = getSessionId();

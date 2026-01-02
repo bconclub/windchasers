@@ -15,7 +15,15 @@ export async function POST(request: NextRequest) {
       preferredDate, 
       preferredTime, 
       source,
+      // UTM parameters
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_term,
+      utm_content,
       // Tracking data
+      referrer,
+      landing_page,
       sessionId,
       pageViews,
       utmParams,
@@ -54,10 +62,18 @@ export async function POST(request: NextRequest) {
       preferredTime: preferredTime || "",
       source: source || "",
       timestamp: new Date().toISOString(),
+      // UTM parameters (prefer direct params, fallback to utmParams object)
+      utm_source: utm_source || utmParams?.utm_source || "",
+      utm_medium: utm_medium || utmParams?.utm_medium || "",
+      utm_campaign: utm_campaign || utmParams?.utm_campaign || "",
+      utm_term: utm_term || utmParams?.utm_term || "",
+      utm_content: utm_content || utmParams?.utm_content || "",
+      // Referrer and landing page
+      referrer: referrer || "",
+      landing_page: landing_page || "",
       // Tracking data
       sessionId,
       pageViews,
-      utmParams,
       formSubmissions,
       userInfo,
       assessmentData,

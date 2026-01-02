@@ -5,12 +5,21 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ClipboardCheck, Calendar } from "lucide-react";
+import { hasCompletedAssessment, hasCompletedBooking } from "@/lib/sessionStorage";
 
 export default function FloatingActionButtons() {
   const pathname = usePathname();
   const [isVisible, setIsVisible] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [hasScrolledUp, setHasScrolledUp] = useState(false);
+  const [assessmentCompleted, setAssessmentCompleted] = useState(false);
+  const [bookingCompleted, setBookingCompleted] = useState(false);
+  
+  // Check completion status on mount and pathname change
+  useEffect(() => {
+    setAssessmentCompleted(hasCompletedAssessment());
+    setBookingCompleted(hasCompletedBooking());
+  }, [pathname]);
   
   // Show both buttons everywhere except demo and thank-you pages
   const showAssessment = true;
@@ -80,7 +89,7 @@ export default function FloatingActionButtons() {
               }}
               className="flex flex-row gap-3"
             >
-            {showAssessment && (
+            {showAssessment && !assessmentCompleted && (
               <Link
                 href="/assessment"
                 className="w-[160px] h-12 bg-dark border-2 border-gold rounded-lg flex items-center justify-center gap-2 text-white font-semibold hover:bg-accent-dark transition-colors shadow-lg hover:shadow-xl text-sm"
@@ -92,10 +101,14 @@ export default function FloatingActionButtons() {
             {showDemo && (
               <Link
                 href="/demo"
-                className="w-[160px] h-12 bg-gold text-dark rounded-lg flex items-center justify-center gap-2 font-semibold hover:bg-gold/90 transition-colors shadow-lg hover:shadow-xl text-sm"
+                className={`w-[160px] h-12 rounded-lg flex items-center justify-center gap-2 font-semibold transition-colors shadow-lg text-sm ${
+                  bookingCompleted
+                    ? "bg-gold/30 text-dark/50 cursor-not-allowed"
+                    : "bg-gold text-dark hover:bg-gold/90 hover:shadow-xl"
+                }`}
               >
                 <Calendar className="w-4 h-4" />
-                <span>Book a Demo</span>
+                <span>{bookingCompleted ? "Book a Demo Again" : "Book a Demo"}</span>
               </Link>
             )}
             </motion.div>
@@ -122,13 +135,17 @@ export default function FloatingActionButtons() {
             {showDemo && (
               <Link
                 href="/demo"
-                className="flex-1 bg-gold text-dark h-16 flex items-center justify-center gap-2 font-semibold active:bg-gold/90 transition-colors"
+                className={`flex-1 h-16 flex items-center justify-center gap-2 font-semibold transition-colors ${
+                  bookingCompleted
+                    ? "bg-gold/30 text-dark/50 cursor-not-allowed"
+                    : "bg-gold text-dark active:bg-gold/90"
+                }`}
               >
                 <Calendar className="w-5 h-5" />
-                <span className="text-sm">Book a Demo</span>
+                <span className="text-sm">{bookingCompleted ? "Book a Demo Again" : "Book a Demo"}</span>
               </Link>
             )}
-            {showAssessment && (
+            {showAssessment && !assessmentCompleted && (
               <Link
                 href="/assessment"
                 className="flex-1 bg-dark border-t-2 border-gold h-16 flex items-center justify-center gap-2 text-white font-semibold active:bg-accent-dark transition-colors"

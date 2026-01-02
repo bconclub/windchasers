@@ -90,3 +90,68 @@ export function grantPricingAccess(): void {
   }
 }
 
+const ASSESSMENT_COMPLETED_KEY = "assessment_completed";
+const BOOKING_COMPLETED_KEY = "booking_completed";
+
+/**
+ * Check if assessment has been completed
+ */
+export function hasCompletedAssessment(): boolean {
+  if (typeof window === "undefined") return false;
+  
+  try {
+    const userData = getUserSessionData();
+    // Check if assessmentScore exists in user data
+    if (userData?.assessmentScore !== undefined) {
+      return true;
+    }
+    // Also check the flag (for backwards compatibility)
+    const completed = sessionStorage.getItem(ASSESSMENT_COMPLETED_KEY);
+    return completed === "true";
+  } catch (error) {
+    console.error("Error reading assessment completion:", error);
+    return false;
+  }
+}
+
+/**
+ * Mark assessment as completed
+ */
+export function markAssessmentCompleted(): void {
+  if (typeof window === "undefined") return;
+  
+  try {
+    sessionStorage.setItem(ASSESSMENT_COMPLETED_KEY, "true");
+  } catch (error) {
+    console.error("Error marking assessment as completed:", error);
+  }
+}
+
+/**
+ * Check if booking has been completed
+ */
+export function hasCompletedBooking(): boolean {
+  if (typeof window === "undefined") return false;
+  
+  try {
+    const completed = sessionStorage.getItem(BOOKING_COMPLETED_KEY);
+    return completed === "true";
+  } catch (error) {
+    console.error("Error reading booking completion:", error);
+    return false;
+  }
+}
+
+/**
+ * Mark booking as completed
+ */
+export function markBookingCompleted(): void {
+  if (typeof window === "undefined") return;
+  
+  try {
+    sessionStorage.setItem(BOOKING_COMPLETED_KEY, "true");
+  } catch (error) {
+    console.error("Error marking booking as completed:", error);
+  }
+}
+
