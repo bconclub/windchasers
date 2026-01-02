@@ -9,16 +9,10 @@ import VideoCarousel from "@/components/VideoCarousel";
 import ImageCarousel from "@/components/ImageCarousel";
 
 export default function Home() {
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/page.tsx:11',message:'Home component rendering',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
-  // #endregion
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
   const videoRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/page.tsx:16',message:'Home useEffect running',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
-    // #endregion
     document.title = "Windchasers - India's Top Pilot Training Academy- Bangalore";
   }, []);
 

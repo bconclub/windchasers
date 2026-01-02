@@ -101,44 +101,23 @@ export default function DGCAPage() {
 
         {/* 6 DGCA Subjects - Expandable Grid */}
         <section className="mb-16 py-12 md:py-12 h-[90vh] md:h-auto">
-          {/* #region agent log */}
-          {typeof window !== 'undefined' && (() => { fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/dgca/page.tsx:133',message:'DGCA Subjects section rendering',data:{viewportHeight:window.innerHeight,sectionHeight:'90vh'},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'B'})}).catch(()=>{}); return null; })()}
-          {/* #endregion */}
           <h2 className="text-3xl font-bold mb-4 md:mb-12 text-center text-gold">
             6 DGCA Subjects Breakdown
           </h2>
           <div className="max-w-6xl mx-auto">
-            {/* #region agent log */}
-            {(() => { fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/dgca/page.tsx:138',message:'Before DGCASubjectsGrid render',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{}); return null; })()}
-            {/* #endregion */}
             <DGCASubjectsGrid />
-            {/* #region agent log */}
-            {(() => { fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/dgca/page.tsx:141',message:'After DGCASubjectsGrid render',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{}); return null; })()}
-            {/* #endregion */}
           </div>
         </section>
 
         {/* Why Choose Us */}
-        {/* #region agent log */}
-        {(() => { fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/dgca/page.tsx:145',message:'Before WhyChooseUsCarousel render',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{}); return null; })()}
-        {/* #endregion */}
         <WhyChooseUsCarousel />
-        {/* #region agent log */}
-        {(() => { fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/dgca/page.tsx:149',message:'After WhyChooseUsCarousel render',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{}); return null; })()}
-        {/* #endregion */}
 
         {/* 8-Step Journey */}
         <section className="py-16">
-          {/* #region agent log */}
-          {(() => { fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/dgca/page.tsx:153',message:'Before PilotJourneyTimeline render',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{}); return null; })()}
-          {/* #endregion */}
           <PilotJourneyTimeline />
         </section>
 
         {/* Student Video Carousel */}
-        {/* #region agent log */}
-        {(() => { fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/dgca/page.tsx:158',message:'Before VideoCarousel render',data:{videosCount:videos.length},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{}); return null; })()}
-        {/* #endregion */}
         <VideoCarousel
           videos={videos}
           title="Student to Pilot"
