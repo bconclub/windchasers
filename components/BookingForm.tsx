@@ -316,7 +316,7 @@ export default function BookingForm() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6">
+    <div className="max-w-2xl mx-auto px-2 sm:px-6">
       {/* Heading */}
       <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-gold">Book a Demo</h2>
       
@@ -337,7 +337,7 @@ export default function BookingForm() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 p-4 sm:p-6 md:p-8 border-2 border-white/20 rounded-lg bg-accent-dark/50 relative">
+      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 p-2 sm:p-6 md:p-8 border-2 border-white/20 rounded-lg bg-accent-dark/50 relative">
         {/* Toggle Switch - Top Right */}
         <div className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 flex flex-row items-center gap-1.5 sm:gap-2">
           <button
