@@ -45,20 +45,21 @@ export default function FloatingActionButtons() {
               damping: 20,
               delay: 0.2,
             }}
-            className="hidden md:flex flex-row gap-3 fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50"
+            className="hidden md:flex flex-row gap-3 fixed bottom-6 left-1/2 z-50"
+            style={{ transform: 'translateX(-50%)' }}
           >
             <Link
               href="/assessment"
-              className="w-[180px] h-14 bg-dark border-2 border-gold rounded-lg flex items-center justify-center gap-3 text-white font-semibold hover:bg-accent-dark transition-colors shadow-lg hover:shadow-xl"
+              className="w-[160px] h-12 bg-dark border-2 border-gold rounded-lg flex items-center justify-center gap-2 text-white font-semibold hover:bg-accent-dark transition-colors shadow-lg hover:shadow-xl text-sm"
             >
-              <ClipboardCheck className="w-5 h-5 text-gold" />
+              <ClipboardCheck className="w-4 h-4 text-gold" />
               <span>Take Assessment</span>
             </Link>
             <Link
               href="/demo"
-              className="w-[180px] h-14 bg-gold text-dark rounded-lg flex items-center justify-center gap-3 font-semibold hover:bg-gold/90 transition-colors shadow-lg hover:shadow-xl"
+              className="w-[160px] h-12 bg-gold text-dark rounded-lg flex items-center justify-center gap-2 font-semibold hover:bg-gold/90 transition-colors shadow-lg hover:shadow-xl text-sm"
             >
-              <Calendar className="w-5 h-5" />
+              <Calendar className="w-4 h-4" />
               <span>Book a Demo</span>
             </Link>
           </motion.div>
