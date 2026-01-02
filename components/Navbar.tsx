@@ -22,11 +22,11 @@ export default function Navbar() {
           <div className="flex justify-between items-center h-20">
             <Link href="/" className="flex items-center">
               <Image
-                src="/Windchasers-Logo.png"
+                src="/images/White transparent.png"
                 alt="WindChasers"
                 width={180}
                 height={60}
-                className="h-12 w-auto"
+                className="h-[3.45rem] md:h-12 w-auto"
                 priority
               />
             </Link>
