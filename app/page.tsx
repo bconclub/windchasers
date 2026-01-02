@@ -13,7 +13,7 @@ export default function Home() {
   const videoRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
-    document.title = "WindChasers Aviation Academy | Honest Pilot Training";
+    document.title = "Windchasers - India's Top Pilot Training Academy- Bangalore";
   }, []);
 
   const scrollToPathSelection = () => {
