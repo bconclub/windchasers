@@ -66,12 +66,26 @@ export default function FloatingActionButtons() {
     return null;
   }
 
+  // Hide completely if both actions are completed
+  if (assessmentCompleted && bookingCompleted) {
+    return null;
+  }
+
+  // Determine which buttons to show
+  const showAssessmentButton = !assessmentCompleted;
+  const showDemoButton = !bookingCompleted;
+
+  // Don't render if no buttons should be shown
+  if (!showAssessmentButton && !showDemoButton) {
+    return null;
+  }
+
   return (
     <AnimatePresence>
       {isVisible && (
         <>
           {/* Desktop - Inline buttons centered */}
-          {(showAssessment || showDemo) && (
+          {(showAssessmentButton || showDemoButton) && (
             <div className="hidden md:block fixed bottom-6 left-1/2 -translate-x-1/2 z-50">
             <motion.div
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
@@ -89,7 +103,7 @@ export default function FloatingActionButtons() {
               }}
               className="flex flex-row gap-3"
             >
-            {showAssessment && !assessmentCompleted && (
+            {showAssessmentButton && (
               <Link
                 href="/assessment"
                 className="w-[160px] h-12 bg-dark border-2 border-gold rounded-lg flex items-center justify-center gap-2 text-white font-semibold hover:bg-accent-dark transition-colors shadow-lg hover:shadow-xl text-sm"
@@ -98,17 +112,13 @@ export default function FloatingActionButtons() {
                 <span>Take Assessment</span>
               </Link>
             )}
-            {showDemo && (
+            {showDemoButton && (
               <Link
                 href="/demo"
-                className={`w-[160px] h-12 rounded-lg flex items-center justify-center gap-2 font-semibold transition-colors shadow-lg text-sm ${
-                  bookingCompleted
-                    ? "bg-gold/30 text-dark/50 cursor-not-allowed"
-                    : "bg-gold text-dark hover:bg-gold/90 hover:shadow-xl"
-                }`}
+                className="w-[160px] h-12 bg-gold text-dark rounded-lg flex items-center justify-center gap-2 font-semibold hover:bg-gold/90 transition-colors shadow-lg hover:shadow-xl text-sm"
               >
                 <Calendar className="w-4 h-4" />
-                <span>{bookingCompleted ? "Book a Demo Again" : "Book a Demo"}</span>
+                <span>Book a Demo</span>
               </Link>
             )}
             </motion.div>
@@ -116,7 +126,7 @@ export default function FloatingActionButtons() {
           )}
 
           {/* Mobile - Side-by-side bottom bar */}
-          {(showAssessment || showDemo) && (
+          {(showAssessmentButton || showDemoButton) && (
             <motion.div
             initial={{ opacity: 0, y: 100 }}
             animate={{ 
@@ -132,20 +142,16 @@ export default function FloatingActionButtons() {
             }}
             className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex shadow-2xl"
           >
-            {showDemo && (
+            {showDemoButton && (
               <Link
                 href="/demo"
-                className={`flex-1 h-16 flex items-center justify-center gap-2 font-semibold transition-colors ${
-                  bookingCompleted
-                    ? "bg-gold/30 text-dark/50 cursor-not-allowed"
-                    : "bg-gold text-dark active:bg-gold/90"
-                }`}
+                className="flex-1 bg-gold text-dark h-16 flex items-center justify-center gap-2 font-semibold active:bg-gold/90 transition-colors"
               >
                 <Calendar className="w-5 h-5" />
-                <span className="text-sm">{bookingCompleted ? "Book a Demo Again" : "Book a Demo"}</span>
+                <span className="text-sm">Book a Demo</span>
               </Link>
             )}
-            {showAssessment && !assessmentCompleted && (
+            {showAssessmentButton && (
               <Link
                 href="/assessment"
                 className="flex-1 bg-dark border-t-2 border-gold h-16 flex items-center justify-center gap-2 text-white font-semibold active:bg-accent-dark transition-colors"
