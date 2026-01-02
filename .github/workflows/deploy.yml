@@ -24,7 +24,18 @@ jobs:
           script_stop: true
           script: |
             cd /var/www/windchasers
-            git pull origin main
+            # Retry git pull with exponential backoff
+            for i in 1 2 3; do
+              if git pull origin main; then
+                break
+              fi
+              if [ $i -eq 3 ]; then
+                echo "Git pull failed after 3 attempts"
+                exit 1
+              fi
+              echo "Git pull failed, retrying in $((i*5)) seconds..."
+              sleep $((i*5))
+            done
             npm ci
             npm run build
             pm2 restart windchasers || pm2 start npm --name "windchasers" -- start
