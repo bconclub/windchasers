@@ -2,7 +2,7 @@ import AssessmentForm from "@/components/AssessmentForm";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pilot Aptitude Test | WindChasers Aviation Academy",
+  title: "PAT - Pilot Aptitude Test | WindChasers Aviation Academy",
   description: "20 questions to assess your natural aptitude for pilot training. Takes 5-10 minutes. Get instant results and personalized guidance.",
 };
 
@@ -12,7 +12,7 @@ export default function AssessmentPage() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            Pilot <span className="text-gold">Aptitude Test</span>
+            PAT - <span className="text-gold">Pilot Aptitude Test</span>
           </h1>
           <p className="text-xl text-white/70 max-w-3xl mx-auto">
             20 questions to assess your natural aptitude for pilot training. Takes 5-10 minutes. Get instant results and personalized guidance.
