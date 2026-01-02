@@ -234,7 +234,7 @@ export default function InternationalPage() {
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6">Ready for Pilot Training Abroad?</h2>
           <p className="text-white/70 mb-8 max-w-2xl mx-auto">
-            Take our assessment to discover the best country for your goals and budget. We&apos;ll handle everything from admission to visa.
+            Book a demo to discover the best country for your goals and budget. We&apos;ll handle everything from admission to visa.
           </p>
           <div className="flex justify-center">
             <Link
