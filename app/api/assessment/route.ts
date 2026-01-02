@@ -4,12 +4,14 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { 
-      name, 
+      firstName,
+      lastName,
       email, 
-      score, 
+      phone,
       answers,
-      readinessTier,
-      readinessStatus,
+      scores,
+      tier,
+      timestamp,
       // Tracking data
       sessionId,
       pageViews,
@@ -20,33 +22,30 @@ export async function POST(request: NextRequest) {
     } = body;
 
     // Validate required fields
-    if (!name || !email || score === undefined) {
+    if (!firstName || !lastName || !email || !phone || !scores || !tier) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    // Determine score tier for follow-up (use provided or calculate)
-    let scoreTier = readinessTier || "needs-improvement";
-    if (!readinessTier) {
-      if (score >= 80) scoreTier = "excellent";
-      else if (score >= 60) scoreTier = "good";
-      else if (score >= 40) scoreTier = "fair";
-    }
-
     // Save assessment data with full tracking
     const assessmentRecord = {
-      name,
+      firstName,
+      lastName,
+      name: `${firstName} ${lastName}`,
       email,
-      score,
-      scoreTier,
-      readinessStatus: readinessStatus || (scoreTier === "excellent" ? "Ready to start" : 
-                                          scoreTier === "good" ? "Minor prep needed" :
-                                          scoreTier === "fair" ? "Prep required" : "Not ready yet"),
+      phone,
+      scores: {
+        qualification: scores.qualification || 0,
+        aptitude: scores.aptitude || 0,
+        readiness: scores.readiness || 0,
+        total: scores.total || 0,
+      },
+      tier,
       answersCount: answers?.length || 0,
       answers,
-      timestamp: new Date().toISOString(),
+      timestamp: timestamp || new Date().toISOString(),
       // Tracking data
       sessionId,
       pageViews,
@@ -84,8 +83,8 @@ export async function POST(request: NextRequest) {
       {
         success: true,
         message: "Assessment saved successfully",
-        score,
-        scoreTier,
+        scores: assessmentRecord.scores,
+        tier: assessmentRecord.tier,
       },
       { status: 200 }
     );
