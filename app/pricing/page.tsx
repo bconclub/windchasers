@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
 
-export default function PricingPage() {
+function PricingContent() {
   const searchParams = useSearchParams();
   const [source, setSource] = useState<string | null>(null);
 
@@ -261,6 +261,25 @@ export default function PricingPage() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={
+      <div className="pt-32 pb-20 px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-12 bg-gold/20 rounded w-1/2 mx-auto mb-4"></div>
+              <div className="h-6 bg-white/10 rounded w-1/3 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <PricingContent />
+    </Suspense>
   );
 }
 
