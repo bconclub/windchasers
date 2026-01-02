@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Analytics from "@/components/Analytics";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,19 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans">
-        {/* Google tag (gtag.js) */}
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-3WDV2V65F5"
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-3WDV2V65F5');
-          `}
-        </Script>
+        <Analytics />
         <Navbar />
         <main className="min-h-screen">
           {children}

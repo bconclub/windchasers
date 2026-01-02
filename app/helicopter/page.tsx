@@ -137,7 +137,7 @@ export default function HelicopterPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/demo"
+              href="/demo?source=helicopter"
               className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
             >
               Book Free Demo

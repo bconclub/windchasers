@@ -121,7 +121,7 @@ export default function DGCAPage() {
           <h2 className="text-3xl font-bold mb-6">Ready to Start?</h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/demo"
+              href="/demo?source=dgca"
               className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
             >
               Book Free Demo

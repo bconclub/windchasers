@@ -231,7 +231,7 @@ export default function InternationalPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/demo"
+              href="/demo?source=abroad"
               className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
             >
               Book Consultation
