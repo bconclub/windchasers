@@ -644,6 +644,19 @@ export default function AssessmentForm() {
 
   return (
     <div className="max-w-3xl mx-auto">
+      {/* Disclaimer - Show only on first question */}
+      {currentQuestion === 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg"
+        >
+          <p className="text-sm text-white/80 text-center">
+            <span className="font-semibold text-blue-400">Note:</span> This assessment is designed for aspiring pilots who are starting their journey, not for licensed pilots.
+          </p>
+        </motion.div>
+      )}
+
       {/* Progress Bar */}
       <div className="mb-8">
         <div className="flex justify-between items-center mb-2">
