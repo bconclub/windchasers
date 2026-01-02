@@ -109,7 +109,7 @@ export default function PricingPage() {
           </p>
         </motion.div>
 
-        {source && "pricing" in content ? (
+        {source && "pricing" in content && content.pricing ? (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -133,7 +133,7 @@ export default function PricingPage() {
                 <div>
                   <h3 className="text-xl font-bold mb-4 text-gold">What's Included</h3>
                   <ul className="space-y-3 text-white/80">
-                    {content.features.map((feature, index) => (
+                    {"features" in content && content.features?.map((feature, index) => (
                       <li key={index} className="flex items-start">
                         <CheckCircle className="w-5 h-5 text-gold mr-3 flex-shrink-0 mt-0.5" strokeWidth={2} />
                         <span>{feature}</span>
@@ -145,7 +145,7 @@ export default function PricingPage() {
                 <div>
                   <h3 className="text-xl font-bold mb-4 text-gold">Payment Options</h3>
                   <ul className="space-y-3 text-white/80 mb-6">
-                    {content.paymentOptions.map((option, index) => (
+                    {"paymentOptions" in content && content.paymentOptions?.map((option, index) => (
                       <li key={index} className="flex items-start">
                         <span className="text-gold mr-3">•</span>
                         <span>{option}</span>
