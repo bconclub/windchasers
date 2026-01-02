@@ -307,10 +307,22 @@ export default function AssessmentForm() {
     }
   }, [showContactForm]);
 
-  const handleAnswer = (value: string | number) => {
+  const handleAnswer = (value: string | number, autoAdvance: boolean = false) => {
     const newAnswers = [...answers];
     newAnswers[currentQuestion] = value;
     setAnswers(newAnswers);
+    
+    // Auto-advance to next question if it's a radio button selection
+    if (autoAdvance) {
+      // Small delay to show the selection before moving
+      setTimeout(() => {
+        if (currentQuestion < questions.length - 1) {
+          setCurrentQuestion(currentQuestion + 1);
+        } else {
+          setShowContactForm(true);
+        }
+      }, 300);
+    }
   };
 
   const handleNext = () => {
@@ -649,10 +661,10 @@ export default function AssessmentForm() {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg"
+          className="mb-6 p-4 bg-gold/20 border-2 border-gold/50 rounded-lg shadow-lg shadow-gold/20"
         >
-          <p className="text-sm text-white/80 text-center">
-            <span className="font-semibold text-blue-400">Note:</span> This assessment is designed for aspiring pilots who are starting their journey, not for licensed pilots.
+          <p className="text-sm text-white text-center">
+            <span className="font-bold text-gold">Note:</span> This assessment is designed for aspiring pilots who are starting their journey, not for licensed pilots.
           </p>
         </motion.div>
       )}
@@ -717,7 +729,7 @@ export default function AssessmentForm() {
                   key={index}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => handleAnswer(index)}
+                  onClick={() => handleAnswer(index, true)}
                   className={`w-full p-6 text-left rounded-lg border-2 transition-all ${
                     answers[currentQuestion] === index
                       ? "border-gold bg-gold/10"

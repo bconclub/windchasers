@@ -443,12 +443,20 @@ export default function Home() {
           <p className="text-xl text-white/70 mb-8">
             Discover your path to becoming a pilot. Take our free assessment to get personalized guidance.
           </p>
-          <Link
-            href="/assessment"
-            className="inline-block bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
-          >
-            Take Assessment
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Link
+              href="/assessment"
+              className="inline-block bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
+            >
+              Take Assessment
+            </Link>
+            <Link
+              href="/demo"
+              className="inline-block bg-transparent border-2 border-gold text-gold px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold hover:text-dark transition-colors"
+            >
+              Book Now
+            </Link>
+          </div>
         </div>
       </section>
     </>

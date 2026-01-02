@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "PAT - Pilot Aptitude Test | WindChasers Aviation Academy",
-  description: "20 questions to assess your natural aptitude for pilot training. Takes 5-10 minutes. Get instant results and personalized guidance.",
+  description: "20 questions. 3 minutes. Instant results + personalized guidance",
 };
 
 export default function AssessmentPage() {
@@ -17,7 +17,7 @@ export default function AssessmentPage() {
             <span className="text-gold">Pilot Aptitude Test</span>
           </h1>
           <p className="text-xl text-white/70 max-w-3xl mx-auto">
-            20 questions to assess your natural aptitude for pilot training. Takes 5-10 minutes. Get instant results and personalized guidance.
+            20 questions. 3 minutes. Instant results + personalized guidance
           </p>
         </div>
 

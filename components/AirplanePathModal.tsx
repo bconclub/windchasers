@@ -27,10 +27,11 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            onClick={(e) => e.stopPropagation()}
             className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-6"
           >
-            <div className="relative max-w-4xl w-full h-full md:h-auto">
-              <div className="bg-accent-dark border-0 md:border-2 border-gold/50 rounded-none md:rounded-lg h-full md:max-h-[90vh] overflow-y-auto relative">
+            <div className="relative max-w-4xl w-full h-full md:h-auto" onClick={(e) => e.stopPropagation()}>
+              <div className="bg-accent-dark border-0 md:border-2 border-gold/50 rounded-none md:rounded-lg h-full md:max-h-[90vh] overflow-y-auto relative" onClick={(e) => e.stopPropagation()}>
                 {/* Close Button */}
                 <button
                   onClick={onClose}
@@ -47,6 +48,7 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
                     {/* Starting Fresh */}
                     <Link
                       href="/dgca"
+                      onClick={onClose}
                       className="group bg-dark border-2 border-gold/50 hover:border-gold transition-all p-6 md:p-8 rounded-lg block"
                     >
                     <h3 className="text-2xl font-bold mb-4 text-gold">Starting Fresh</h3>
@@ -77,6 +79,7 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
                     {/* DGCA Completed */}
                     <Link
                       href="/international"
+                      onClick={onClose}
                       className="group bg-dark border-2 border-gold/50 hover:border-gold transition-all p-6 md:p-8 rounded-lg block"
                     >
                     <h3 className="text-2xl font-bold mb-4 text-gold">DGCA Completed</h3>
@@ -107,7 +110,7 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
 
                   <div className="mt-8 pt-8 border-t border-white/10 text-center">
                     <p className="text-white/50 text-sm">
-                      Not sure which path? <Link href="/assessment" className="text-gold hover:underline">Take Assessment</Link>
+                      Not sure which path? <Link href="/assessment" onClick={onClose} className="text-gold hover:underline">Take Assessment</Link>
                     </p>
                   </div>
                 </div>

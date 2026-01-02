@@ -235,9 +235,9 @@ function ThankYouContent() {
         >
           <p className="text-white/60 mb-4">Need immediate assistance?</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <a href="mailto:info@windchasers.com" className="flex items-center gap-2 text-white/80 hover:text-gold transition-colors">
+            <a href="mailto:aviators@windchasers.in" className="flex items-center gap-2 text-white/80 hover:text-gold transition-colors">
               <Mail className="w-5 h-5" />
-              <span>info@windchasers.com</span>
+              <span>aviators@windchasers.in</span>
             </a>
             <a href="tel:+919876543210" className="flex items-center gap-2 text-white/80 hover:text-gold transition-colors">
               <Phone className="w-5 h-5" />
