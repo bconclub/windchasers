@@ -34,7 +34,7 @@ export default function FloatingActionButtons() {
     <AnimatePresence>
       {isVisible && (
         <>
-          {/* Desktop - Stacked buttons centered */}
+          {/* Desktop - Inline buttons centered */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -45,7 +45,7 @@ export default function FloatingActionButtons() {
               damping: 20,
               delay: 0.2,
             }}
-            className="hidden md:flex flex-col gap-3 fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50"
+            className="hidden md:flex flex-row gap-3 fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50"
           >
             <Link
               href="/assessment"
