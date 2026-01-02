@@ -379,8 +379,8 @@ export default function VideoCarousel({ videos, title, subtitle }: VideoCarousel
                   ×
                 </button>
 
-                {/* Video Player */}
-                <div className="relative bg-black rounded-lg overflow-hidden w-full mx-auto" style={{ paddingBottom: "56.25%", height: 0, maxHeight: "80vh" }}>
+                {/* Video Player - 9:16 aspect ratio (portrait) */}
+                <div className="relative bg-black rounded-lg overflow-hidden w-full mx-auto max-w-md" style={{ aspectRatio: "9/16", maxHeight: "90vh" }}>
                   <iframe
                     src={`${selectedVideo.embedUrl}?autoplay=1&loop=0&byline=0&title=0&portrait=0&muted=1&controls=1&responsive=1`}
                     className="absolute top-0 left-0 w-full h-full border-0"
