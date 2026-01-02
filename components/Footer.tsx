@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="bg-accent-dark border-t border-white/10">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h3 className="text-gold font-bold text-lg mb-4">WINDCHASERS</h3>
@@ -46,7 +46,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-12 pt-8 text-center text-sm text-white/40">
+        <div className="border-t border-white/10 mt-16 pt-12 text-center text-sm text-white/40">
           <p>&copy; {new Date().getFullYear()} WindChasers Aviation Academy. All rights reserved.</p>
           <p className="mt-2">DGCA Approved | Ex-Air Force Instructors</p>
         </div>
