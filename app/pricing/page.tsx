@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { Suspense, useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
@@ -8,7 +8,7 @@ import { CheckCircle, Users, Book, Headphones, GraduationCap, ClipboardCheck, Sh
 import PricingFormModal from "@/components/PricingFormModal";
 import { hasPricingAccess } from "@/lib/sessionStorage";
 
-export default function PricingPage() {
+function PricingPageContent() {
   const searchParams = useSearchParams();
   const [source, setSource] = useState<string | null>(null);
   const [packageType, setPackageType] = useState<string | null>(null);
@@ -588,6 +588,25 @@ export default function PricingPage() {
       </div>
     </div>
     </>
+  );
+}
+
+export default function PricingPage() {
+  return (
+    <Suspense fallback={
+      <div className="pt-32 pb-20 px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center">
+            <div className="animate-pulse">
+              <div className="h-12 bg-gold/20 rounded w-1/2 mx-auto mb-4"></div>
+              <div className="h-6 bg-white/10 rounded w-1/3 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }>
+      <PricingPageContent />
+    </Suspense>
   );
 }
 
