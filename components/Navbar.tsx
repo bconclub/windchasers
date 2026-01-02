@@ -25,9 +25,9 @@ export default function Navbar() {
               <Image
                 src="/images/White transparent.png"
                 alt="WindChasers"
-                width={216}
-                height={72}
-                className="h-[57.6px] w-auto"
+                width={180}
+                height={60}
+                className="h-12 w-auto"
                 priority
               />
             </Link>

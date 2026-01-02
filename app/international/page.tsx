@@ -19,7 +19,7 @@ const countries = [
   },
   {
     name: "Canada",
-    flagImage: "/images/flags/canada-flag-png-large.png",
+    flagImage: "/images/canada-flag-png-large.png",
     duration: "6-8 months",
     highlights: [
       "Transport Canada approved",
@@ -63,7 +63,7 @@ const countries = [
   },
   {
     name: "Australia",
-    flagImage: "/images/flags/Australia Flag.jpg",
+    flagImage: "/images/flags/flag-jpg-xl-9-2048x1024.jpg",
     duration: "6-9 months",
     highlights: [
       "CASA approved training",

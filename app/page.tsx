@@ -10,7 +10,6 @@ import ImageCarousel from "@/components/ImageCarousel";
 
 export default function Home() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
   const videoRef = useRef<HTMLIFrameElement>(null);
 
   const scrollToPathSelection = () => {
@@ -18,35 +17,40 @@ export default function Home() {
     pathSection?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Ensure video loops by listening for end events
+  // Handle video looping within timeframe
   useEffect(() => {
     const handleMessage = (event: MessageEvent) => {
-      // Only accept messages from Vimeo
-      if (event.origin !== 'https://player.vimeo.com') return;
+      // Only accept messages from YouTube
+      if (event.origin !== 'https://www.youtube.com') return;
       
       try {
         const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
         
-        // When video ends, restart it
-        if (data && (data.event === 'ended' || data.method === 'ended')) {
+        // When video reaches end (394 seconds), restart at 334 seconds
+        if (data && data.event === 'onStateChange' && data.info === 0) {
+          // Video ended, seek to start time
           if (videoRef.current?.contentWindow) {
-            // Restart the video by sending play command
             videoRef.current.contentWindow.postMessage(
-              JSON.stringify({ method: 'play' }),
-              'https://player.vimeo.com'
+              JSON.stringify({
+                event: 'command',
+                func: 'seekTo',
+                args: [334, true]
+              }),
+              'https://www.youtube.com'
+            );
+            // Play the video
+            videoRef.current.contentWindow.postMessage(
+              JSON.stringify({
+                event: 'command',
+                func: 'playVideo',
+                args: []
+              }),
+              'https://www.youtube.com'
             );
           }
         }
       } catch (e) {
-        // Not JSON, check for string match
-        if (typeof event.data === 'string' && event.data.includes('ended')) {
-          if (videoRef.current?.contentWindow) {
-            videoRef.current.contentWindow.postMessage(
-              JSON.stringify({ method: 'play' }),
-              'https://player.vimeo.com'
-            );
-          }
-        }
+        // Not JSON, ignore
       }
     };
 
@@ -111,28 +115,15 @@ export default function Home() {
     <>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Fallback Image Background */}
-        <div 
-          className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ${
-            videoLoaded ? 'opacity-0' : 'opacity-100'
-          }`}
-          style={{ 
-            backgroundImage: "url('/WC HEro.webp')",
-            zIndex: videoLoaded ? 0 : 1
-          }}
-        />
-        
-        {/* Vimeo Video Background */}
+        {/* YouTube Video Background */}
         <div className="absolute inset-0 w-full h-full overflow-hidden">
           <iframe
             ref={videoRef}
-            onLoad={() => setVideoLoaded(true)}
-            className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2"
-            src="https://player.vimeo.com/video/1150417989?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&playsinline=1"
+            className="absolute top-1/2 left-[70%] md:left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2"
+            src="https://www.youtube.com/embed/a9o-PE-DLNA?autoplay=1&mute=1&loop=1&playlist=a9o-PE-DLNA&start=334&end=394&controls=0&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1"
             title="Aviation Background"
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
+            allow="autoplay; encrypted-media"
             style={{ pointerEvents: 'none' }}
-            frameBorder="0"
           />
         </div>
 
@@ -155,7 +146,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-white/70 mb-12 max-w-3xl mx-auto"
           >
-            No false promises. Real costs. Real guidance. DGCA approved training with Commercial Pilot Instructors.
+            No false promises. Real costs. Real guidance. DGCA approved training with ex-Air Force instructors.
           </motion.p>
 
           <motion.div
@@ -167,7 +158,7 @@ export default function Home() {
               onClick={scrollToPathSelection}
               className="bg-gold text-dark px-8 py-3 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
             >
-              Choose your Path
+              Choose Your Path
             </button>
           </motion.div>
 
@@ -193,7 +184,7 @@ export default function Home() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                 </div>
-                <div className="text-gold font-semibold text-sm md:text-base mb-2">DGCA Approved Curriculum</div>
+                <div className="text-gold font-semibold text-sm md:text-base mb-2">DGCA Approved</div>
               </div>
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 mb-4 flex items-center justify-center rounded-full bg-gold/10 border-2 border-gold/30">
@@ -325,7 +316,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gold transition-colors">Expert Guidance</h3>
               <p className="text-white/60 leading-relaxed">
-                Commercial Pilot Instructors with thousands of flight hours. Real-world experience in the cockpit.
+                Ex-Air Force instructors with thousands of flight hours. Real-world experience in the cockpit.
               </p>
             </motion.div>
 
