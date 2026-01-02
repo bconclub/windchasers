@@ -13,6 +13,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "WindChasers Aviation Academy | Honest Pilot Training",
   description: "DGCA approved pilot training with real cost transparency. Ex-Air Force instructors. No false promises.",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/Windhcasers Icon.png", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({
