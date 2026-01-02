@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { trackFormSubmission } from "@/lib/tracking";
+import { getUserSessionData, saveUserSessionData } from "@/lib/sessionStorage";
+import { trackPilotLead } from "@/lib/analytics";
 
 interface Question {
   id: number;
@@ -263,17 +266,46 @@ const sectionBreaks = [
 ];
 
 export default function AssessmentForm() {
+  const searchParams = useSearchParams();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [answers, setAnswers] = useState<(string | number)[]>(new Array(questions.length).fill(""));
   const [showContactForm, setShowContactForm] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sourceFrom, setSourceFrom] = useState<string | null>(null);
   const [contactInfo, setContactInfo] = useState({
     firstName: "",
     lastName: "",
     phone: "",
     email: "",
   });
+
+  // Read 'from' URL param on mount
+  useEffect(() => {
+    try {
+      const fromParam = searchParams?.get("from");
+      if (fromParam) {
+        setSourceFrom(fromParam);
+      }
+    } catch (error) {
+      console.error("Error reading search params:", error);
+    }
+  }, [searchParams]);
+
+  // Load user data from sessionStorage when contact form is shown
+  useEffect(() => {
+    if (showContactForm) {
+      const userData = getUserSessionData();
+      if (userData) {
+        setContactInfo({
+          firstName: userData.firstName || "",
+          lastName: userData.lastName || "",
+          phone: userData.phone || "",
+          email: userData.email || "",
+        });
+      }
+    }
+  }, [showContactForm]);
 
   const handleAnswer = (value: string | number) => {
     const newAnswers = [...answers];
@@ -400,8 +432,35 @@ export default function AssessmentForm() {
         tier,
       });
 
+      // Determine source from URL param (from=dgca/helicopter/abroad)
+      const finalSource = sourceFrom || 'unknown';
+      
+      // Track pilot lead
+      trackPilotLead(finalSource, 'assessment_completion');
+
+      // Save to sessionStorage: user data, score, tier, and interest
+      saveUserSessionData({
+        firstName: contactInfo.firstName,
+        lastName: contactInfo.lastName,
+        email: contactInfo.email,
+        phone: contactInfo.phone,
+        interest: sourceFrom || undefined,
+        assessmentScore: scores.total,
+        tier,
+      });
+
       setIsSubmitting(false);
-      setShowResults(true);
+      
+      // Redirect to thank you page with assessment data
+      const thankYouData = {
+        score: scores.total,
+        tier: tier,
+        qualificationScore: scores.qualification,
+        aptitudeScore: scores.aptitude,
+        readinessScore: scores.readiness,
+      };
+      const dataParam = encodeURIComponent(JSON.stringify(thankYouData));
+      window.location.href = `/thank-you?type=assessment&data=${dataParam}`;
     } catch (error) {
       console.error("Failed to submit assessment:", error);
       setIsSubmitting(false);
@@ -440,9 +499,11 @@ export default function AssessmentForm() {
                 id="firstName"
                 required
                 value={contactInfo.firstName}
-                onChange={(e) =>
-                  setContactInfo({ ...contactInfo, firstName: e.target.value })
-                }
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  setContactInfo({ ...contactInfo, firstName: newValue });
+                  saveUserSessionData({ firstName: newValue });
+                }}
                 className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-white"
               />
             </div>
@@ -455,9 +516,11 @@ export default function AssessmentForm() {
                 id="lastName"
                 required
                 value={contactInfo.lastName}
-                onChange={(e) =>
-                  setContactInfo({ ...contactInfo, lastName: e.target.value })
-                }
+                onChange={(e) => {
+                  const newValue = e.target.value;
+                  setContactInfo({ ...contactInfo, lastName: newValue });
+                  saveUserSessionData({ lastName: newValue });
+                }}
                 className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-white"
               />
             </div>
@@ -472,9 +535,11 @@ export default function AssessmentForm() {
               required
               placeholder="+91 9876543210"
               value={contactInfo.phone}
-              onChange={(e) =>
-                setContactInfo({ ...contactInfo, phone: e.target.value })
-              }
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setContactInfo({ ...contactInfo, phone: newValue });
+                saveUserSessionData({ phone: newValue });
+              }}
               className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-white"
             />
           </div>
@@ -487,9 +552,11 @@ export default function AssessmentForm() {
               id="email"
               required
               value={contactInfo.email}
-              onChange={(e) =>
-                setContactInfo({ ...contactInfo, email: e.target.value })
-              }
+              onChange={(e) => {
+                const newValue = e.target.value;
+                setContactInfo({ ...contactInfo, email: newValue });
+                saveUserSessionData({ email: newValue });
+              }}
               className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-white"
             />
           </div>
@@ -562,7 +629,16 @@ export default function AssessmentForm() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/demo"
+            href={(() => {
+              const params = new URLSearchParams();
+              if (sourceFrom) params.set("source", sourceFrom);
+              params.set("prefill", "assessment");
+              params.set("score", scores.total.toString());
+              params.set("tier", tier);
+              params.set("name", `${contactInfo.firstName} ${contactInfo.lastName}`.trim());
+              params.set("email", contactInfo.email);
+              return `/demo?${params.toString()}`;
+            })()}
             className="bg-gold text-dark px-8 py-4 rounded-lg font-semibold hover:bg-gold/90 transition-colors text-center"
           >
             Book a Demo

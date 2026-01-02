@@ -9,10 +9,16 @@ import VideoCarousel from "@/components/VideoCarousel";
 import ImageCarousel from "@/components/ImageCarousel";
 
 export default function Home() {
+  // #region agent log
+  fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/page.tsx:11',message:'Home component rendering',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'C'})}).catch(()=>{});
+  // #endregion
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
   const videoRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/page.tsx:16',message:'Home useEffect running',data:{timestamp:Date.now()},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'D'})}).catch(()=>{});
+    // #endregion
     document.title = "Windchasers - India's Top Pilot Training Academy- Bangalore";
   }, []);
 
@@ -139,7 +145,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight"
+            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight text-white"
           >
             Your Career Path to the <span className="text-gold">Cockpit</span>
           </motion.h1>
@@ -227,7 +233,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
               >
-                <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
+                <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white">
                   Airplane
                 </h2>
                 <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-md mx-auto">
@@ -264,7 +270,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
+                <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white">
                   Helicopter
                 </h2>
                 <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-md mx-auto">
@@ -392,7 +398,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gold transition-colors">Honest Pricing</h3>
               <p className="text-white/60 leading-relaxed">
-                Complete cost breakdown upfront. No surprises, no hidden fees. Know exactly what you're investing.
+                Complete cost breakdown upfront. No surprises, no hidden fees. Know exactly what you&apos;re investing.
               </p>
             </motion.div>
 

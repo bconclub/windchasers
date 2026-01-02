@@ -1,18 +1,19 @@
-import Link from "next/link";
-import type { Metadata } from "next";
-import { CheckCircle } from "lucide-react";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Helicopter Pilot License | WindChasers Aviation Academy",
-  description: "HPL training for specialized aviation careers. Offshore operations, medical evacuation, VIP transport, and more.",
-};
+import Link from "next/link";
+import { useEffect } from "react";
+import { CheckCircle } from "lucide-react";
+import { trackKeyPageView } from "@/lib/analytics";
 
 export default function HelicopterPage() {
+  useEffect(() => {
+    trackKeyPageView('Helicopter Training');
+  }, []);
   return (
     <div className="pt-32 pb-20 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
             Helicopter <span className="text-gold">Pilot License</span>
           </h1>
           <p className="text-xl text-white/70 max-w-3xl mx-auto">
@@ -150,7 +151,7 @@ export default function HelicopterPage() {
               Book a Demo
             </Link>
             <Link
-              href="/assessment"
+              href="/assessment?from=helicopter"
               className="bg-white/10 text-white px-12 py-5 rounded-lg font-semibold text-lg hover:bg-white/20 transition-colors border border-white/20 inline-block"
             >
               Take Assessment

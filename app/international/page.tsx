@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { CheckCircle } from "lucide-react";
+import { trackKeyPageView } from "@/lib/analytics";
 
 const countries = [
   {
@@ -80,13 +81,14 @@ export default function InternationalPage() {
 
   useEffect(() => {
     document.title = "Pilot Training Abroad | WindChasers Aviation Academy";
+    trackKeyPageView('Fly Abroad');
   }, []);
 
   return (
     <div className="pt-32 pb-20 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
             Fly <span className="text-gold">Abroad</span>
           </h1>
           <p className="text-xl text-white/70 max-w-3xl mx-auto">
@@ -232,7 +234,7 @@ export default function InternationalPage() {
         <div className="text-center">
           <h2 className="text-3xl font-bold mb-6">Ready for Pilot Training Abroad?</h2>
           <p className="text-white/70 mb-8 max-w-2xl mx-auto">
-            Book a consultation to discuss the best country for your goals and budget. We'll handle everything from admission to visa.
+            Book a consultation to discuss the best country for your goals and budget. We&apos;ll handle everything from admission to visa.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
@@ -242,7 +244,7 @@ export default function InternationalPage() {
               Book a Demo
             </Link>
             <Link
-              href="/assessment"
+              href="/assessment?from=abroad"
               className="bg-white/10 text-white px-12 py-5 rounded-lg font-semibold text-lg hover:bg-white/20 transition-colors border border-white/20 inline-block"
             >
               Take Assessment

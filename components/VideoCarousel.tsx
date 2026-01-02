@@ -21,7 +21,10 @@ export default function VideoCarousel({ videos, title, subtitle }: VideoCarousel
   const [visibleCount, setVisibleCount] = useState(5);
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-
+  
+  // Throttle wheel events for smooth scrolling
+  const wheelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastWheelTimeRef = useRef<number>(0);
 
   // Lock scroll when modal is open
   useEffect(() => {
@@ -99,10 +102,6 @@ export default function VideoCarousel({ videos, title, subtitle }: VideoCarousel
   const prevSlide = () => {
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   };
-
-  // Throttle wheel events for smooth scrolling
-  const wheelTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const lastWheelTimeRef = useRef<number>(0);
 
   const handleWheel = (e: React.WheelEvent) => {
     // Check if horizontal scroll

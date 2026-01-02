@@ -52,6 +52,98 @@ const steps: Step[] = [
   },
 ];
 
+interface TimelineStepProps {
+  step: Step;
+  index: number;
+  isEven: boolean;
+  isMobile: boolean;
+}
+
+function TimelineStep({ step, index, isEven, isMobile }: TimelineStepProps) {
+  const stepRef = useRef<HTMLDivElement>(null);
+  const stepInView = useInView(stepRef, { once: false, amount: 0.5 });
+
+  return (
+    <motion.div
+      ref={stepRef}
+      className="relative flex items-center"
+      initial={{ opacity: 0, y: 20 }}
+      animate={stepInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+    >
+      {/* Circle with number - Desktop */}
+      <motion.div
+        className="hidden lg:flex absolute left-1/2 -translate-x-1/2 w-16 h-16 bg-gold rounded-full border-4 border-dark items-center justify-center z-10"
+        initial={{ scale: 0 }}
+        animate={stepInView ? { scale: 1 } : { scale: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 200,
+          damping: 15,
+          delay: index * 0.1 + 0.2,
+        }}
+      >
+        <motion.span
+          className="text-dark font-bold text-xl leading-none"
+          initial={{ opacity: 0 }}
+          animate={stepInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ delay: index * 0.1 + 0.4 }}
+        >
+          {step.number}
+        </motion.span>
+      </motion.div>
+
+      {/* Circle with number - Mobile */}
+      <motion.div
+        className="lg:hidden absolute left-8 transform -translate-x-1/2 w-12 h-12 bg-gold rounded-full border-4 border-dark flex items-center justify-center z-10"
+        initial={{ scale: 0 }}
+        animate={stepInView ? { scale: 1 } : { scale: 0 }}
+        transition={{
+          type: "spring",
+          stiffness: 200,
+          damping: 15,
+          delay: index * 0.1 + 0.2,
+        }}
+      >
+        <motion.span
+          className="text-dark font-bold"
+          initial={{ opacity: 0 }}
+          animate={stepInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ delay: index * 0.1 + 0.4 }}
+        >
+          {step.number}
+        </motion.span>
+      </motion.div>
+
+      {/* Content Card */}
+      <motion.div
+        className={`ml-20 lg:ml-0 ${
+          isEven
+            ? "lg:ml-auto lg:w-[45%] lg:pl-8"
+            : "lg:mr-auto lg:w-[45%] lg:pr-8 lg:text-right"
+        }`}
+        initial={{ 
+          opacity: 0, 
+          x: isMobile ? 100 : (isEven ? 50 : -50) // Mobile: always from right, Desktop: alternating
+        }}
+        animate={stepInView ? { 
+          opacity: 1, 
+          x: 0 
+        } : { 
+          opacity: 0, 
+          x: isMobile ? 100 : (isEven ? 50 : -50) // Mobile: always from right, Desktop: alternating
+        }}
+        transition={{ duration: 0.6, delay: index * 0.1 + 0.3 }}
+      >
+        <div className="bg-accent-dark p-6 rounded-lg border border-white/10">
+          <h3 className="text-lg font-bold mb-2">{step.title}</h3>
+          <p className="text-white/60 text-sm">{step.description}</p>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
 export default function PilotJourneyTimeline() {
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef, { once: false, amount: 0.3 });
@@ -162,92 +254,15 @@ export default function PilotJourneyTimeline() {
 
         {/* Timeline Steps */}
         <div className="space-y-12 lg:space-y-16">
-          {steps.map((step, index) => {
-            const isEven = index % 2 === 0;
-            const stepRef = useRef<HTMLDivElement>(null);
-            const stepInView = useInView(stepRef, { once: false, amount: 0.5 });
-
-            return (
-              <motion.div
-                key={index}
-                ref={stepRef}
-                className="relative flex items-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={stepInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                {/* Circle with number - Desktop */}
-                <motion.div
-                  className="hidden lg:flex absolute left-1/2 -translate-x-1/2 w-16 h-16 bg-gold rounded-full border-4 border-dark items-center justify-center z-10"
-                  initial={{ scale: 0 }}
-                  animate={stepInView ? { scale: 1 } : { scale: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 200,
-                    damping: 15,
-                    delay: index * 0.1 + 0.2,
-                  }}
-                >
-                  <motion.span
-                    className="text-dark font-bold text-xl leading-none"
-                    initial={{ opacity: 0 }}
-                    animate={stepInView ? { opacity: 1 } : { opacity: 0 }}
-                    transition={{ delay: index * 0.1 + 0.4 }}
-                  >
-                    {step.number}
-                  </motion.span>
-                </motion.div>
-
-                {/* Circle with number - Mobile */}
-                <motion.div
-                  className="lg:hidden absolute left-8 transform -translate-x-1/2 w-12 h-12 bg-gold rounded-full border-4 border-dark flex items-center justify-center z-10"
-                  initial={{ scale: 0 }}
-                  animate={stepInView ? { scale: 1 } : { scale: 0 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 200,
-                    damping: 15,
-                    delay: index * 0.1 + 0.2,
-                  }}
-                >
-                  <motion.span
-                    className="text-dark font-bold"
-                    initial={{ opacity: 0 }}
-                    animate={stepInView ? { opacity: 1 } : { opacity: 0 }}
-                    transition={{ delay: index * 0.1 + 0.4 }}
-                  >
-                    {step.number}
-                  </motion.span>
-                </motion.div>
-
-                {/* Content Card */}
-                <motion.div
-                  className={`ml-20 lg:ml-0 ${
-                    isEven
-                      ? "lg:ml-auto lg:w-[45%] lg:pl-8"
-                      : "lg:mr-auto lg:w-[45%] lg:pr-8 lg:text-right"
-                  }`}
-                  initial={{ 
-                    opacity: 0, 
-                    x: isMobile ? 100 : (isEven ? 50 : -50) // Mobile: always from right, Desktop: alternating
-                  }}
-                  animate={stepInView ? { 
-                    opacity: 1, 
-                    x: 0 
-                  } : { 
-                    opacity: 0, 
-                    x: isMobile ? 100 : (isEven ? 50 : -50) // Mobile: always from right, Desktop: alternating
-                  }}
-                  transition={{ duration: 0.6, delay: index * 0.1 + 0.3 }}
-                >
-                  <div className="bg-accent-dark p-6 rounded-lg border border-white/10">
-                    <h3 className="text-lg font-bold mb-2">{step.title}</h3>
-                    <p className="text-white/60 text-sm">{step.description}</p>
-                  </div>
-                </motion.div>
-              </motion.div>
-            );
-          })}
+          {steps.map((step, index) => (
+            <TimelineStep
+              key={index}
+              step={step}
+              index={index}
+              isEven={index % 2 === 0}
+              isMobile={isMobile}
+            />
+          ))}
         </div>
       </div>
     </div>

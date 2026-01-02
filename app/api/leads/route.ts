@@ -14,7 +14,6 @@ export async function POST(request: NextRequest) {
     }
 
     // TODO: Integrate with PROXe CRM
-    // For now, log the lead data
     const leadRecord = {
       name,
       email,
@@ -24,11 +23,9 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString(),
     };
 
-    console.log("New lead:", leadRecord);
-
     // Send to webhook
     try {
-      await fetch("https://build.goproxe.com/webhook-test/pilot-windchasers", {
+      await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,11 +41,6 @@ export async function POST(request: NextRequest) {
     }
 
     // TODO: Send to PROXe API
-    // const proxeResponse = await fetch('PROXE_API_ENDPOINT', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ name, email, phone, source, message })
-    // });
 
     return NextResponse.json(
       { success: true, message: "Lead captured successfully" },

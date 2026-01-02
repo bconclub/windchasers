@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import AssessmentForm from "@/components/AssessmentForm";
 import type { Metadata } from "next";
 
@@ -11,7 +12,7 @@ export default function AssessmentPage() {
     <div className="pt-32 pb-20 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
             PAT<br />
             <span className="text-gold">Pilot Aptitude Test</span>
           </h1>
@@ -20,7 +21,9 @@ export default function AssessmentPage() {
           </p>
         </div>
 
-        <AssessmentForm />
+        <Suspense fallback={<div className="text-center py-8">Loading assessment...</div>}>
+          <AssessmentForm />
+        </Suspense>
       </div>
     </div>
   );

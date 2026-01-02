@@ -16,6 +16,9 @@ const config: Config = {
       fontFamily: {
         sans: ["var(--font-sans)"],
       },
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(circle, var(--tw-gradient-stops))",
+      },
     },
   },
   plugins: [],

@@ -8,8 +8,9 @@ import { ClipboardCheck, Calendar } from "lucide-react";
 
 export default function FloatingActionButtons() {
   const pathname = usePathname();
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [hasScrolledUp, setHasScrolledUp] = useState(false);
   
   // Show both buttons on all other pages
   const showAssessment = true;
@@ -24,10 +25,21 @@ export default function FloatingActionButtons() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // Show on scroll up, hide on scroll down (applies to both mobile and desktop)
-      if (currentScrollY < lastScrollY || currentScrollY < 100) {
-        setIsVisible(true);
-      } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+      // Check if user has scrolled up (first upward scroll)
+      if (!hasScrolledUp && currentScrollY < lastScrollY && lastScrollY > 0) {
+        setHasScrolledUp(true);
+      }
+      
+      // Only show buttons after first upward scroll
+      if (hasScrolledUp) {
+        // Show on scroll up, hide on scroll down (applies to both mobile and desktop)
+        if (currentScrollY < lastScrollY || currentScrollY < 100) {
+          setIsVisible(true);
+        } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+          setIsVisible(false);
+        }
+      } else {
+        // Keep hidden until first upward scroll
         setIsVisible(false);
       }
       
@@ -38,7 +50,7 @@ export default function FloatingActionButtons() {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [lastScrollY, pathname]);
+  }, [lastScrollY, pathname, hasScrolledUp]);
 
   // Hide floating buttons completely on assessment and demo pages
   if (pathname === "/assessment" || pathname === "/demo") {

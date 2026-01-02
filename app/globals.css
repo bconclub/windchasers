@@ -11,6 +11,8 @@
   body {
     @apply bg-dark text-white antialiased;
     overflow-x: hidden;
+    color: #ffffff !important;
+    background-color: #1A1A1A !important;
   }
 
   /* Thin theme-colored scrollbar */
@@ -54,5 +56,42 @@
 
   .perspective-1000 {
     perspective: 1000px;
+  }
+
+  /* Hide native date picker icon */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
+
+  /* Theme-colored select dropdown */
+  select {
+    @apply text-white;
+    background-color: #2A2A2A;
+    color: #ffffff;
+  }
+
+  select:focus {
+    border-color: #C5A572 !important;
+    outline: none;
+    box-shadow: 0 0 0 1px #C5A572;
+  }
+
+  select:hover {
+    border-color: rgba(197, 165, 114, 0.5);
+  }
+
+  select option {
+    background-color: #2A2A2A;
+    color: #ffffff;
+    padding: 0.75rem;
+  }
+
+  select option:hover,
+  select option:checked,
+  select option:focus {
+    background-color: #C5A572;
+    color: #1A1A1A;
+    font-weight: 600;
   }
 }

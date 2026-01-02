@@ -11,6 +11,9 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/6e6eb0a4-7766-4439-bd69-47eda092beb1',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'app/error.tsx:13',message:'Error boundary caught error',data:{error:error.message,stack:error.stack?.substring(0,200),digest:error.digest},timestamp:Date.now(),sessionId:'debug-session',runId:'run1',hypothesisId:'E'})}).catch(()=>{});
+    // #endregion
     console.error(error);
   }, [error]);
 

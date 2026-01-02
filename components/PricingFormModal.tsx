@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { trackFormSubmission, sendTrackingData } from "@/lib/tracking";
+import { getUserSessionData, saveUserSessionData, grantPricingAccess } from "@/lib/sessionStorage";
+import { trackPilotLead } from "@/lib/analytics";
 
 type StartTimeline = "immediately" | "within_month" | "within_3_months" | "within_6_months" | "planning";
 
@@ -19,9 +21,10 @@ interface PricingFormModalProps {
   isOpen: boolean;
   onClose: () => void;
   source?: string;
+  onSuccess?: () => void; // Optional callback when form is successfully submitted
 }
 
-export default function PricingFormModal({ isOpen, onClose, source }: PricingFormModalProps) {
+export default function PricingFormModal({ isOpen, onClose, source, onSuccess }: PricingFormModalProps) {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
@@ -31,6 +34,29 @@ export default function PricingFormModal({ isOpen, onClose, source }: PricingFor
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+
+  // Load user data from sessionStorage on mount
+  useEffect(() => {
+    if (isOpen) {
+      const userData = getUserSessionData();
+      if (userData) {
+        const updates: Partial<typeof formData> = {};
+        
+        // Combine firstName and lastName for name field
+        if (userData.firstName || userData.lastName) {
+          const fullName = [userData.firstName, userData.lastName].filter(Boolean).join(" ");
+          if (fullName) updates.name = fullName;
+        }
+        
+        if (userData.email) updates.email = userData.email;
+        if (userData.phone) updates.phone = userData.phone;
+        
+        if (Object.keys(updates).length > 0) {
+          setFormData((prev) => ({ ...prev, ...updates }));
+        }
+      }
+    }
+  }, [isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,18 +80,35 @@ export default function PricingFormModal({ isOpen, onClose, source }: PricingFor
       });
 
       if (response.ok) {
+        // Track pilot lead
+        trackPilotLead(urlSource, 'pricing_inquiry');
+        
         // Send complete tracking data
         await sendTrackingData("/api/pricing", {
           formData,
           source: urlSource,
         });
 
+        // Grant pricing access
+        grantPricingAccess();
+
         setSubmitStatus("success");
         
-        // Close modal and navigate to pricing page after a brief delay
+        // Redirect to thank you page with pricing data
+        const thankYouData = {
+          source: urlSource,
+        };
+        const dataParam = encodeURIComponent(JSON.stringify(thankYouData));
+        
+        // Close modal and navigate to thank you page after a brief delay
         setTimeout(() => {
           onClose();
-          router.push("/pricing?source=dgca");
+          // If onSuccess callback is provided, call it instead of redirecting
+          if (onSuccess) {
+            onSuccess();
+          } else {
+            window.location.href = `/thank-you?type=pricing&data=${dataParam}`;
+          }
         }, 1000);
       } else {
         setSubmitStatus("error");
@@ -122,7 +165,19 @@ export default function PricingFormModal({ isOpen, onClose, source }: PricingFor
                       id="name"
                       required
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      onChange={(e) => {
+                        const newValue = e.target.value;
+                        setFormData({ ...formData, name: newValue });
+                        // Save to sessionStorage - try to split name into first/last
+                        const nameParts = newValue.trim().split(/\s+/);
+                        if (nameParts.length >= 2) {
+                          const lastName = nameParts.pop() || "";
+                          const firstName = nameParts.join(" ");
+                          saveUserSessionData({ firstName, lastName });
+                        } else if (nameParts.length === 1) {
+                          saveUserSessionData({ firstName: nameParts[0], lastName: "" });
+                        }
+                      }}
                       className="w-full px-4 py-3 bg-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors"
                     />
                   </div>
@@ -136,7 +191,11 @@ export default function PricingFormModal({ isOpen, onClose, source }: PricingFor
                         type="email"
                         id="email"
                         value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        onChange={(e) => {
+                          const newValue = e.target.value;
+                          setFormData({ ...formData, email: newValue });
+                          saveUserSessionData({ email: newValue });
+                        }}
                         className="w-full px-4 py-3 bg-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors"
                       />
                     </div>
@@ -150,7 +209,11 @@ export default function PricingFormModal({ isOpen, onClose, source }: PricingFor
                         id="phone"
                         required
                         value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                        onChange={(e) => {
+                          const newValue = e.target.value;
+                          setFormData({ ...formData, phone: newValue });
+                          saveUserSessionData({ phone: newValue });
+                        }}
                         className="w-full px-4 py-3 bg-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors"
                       />
                     </div>

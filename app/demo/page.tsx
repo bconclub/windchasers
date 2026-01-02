@@ -1,27 +1,49 @@
-import { Suspense } from "react";
-import BookingForm from "@/components/BookingForm";
-import type { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Book Free Demo | WindChasers Aviation Academy",
-  description: "Get personalized guidance from our experts. Choose between an online consultation or visit our campus with simulator access.",
-};
+import { Suspense, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import BookingForm from "@/components/BookingForm";
 
 export default function DemoPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    document.title = "Book Free Demo | WindChasers Aviation Academy";
+  }, []);
+
+  const handleCardClick = (demoType: "online" | "offline") => {
+    // Update URL with demoType parameter
+    const params = new URLSearchParams(searchParams?.toString() || "");
+    params.set("demoType", demoType);
+    router.push(`/demo?${params.toString()}`, { scroll: false });
+    
+    // Scroll to form after a brief delay
+    setTimeout(() => {
+      const formElement = document.querySelector('form');
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 150);
+  };
+
   return (
     <div className="pt-32 pb-20 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
-            Book Your <span className="text-gold">Free Demo</span>
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white">
+            See Our Training <span className="text-gold">First-Hand</span>
           </h1>
           <p className="text-xl text-white/70 max-w-3xl mx-auto">
-            Get personalized guidance from our experts. Choose between an online consultation or visit our campus with simulator access.
+            Visit campus or join online demo
           </p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 mb-16">
-          <div className="bg-gradient-to-br from-accent-dark to-dark p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20">
+          <button
+            onClick={() => handleCardClick("online")}
+            className="bg-gradient-to-br from-accent-dark to-dark p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group"
+          >
             <div className="flex items-center mb-6">
               <div className="w-14 h-14 rounded-lg bg-gold/10 flex items-center justify-center mr-4">
                 <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -62,9 +84,12 @@ export default function DemoPage() {
                 <span>Q&A with instructors</span>
               </li>
             </ul>
-          </div>
+          </button>
 
-          <div className="bg-gradient-to-br from-accent-dark to-dark p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20">
+          <button
+            onClick={() => handleCardClick("offline")}
+            className="bg-gradient-to-br from-accent-dark to-dark p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group"
+          >
             <div className="flex items-center mb-6">
               <div className="w-14 h-14 rounded-lg bg-gold/10 flex items-center justify-center mr-4">
                 <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -105,7 +130,7 @@ export default function DemoPage() {
                 <span>Detailed course roadmap</span>
               </li>
             </ul>
-          </div>
+          </button>
         </div>
 
         <Suspense fallback={<div className="text-center py-8">Loading form...</div>}>

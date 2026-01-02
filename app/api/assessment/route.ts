@@ -55,11 +55,9 @@ export async function POST(request: NextRequest) {
       userInfo,
     };
 
-    console.log("Assessment completed with tracking:", JSON.stringify(assessmentRecord, null, 2));
-
     // Send to webhook
     try {
-      await fetch("https://build.goproxe.com/webhook-test/pilot-windchasers", {
+      await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
