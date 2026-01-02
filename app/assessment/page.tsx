@@ -1,4 +1,6 @@
 import AssessmentForm from "@/components/AssessmentForm";
+import Link from "next/link";
+import { Calendar } from "lucide-react";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -50,6 +52,17 @@ export default function AssessmentPage() {
         </div>
 
         <AssessmentForm />
+
+        {/* Bottom CTA */}
+        <div className="mt-16 text-center">
+          <Link
+            href="/demo"
+            className="inline-flex items-center gap-3 bg-gold text-dark px-8 py-4 rounded-lg font-semibold hover:bg-gold/90 transition-colors"
+          >
+            <Calendar className="w-5 h-5" />
+            <span>Book a Demo</span>
+          </Link>
+        </div>
       </div>
     </div>
   );

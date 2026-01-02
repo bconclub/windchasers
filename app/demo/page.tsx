@@ -1,4 +1,6 @@
 import { Suspense } from "react";
+import Link from "next/link";
+import { ClipboardCheck } from "lucide-react";
 import BookingForm from "@/components/BookingForm";
 import type { Metadata } from "next";
 
@@ -111,6 +113,17 @@ export default function DemoPage() {
         <Suspense fallback={<div className="text-center py-8">Loading form...</div>}>
           <BookingForm />
         </Suspense>
+
+        {/* Bottom CTA */}
+        <div className="mt-16 text-center">
+          <Link
+            href="/assessment"
+            className="inline-flex items-center gap-3 bg-dark border-2 border-gold text-white px-8 py-4 rounded-lg font-semibold hover:bg-accent-dark transition-colors"
+          >
+            <ClipboardCheck className="w-5 h-5 text-gold" />
+            <span>Take Assessment</span>
+          </Link>
+        </div>
       </div>
     </div>
   );

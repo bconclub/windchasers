@@ -11,14 +11,14 @@ export default function FloatingActionButtons() {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   
-  // Hide buttons on their respective pages
-  const showAssessment = pathname !== "/assessment";
-  const showDemo = pathname !== "/demo";
-  
-  // Don't show component if both buttons are hidden
-  if (!showAssessment && !showDemo) {
+  // Hide floating buttons completely on assessment and demo pages
+  if (pathname === "/assessment" || pathname === "/demo") {
     return null;
   }
+  
+  // Show both buttons on all other pages
+  const showAssessment = true;
+  const showDemo = true;
 
   useEffect(() => {
     // Bounce animation on mount
