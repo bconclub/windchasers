@@ -55,9 +55,9 @@ export async function POST(request: NextRequest) {
       userInfo,
     };
 
-    // Send to webhook
+    // Send to PAT test webhook
     try {
-      await fetch("https://build.goproxe.com/webhook-test/pilot-windchasers", {
+      const webhookResponse = await fetch("https://build.goproxe.com/webhook/pat-test", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -67,9 +67,16 @@ export async function POST(request: NextRequest) {
           ...assessmentRecord,
         }),
       });
+      
+      if (webhookResponse.ok) {
+        console.log("PAT test webhook sent successfully");
+      } else {
+        const errorText = await webhookResponse.text().catch(() => "Unknown error");
+        console.error("PAT test webhook returned error status:", webhookResponse.status, errorText);
+      }
     } catch (webhookError) {
-      console.error("Error sending to webhook:", webhookError);
-      // Don't fail the request if webhook fails
+      console.error("Error sending PAT test to webhook:", webhookError);
+      // Don't fail the request if webhook fails - assessment is still considered successful
     }
 
     // TODO: Store in database
