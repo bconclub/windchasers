@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { trackFormSubmission } from "@/lib/tracking";
+import { trackFormSubmission, getStoredUTMParams, getLandingPage, getStoredReferrer, sendTrackingData } from "@/lib/tracking";
 import { getUserSessionData, saveUserSessionData, markAssessmentCompleted } from "@/lib/sessionStorage";
 import { trackPilotLead } from "@/lib/analytics";
 
@@ -418,6 +418,14 @@ export default function AssessmentForm() {
     const tierInfo = getTierInfo(tier);
 
     try {
+      // Determine source from URL param (from=dgca/helicopter/abroad)
+      const finalSource = sourceFrom || 'unknown';
+      
+      // Get stored UTM params, landing page, and referrer
+      const utmParams = getStoredUTMParams();
+      const landingPage = getLandingPage();
+      const referrer = getStoredReferrer();
+
       const response = await fetch("/api/assessment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -433,6 +441,16 @@ export default function AssessmentForm() {
           scores,
           tier,
           timestamp: new Date().toISOString(),
+          source: finalSource,
+          // Include UTM parameters
+          utm_source: utmParams.utm_source || "",
+          utm_medium: utmParams.utm_medium || "",
+          utm_campaign: utmParams.utm_campaign || "",
+          utm_term: utmParams.utm_term || "",
+          utm_content: utmParams.utm_content || "",
+          // Include referrer and landing page
+          referrer: referrer || "",
+          landing_page: landingPage || "",
         }),
       });
 
@@ -444,11 +462,19 @@ export default function AssessmentForm() {
         tier,
       });
 
-      // Determine source from URL param (from=dgca/helicopter/abroad)
-      const finalSource = sourceFrom || 'unknown';
-      
       // Track pilot lead
       trackPilotLead(finalSource, 'assessment_completion');
+      
+      // Send complete tracking data
+      await sendTrackingData("/api/assessment", {
+        formData: {
+          firstName: contactInfo.firstName,
+          lastName: contactInfo.lastName,
+          email: contactInfo.email,
+          phone: contactInfo.phone,
+        },
+        source: finalSource,
+      });
 
       // Save to sessionStorage: user data, score, tier, and interest
       saveUserSessionData({
