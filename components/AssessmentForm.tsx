@@ -371,41 +371,73 @@ export default function AssessmentForm() {
   };
 
   const getTier = (totalScore: number) => {
-    if (totalScore >= 120) return "premium";
-    if (totalScore >= 90) return "strong";
-    if (totalScore >= 60) return "potential";
+    if (totalScore >= 140) return "premium";
+    if (totalScore >= 120) return "strong";
+    if (totalScore >= 90) return "moderate";
     return "not-ready";
   };
 
   const getTierInfo = (tier: string) => {
     const tiers = {
       premium: {
-        label: "Premium Lead - Ready to Start",
+        label: "Premium Tier",
+        headline: "You're Flight-Ready",
+        subhead: "Your score qualifies you for immediate enrollment. Book your consultation now.",
         color: "text-gold",
         bgColor: "bg-gold/20",
         borderColor: "border-gold",
-        description: "Excellent! You're well-prepared and ready to begin your pilot training journey. Our team will guide you through the next steps.",
+        description: "Premium tier: You're in the top 15% of applicants. Let's map your fastest path to the cockpit.",
+        nextSteps: [
+          "Detailed breakdown sent to your email",
+          "Our team calls within 24 hours",
+        ],
+        ctaText: "Book Free Consultation",
+        ctaLink: "/booking",
       },
       strong: {
-        label: "Strong Candidate - Minor Prep Needed",
+        label: "Strong Tier",
+        headline: "You're Qualified",
+        subhead: "Your score shows strong potential. Let's discuss the right training path for you.",
         color: "text-green-400",
         bgColor: "bg-green-400/20",
         borderColor: "border-green-400",
-        description: "Great foundation! With some minor preparation, you'll be ready to excel in pilot training.",
+        description: "",
+        nextSteps: [
+          "Email breakdown sent",
+          "Consultation call within 48 hours",
+        ],
+        ctaText: "Schedule Your Call",
+        ctaLink: "/booking",
       },
-      potential: {
-        label: "Potential Candidate - Preparation Required",
+      moderate: {
+        label: "Moderate Tier",
+        headline: "You Have Potential",
+        subhead: "Your score shows gaps we can address. Book a consultation to explore your options.",
         color: "text-yellow-400",
         bgColor: "bg-yellow-400/20",
         borderColor: "border-yellow-400",
-        description: "You have potential! Some focused preparation will help you succeed in pilot training.",
+        description: "",
+        nextSteps: [
+          "Email analysis sent",
+          "Team reaches out within 72 hours",
+        ],
+        ctaText: "Explore Training Options",
+        ctaLink: "/booking",
       },
       "not-ready": {
-        label: "Not Ready Yet - Build Foundation First",
+        label: "Not Ready Yet",
+        headline: "Build Your Foundation",
+        subhead: "Let's work together to strengthen your foundation and prepare you for pilot training.",
         color: "text-red-400",
         bgColor: "bg-red-400/20",
         borderColor: "border-red-400",
         description: "Don't worry! Building a strong foundation first will set you up for success. We can help guide you.",
+        nextSteps: [
+          "Email analysis sent",
+          "Team reaches out within 72 hours",
+        ],
+        ctaText: "Explore Training Options",
+        ctaLink: "/booking",
       },
     };
     return tiers[tier as keyof typeof tiers];
@@ -453,6 +485,12 @@ export default function AssessmentForm() {
           landing_page: landingPage || "",
         }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+        console.error("Assessment submission failed:", response.status, errorData);
+        throw new Error(errorData.error || "Failed to submit assessment");
+      }
 
       trackFormSubmission("assessment", {
         name: `${contactInfo.firstName} ${contactInfo.lastName}`,
