@@ -391,7 +391,7 @@ export default function AssessmentForm() {
           "Detailed breakdown sent to your email",
           "Our team calls within 24 hours",
         ],
-        ctaText: "Book Free Consultation",
+        ctaText: "Book a Demo",
         ctaLink: "/booking",
       },
       strong: {
@@ -406,7 +406,7 @@ export default function AssessmentForm() {
           "Email breakdown sent",
           "Consultation call within 48 hours",
         ],
-        ctaText: "Schedule Your Call",
+        ctaText: "Book a Demo",
         ctaLink: "/booking",
       },
       moderate: {
@@ -421,7 +421,7 @@ export default function AssessmentForm() {
           "Email analysis sent",
           "Team reaches out within 72 hours",
         ],
-        ctaText: "Explore Training Options",
+        ctaText: "Book a Demo",
         ctaLink: "/booking",
       },
       "not-ready": {
@@ -436,7 +436,7 @@ export default function AssessmentForm() {
           "Email analysis sent",
           "Team reaches out within 72 hours",
         ],
-        ctaText: "Explore Training Options",
+        ctaText: "Book a Demo",
         ctaLink: "/booking",
       },
     };

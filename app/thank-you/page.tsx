@@ -42,7 +42,7 @@ function ThankYouContent() {
           "Detailed breakdown sent to your email",
           "Our team calls within 24 hours",
         ],
-        ctaText: "Book Free Consultation",
+        ctaText: "Book a Demo",
         ctaLink: "/booking",
         rankPercentile: 15,
       },
@@ -58,7 +58,7 @@ function ThankYouContent() {
           "Email breakdown sent",
           "Consultation call within 48 hours",
         ],
-        ctaText: "Schedule Your Call",
+        ctaText: "Book a Demo",
         ctaLink: "/booking",
         rankPercentile: 30,
       },
@@ -74,7 +74,7 @@ function ThankYouContent() {
           "Email analysis sent",
           "Team reaches out within 72 hours",
         ],
-        ctaText: "Explore Training Options",
+        ctaText: "Book a Demo",
         ctaLink: "/booking",
         rankPercentile: 50,
       },
@@ -90,7 +90,7 @@ function ThankYouContent() {
           "Email analysis sent",
           "Team reaches out within 72 hours",
         ],
-        ctaText: "Explore Training Options",
+        ctaText: "Book a Demo",
         ctaLink: "/booking",
         rankPercentile: 70,
       },
@@ -155,7 +155,22 @@ function ThankYouContent() {
             title: "Assessment Submitted Successfully!",
             icon: Award,
             message: "Thank you for completing the Pilot Aptitude Test.",
-            details: null,
+            details: (
+              <div className="pt-4">
+                <Link
+                  href="/booking"
+                  className="block w-full bg-gold text-dark py-5 rounded-lg font-bold text-lg hover:bg-gold/90 transition-colors text-center shadow-lg shadow-gold/20"
+                >
+                  Book a Demo
+                </Link>
+                <Link
+                  href="/"
+                  className="block w-full bg-dark border-2 border-gold text-white py-3 rounded-lg font-semibold hover:bg-accent-dark transition-colors text-center mt-3"
+                >
+                  Back to Home
+                </Link>
+              </div>
+            ),
             nextSteps: [],
             isAssessment: false,
           };
@@ -164,6 +179,9 @@ function ThankYouContent() {
         const tierInfo = getTierInfo(formData.tier || "moderate");
         const score = formData.score || 0;
         const rankPercentile = tierInfo.rankPercentile || 50;
+        
+        // Ensure CTA text is always "Book a Demo"
+        tierInfo.ctaText = "Book a Demo";
         
         return {
           title: "",
