@@ -163,7 +163,7 @@ export function getStoredReferrer(): string {
 // Get all tracking data
 export function getTrackingData(): TrackingData {
   const sessionId = getSessionId();
-  const utmParams = getUTMParams();
+  const utmParams = getStoredUTMParams(); // Use stored UTM params (first-touch) instead of current URL params
   
   // Get stored data from sessionStorage
   const storedData = typeof window !== "undefined" 

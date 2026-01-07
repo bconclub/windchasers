@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { trackFormSubmission, sendTrackingData } from "@/lib/tracking";
+import { trackFormSubmission, sendTrackingData, getStoredUTMParams, getLandingPage, getStoredReferrer } from "@/lib/tracking";
 import { getUserSessionData, saveUserSessionData, grantPricingAccess } from "@/lib/sessionStorage";
 import { trackPilotLead } from "@/lib/analytics";
 
@@ -69,6 +69,11 @@ export default function PricingFormModal({ isOpen, onClose, source, onSuccess }:
       // Track form submission
       trackFormSubmission("pricing", formData, urlSource, "dgca_ground");
 
+      // Get stored UTM params, landing page, and referrer
+      const utmParams = getStoredUTMParams();
+      const landingPage = getLandingPage();
+      const referrer = getStoredReferrer();
+
       const response = await fetch("/api/pricing", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -76,6 +81,15 @@ export default function PricingFormModal({ isOpen, onClose, source, onSuccess }:
           ...formData,
           source: urlSource,
           interest: "dgca_ground",
+          // Include UTM parameters
+          utm_source: utmParams.utm_source || "",
+          utm_medium: utmParams.utm_medium || "",
+          utm_campaign: utmParams.utm_campaign || "",
+          utm_term: utmParams.utm_term || "",
+          utm_content: utmParams.utm_content || "",
+          // Include referrer and landing page
+          referrer: referrer || "",
+          landing_page: landingPage || "",
         }),
       });
 

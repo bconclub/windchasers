@@ -242,22 +242,6 @@ function PricingPageContent() {
 
                       {/* Accordion for More Details */}
                       <div className="mb-6 flex-grow">
-                        <button
-                          onClick={() => setExpandedCard(expandedCard === "package1" ? null : "package1")}
-                          className="w-full flex items-center justify-between text-left mb-3"
-                        >
-                          <h4 className="text-lg font-bold text-gold">More Details</h4>
-                          <motion.svg
-                            className="w-5 h-5 text-gold"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            animate={{ rotate: expandedCard === "package1" ? 180 : 0 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </motion.svg>
-                        </button>
                         <AnimatePresence>
                           {expandedCard === "package1" && (
                             <motion.div
@@ -265,7 +249,7 @@ function PricingPageContent() {
                               animate={{ height: "auto", opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.3 }}
-                              className="overflow-hidden"
+                              className="overflow-hidden mb-3"
                             >
                               <div>
                                 <h5 className="text-md font-semibold text-gold mb-2">Subjects:</h5>
@@ -293,12 +277,22 @@ function PricingPageContent() {
                         </AnimatePresence>
                       </div>
 
-                      <Link
-                        href="/pricing?source=dgca&package=4"
-                        className="w-full bg-gold text-dark py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors mt-auto text-center block"
+                      <button
+                        onClick={() => setExpandedCard(expandedCard === "package1" ? null : "package1")}
+                        className="w-full bg-gold text-dark py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors mt-auto flex items-center justify-center gap-2"
                       >
-                        Get Pricing
-                      </Link>
+                        <span>More Details</span>
+                        <motion.svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          animate={{ rotate: expandedCard === "package1" ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </motion.svg>
+                      </button>
                     </div>
                   </div>
 
@@ -335,22 +329,6 @@ function PricingPageContent() {
 
                       {/* Accordion for More Details */}
                       <div className="mb-6 flex-grow">
-                        <button
-                          onClick={() => setExpandedCard(expandedCard === "package2" ? null : "package2")}
-                          className="w-full flex items-center justify-between text-left mb-3"
-                        >
-                          <h4 className="text-lg font-bold text-gold">More Details</h4>
-                          <motion.svg
-                            className="w-5 h-5 text-gold"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                            animate={{ rotate: expandedCard === "package2" ? 180 : 0 }}
-                            transition={{ duration: 0.3 }}
-                          >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </motion.svg>
-                        </button>
                         <AnimatePresence>
                           {expandedCard === "package2" && (
                             <motion.div
@@ -358,7 +336,7 @@ function PricingPageContent() {
                               animate={{ height: "auto", opacity: 1 }}
                               exit={{ height: 0, opacity: 0 }}
                               transition={{ duration: 0.3 }}
-                              className="overflow-hidden"
+                              className="overflow-hidden mb-3"
                             >
                               <div>
                                 <h5 className="text-md font-semibold text-gold mb-2">Subjects:</h5>
@@ -394,12 +372,22 @@ function PricingPageContent() {
                         </AnimatePresence>
                       </div>
 
-                      <Link
-                        href="/pricing?source=dgca&package=6"
-                        className="w-full bg-gold text-dark py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors mt-auto text-center block"
+                      <button
+                        onClick={() => setExpandedCard(expandedCard === "package2" ? null : "package2")}
+                        className="w-full bg-gold text-dark py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors mt-auto flex items-center justify-center gap-2"
                       >
-                        Get Pricing
-                      </Link>
+                        <span>More Details</span>
+                        <motion.svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          animate={{ rotate: expandedCard === "package2" ? 180 : 0 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </motion.svg>
+                      </button>
                     </div>
                   </div>
                 </div>
