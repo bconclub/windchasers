@@ -76,25 +76,33 @@ export async function POST(request: NextRequest) {
 
     // Send to PAT test webhook
     try {
+      const webhookPayload = {
+        type: "assessment",
+        ...assessmentRecord,
+      };
+      
+      console.log("Sending PAT test data to webhook:", JSON.stringify(webhookPayload, null, 2));
+      
       const webhookResponse = await fetch("https://build.goproxe.com/webhook/pat-test", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          type: "assessment",
-          ...assessmentRecord,
-        }),
+        body: JSON.stringify(webhookPayload),
       });
       
+      const responseText = await webhookResponse.text().catch(() => "Could not read response");
+      
       if (webhookResponse.ok) {
-        console.log("PAT test webhook sent successfully");
+        console.log("PAT test webhook sent successfully. Response:", responseText);
       } else {
-        const errorText = await webhookResponse.text().catch(() => "Unknown error");
-        console.error("PAT test webhook returned error status:", webhookResponse.status, errorText);
+        console.error("PAT test webhook returned error status:", webhookResponse.status);
+        console.error("Error response:", responseText);
+        console.error("Payload sent:", JSON.stringify(webhookPayload, null, 2));
       }
     } catch (webhookError) {
       console.error("Error sending PAT test to webhook:", webhookError);
+      console.error("Error details:", webhookError instanceof Error ? webhookError.message : String(webhookError));
       // Don't fail the request if webhook fails - assessment is still considered successful
     }
 

@@ -61,6 +61,10 @@ export default function RootLayout({
           />
         </noscript>
         {/* End Meta Pixel Code */}
+        <Script
+          src="https://agent.windchasers.in/widget/embed.js"
+          strategy="afterInteractive"
+        />
         <Analytics />
         <TrackingProvider>
           <Navbar />
