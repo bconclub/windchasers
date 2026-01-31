@@ -24,6 +24,7 @@ jobs:
           script_stop: true
           script: |
             cd /var/www/windchasers
+            git reset --hard origin/main
             # Retry git pull with exponential backoff
             for i in 1 2 3; do
               if git pull origin main; then
