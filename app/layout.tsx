@@ -6,7 +6,6 @@ import Navbar from "@/components/Navbar";
 import ConditionalFooter from "@/components/ConditionalFooter";
 import Analytics from "@/components/Analytics";
 import TrackingProvider from "@/components/TrackingProvider";
-import FloatingActionButtons from "@/components/FloatingActionButtons";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -74,7 +73,6 @@ export default function RootLayout({
             {children}
           </main>
           <ConditionalFooter />
-          <FloatingActionButtons />
         </TrackingProvider>
       </body>
     </html>
