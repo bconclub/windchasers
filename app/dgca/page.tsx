@@ -107,6 +107,14 @@ export default function DGCAPage() {
           <div className="max-w-6xl mx-auto">
             <DGCASubjectsGrid />
           </div>
+          <div className="text-center mt-8">
+            <Link
+              href="/demo"
+              className="inline-block bg-gold text-dark px-10 py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
+            >
+              Book a Demo Session
+            </Link>
+          </div>
         </section>
 
         {/* Why Choose Us */}
