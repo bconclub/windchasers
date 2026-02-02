@@ -241,7 +241,7 @@ export default function InternationalPage() {
               href="/demo?source=abroad"
               className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
             >
-              Book a Demo
+              Book a Demo Session
             </Link>
           </div>
         </div>

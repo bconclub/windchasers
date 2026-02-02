@@ -2,14 +2,12 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { DollarSign } from "lucide-react";
+import { AnimatePresence } from "framer-motion";
 import WhyChooseUsCarousel from "@/components/WhyChooseUsCarousel";
 import PilotJourneyTimeline from "@/components/PilotJourneyTimeline";
 import PricingFormModal from "@/components/PricingFormModal";
 import DGCASubjectsGrid from "@/components/DGCASubjectsGrid";
 import VideoCarousel from "@/components/VideoCarousel";
-import HeroImageCarousel from "@/components/HeroImageCarousel";
 import { trackKeyPageView } from "@/lib/analytics";
 
 export default function DGCAPage() {
@@ -107,7 +105,7 @@ export default function DGCAPage() {
           <div className="max-w-6xl mx-auto">
             <DGCASubjectsGrid />
           </div>
-          <div className="text-center mt-8">
+          <div className="text-center mt-16 mb-8">
             <Link
               href="/demo"
               className="inline-block bg-gold text-dark px-10 py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
@@ -118,11 +116,21 @@ export default function DGCAPage() {
         </section>
 
         {/* Why Choose Us */}
-        <WhyChooseUsCarousel />
+        <div className="mt-16">
+          <WhyChooseUsCarousel />
+        </div>
 
         {/* 8-Step Journey */}
         <section className="py-16">
           <PilotJourneyTimeline />
+          <div className="text-center mt-12">
+            <Link
+              href="/demo"
+              className="inline-block bg-gold text-dark px-10 py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
+            >
+              Book a Demo Session
+            </Link>
+          </div>
         </section>
 
         {/* Student Video Carousel */}
@@ -222,68 +230,6 @@ export default function DGCAPage() {
               </p>
             </div>
           </div>
-
-          {/* Exam Format Section */}
-          <div className="bg-dark border-2 border-gold/30 rounded-lg p-8 md:p-12 max-w-4xl mx-auto">
-            <h3 className="text-2xl font-bold mb-8 text-center text-gold">DGCA Exam Format</h3>
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <h4 className="text-xl font-bold mb-4 text-gold">Exam Details</h4>
-                <ul className="space-y-3 text-white/80">
-                  <li className="flex items-start">
-                    <span className="text-gold mr-3">•</span>
-                    <span>6 subjects, each 100 marks</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold mr-3">•</span>
-                    <span>70% passing marks required</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold mr-3">•</span>
-                    <span>Multiple choice questions</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold mr-3">•</span>
-                    <span>All papers within 3 years</span>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="text-xl font-bold mb-4 text-gold">What You Get</h4>
-                <ul className="space-y-3 text-white/80">
-                  <li className="flex items-start">
-                    <span className="text-gold mr-3">•</span>
-                    <span>Comprehensive study material</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold mr-3">•</span>
-                    <span>Regular mock tests</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold mr-3">•</span>
-                    <span>Doubt clearing sessions</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="text-gold mr-3">•</span>
-                    <span>Exam registration support</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* CTA */}
-        <div className="text-center">
-          <h2 className="text-3xl font-bold mb-6 text-white">Ready to Start?</h2>
-          <div className="flex justify-center">
-            <Link
-              href="/assessment?from=dgca"
-              className="bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors inline-block"
-            >
-              Take Assessment
-            </Link>
-          </div>
         </div>
 
         {/* Pricing Form Modal */}
@@ -297,105 +243,6 @@ export default function DGCAPage() {
           }}
         />
       </div>
-
-      {/* Pricing Section CTA - Split Hero Layout */}
-      <section className="w-full bg-dark border-t-2 border-b-2 border-gold/30 py-20">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            {/* Left: Heading + Subtext + Button */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="flex flex-col space-y-6 text-center lg:text-left"
-            >
-              {/* Icon */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
-                className="flex justify-center lg:justify-start"
-              >
-                <DollarSign className="w-12 h-12 text-gold" />
-              </motion.div>
-
-              {/* Heading */}
-              <motion.h2
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="text-4xl md:text-5xl font-bold text-gold"
-              >
-                Course Pricing & Packages
-              </motion.h2>
-
-              {/* Subtext */}
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="text-lg text-white/80"
-              >
-                Real numbers. Real transparency. Get complete pricing breakdown 
-                for our DGCA Ground Classes - no hidden costs, no surprises.
-              </motion.p>
-
-              {/* Button */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.3 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex justify-center lg:justify-start"
-              >
-                <Link
-                  href="/pricing?source=dgca"
-                  className="inline-block bg-gold text-dark px-8 py-4 rounded-lg font-semibold flex items-center justify-center gap-2 hover:bg-gold/90 transition-colors"
-                >
-                  View Pricing Details
-                  <span>→</span>
-                </Link>
-              </motion.div>
-
-              {/* Trust Line */}
-              <motion.p
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="text-sm text-white/60"
-              >
-                Join 100+ students who chose honest pricing
-              </motion.p>
-            </motion.div>
-
-            {/* Right: Image Carousel */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="w-full"
-            >
-              <HeroImageCarousel
-                images={[
-                  "/images/PIlot Traingin.webp",
-                  "/images/PIlot Traingin  v1.webp",
-                  "/images/Helicopter Training.webp",
-                  "/facility/WC1.webp",
-                ]}
-                autoRotateInterval={4000}
-              />
-            </motion.div>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

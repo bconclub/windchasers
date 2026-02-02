@@ -39,10 +39,10 @@ function DemoPageContent() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 mb-16">
+        <div className="flex gap-4 mb-16 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide lg:grid lg:grid-cols-2 lg:overflow-visible lg:pb-0">
           <button
             onClick={() => handleCardClick("online")}
-            className="bg-gradient-to-br from-accent-dark to-dark p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group"
+            className="bg-gradient-to-br from-accent-dark to-dark p-6 md:p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group flex-shrink-0 w-[85vw] md:w-auto snap-center"
           >
             <div className="flex items-center mb-6">
               <div className="w-14 h-14 rounded-lg bg-gold/10 flex items-center justify-center mr-4">
@@ -88,7 +88,7 @@ function DemoPageContent() {
 
           <button
             onClick={() => handleCardClick("offline")}
-            className="bg-gradient-to-br from-accent-dark to-dark p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group"
+            className="bg-gradient-to-br from-accent-dark to-dark p-6 md:p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group flex-shrink-0 w-[85vw] md:w-auto snap-center"
           >
             <div className="flex items-center mb-6">
               <div className="w-14 h-14 rounded-lg bg-gold/10 flex items-center justify-center mr-4">
@@ -131,6 +131,12 @@ function DemoPageContent() {
               </li>
             </ul>
           </button>
+        </div>
+
+        {/* Navigation dots - mobile only */}
+        <div className="flex justify-center gap-2 -mt-3 mb-16 lg:hidden">
+          <div className="w-2 h-2 rounded-full bg-gold"></div>
+          <div className="w-2 h-2 rounded-full bg-white/30"></div>
         </div>
 
         <Suspense fallback={<div className="text-center py-8">Loading form...</div>}>

@@ -60,12 +60,11 @@ export default function RootLayout({
           />
         </noscript>
         {/* End Meta Pixel Code */}
-        {/* Proxe Widget - Commented out for testing mobile click issues
+        {/* Proxe Widget */}
         <Script
           src="https://agent.windchasers.in/widget/embed.js"
           strategy="afterInteractive"
         />
-        */}
         <Analytics />
         <TrackingProvider>
           <Navbar />

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -6,9 +7,15 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-gold font-bold text-lg mb-4">WINDCHASERS</h3>
+            <Image
+              src="/images/White transparent.png"
+              alt="WindChasers"
+              width={180}
+              height={60}
+              className="h-12 w-auto mb-4"
+            />
             <p className="text-sm text-white/60">
-              DGCA approved pilot training with real cost transparency.
+              India's Top Pilot Training Academy
             </p>
           </div>
 
@@ -24,7 +31,7 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold mb-4">Resources</h4>
             <ul className="space-y-2 text-sm text-white/60">
-              <li><Link href="/assessment" className="hover:text-white transition-colors">Aptitude Test</Link></li>
+              <li><Link href="/assessment" className="hover:text-white transition-colors">Pilot Assessment Test</Link></li>
             </ul>
           </div>
 

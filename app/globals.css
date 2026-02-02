@@ -94,4 +94,20 @@
     color: #1A1A1A;
     font-weight: 600;
   }
+
+  /* Fix Proxe widget blocking clicks - only capture clicks on the widget itself */
+  #proxe-widget-container,
+  [id^="proxe"],
+  [class*="proxe"] {
+    pointer-events: none;
+  }
+
+  #proxe-widget-container iframe,
+  #proxe-widget-container button,
+  [id^="proxe"] iframe,
+  [id^="proxe"] button,
+  [class*="proxe"] iframe,
+  [class*="proxe"] button {
+    pointer-events: auto;
+  }
 }

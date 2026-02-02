@@ -454,7 +454,7 @@ export default function Home() {
               href="/demo"
               className="inline-block bg-transparent border-2 border-gold text-gold px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold hover:text-dark transition-colors"
             >
-              Book a Demo
+              Book a Demo Session
             </Link>
           </div>
         </div>
