@@ -119,12 +119,12 @@ export default function Home() {
     <>
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* YouTube Video Background */}
+        {/* Vimeo Video Background */}
         <div className="absolute inset-0 w-full h-full overflow-hidden">
           <iframe
             ref={videoRef}
             className="absolute top-1/2 left-[70%] md:left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 border-0"
-            src="https://www.youtube.com/embed/a9o-PE-DLNA?autoplay=1&mute=1&loop=1&playlist=a9o-PE-DLNA&start=334&end=394&controls=0&showinfo=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1"
+            src="https://player.vimeo.com/video/1160946921?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&background=1"
             title="Aviation Background"
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
             allowFullScreen
