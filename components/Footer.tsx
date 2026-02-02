@@ -15,7 +15,7 @@ export default function Footer() {
               className="h-12 w-auto mb-4"
             />
             <p className="text-sm text-white/60">
-              India's Top Pilot Training Academy
+              India&apos;s Top Pilot Training Academy
             </p>
           </div>
 
