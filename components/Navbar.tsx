@@ -69,6 +69,16 @@ export default function Navbar() {
               transition={{ type: "tween", duration: 0.3 }}
               className="fixed top-0 right-0 h-full w-80 bg-dark border-l border-gold/30 z-50 shadow-2xl"
             >
+              {/* Close Button */}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="absolute top-6 right-6 text-white/70 hover:text-gold transition-colors"
+                aria-label="Close menu"
+              >
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
               <div className="flex flex-col h-full pt-24 px-8">
                 {links.map((link, index) => (
                   <motion.div
