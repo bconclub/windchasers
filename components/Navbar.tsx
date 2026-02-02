@@ -9,10 +9,11 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   const links = [
-    { href: "/dgca", label: "DGCA Ground" },
+    { href: "/dgca", label: "DGCA Ground Classes" },
     { href: "/international", label: "Pilot Training Abroad" },
-    { href: "/helicopter", label: "Helicopter" },
-    { href: "/assessment", label: "Take Assessment" },
+    { href: "/helicopter", label: "Helicopter Pilot Training" },
+    { href: "/assessment", label: "Take Pilot Assessment" },
+    { href: "/demo", label: "Book a Demo" },
   ];
 
   return (
