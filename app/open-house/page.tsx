@@ -19,12 +19,12 @@ import {
 } from "lucide-react";
 import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
-import WC1 from "@/public/facility/WC1.webp";
-import WC2 from "@/public/facility/WC2.webp";
-import WC3 from "@/public/facility/WC3.webp";
-import WC4 from "@/public/facility/WC4.webp";
-import WC5 from "@/public/facility/WC5.webp";
-import WC6 from "@/public/facility/WC6.webp";
+import oh1 from "@/public/open house/Open HOuse 1.jpg";
+import oh2 from "@/public/open house/Open Houe 2.jpg";
+import ohApr from "@/public/open house/WC Open house April 15.jpg";
+import ohApr1 from "@/public/open house/WC Open house April 15 1.jpg";
+import ohApr2 from "@/public/open house/WC Open house April 15 2.jpg";
+import ohNov from "@/public/open house/WC November 2024.jpg";
 
 // URL-encode filenames from public/open house/
 const asset = (filename: string) =>
@@ -92,12 +92,12 @@ const GALLERY_VIDEOS = [
 ];
 
 const GALLERY_IMAGES = [
-  { src: WC1, alt: "Students interacting with instructors at WindChasers open house event" },
-  { src: WC2, alt: "Pilot training demonstration session" },
-  { src: WC3, alt: "Group discussion about aviation career paths" },
-  { src: WC4, alt: "WindChasers training facility overview" },
-  { src: WC5, alt: "Students asking questions to commercial pilots" },
-  { src: WC6, alt: "Hands-on simulator experience session" },
+  { src: oh1, alt: "Open house attendees listening to presentations", position: "center" },
+  { src: oh2, alt: "Commercial pilot answering student questions", position: "center" },
+  { src: ohApr, alt: "Students and parents at WindChasers open house", position: "center" },
+  { src: ohApr1, alt: "Hands-on simulator experience at open house", position: "center" },
+  { src: ohApr2, alt: "Instructor explaining career paths to attendees", position: "center" },
+  { src: ohNov, alt: "November open house presentation session", position: "top center" },
 ];
 
 type Role = "" | "student" | "parent";
@@ -775,8 +775,8 @@ export default function OpenHousePage() {
           </div>
 
           {/* Images: uniform 16:9 grid, lightbox on click */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {GALLERY_IMAGES.map(({ src, alt }, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
+            {GALLERY_IMAGES.map(({ src, alt, position }, i) => (
               <motion.div
                 key={src.src}
                 initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.97 }}
@@ -797,13 +797,19 @@ export default function OpenHousePage() {
                     alt={alt}
                     fill
                     className="object-cover transition-transform duration-[400ms] group-hover:scale-[1.03]"
-                    style={{ transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)" }}
+                    style={{
+                      objectPosition: position,
+                      transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+                    }}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     loading={i < 3 ? "eager" : "lazy"}
                     priority={i < 3}
                     placeholder="blur"
                   />
                 </button>
+                <div className="absolute inset-0 z-10 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                  <span className="text-[#C5A572] font-semibold">View</span>
+                </div>
               </motion.div>
             ))}
           </div>
