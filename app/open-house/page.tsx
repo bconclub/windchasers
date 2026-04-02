@@ -1,62 +1,87 @@
 "use client";
 
+import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   X,
   ChevronDown,
-  Map,
-  Plane,
-  TrendingUp,
-  GitBranch,
-  DollarSign,
   AlertTriangle,
-  Shield,
+  Route,
+  Award,
+  Briefcase,
+  GitCompare,
+  Wallet,
+  GraduationCap,
+  Users,
+  CheckCircle,
 } from "lucide-react";
 import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
+import WC1 from "@/public/facility/WC1.webp";
+import WC2 from "@/public/facility/WC2.webp";
+import WC3 from "@/public/facility/WC3.webp";
+import WC4 from "@/public/facility/WC4.webp";
+import WC5 from "@/public/facility/WC5.webp";
+import WC6 from "@/public/facility/WC6.webp";
 
 // URL-encode filenames from public/open house/
 const asset = (filename: string) =>
   `/open%20house/${encodeURIComponent(filename)}`;
 
 const TOPICS = [
+  { Icon: Route, title: "Step-by-step roadmap", desc: "The exact path from completing 12th to holding a CPL. No gaps." },
+  { Icon: Award, title: "Life after CPL", desc: "What happens the day you get your licence. Real timelines, real expectations." },
+  { Icon: Briefcase, title: "Career path after CPL", desc: "Airlines, charters, cargo, instructing. What each path looks like." },
+  { Icon: GitCompare, title: "Cadet programme vs CPL", desc: "Two routes to the cockpit. Which one is right for you." },
+  { Icon: Wallet, title: "Money talk: what is the real cost?", desc: "Full cost breakdown. Training, exams, medicals, everything." },
+  { Icon: AlertTriangle, title: "Biggest mistakes student pilots make", desc: "What trips most aspirants up and how to avoid it." },
+];
+
+const INSTRUCTORS = [
   {
-    Icon: Map,
-    title: "Step-by-step roadmap",
-    desc: "The exact path from completing 12th to holding a CPL. No gaps.",
+    initials: "SC",
+    name: "Senior Captain",
+    role: "Former Air India Captain",
+    cred: "15,000+ hours",
+    desc: "Active airline experience",
   },
   {
-    Icon: Plane,
-    title: "Life after CPL",
-    desc: "What happens the day you get your licence. Real timelines, real expectations.",
+    initials: "DG",
+    name: "DGCA Instructor",
+    role: "DGCA Certified Instructor",
+    cred: "Ground school specialist",
+    desc: "Ground school specialists",
   },
   {
-    Icon: TrendingUp,
-    title: "Career path after CPL",
-    desc: "Airlines, charters, cargo, instructing. What each path looks like.",
+    initials: "SI",
+    name: "Simulator Expert",
+    role: "Simulator Instructor",
+    cred: "Type-rated trainer",
+    desc: "Hands-on training experts",
+  },
+];
+
+const WHO_SHOULD_ATTEND = [
+  {
+    Icon: GraduationCap,
+    headline: "Students Ready to Fly",
+    subtext: "Completed 12th grade or in final year. Serious about starting CPL training in 2026.",
+    bullets: ["Want clear roadmap", "Need cost clarity", "Exploring cadet vs CPL routes"],
   },
   {
-    Icon: GitBranch,
-    title: "Cadet programme vs CPL",
-    desc: "Two routes to the cockpit. Which one is right for you.",
+    Icon: Users,
+    headline: "Supportive Parents",
+    subtext: "Want to understand investment, safety, and career prospects before your child commits.",
+    bullets: ["Full cost breakdown", "Career stability info", "Training safety standards"],
   },
-  {
-    Icon: DollarSign,
-    title: "Money talk: what is the real cost?",
-    desc: "Full cost breakdown. Training, exams, medicals, everything.",
-  },
-  {
-    Icon: AlertTriangle,
-    title: "Biggest mistakes student pilots make",
-    desc: "What trips most aspirants up and how to avoid it.",
-  },
-  {
-    Icon: Shield,
-    title: "How WindChasers solves this",
-    desc: "Our approach, our track record, and why it works.",
-  },
+];
+
+const TRUST_BADGES = [
+  "DGCA Certified Training Organization",
+  "500+ Commercial Pilots Trained",
+  "FAA & Ex-Air Force Instructors",
 ];
 
 const GALLERY_VIDEOS = [
@@ -67,17 +92,12 @@ const GALLERY_VIDEOS = [
 ];
 
 const GALLERY_IMAGES = [
-  { src: "Open Hosue 3.jpg", alt: "Students interacting with instructors at WindChasers open house event" },
-  { src: "Open Hosue 4.jpg", alt: "Pilot training demonstration session" },
-  { src: "Open Houe 2.jpg", alt: "Group discussion about aviation career paths" },
-  { src: "Open HOuse 1.jpg", alt: "WindChasers training facility overview" },
-  { src: "Open House May 25 1.jpg", alt: "Students asking questions to commercial pilots" },
-  { src: "Open House May 25 2.jpg", alt: "Hands-on simulator experience session" },
-  { src: "Open House May 25.jpg", alt: "Open house attendees networking with instructors" },
-  { src: "WC November 2024.jpg", alt: "November 2024 open house event highlights" },
-  { src: "WC Open house April 15 1.jpg", alt: "April open house career counseling session" },
-  { src: "WC Open house April 15 2.jpg", alt: "Students exploring flight training materials" },
-  { src: "WC Open house April 15.jpg", alt: "April 2025 open house event at WindChasers HQ" },
+  { src: WC1, alt: "Students interacting with instructors at WindChasers open house event" },
+  { src: WC2, alt: "Pilot training demonstration session" },
+  { src: WC3, alt: "Group discussion about aviation career paths" },
+  { src: WC4, alt: "WindChasers training facility overview" },
+  { src: WC5, alt: "Students asking questions to commercial pilots" },
+  { src: WC6, alt: "Hands-on simulator experience session" },
 ];
 
 type Role = "" | "student" | "parent";
@@ -107,7 +127,6 @@ interface FormErrors {
   role?: string;
 }
 
-// Hook to detect if element is in viewport for video pausing
 function useInView<T extends HTMLElement>(options?: IntersectionObserverInit) {
   const [isInView, setIsInView] = useState(false);
   const ref = useRef<T>(null);
@@ -127,7 +146,6 @@ function useInView<T extends HTMLElement>(options?: IntersectionObserverInit) {
   return { ref, isInView };
 }
 
-// Video component with intersection observer for performance
 function GalleryVideo({ src, index }: { src: string; index: number }) {
   const { ref, isInView } = useInView<HTMLVideoElement>();
   const shouldReduceMotion = useReducedMotion();
@@ -262,7 +280,7 @@ export default function OpenHousePage() {
       });
 
       if (!res.ok) throw new Error("Submission failed");
-      router.push("/thank-you?type=booking");
+      router.push("/thank-you?type=open-house");
     } catch {
       setSubmitError("Something went wrong. Please try again.");
       setSubmitting(false);
@@ -275,40 +293,43 @@ export default function OpenHousePage() {
   };
 
   const transitionDuration = shouldReduceMotion ? 0 : undefined;
+  const { ref: heroRef, isInView: heroInView } = useInView<HTMLElement>();
 
   return (
     <>
       {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
-          <iframe
-            className="absolute top-1/2 left-[70%] md:left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 border-0"
-            src="https://player.vimeo.com/video/1160946921?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&background=1"
-            title="Aviation Background"
-            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-            allowFullScreen
-            loading="eager"
-            style={{ pointerEvents: "none" }}
-          />
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-black">
+          {heroInView && (
+            <iframe
+              className="absolute top-1/2 left-[70%] md:left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 border-0"
+              src="https://player.vimeo.com/video/1160946921?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&background=1"
+              title="Aviation Background"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+              allowFullScreen
+              loading="eager"
+              style={{ pointerEvents: "none" }}
+            />
+          )}
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/80 to-dark z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/60 to-black/80 z-10" />
 
         <div className="relative z-20 max-w-4xl mx-auto px-6 lg:px-8 text-center pt-20">
           <motion.h1
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: transitionDuration ?? 0.8 }}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-white"
+            className="text-[32px] md:text-5xl lg:text-[48px] font-bold mb-6 leading-tight text-white"
           >
             Bangalore&apos;s Only{" "}
-            <span className="text-gold">Pilot Career Open House</span>
+            <span className="text-[#C5A572]">Pilot Career Open House</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.2 }}
-            className="text-xl md:text-2xl text-white/80 mb-8"
+            className="text-base md:text-xl text-gray-300 mb-8 font-normal"
           >
             Where Bangalore&apos;s future pilots are made.
           </motion.p>
@@ -317,7 +338,7 @@ export default function OpenHousePage() {
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.35 }}
-            className="text-base md:text-lg text-white/70 mb-10"
+            className="text-base text-[#C5A572] mb-10 tracking-[1px]"
           >
             April 11, 2026 · 11:30 AM onwards · WindChasers HQ, Bangalore
           </motion.p>
@@ -329,7 +350,7 @@ export default function OpenHousePage() {
           >
             <button
               onClick={scrollToRegister}
-              className="bg-gold text-dark px-10 py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
+              className="bg-[#C5A572] text-black px-10 py-4 rounded-lg font-semibold text-lg hover:bg-[#C5A572]/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               Reserve Your Spot
             </button>
@@ -338,14 +359,14 @@ export default function OpenHousePage() {
       </section>
 
       {/* Topics covered */}
-      <section className="py-20 px-6 lg:px-8 bg-accent-dark">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-20 px-6 lg:px-8 bg-[#1A1A1A]">
+        <div className="max-w-[1200px] mx-auto">
           <motion.h2
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: transitionDuration ?? 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-center mb-4 text-gold"
+            className="text-4xl md:text-5xl font-bold text-center mb-4 text-[#C5A572]"
           >
             Topics covered
           </motion.h2>
@@ -354,83 +375,102 @@ export default function OpenHousePage() {
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ duration: transitionDuration ?? 0.6, delay: shouldReduceMotion ? 0 : 0.15 }}
-            className="text-white/70 text-center text-lg mb-14"
+            className="text-gray-400 text-center text-lg mb-14"
           >
             One morning. Every answer you need.
           </motion.p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {TOPICS.map(({ title, desc }, i) => {
-              const isLast = i === TOPICS.length - 1;
-              return (
-                <motion.div
-                  key={title}
-                  initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : i * 0.07 }}
-                  className={[
-                    "bg-dark border-l-4 border-gold rounded-r-xl p-6",
-                    isLast ? "md:col-start-2" : "",
-                  ].join(" ")}
-                >
-                  <h3 className="text-white font-bold text-base md:text-lg mb-2 leading-snug">
-                    {title}
-                  </h3>
-                  <p className="text-white/70 text-sm leading-relaxed">{desc}</p>
-                </motion.div>
-              );
-            })}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {TOPICS.map(({ title, desc, Icon }, i) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : i * 0.07 }}
+                className="bg-[#1A1A1A] border-t-2 border-[#C5A572] rounded-lg p-8 hover:-translate-y-1 hover:shadow-xl hover:border-t-[3px] transition-all duration-300"
+              >
+                <Icon className="w-8 h-8 text-[#C5A572] mb-4" />
+                <h3 className="text-white font-semibold text-lg mb-2 leading-snug">
+                  {title}
+                </h3>
+                <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Past open houses gallery */}
-      <section className="py-20 px-6 lg:px-8 bg-dark">
-        <div className="max-w-7xl mx-auto">
+      {/* Meet Our Instructors */}
+      <section className="py-20 px-6 lg:px-8 bg-gradient-to-b from-[#1A1A1A] to-[#2A2A2A]">
+        <div className="max-w-[1200px] mx-auto">
           <motion.h2
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: transitionDuration ?? 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-center mb-14 text-gold"
+            className="text-4xl md:text-5xl font-bold text-center mb-14 text-[#C5A572]"
           >
-            From our past open houses
+            Meet Our Instructors
           </motion.h2>
 
-          {/* Videos: horizontal scroll on mobile, 2-col grid on desktop */}
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory lg:grid lg:grid-cols-2 lg:overflow-visible lg:pb-0 mb-10">
-            {GALLERY_VIDEOS.map((v, i) => (
-              <GalleryVideo key={v} src={v} index={i} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {INSTRUCTORS.map(({ initials, name, role, cred, desc }, i) => (
+              <motion.div
+                key={name}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : i * 0.07 }}
+                className="rounded-lg p-10 text-center bg-[#1A1A1A]/60 border border-white/5"
+              >
+                <div className="w-[120px] h-[120px] mx-auto rounded-full bg-gradient-to-br from-[#C5A572] to-[#8a6d43] flex items-center justify-center text-black font-bold text-2xl mb-4">
+                  {initials}
+                </div>
+                <h3 className="text-white font-semibold text-base mb-1">{name}</h3>
+                <p className="text-[#C5A572] text-sm mb-1">{role}</p>
+                <p className="text-gray-500 text-xs mb-4">{cred}</p>
+                <p className="text-gray-400 text-sm">{desc}</p>
+              </motion.div>
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* Images: 2-col mobile, 3-col desktop, lightbox on click */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {GALLERY_IMAGES.map(({ src, alt }, i) => (
+      {/* Who Should Attend */}
+      <section className="py-20 px-6 lg:px-8 bg-[#1E1E1E]">
+        <div className="max-w-[1200px] mx-auto">
+          <motion.h2
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: transitionDuration ?? 0.6 }}
+            className="text-4xl md:text-5xl font-bold text-center mb-14 text-[#C5A572]"
+          >
+            Who Should Attend
+          </motion.h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {WHO_SHOULD_ATTEND.map(({ Icon, headline, subtext, bullets }, i) => (
               <motion.div
-                key={src}
-                initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.97 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                key={headline}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : i * 0.05 }}
-                className="overflow-hidden rounded-xl cursor-pointer group focus-within:ring-2 focus-within:ring-gold/60"
-                onClick={() => openLightbox(asset(src), alt)}
+                transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : i * 0.07 }}
+                className="bg-[#252525] border-l-4 border-[#C5A572] rounded-r-lg p-8"
               >
-                <button
-                  type="button"
-                  className="w-full h-full p-0 border-0 bg-transparent"
-                  onClick={() => openLightbox(asset(src), alt)}
-                  aria-label={`View larger image: ${alt}`}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={asset(src)}
-                    alt={alt}
-                    className="w-full h-40 md:h-52 object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                </button>
+                <Icon className="w-10 h-10 text-[#C5A572] mb-4" />
+                <h3 className="text-white font-semibold text-xl mb-2">{headline}</h3>
+                <p className="text-gray-400 text-sm mb-5 leading-relaxed">{subtext}</p>
+                <ul className="space-y-2">
+                  {bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-2 text-gray-300 text-sm">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#C5A572] mt-1.5 flex-shrink-0" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
               </motion.div>
             ))}
           </div>
@@ -440,28 +480,49 @@ export default function OpenHousePage() {
       {/* Registration form */}
       <section
         id="register"
-        className="py-20 px-6 lg:px-8 bg-accent-dark scroll-mt-20"
+        className="py-20 px-6 lg:px-8 bg-[#1A1A1A] scroll-mt-20"
       >
-        <div className="max-w-xl mx-auto">
+        <div className="max-w-[600px] mx-auto">
           <motion.div
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: transitionDuration ?? 0.6 }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-3 text-gold">
-              Reserve Your Spot
+            <h2 className="text-4xl md:text-5xl font-bold text-center mb-3 text-[#C5A572]">
+              Secure Your Seat
             </h2>
-            <p className="text-white/70 text-center mb-10">
-              Free entry. Limited seats. April 11 · 11:30 AM.
+            <p className="text-gray-400 text-center mb-6">
+              Only 30 seats available · April 11, 2026 · 11:30 AM
             </p>
+
+            {/* Scarcity bar */}
+            <div className="mb-8">
+              <div className="flex justify-between text-sm text-gray-300 mb-2">
+                <span>Seats filling fast</span>
+                <span>72% full</span>
+              </div>
+              <div className="h-2 w-full bg-[#333] rounded-full overflow-hidden">
+                <div className="h-full w-[72%] bg-[#C5A572] rounded-full" />
+              </div>
+            </div>
+
+            {/* Trust badges */}
+            <div className="flex flex-wrap justify-center gap-3 mb-8">
+              {TRUST_BADGES.map((badge) => (
+                <div key={badge} className="flex items-center gap-2 bg-[#252525] border border-white/10 rounded-full px-4 py-2 text-xs text-gray-300">
+                  <CheckCircle className="w-4 h-4 text-[#C5A572]" />
+                  <span>{badge}</span>
+                </div>
+              ))}
+            </div>
 
             {blocked ? (
               <motion.div
                 initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: shouldReduceMotion ? 0 : undefined }}
-                className="rounded-xl border border-white/10 bg-dark p-8 text-center"
+                className="rounded-lg border border-white/10 bg-[#252525] p-8 text-center"
                 role="alert"
               >
                 <p className="text-white/90 text-lg leading-relaxed mb-3">
@@ -470,14 +531,14 @@ export default function OpenHousePage() {
                 </p>
                 <p className="text-white/60 text-sm">
                   Redirecting you{" "}
-                  <span className="text-gold">shortly...</span>
+                  <span className="text-[#C5A572]">shortly...</span>
                 </p>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 {/* Role selector */}
                 <div>
-                  <label className="block text-sm text-white/70 mb-2">
+                  <label className="block text-sm text-gray-300 mb-2">
                     I am a… <span className="text-red-400">*</span>
                   </label>
                   <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Select your role">
@@ -491,10 +552,10 @@ export default function OpenHousePage() {
                         }}
                         aria-checked={role === r}
                         role="radio"
-                        className={`py-3 rounded-lg font-medium text-sm capitalize transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 ${
+                        className={`py-3 rounded-full font-medium text-sm capitalize transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 ${
                           role === r
-                            ? "bg-gold text-dark"
-                            : "bg-dark border border-white/10 text-white/70 hover:border-white/30"
+                            ? "bg-[#C5A572] text-black"
+                            : "bg-[#252525] border border-white/10 text-gray-300 hover:border-white/30"
                         }`}
                       >
                         {r === "student" ? "Student / Aspiring Pilot" : "Parent / Guardian"}
@@ -507,7 +568,7 @@ export default function OpenHousePage() {
                 </div>
 
                 <div>
-                  <label htmlFor="name" className="block text-sm text-white/70 mb-1.5">
+                  <label htmlFor="name" className="block text-sm text-gray-300 mb-1.5">
                     Full Name <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -522,7 +583,7 @@ export default function OpenHousePage() {
                     }}
                     aria-invalid={errors.name ? "true" : "false"}
                     aria-describedby={errors.name ? "name-error" : undefined}
-                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-gold/50 transition-colors"
+                    className="w-full bg-[#252525] border border-[#444] rounded-lg px-4 h-12 text-white placeholder:text-white/40 focus:outline-none focus:border-[#C5A572] transition-colors"
                   />
                   {errors.name && (
                     <p id="name-error" className="text-red-400 text-sm mt-1.5" role="alert">{errors.name}</p>
@@ -530,7 +591,7 @@ export default function OpenHousePage() {
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm text-white/70 mb-1.5">
+                  <label htmlFor="phone" className="block text-sm text-gray-300 mb-1.5">
                     Phone <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -545,15 +606,16 @@ export default function OpenHousePage() {
                     }}
                     aria-invalid={errors.phone ? "true" : "false"}
                     aria-describedby={errors.phone ? "phone-error" : undefined}
-                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-gold/50 transition-colors"
+                    className="w-full bg-[#252525] border border-[#444] rounded-lg px-4 h-12 text-white placeholder:text-white/40 focus:outline-none focus:border-[#C5A572] transition-colors"
                   />
+                  <p className="text-gray-500 text-xs mt-1.5">We&apos;ll send venue details and reminder on WhatsApp</p>
                   {errors.phone && (
                     <p id="phone-error" className="text-red-400 text-sm mt-1.5" role="alert">{errors.phone}</p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm text-white/70 mb-1.5">
+                  <label htmlFor="email" className="block text-sm text-gray-300 mb-1.5">
                     Email <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -568,7 +630,7 @@ export default function OpenHousePage() {
                     }}
                     aria-invalid={errors.email ? "true" : "false"}
                     aria-describedby={errors.email ? "email-error" : undefined}
-                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-gold/50 transition-colors"
+                    className="w-full bg-[#252525] border border-[#444] rounded-lg px-4 h-12 text-white placeholder:text-white/40 focus:outline-none focus:border-[#C5A572] transition-colors"
                   />
                   {errors.email && (
                     <p id="email-error" className="text-red-400 text-sm mt-1.5" role="alert">{errors.email}</p>
@@ -577,7 +639,7 @@ export default function OpenHousePage() {
 
                 {role === "student" && (
                   <div>
-                    <label htmlFor="status" className="block text-sm text-white/70 mb-1.5">
+                    <label htmlFor="status" className="block text-sm text-gray-300 mb-1.5">
                       Current Status <span className="text-red-400">*</span>
                     </label>
                     <div className="relative">
@@ -594,7 +656,7 @@ export default function OpenHousePage() {
                         }}
                         aria-invalid={errors.status ? "true" : "false"}
                         aria-describedby={errors.status ? "status-error" : undefined}
-                        className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold/50 transition-colors appearance-none pr-10"
+                        className="w-full bg-[#252525] border border-[#444] rounded-lg px-4 h-12 text-white focus:outline-none focus:border-[#C5A572] transition-colors appearance-none pr-10"
                       >
                         <option value="" disabled>
                           Select your status
@@ -613,7 +675,7 @@ export default function OpenHousePage() {
                 )}
 
                 <div>
-                  <label htmlFor="city" className="block text-sm text-white/70 mb-1.5">
+                  <label htmlFor="city" className="block text-sm text-gray-300 mb-1.5">
                     City <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -628,7 +690,7 @@ export default function OpenHousePage() {
                     }}
                     aria-invalid={errors.city ? "true" : "false"}
                     aria-describedby={errors.city ? "city-error" : undefined}
-                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-gold/50 transition-colors"
+                    className="w-full bg-[#252525] border border-[#444] rounded-lg px-4 h-12 text-white placeholder:text-white/40 focus:outline-none focus:border-[#C5A572] transition-colors"
                   />
                   {errors.city && (
                     <p id="city-error" className="text-red-400 text-sm mt-1.5" role="alert">{errors.city}</p>
@@ -636,34 +698,38 @@ export default function OpenHousePage() {
                 </div>
 
                 {role === "student" && (
-                  <div className="flex items-center justify-between p-4 rounded-lg border border-white/10 bg-dark">
-                    <span className="text-white/80 text-sm">
+                  <div>
+                    <label className="block text-sm text-gray-300 mb-2">
                       Will a parent or guardian be attending?
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setForm((f) => ({
-                          ...f,
-                          parentAttending: !f.parentAttending,
-                        }))
-                      }
-                      className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-dark ${
-                        form.parentAttending
-                          ? "bg-gold border-gold"
-                          : "bg-white/10 border-white/20"
-                      }`}
-                      aria-pressed={form.parentAttending}
-                      aria-label="Parent attending toggle"
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 mt-0.5 ${
-                          form.parentAttending
-                            ? "translate-x-5"
-                            : "translate-x-0.5"
+                    </label>
+                    <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Parent attending">
+                      <button
+                        type="button"
+                        onClick={() => setForm((f) => ({ ...f, parentAttending: false }))}
+                        aria-checked={!form.parentAttending}
+                        role="radio"
+                        className={`py-3 rounded-full font-medium text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 ${
+                          !form.parentAttending
+                            ? "bg-[#C5A572] text-black"
+                            : "bg-[#252525] border border-white/10 text-gray-300 hover:border-white/30"
                         }`}
-                      />
-                    </button>
+                      >
+                        Student Only
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setForm((f) => ({ ...f, parentAttending: true }))}
+                        aria-checked={form.parentAttending}
+                        role="radio"
+                        className={`py-3 rounded-full font-medium text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 ${
+                          form.parentAttending
+                            ? "bg-[#C5A572] text-black"
+                            : "bg-[#252525] border border-white/10 text-gray-300 hover:border-white/30"
+                        }`}
+                      >
+                        Student + Parent
+                      </button>
+                    </div>
                   </div>
                 )}
 
@@ -674,7 +740,7 @@ export default function OpenHousePage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-gold text-dark py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-accent-dark"
+                  className="w-full bg-[#C5A572] text-black h-12 rounded-lg font-semibold text-lg hover:bg-[#C5A572]/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1A1A]"
                 >
                   {submitting ? "Registering..." : "Register for Free"}
                 </button>
@@ -685,6 +751,62 @@ export default function OpenHousePage() {
               </form>
             )}
           </motion.div>
+        </div>
+      </section>
+
+      {/* Past open houses gallery */}
+      <section className="py-20 px-6 lg:px-8 bg-[#111]">
+        <div className="max-w-7xl mx-auto">
+          <motion.h2
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: transitionDuration ?? 0.6 }}
+            className="text-4xl md:text-5xl font-bold text-center mb-14 text-[#C5A572]"
+          >
+            From our past open houses
+          </motion.h2>
+
+          {/* Videos: horizontal scroll on mobile, 2-col grid on desktop */}
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory lg:grid lg:grid-cols-2 lg:overflow-visible lg:pb-0 mb-10">
+            {GALLERY_VIDEOS.map((v, i) => (
+              <GalleryVideo key={v} src={v} index={i} />
+            ))}
+          </div>
+
+          {/* Images: uniform 16:9 grid, lightbox on click */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+            {GALLERY_IMAGES.map(({ src, alt }, i) => (
+              <motion.div
+                key={src.src}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.97 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : i * 0.05 }}
+                className="relative aspect-video overflow-hidden rounded-lg cursor-pointer group focus-within:ring-2 focus-within:ring-[#C5A572]/60 hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-shadow"
+                onClick={() => openLightbox(src.src, alt)}
+              >
+                <button
+                  type="button"
+                  className="absolute inset-0 w-full h-full p-0 border-0 bg-transparent"
+                  onClick={() => openLightbox(src.src, alt)}
+                  aria-label={`View larger image: ${alt}`}
+                >
+                  <Image
+                    src={src}
+                    alt={alt}
+                    fill
+                    className="object-cover transition-transform duration-[400ms] group-hover:scale-[1.03]"
+                    style={{ transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)" }}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    loading={i < 3 ? "eager" : "lazy"}
+                    priority={i < 3}
+                    placeholder="blur"
+                  />
+                </button>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -703,7 +825,7 @@ export default function OpenHousePage() {
             aria-label="Image lightbox"
           >
             <button
-              className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 rounded p-1"
+              className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 rounded p-1"
               onClick={() => setLightboxSrc(null)}
               aria-label="Close lightbox"
             >
