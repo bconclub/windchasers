@@ -1,9 +1,19 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { Users, BookOpen, Gamepad2, X, ChevronDown, Map, Plane, TrendingUp, GitBranch, DollarSign, AlertTriangle, Shield } from "lucide-react";
+import {
+  X,
+  ChevronDown,
+  Map,
+  Plane,
+  TrendingUp,
+  GitBranch,
+  DollarSign,
+  AlertTriangle,
+  Shield,
+} from "lucide-react";
 import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
 
@@ -49,21 +59,6 @@ const TOPICS = [
   },
 ];
 
-const TEAM = [
-  {
-    Icon: Users,
-    label: "Senior commercial pilots with active airline experience",
-  },
-  {
-    Icon: BookOpen,
-    label: "DGCA certified ground instructors",
-  },
-  {
-    Icon: Gamepad2,
-    label: "Simulator instructors. Hands-on time included.",
-  },
-];
-
 const GALLERY_VIDEOS = [
   "Open hosue 5.mp4",
   "Open House May 4.mp4",
@@ -72,17 +67,17 @@ const GALLERY_VIDEOS = [
 ];
 
 const GALLERY_IMAGES = [
-  "Open Hosue 3.jpg",
-  "Open Hosue 4.jpg",
-  "Open Houe 2.jpg",
-  "Open HOuse 1.jpg",
-  "Open House May 25 1.jpg",
-  "Open House May 25 2.jpg",
-  "Open House May 25.jpg",
-  "WC November 2024.jpg",
-  "WC Open house April 15 1.jpg",
-  "WC Open house April 15 2.jpg",
-  "WC Open house April 15.jpg",
+  { src: "Open Hosue 3.jpg", alt: "Students interacting with instructors at WindChasers open house event" },
+  { src: "Open Hosue 4.jpg", alt: "Pilot training demonstration session" },
+  { src: "Open Houe 2.jpg", alt: "Group discussion about aviation career paths" },
+  { src: "Open HOuse 1.jpg", alt: "WindChasers training facility overview" },
+  { src: "Open House May 25 1.jpg", alt: "Students asking questions to commercial pilots" },
+  { src: "Open House May 25 2.jpg", alt: "Hands-on simulator experience session" },
+  { src: "Open House May 25.jpg", alt: "Open house attendees networking with instructors" },
+  { src: "WC November 2024.jpg", alt: "November 2024 open house event highlights" },
+  { src: "WC Open house April 15 1.jpg", alt: "April open house career counseling session" },
+  { src: "WC Open house April 15 2.jpg", alt: "Students exploring flight training materials" },
+  { src: "WC Open house April 15.jpg", alt: "April 2025 open house event at WindChasers HQ" },
 ];
 
 type Role = "" | "student" | "parent";
@@ -103,9 +98,62 @@ interface FormState {
   parentAttending: boolean;
 }
 
+interface FormErrors {
+  name?: string;
+  phone?: string;
+  email?: string;
+  status?: string;
+  city?: string;
+  role?: string;
+}
+
+// Hook to detect if element is in viewport for video pausing
+function useInView<T extends HTMLElement>(options?: IntersectionObserverInit) {
+  const [isInView, setIsInView] = useState(false);
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsInView(entry.isIntersecting);
+    }, { threshold: 0.1, ...options });
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [options]);
+
+  return { ref, isInView };
+}
+
+// Video component with intersection observer for performance
+function GalleryVideo({ src, index }: { src: string; index: number }) {
+  const { ref, isInView } = useInView<HTMLVideoElement>();
+  const shouldReduceMotion = useReducedMotion();
+
+  return (
+    <motion.video
+      ref={ref}
+      key={src}
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: index * 0.1 }}
+      src={asset(src)}
+      autoPlay={!shouldReduceMotion && isInView}
+      muted
+      loop
+      playsInline
+      className="flex-none w-72 h-48 rounded-xl object-cover snap-start lg:w-full lg:h-64"
+    />
+  );
+}
+
 export default function OpenHousePage() {
   const router = useRouter();
   const { sessionId, utmParams } = useTracking();
+  const shouldReduceMotion = useReducedMotion();
 
   const [role, setRole] = useState<Role>("");
   const [form, setForm] = useState<FormState>({
@@ -116,10 +164,12 @@ export default function OpenHousePage() {
     city: "",
     parentAttending: false,
   });
+  const [errors, setErrors] = useState<FormErrors>({});
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
+  const [submitError, setSubmitError] = useState("");
   const [blocked, setBlocked] = useState(false);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [lightboxAlt, setLightboxAlt] = useState<string>("");
 
   useEffect(() => {
     document.title =
@@ -132,26 +182,51 @@ export default function OpenHousePage() {
     return () => clearTimeout(t);
   }, [blocked, router]);
 
+  const validateForm = useCallback((): boolean => {
+    const newErrors: FormErrors = {};
+
+    if (!role) {
+      newErrors.role = "Please select whether you are a student or a parent.";
+    }
+
+    if (!form.name.trim()) {
+      newErrors.name = "Full name is required.";
+    }
+
+    if (!form.phone.trim()) {
+      newErrors.phone = "Phone number is required.";
+    } else if (!/^[/+]?[0-9\s-]{10,}$/.test(form.phone.replace(/\s/g, ""))) {
+      newErrors.phone = "Please enter a valid phone number.";
+    }
+
+    if (!form.email.trim()) {
+      newErrors.email = "Email is required.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = "Please enter a valid email address.";
+    }
+
+    if (!form.city.trim()) {
+      newErrors.city = "City is required.";
+    }
+
+    if (role === "student" && !form.status) {
+      newErrors.status = "Please select your current status.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [form, role]);
+
   const scrollToRegister = () => {
-    document.getElementById("register")?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById("register")?.scrollIntoView({ behavior: shouldReduceMotion ? "auto" : "smooth" });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setSubmitError("");
+    setErrors({});
 
-    if (!role) {
-      setError("Please select whether you are a student or a parent.");
-      return;
-    }
-
-    if (!form.name || !form.phone || !form.email || !form.city) {
-      setError("Please fill in all fields.");
-      return;
-    }
-
-    if (role === "student" && !form.status) {
-      setError("Please select your current status.");
+    if (!validateForm()) {
       return;
     }
 
@@ -189,10 +264,17 @@ export default function OpenHousePage() {
       if (!res.ok) throw new Error("Submission failed");
       router.push("/thank-you?type=booking");
     } catch {
-      setError("Something went wrong. Please try again.");
+      setSubmitError("Something went wrong. Please try again.");
       setSubmitting(false);
     }
   };
+
+  const openLightbox = (src: string, alt: string) => {
+    setLightboxSrc(src);
+    setLightboxAlt(alt);
+  };
+
+  const transitionDuration = shouldReduceMotion ? 0 : undefined;
 
   return (
     <>
@@ -205,7 +287,7 @@ export default function OpenHousePage() {
             title="Aviation Background"
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
             allowFullScreen
-            loading="lazy"
+            loading="eager"
             style={{ pointerEvents: "none" }}
           />
         </div>
@@ -213,9 +295,9 @@ export default function OpenHousePage() {
 
         <div className="relative z-20 max-w-4xl mx-auto px-6 lg:px-8 text-center pt-20">
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: transitionDuration ?? 0.8 }}
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-white"
           >
             Bangalore&apos;s Only{" "}
@@ -223,31 +305,31 @@ export default function OpenHousePage() {
           </motion.h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-xl md:text-2xl text-white/70 mb-8"
+            transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.2 }}
+            className="text-xl md:text-2xl text-white/80 mb-8"
           >
             Where Bangalore&apos;s future pilots are made.
           </motion.p>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.35 }}
-            className="text-base md:text-lg text-white/50 mb-10"
+            transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.35 }}
+            className="text-base md:text-lg text-white/70 mb-10"
           >
             April 11, 2026 · 11:30 AM onwards · WindChasers HQ, Bangalore
           </motion.p>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
+            transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.5 }}
           >
             <button
               onClick={scrollToRegister}
-              className="bg-gold text-dark px-10 py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
+              className="bg-gold text-dark px-10 py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
             >
               Reserve Your Spot
             </button>
@@ -259,48 +341,43 @@ export default function OpenHousePage() {
       <section className="py-20 px-6 lg:px-8 bg-accent-dark">
         <div className="max-w-7xl mx-auto">
           <motion.h2
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: transitionDuration ?? 0.6 }}
             className="text-4xl md:text-5xl font-bold text-center mb-4 text-gold"
           >
             Topics covered
           </motion.h2>
           <motion.p
-            initial={{ opacity: 0 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-white/60 text-center text-lg mb-14"
+            transition={{ duration: transitionDuration ?? 0.6, delay: shouldReduceMotion ? 0 : 0.15 }}
+            className="text-white/70 text-center text-lg mb-14"
           >
             One morning. Every answer you need.
           </motion.p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {TOPICS.map(({ Icon, title, desc }, i) => {
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {TOPICS.map(({ title, desc }, i) => {
               const isLast = i === TOPICS.length - 1;
               return (
                 <motion.div
                   key={title}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.07 }}
+                  transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : i * 0.07 }}
                   className={[
-                    "bg-dark border border-white/10 hover:border-[#C5A572]/40 transition-colors duration-300 rounded-xl p-6 flex flex-col",
-                    isLast ? "md:col-start-2 lg:col-start-auto" : "",
+                    "bg-dark border-l-4 border-gold rounded-r-xl p-6",
+                    isLast ? "md:col-start-2" : "",
                   ].join(" ")}
                 >
-                  <Icon
-                    className="mb-4 flex-shrink-0"
-                    style={{ color: "#C5A572", width: 28, height: 28 }}
-                    strokeWidth={1.5}
-                  />
                   <h3 className="text-white font-bold text-base md:text-lg mb-2 leading-snug">
                     {title}
                   </h3>
-                  <p className="text-white/55 text-sm leading-relaxed">{desc}</p>
+                  <p className="text-white/70 text-sm leading-relaxed">{desc}</p>
                 </motion.div>
               );
             })}
@@ -308,43 +385,52 @@ export default function OpenHousePage() {
         </div>
       </section>
 
-      {/* Meet our team */}
+      {/* Past open houses gallery */}
       <section className="py-20 px-6 lg:px-8 bg-dark">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-7xl mx-auto">
           <motion.h2
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-center mb-4 text-gold"
+            transition={{ duration: transitionDuration ?? 0.6 }}
+            className="text-4xl md:text-5xl font-bold text-center mb-14 text-gold"
           >
-            Meet our instructors
+            From our past open houses
           </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-white/60 text-center text-lg mb-14 max-w-2xl mx-auto"
-          >
-            Sit down with our senior instructors. Ask anything about the CPL
-            path, training philosophy, and what it takes.
-          </motion.p>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {TEAM.map(({ Icon, label }, i) => (
+          {/* Videos: horizontal scroll on mobile, 2-col grid on desktop */}
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory lg:grid lg:grid-cols-2 lg:overflow-visible lg:pb-0 mb-10">
+            {GALLERY_VIDEOS.map((v, i) => (
+              <GalleryVideo key={v} src={v} index={i} />
+            ))}
+          </div>
+
+          {/* Images: 2-col mobile, 3-col desktop, lightbox on click */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            {GALLERY_IMAGES.map(({ src, alt }, i) => (
               <motion.div
-                key={label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                key={src}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.97 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group bg-dark border border-white/10 hover:border-gold/40 rounded-xl p-8 flex flex-col items-center text-center transition-colors duration-300"
+                transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : i * 0.05 }}
+                className="overflow-hidden rounded-xl cursor-pointer group focus-within:ring-2 focus-within:ring-gold/60"
+                onClick={() => openLightbox(asset(src), alt)}
               >
-                <div className="w-14 h-14 mb-5 flex items-center justify-center rounded-xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
-                  <Icon className="w-7 h-7 text-gold" strokeWidth={1.5} />
-                </div>
-                <p className="text-white/75 text-base leading-relaxed">{label}</p>
+                <button
+                  type="button"
+                  className="w-full h-full p-0 border-0 bg-transparent"
+                  onClick={() => openLightbox(asset(src), alt)}
+                  aria-label={`View larger image: ${alt}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={asset(src)}
+                    alt={alt}
+                    className="w-full h-40 md:h-52 object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </button>
               </motion.div>
             ))}
           </div>
@@ -358,29 +444,31 @@ export default function OpenHousePage() {
       >
         <div className="max-w-xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: transitionDuration ?? 0.6 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-3 text-gold">
               Reserve Your Spot
             </h2>
-            <p className="text-white/60 text-center mb-10">
+            <p className="text-white/70 text-center mb-10">
               Free entry. Limited seats. April 11 · 11:30 AM.
             </p>
 
             {blocked ? (
               <motion.div
-                initial={{ opacity: 0, scale: 0.96 }}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: shouldReduceMotion ? 0 : undefined }}
                 className="rounded-xl border border-white/10 bg-dark p-8 text-center"
+                role="alert"
               >
-                <p className="text-white/80 text-lg leading-relaxed mb-3">
+                <p className="text-white/90 text-lg leading-relaxed mb-3">
                   This open house is exclusively for students who have completed
                   12th or above. Visit our homepage to explore how to prepare.
                 </p>
-                <p className="text-white/40 text-sm">
+                <p className="text-white/60 text-sm">
                   Redirecting you{" "}
                   <span className="text-gold">shortly...</span>
                 </p>
@@ -389,90 +477,123 @@ export default function OpenHousePage() {
               <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 {/* Role selector */}
                 <div>
-                  <label className="block text-sm text-white/60 mb-2">
-                    I am a…
+                  <label className="block text-sm text-white/70 mb-2">
+                    I am a… <span className="text-red-400">*</span>
                   </label>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Select your role">
                     {(["student", "parent"] as const).map((r) => (
                       <button
                         key={r}
                         type="button"
-                        onClick={() => setRole(r)}
+                        onClick={() => {
+                          setRole(r);
+                          setErrors((prev) => ({ ...prev, role: undefined }));
+                        }}
+                        aria-checked={role === r}
+                        role="radio"
                         className={`py-3 rounded-lg font-medium text-sm capitalize transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 ${
                           role === r
                             ? "bg-gold text-dark"
-                            : "bg-dark border border-white/10 text-white/60 hover:border-white/30"
+                            : "bg-dark border border-white/10 text-white/70 hover:border-white/30"
                         }`}
                       >
                         {r === "student" ? "Student / Aspiring Pilot" : "Parent / Guardian"}
                       </button>
                     ))}
                   </div>
+                  {errors.role && (
+                    <p className="text-red-400 text-sm mt-1.5" role="alert">{errors.role}</p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-sm text-white/60 mb-1.5">
-                    Full Name
+                  <label htmlFor="name" className="block text-sm text-white/70 mb-1.5">
+                    Full Name <span className="text-red-400">*</span>
                   </label>
                   <input
+                    id="name"
                     type="text"
                     required
                     placeholder="Your full name"
                     value={form.name}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, name: e.target.value }))
-                    }
-                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-gold/50 transition-colors"
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, name: e.target.value }));
+                      setErrors((prev) => ({ ...prev, name: undefined }));
+                    }}
+                    aria-invalid={errors.name ? "true" : "false"}
+                    aria-describedby={errors.name ? "name-error" : undefined}
+                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-gold/50 transition-colors"
                   />
+                  {errors.name && (
+                    <p id="name-error" className="text-red-400 text-sm mt-1.5" role="alert">{errors.name}</p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-sm text-white/60 mb-1.5">
-                    Phone
+                  <label htmlFor="phone" className="block text-sm text-white/70 mb-1.5">
+                    Phone <span className="text-red-400">*</span>
                   </label>
                   <input
+                    id="phone"
                     type="tel"
                     required
                     placeholder="+91 98765 43210"
                     value={form.phone}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, phone: e.target.value }))
-                    }
-                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-gold/50 transition-colors"
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, phone: e.target.value }));
+                      setErrors((prev) => ({ ...prev, phone: undefined }));
+                    }}
+                    aria-invalid={errors.phone ? "true" : "false"}
+                    aria-describedby={errors.phone ? "phone-error" : undefined}
+                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-gold/50 transition-colors"
                   />
+                  {errors.phone && (
+                    <p id="phone-error" className="text-red-400 text-sm mt-1.5" role="alert">{errors.phone}</p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-sm text-white/60 mb-1.5">
-                    Email
+                  <label htmlFor="email" className="block text-sm text-white/70 mb-1.5">
+                    Email <span className="text-red-400">*</span>
                   </label>
                   <input
+                    id="email"
                     type="email"
                     required
                     placeholder="you@email.com"
                     value={form.email}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, email: e.target.value }))
-                    }
-                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-gold/50 transition-colors"
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, email: e.target.value }));
+                      setErrors((prev) => ({ ...prev, email: undefined }));
+                    }}
+                    aria-invalid={errors.email ? "true" : "false"}
+                    aria-describedby={errors.email ? "email-error" : undefined}
+                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-gold/50 transition-colors"
                   />
+                  {errors.email && (
+                    <p id="email-error" className="text-red-400 text-sm mt-1.5" role="alert">{errors.email}</p>
+                  )}
                 </div>
 
                 {role === "student" && (
                   <div>
-                    <label className="block text-sm text-white/60 mb-1.5">
-                      Current Status
+                    <label htmlFor="status" className="block text-sm text-white/70 mb-1.5">
+                      Current Status <span className="text-red-400">*</span>
                     </label>
                     <div className="relative">
                       <select
+                        id="status"
                         required
                         value={form.status}
-                        onChange={(e) =>
+                        onChange={(e) => {
                           setForm((f) => ({
                             ...f,
                             status: e.target.value as Status,
-                          }))
-                        }
+                          }));
+                          setErrors((prev) => ({ ...prev, status: undefined }));
+                        }}
+                        aria-invalid={errors.status ? "true" : "false"}
+                        aria-describedby={errors.status ? "status-error" : undefined}
                         className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold/50 transition-colors appearance-none pr-10"
                       >
                         <option value="" disabled>
@@ -483,30 +604,40 @@ export default function OpenHousePage() {
                         <option value="Graduate or above">Graduate or above</option>
                         <option value="Below 12th">Below 12th</option>
                       </select>
-                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                     </div>
+                    {errors.status && (
+                      <p id="status-error" className="text-red-400 text-sm mt-1.5" role="alert">{errors.status}</p>
+                    )}
                   </div>
                 )}
 
                 <div>
-                  <label className="block text-sm text-white/60 mb-1.5">
-                    City
+                  <label htmlFor="city" className="block text-sm text-white/70 mb-1.5">
+                    City <span className="text-red-400">*</span>
                   </label>
                   <input
+                    id="city"
                     type="text"
                     required
                     placeholder="Bangalore"
                     value={form.city}
-                    onChange={(e) =>
-                      setForm((f) => ({ ...f, city: e.target.value }))
-                    }
-                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/30 focus:outline-none focus:border-gold/50 transition-colors"
+                    onChange={(e) => {
+                      setForm((f) => ({ ...f, city: e.target.value }));
+                      setErrors((prev) => ({ ...prev, city: undefined }));
+                    }}
+                    aria-invalid={errors.city ? "true" : "false"}
+                    aria-describedby={errors.city ? "city-error" : undefined}
+                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white placeholder:text-white/40 focus:outline-none focus:border-gold/50 transition-colors"
                   />
+                  {errors.city && (
+                    <p id="city-error" className="text-red-400 text-sm mt-1.5" role="alert">{errors.city}</p>
+                  )}
                 </div>
 
                 {role === "student" && (
                   <div className="flex items-center justify-between p-4 rounded-lg border border-white/10 bg-dark">
-                    <span className="text-white/70 text-sm">
+                    <span className="text-white/80 text-sm">
                       Will a parent or guardian be attending?
                     </span>
                     <button
@@ -536,8 +667,8 @@ export default function OpenHousePage() {
                   </div>
                 )}
 
-                {error && (
-                  <p className="text-red-400 text-sm text-center">{error}</p>
+                {submitError && (
+                  <p className="text-red-400 text-sm text-center" role="alert">{submitError}</p>
                 )}
 
                 <button
@@ -548,7 +679,7 @@ export default function OpenHousePage() {
                   {submitting ? "Registering..." : "Register for Free"}
                 </button>
 
-                <p className="text-white/30 text-xs text-center">
+                <p className="text-white/50 text-xs text-center">
                   No spam. We&apos;ll only send you event details and a reminder.
                 </p>
               </form>
@@ -557,86 +688,34 @@ export default function OpenHousePage() {
         </div>
       </section>
 
-      {/* Past open houses gallery */}
-      <section className="py-20 px-6 lg:px-8 bg-dark">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-center mb-14 text-gold"
-          >
-            From our past open houses
-          </motion.h2>
-
-          {/* Videos: horizontal scroll on mobile, 2-col grid on desktop */}
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory lg:grid lg:grid-cols-2 lg:overflow-visible lg:pb-0 mb-10">
-            {GALLERY_VIDEOS.map((v, i) => (
-              <motion.video
-                key={v}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                src={asset(v)}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="flex-none w-72 h-48 rounded-xl object-cover snap-start lg:w-full lg:h-64"
-              />
-            ))}
-          </div>
-
-          {/* Images: 2-col mobile, 3-col desktop, lightbox on click */}
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-            {GALLERY_IMAGES.map((img, i) => (
-              <motion.div
-                key={img}
-                initial={{ opacity: 0, scale: 0.97 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: i * 0.05 }}
-                className="overflow-hidden rounded-xl cursor-pointer group"
-                onClick={() => setLightboxSrc(asset(img))}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={asset(img)}
-                  alt=""
-                  className="w-full h-40 md:h-52 object-cover group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Lightbox */}
       <AnimatePresence>
         {lightboxSrc && (
           <motion.div
-            initial={{ opacity: 0 }}
+            initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            exit={{ opacity: shouldReduceMotion ? 1 : 0 }}
+            transition={{ duration: shouldReduceMotion ? 0 : undefined }}
             className="fixed inset-0 z-50 bg-black/92 flex items-center justify-center p-4"
             onClick={() => setLightboxSrc(null)}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Image lightbox"
           >
             <button
-              className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+              className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 rounded p-1"
               onClick={() => setLightboxSrc(null)}
               aria-label="Close lightbox"
             >
               <X className="w-8 h-8" />
             </button>
             <motion.img
-              initial={{ scale: 0.92 }}
+              initial={{ scale: shouldReduceMotion ? 1 : 0.92 }}
               animate={{ scale: 1 }}
-              exit={{ scale: 0.92 }}
+              exit={{ scale: shouldReduceMotion ? 1 : 0.92 }}
+              transition={{ duration: shouldReduceMotion ? 0 : undefined }}
               src={lightboxSrc}
-              alt=""
+              alt={lightboxAlt}
               className="max-w-full max-h-[90vh] rounded-xl shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             />
