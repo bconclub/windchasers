@@ -1,44 +1,81 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { BookOpen, Users, Gamepad2, Building2 } from "lucide-react";
-import ImageCarousel from "@/components/ImageCarousel";
+import { Users, BookOpen, Gamepad2, X } from "lucide-react";
 import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
 
-const AGENDA_ITEMS = [
+// URL-encode filenames from public/open house/
+const asset = (filename: string) =>
+  `/open%20house/${encodeURIComponent(filename)}`;
+
+const TOPICS = [
   {
-    icon: BookOpen,
-    title: "Full CPL roadmap session",
-    desc: "End-to-end breakdown of what it takes to earn your Commercial Pilot Licence — timelines, costs, and what to expect.",
+    title: "Step-by-step roadmap",
+    desc: "The exact path from completing 12th to holding a CPL. No gaps.",
   },
   {
-    icon: Users,
-    title: "Meet our instructors",
-    desc: "Sit down with ex-Air Force pilots. Ask anything — their experience, training philosophy, and what they look for in students.",
+    title: "Life after CPL",
+    desc: "What happens the day you get your licence. Real timelines, real expectations.",
   },
   {
-    icon: Gamepad2,
-    title: "Experience the flight simulator",
-    desc: "Get hands-on time in our industry-standard simulator. Feel what flying actually feels like before committing.",
+    title: "Career path after CPL",
+    desc: "Airlines, charters, cargo, instructing. What each path looks like.",
   },
   {
-    icon: Building2,
-    title: "Tour the facility",
-    desc: "Walk through our classrooms, briefing rooms, and sim bay. See exactly where you'll spend the next chapter of your life.",
+    title: "Cadet programme vs CPL",
+    desc: "Two routes to the cockpit. Which one is right for you.",
+  },
+  {
+    title: "Money talk: what is the real cost?",
+    desc: "Full cost breakdown. Training, exams, medicals, everything.",
+  },
+  {
+    title: "Biggest mistakes student pilots make",
+    desc: "What trips most aspirants up and how to avoid it.",
+  },
+  {
+    title: "How WindChasers solves this",
+    desc: "Our approach, our track record, and why it works.",
   },
 ];
 
-const FACILITY_IMAGES = [
-  "/facility/WC1.webp",
-  "/facility/WC2.webp",
-  "/facility/WC3.webp",
-  "/facility/WC4.webp",
-  "/facility/WC5.webp",
-  "/facility/WC6.webp",
-  "/facility/WC7.webp",
+const TEAM = [
+  {
+    Icon: Users,
+    label: "Senior commercial pilots with active airline experience",
+  },
+  {
+    Icon: BookOpen,
+    label: "DGCA certified ground instructors",
+  },
+  {
+    Icon: Gamepad2,
+    label: "Simulator instructors. Hands-on time included.",
+  },
+];
+
+const GALLERY_VIDEOS = [
+  "Open hosue 5.mp4",
+  "Open House May 4.mp4",
+  "SnapInsta.to_AQON7tga2fQpN5m1Ud2WRyJKpvSyLHIidvDWsvuwpiCkZlV0-oAIHCUrfCjBi0pnxOD1ddsZQWYg71BiH30ZQEpYCzwwF-1YKkrWFY0.mp4",
+  "WC Open House Nove 2024.mp4",
+];
+
+const GALLERY_IMAGES = [
+  "Open Hosue 3.jpg",
+  "Open Hosue 4.jpg",
+  "Open Houe 2.jpg",
+  "Open HOuse 1.jpg",
+  "Open House May 25 1.jpg",
+  "Open House May 25 2.jpg",
+  "Open House May 25.jpg",
+  "WC November 2024.jpg",
+  "WC Open house April 15 1.jpg",
+  "WC Open house April 15 2.jpg",
+  "WC Open house April 15.jpg",
 ];
 
 type Status =
@@ -72,13 +109,13 @@ export default function OpenHousePage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
   const [blocked, setBlocked] = useState(false);
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
 
   useEffect(() => {
     document.title =
       "Pilot Career Open House Bangalore · April 11 · WindChasers";
   }, []);
 
-  // Redirect "Below 12th" after 3s
   useEffect(() => {
     if (!blocked) return;
     const t = setTimeout(() => router.push("/"), 3000);
@@ -117,7 +154,6 @@ export default function OpenHousePage() {
           status: form.status,
           parentAttending: form.parentAttending,
           source: "open-house",
-          // UTM + session tracking
           sessionId,
           utmParams,
           ...utmParams,
@@ -139,9 +175,8 @@ export default function OpenHousePage() {
 
   return (
     <>
-      {/* ── Hero ── */}
+      {/* Hero */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Vimeo background */}
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
           <iframe
             className="absolute top-1/2 left-[70%] md:left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 border-0"
@@ -156,50 +191,38 @@ export default function OpenHousePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/80 to-dark z-10" />
 
         <div className="relative z-20 max-w-4xl mx-auto px-6 lg:px-8 text-center pt-20">
-          {/* Event badge */}
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="inline-block mb-6 px-4 py-1.5 rounded-full border border-gold/40 bg-gold/10 text-gold text-sm font-medium tracking-wide"
-          >
-            FREE EVENT · APRIL 11, 2026
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1 }}
+            transition={{ duration: 0.8 }}
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-white"
           >
             Bangalore&apos;s Only{" "}
-            <span className="text-gold">Pilot Career</span> Open House
+            <span className="text-gold">Pilot Career Open House</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.25 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-white/70 mb-8"
           >
             Where Bangalore&apos;s future pilots are made.
           </motion.p>
 
-          <motion.div
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-white/60 text-base md:text-lg mb-10"
+            transition={{ duration: 0.8, delay: 0.35 }}
+            className="text-base md:text-lg text-white/50 mb-10"
           >
-            <span>📅 April 11, 2026</span>
-            <span>🕦 11:30 AM onwards</span>
-            <span>📍 WindChasers HQ, Bangalore</span>
-          </motion.div>
+            April 11, 2026 · 11:30 AM onwards · WindChasers HQ, Bangalore
+          </motion.p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.55 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
           >
             <button
               onClick={scrollToRegister}
@@ -211,7 +234,7 @@ export default function OpenHousePage() {
         </div>
       </section>
 
-      {/* ── What's Happening ── */}
+      {/* Topics covered */}
       <section className="py-20 px-6 lg:px-8 bg-accent-dark">
         <div className="max-w-7xl mx-auto">
           <motion.h2
@@ -221,7 +244,7 @@ export default function OpenHousePage() {
             transition={{ duration: 0.6 }}
             className="text-4xl md:text-5xl font-bold text-center mb-4 text-gold"
           >
-            What&apos;s Happening
+            Topics covered
           </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
@@ -230,33 +253,36 @@ export default function OpenHousePage() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="text-white/60 text-center text-lg mb-14"
           >
-            One morning. Everything you need to make the decision.
+            One morning. Every answer you need.
           </motion.p>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {AGENDA_ITEMS.map(({ icon: Icon, title, desc }, i) => (
-              <motion.div
-                key={title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="group p-7 rounded-xl bg-gradient-to-br from-accent-dark to-dark border-2 border-white/10 hover:border-gold/50 transition-all duration-300 hover:shadow-lg hover:shadow-gold/20 hover:-translate-y-1"
-              >
-                <div className="w-13 h-13 mb-5 flex items-center justify-center rounded-xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20 w-14 h-14">
-                  <Icon className="w-7 h-7 text-gold" strokeWidth={1.5} />
-                </div>
-                <h3 className="text-lg font-bold mb-2 text-white group-hover:text-gold transition-colors">
-                  {title}
-                </h3>
-                <p className="text-white/60 text-sm leading-relaxed">{desc}</p>
-              </motion.div>
-            ))}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+            {TOPICS.map(({ title, desc }, i) => {
+              const isLast = i === TOPICS.length - 1;
+              return (
+                <motion.div
+                  key={title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.07 }}
+                  className={[
+                    "bg-dark border-l-4 border-gold rounded-r-xl p-6",
+                    isLast ? "col-span-2 lg:col-span-2 lg:col-start-2" : "",
+                  ].join(" ")}
+                >
+                  <h3 className="text-white font-bold text-base md:text-lg mb-2 leading-snug">
+                    {title}
+                  </h3>
+                  <p className="text-white/55 text-sm leading-relaxed">{desc}</p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* ── Who Should Attend ── */}
+      {/* Meet our team */}
       <section className="py-20 px-6 lg:px-8 bg-dark">
         <div className="max-w-5xl mx-auto">
           <motion.h2
@@ -264,70 +290,42 @@ export default function OpenHousePage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-center mb-14 text-gold"
+            className="text-4xl md:text-5xl font-bold text-center mb-4 text-gold"
           >
-            Who Should Attend
+            Meet our instructors
           </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="text-white/60 text-center text-lg mb-14 max-w-2xl mx-auto"
+          >
+            Sit down with our senior instructors. Ask anything about the CPL
+            path, training philosophy, and what it takes.
+          </motion.p>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="p-8 rounded-xl border-2 border-white/10 hover:border-gold/40 transition-colors"
-            >
-              <div className="text-3xl mb-4">🎓</div>
-              <h3 className="text-2xl font-bold text-white mb-3">Students</h3>
-              <p className="text-white/60 leading-relaxed">
-                If you&apos;ve completed 12th grade or are a graduate with a
-                dream of flying professionally, this event is built for you.
-                Come with questions — leave with a clear plan.
-              </p>
-              <ul className="mt-5 space-y-2 text-white/50 text-sm">
-                <li className="flex items-center gap-2">
-                  <span className="text-gold">✓</span> Completed 12th (Science or Commerce)
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-gold">✓</span> Graduates considering a career change
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-gold">✓</span> Anyone serious about CPL or helicopter training
-                </li>
-              </ul>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="p-8 rounded-xl border-2 border-white/10 hover:border-gold/40 transition-colors"
-            >
-              <div className="text-3xl mb-4">👨‍👩‍👧</div>
-              <h3 className="text-2xl font-bold text-white mb-3">Parents</h3>
-              <p className="text-white/60 leading-relaxed">
-                Aviation training is a significant investment. We believe
-                parents deserve straight answers — on costs, timelines, career
-                outcomes, and what happens after the licence.
-              </p>
-              <ul className="mt-5 space-y-2 text-white/50 text-sm">
-                <li className="flex items-center gap-2">
-                  <span className="text-gold">✓</span> Full cost breakdown, no hidden fees
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-gold">✓</span> Direct Q&amp;A with senior instructors
-                </li>
-                <li className="flex items-center gap-2">
-                  <span className="text-gold">✓</span> Realistic career timelines and outcomes
-                </li>
-              </ul>
-            </motion.div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {TEAM.map(({ Icon, label }, i) => (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="group bg-dark border border-white/10 hover:border-gold/40 rounded-xl p-8 flex flex-col items-center text-center transition-colors duration-300"
+              >
+                <div className="w-14 h-14 mb-5 flex items-center justify-center rounded-xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                  <Icon className="w-7 h-7 text-gold" strokeWidth={1.5} />
+                </div>
+                <p className="text-white/75 text-base leading-relaxed">{label}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── Registration Form ── */}
+      {/* Registration form */}
       <section
         id="register"
         className="py-20 px-6 lg:px-8 bg-accent-dark scroll-mt-20"
@@ -340,10 +338,10 @@ export default function OpenHousePage() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-3 text-gold">
-              Reserve Your Spot
+              Reserve your spot. Free entry.
             </h2>
             <p className="text-white/60 text-center mb-10">
-              Free entry. Limited seats. April 11 · 11:30 AM.
+              April 11, 2026 · 11:30 AM · WindChasers HQ, Bangalore
             </p>
 
             {blocked ? (
@@ -352,22 +350,17 @@ export default function OpenHousePage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="rounded-xl border border-white/10 bg-dark p-8 text-center"
               >
-                <p className="text-white/80 text-lg leading-relaxed mb-2">
-                  This event is exclusively for students who have completed
-                  12th.
+                <p className="text-white/80 text-lg leading-relaxed mb-3">
+                  This open house is exclusively for students who have completed
+                  12th or above. Visit our homepage to explore how to prepare.
                 </p>
-                <p className="text-white/50 text-sm">
-                  Visit our homepage for more.{" "}
-                  <span className="text-gold">Redirecting…</span>
+                <p className="text-white/40 text-sm">
+                  Redirecting you{" "}
+                  <span className="text-gold">shortly...</span>
                 </p>
               </motion.div>
             ) : (
-              <form
-                onSubmit={handleSubmit}
-                noValidate
-                className="space-y-5"
-              >
-                {/* Name */}
+              <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 <div>
                   <label className="block text-sm text-white/60 mb-1.5">
                     Full Name
@@ -384,7 +377,6 @@ export default function OpenHousePage() {
                   />
                 </div>
 
-                {/* Phone */}
                 <div>
                   <label className="block text-sm text-white/60 mb-1.5">
                     Phone
@@ -401,7 +393,6 @@ export default function OpenHousePage() {
                   />
                 </div>
 
-                {/* Email */}
                 <div>
                   <label className="block text-sm text-white/60 mb-1.5">
                     Email
@@ -418,7 +409,6 @@ export default function OpenHousePage() {
                   />
                 </div>
 
-                {/* Status */}
                 <div>
                   <label className="block text-sm text-white/60 mb-1.5">
                     Current Status
@@ -444,7 +434,6 @@ export default function OpenHousePage() {
                   </select>
                 </div>
 
-                {/* City */}
                 <div>
                   <label className="block text-sm text-white/60 mb-1.5">
                     City
@@ -461,10 +450,9 @@ export default function OpenHousePage() {
                   />
                 </div>
 
-                {/* Parent attending toggle */}
                 <div className="flex items-center justify-between p-4 rounded-lg border border-white/10 bg-dark">
                   <span className="text-white/70 text-sm">
-                    Will a parent / guardian be attending?
+                    Will a parent or guardian be attending?
                   </span>
                   <button
                     type="button"
@@ -484,13 +472,14 @@ export default function OpenHousePage() {
                   >
                     <span
                       className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 mt-0.5 ${
-                        form.parentAttending ? "translate-x-5" : "translate-x-0.5"
+                        form.parentAttending
+                          ? "translate-x-5"
+                          : "translate-x-0.5"
                       }`}
                     />
                   </button>
                 </div>
 
-                {/* Error */}
                 {error && (
                   <p className="text-red-400 text-sm text-center">{error}</p>
                 )}
@@ -500,7 +489,7 @@ export default function OpenHousePage() {
                   disabled={submitting}
                   className="w-full bg-gold text-dark py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {submitting ? "Registering…" : "Register for Free"}
+                  {submitting ? "Registering..." : "Register for Free"}
                 </button>
 
                 <p className="text-white/30 text-xs text-center">
@@ -512,12 +501,92 @@ export default function OpenHousePage() {
         </div>
       </section>
 
-      {/* ── Past Events ── */}
-      <ImageCarousel
-        images={FACILITY_IMAGES}
-        title="Inside WindChasers"
-        subtitle="A look at where India's next generation of pilots train."
-      />
+      {/* Past open houses gallery */}
+      <section className="py-20 px-6 lg:px-8 bg-dark">
+        <div className="max-w-7xl mx-auto">
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl md:text-5xl font-bold text-center mb-14 text-gold"
+          >
+            From our past open houses
+          </motion.h2>
+
+          {/* Videos: horizontal scroll on mobile, 2-col grid on desktop */}
+          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory lg:grid lg:grid-cols-2 lg:overflow-visible lg:pb-0 mb-10">
+            {GALLERY_VIDEOS.map((v, i) => (
+              <motion.video
+                key={v}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                src={asset(v)}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="flex-none w-72 h-48 rounded-xl object-cover snap-start lg:w-full lg:h-64"
+              />
+            ))}
+          </div>
+
+          {/* Images: 2-col mobile, 3-col desktop, lightbox on click */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+            {GALLERY_IMAGES.map((img, i) => (
+              <motion.div
+                key={img}
+                initial={{ opacity: 0, scale: 0.97 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: i * 0.05 }}
+                className="overflow-hidden rounded-xl cursor-pointer group"
+                onClick={() => setLightboxSrc(asset(img))}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={asset(img)}
+                  alt=""
+                  className="w-full h-40 md:h-52 object-cover group-hover:scale-105 transition-transform duration-300"
+                  loading="lazy"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxSrc && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/92 flex items-center justify-center p-4"
+            onClick={() => setLightboxSrc(null)}
+          >
+            <button
+              className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+              onClick={() => setLightboxSrc(null)}
+              aria-label="Close lightbox"
+            >
+              <X className="w-8 h-8" />
+            </button>
+            <motion.img
+              initial={{ scale: 0.92 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.92 }}
+              src={lightboxSrc}
+              alt=""
+              className="max-w-full max-h-[90vh] rounded-xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }
