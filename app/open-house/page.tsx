@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Users, BookOpen, Gamepad2, X, ChevronDown } from "lucide-react";
+import { Users, BookOpen, Gamepad2, X, ChevronDown, Map, Plane, TrendingUp, GitBranch, DollarSign, AlertTriangle, Shield } from "lucide-react";
 import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
 
@@ -13,30 +13,37 @@ const asset = (filename: string) =>
 
 const TOPICS = [
   {
+    Icon: Map,
     title: "Step-by-step roadmap",
     desc: "The exact path from completing 12th to holding a CPL. No gaps.",
   },
   {
+    Icon: Plane,
     title: "Life after CPL",
     desc: "What happens the day you get your licence. Real timelines, real expectations.",
   },
   {
+    Icon: TrendingUp,
     title: "Career path after CPL",
     desc: "Airlines, charters, cargo, instructing. What each path looks like.",
   },
   {
+    Icon: GitBranch,
     title: "Cadet programme vs CPL",
     desc: "Two routes to the cockpit. Which one is right for you.",
   },
   {
+    Icon: DollarSign,
     title: "Money talk: what is the real cost?",
     desc: "Full cost breakdown. Training, exams, medicals, everything.",
   },
   {
+    Icon: AlertTriangle,
     title: "Biggest mistakes student pilots make",
     desc: "What trips most aspirants up and how to avoid it.",
   },
   {
+    Icon: Shield,
     title: "How WindChasers solves this",
     desc: "Our approach, our track record, and why it works.",
   },
@@ -270,8 +277,8 @@ export default function OpenHousePage() {
             One morning. Every answer you need.
           </motion.p>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-            {TOPICS.map(({ title, desc }, i) => {
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {TOPICS.map(({ Icon, title, desc }, i) => {
               const isLast = i === TOPICS.length - 1;
               return (
                 <motion.div
@@ -281,10 +288,15 @@ export default function OpenHousePage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.07 }}
                   className={[
-                    "bg-dark border-l-4 border-gold rounded-r-xl p-6",
-                    isLast ? "col-span-2 lg:col-span-2 lg:col-start-2" : "",
+                    "bg-dark border border-white/10 hover:border-[#C5A572]/40 transition-colors duration-300 rounded-xl p-6 flex flex-col",
+                    isLast ? "md:col-start-2 lg:col-start-auto" : "",
                   ].join(" ")}
                 >
+                  <Icon
+                    className="mb-4 flex-shrink-0"
+                    style={{ color: "#C5A572", width: 28, height: 28 }}
+                    strokeWidth={1.5}
+                  />
                   <h3 className="text-white font-bold text-base md:text-lg mb-2 leading-snug">
                     {title}
                   </h3>
