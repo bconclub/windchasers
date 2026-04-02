@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Users, BookOpen, Gamepad2, X } from "lucide-react";
+import { Users, BookOpen, Gamepad2, X, ChevronDown } from "lucide-react";
 import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
 
@@ -78,6 +78,8 @@ const GALLERY_IMAGES = [
   "WC Open house April 15.jpg",
 ];
 
+type Role = "" | "student" | "parent";
+
 type Status =
   | ""
   | "Completed 12th"
@@ -98,6 +100,7 @@ export default function OpenHousePage() {
   const router = useRouter();
   const { sessionId, utmParams } = useTracking();
 
+  const [role, setRole] = useState<Role>("");
   const [form, setForm] = useState<FormState>({
     name: "",
     phone: "",
@@ -130,12 +133,22 @@ export default function OpenHousePage() {
     e.preventDefault();
     setError("");
 
-    if (!form.name || !form.phone || !form.email || !form.status || !form.city) {
+    if (!role) {
+      setError("Please select whether you are a student or a parent.");
+      return;
+    }
+
+    if (!form.name || !form.phone || !form.email || !form.city) {
       setError("Please fill in all fields.");
       return;
     }
 
-    if (form.status === "Below 12th") {
+    if (role === "student" && !form.status) {
+      setError("Please select your current status.");
+      return;
+    }
+
+    if (role === "student" && form.status === "Below 12th") {
       setBlocked(true);
       return;
     }
@@ -151,8 +164,9 @@ export default function OpenHousePage() {
           phone: form.phone,
           email: form.email,
           city: form.city,
-          status: form.status,
-          parentAttending: form.parentAttending,
+          role,
+          status: role === "student" ? form.status : "",
+          parentAttending: role === "student" ? form.parentAttending : null,
           source: "open-house",
           sessionId,
           utmParams,
@@ -338,10 +352,10 @@ export default function OpenHousePage() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-3 text-gold">
-              Reserve your spot. Free entry.
+              Reserve Your Spot
             </h2>
             <p className="text-white/60 text-center mb-10">
-              April 11, 2026 · 11:30 AM · WindChasers HQ, Bangalore
+              Free entry. Limited seats. April 11 · 11:30 AM.
             </p>
 
             {blocked ? (
@@ -361,6 +375,29 @@ export default function OpenHousePage() {
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} noValidate className="space-y-5">
+                {/* Role selector */}
+                <div>
+                  <label className="block text-sm text-white/60 mb-2">
+                    I am a…
+                  </label>
+                  <div className="grid grid-cols-2 gap-3">
+                    {(["student", "parent"] as const).map((r) => (
+                      <button
+                        key={r}
+                        type="button"
+                        onClick={() => setRole(r)}
+                        className={`py-3 rounded-lg font-medium text-sm capitalize transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 ${
+                          role === r
+                            ? "bg-gold text-dark"
+                            : "bg-dark border border-white/10 text-white/60 hover:border-white/30"
+                        }`}
+                      >
+                        {r === "student" ? "Student / Aspiring Pilot" : "Parent / Guardian"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-sm text-white/60 mb-1.5">
                     Full Name
@@ -409,30 +446,35 @@ export default function OpenHousePage() {
                   />
                 </div>
 
-                <div>
-                  <label className="block text-sm text-white/60 mb-1.5">
-                    Current Status
-                  </label>
-                  <select
-                    required
-                    value={form.status}
-                    onChange={(e) =>
-                      setForm((f) => ({
-                        ...f,
-                        status: e.target.value as Status,
-                      }))
-                    }
-                    className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold/50 transition-colors appearance-none"
-                  >
-                    <option value="" disabled>
-                      Select your status
-                    </option>
-                    <option value="Completed 12th">Completed 12th</option>
-                    <option value="Pursuing 12th">Pursuing 12th</option>
-                    <option value="Graduate or above">Graduate or above</option>
-                    <option value="Below 12th">Below 12th</option>
-                  </select>
-                </div>
+                {role === "student" && (
+                  <div>
+                    <label className="block text-sm text-white/60 mb-1.5">
+                      Current Status
+                    </label>
+                    <div className="relative">
+                      <select
+                        required
+                        value={form.status}
+                        onChange={(e) =>
+                          setForm((f) => ({
+                            ...f,
+                            status: e.target.value as Status,
+                          }))
+                        }
+                        className="w-full bg-dark border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-gold/50 transition-colors appearance-none pr-10"
+                      >
+                        <option value="" disabled>
+                          Select your status
+                        </option>
+                        <option value="Completed 12th">Completed 12th</option>
+                        <option value="Pursuing 12th">Pursuing 12th</option>
+                        <option value="Graduate or above">Graduate or above</option>
+                        <option value="Below 12th">Below 12th</option>
+                      </select>
+                      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+                    </div>
+                  </div>
+                )}
 
                 <div>
                   <label className="block text-sm text-white/60 mb-1.5">
@@ -450,35 +492,37 @@ export default function OpenHousePage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg border border-white/10 bg-dark">
-                  <span className="text-white/70 text-sm">
-                    Will a parent or guardian be attending?
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setForm((f) => ({
-                        ...f,
-                        parentAttending: !f.parentAttending,
-                      }))
-                    }
-                    className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 transition-colors duration-200 focus:outline-none ${
-                      form.parentAttending
-                        ? "bg-gold border-gold"
-                        : "bg-white/10 border-white/20"
-                    }`}
-                    aria-pressed={form.parentAttending}
-                    aria-label="Parent attending toggle"
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 mt-0.5 ${
+                {role === "student" && (
+                  <div className="flex items-center justify-between p-4 rounded-lg border border-white/10 bg-dark">
+                    <span className="text-white/70 text-sm">
+                      Will a parent or guardian be attending?
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setForm((f) => ({
+                          ...f,
+                          parentAttending: !f.parentAttending,
+                        }))
+                      }
+                      className={`relative inline-flex h-6 w-11 flex-shrink-0 rounded-full border-2 transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-dark ${
                         form.parentAttending
-                          ? "translate-x-5"
-                          : "translate-x-0.5"
+                          ? "bg-gold border-gold"
+                          : "bg-white/10 border-white/20"
                       }`}
-                    />
-                  </button>
-                </div>
+                      aria-pressed={form.parentAttending}
+                      aria-label="Parent attending toggle"
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform duration-200 mt-0.5 ${
+                          form.parentAttending
+                            ? "translate-x-5"
+                            : "translate-x-0.5"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                )}
 
                 {error && (
                   <p className="text-red-400 text-sm text-center">{error}</p>
@@ -487,7 +531,7 @@ export default function OpenHousePage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="w-full bg-gold text-dark py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full bg-gold text-dark py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-gold/60 focus-visible:ring-offset-2 focus-visible:ring-offset-accent-dark"
                 >
                   {submitting ? "Registering..." : "Register for Free"}
                 </button>
