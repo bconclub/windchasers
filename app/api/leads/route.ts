@@ -3,7 +3,29 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, phone, source, message } = body;
+    const {
+      name,
+      email,
+      phone,
+      source,
+      message,
+      city,
+      status,
+      parentAttending,
+      // UTM + tracking
+      utm_source,
+      utm_medium,
+      utm_campaign,
+      utm_term,
+      utm_content,
+      utmParams,
+      referrer,
+      landing_page,
+      sessionId,
+      pageViews,
+      formSubmissions,
+      userInfo,
+    } = body;
 
     // Validate required fields
     if (!name || !email || !phone) {
@@ -19,8 +41,24 @@ export async function POST(request: NextRequest) {
       email,
       phone,
       source: source || "website",
-      message,
+      message: message || "",
+      city: city || "",
+      status: status || "",
+      parentAttending: parentAttending ?? null,
       timestamp: new Date().toISOString(),
+      // UTM parameters (prefer direct params, fallback to utmParams object)
+      utm_source: utm_source || utmParams?.utm_source || "",
+      utm_medium: utm_medium || utmParams?.utm_medium || "",
+      utm_campaign: utm_campaign || utmParams?.utm_campaign || "",
+      utm_term: utm_term || utmParams?.utm_term || "",
+      utm_content: utm_content || utmParams?.utm_content || "",
+      // Tracking
+      referrer: referrer || "",
+      landing_page: landing_page || "",
+      sessionId,
+      pageViews,
+      formSubmissions,
+      userInfo,
     };
 
     // Send to webhook
