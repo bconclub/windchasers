@@ -16,6 +16,10 @@ import {
   GraduationCap,
   Users,
   CheckCircle,
+  Calendar,
+  Clock,
+  MapPin,
+  Play,
 } from "lucide-react";
 import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
@@ -76,12 +80,6 @@ const WHO_SHOULD_ATTEND = [
     subtext: "Want to understand investment, safety, and career prospects before your child commits.",
     bullets: ["Full cost breakdown", "Career stability info", "Training safety standards"],
   },
-];
-
-const TRUST_BADGES = [
-  "DGCA Certified Training Organization",
-  "500+ Commercial Pilots Trained",
-  "FAA & Ex-Air Force Instructors",
 ];
 
 const GALLERY_VIDEOS = [
@@ -146,25 +144,53 @@ function useInView<T extends HTMLElement>(options?: IntersectionObserverInit) {
   return { ref, isInView };
 }
 
-function GalleryVideo({ src, index }: { src: string; index: number }) {
-  const { ref, isInView } = useInView<HTMLVideoElement>();
+function GalleryVideo({ src, index, draggedRef }: { src: string; index: number; draggedRef?: React.MutableRefObject<boolean> }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
   const shouldReduceMotion = useReducedMotion();
 
+  const togglePlay = () => {
+    if (draggedRef?.current) {
+      draggedRef.current = false;
+      return;
+    }
+    if (!videoRef.current) return;
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+
   return (
-    <motion.video
-      ref={ref}
+    <motion.div
       key={src}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: index * 0.1 }}
-      src={asset(src)}
-      autoPlay={!shouldReduceMotion && isInView}
-      muted
-      loop
-      playsInline
-      className="flex-none w-72 h-48 rounded-xl object-cover snap-start lg:w-full lg:h-64"
-    />
+      className="relative flex-shrink-0 snap-start overflow-hidden rounded-lg cursor-pointer group active:cursor-grabbing"
+      onClick={togglePlay}
+    >
+      <video
+        ref={videoRef}
+        src={asset(src)}
+        muted
+        loop
+        playsInline
+        className="h-[280px] w-auto object-cover"
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+      />
+      {!isPlaying && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity">
+          <div className="w-14 h-14 rounded-full bg-[#C5A572]/90 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <Play className="w-6 h-6 text-black fill-black ml-1" />
+          </div>
+        </div>
+      )}
+    </motion.div>
   );
 }
 
@@ -188,6 +214,50 @@ export default function OpenHousePage() {
   const [blocked, setBlocked] = useState(false);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState<string>("");
+
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftStart, setScrollLeftStart] = useState(0);
+  const dragStartClientX = useRef(0);
+  const justDragged = useRef(false);
+
+  const handleCarouselMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!carouselRef.current) return;
+    setIsDragging(true);
+    dragStartClientX.current = e.clientX;
+    setStartX(e.pageX - carouselRef.current.offsetLeft);
+    setScrollLeftStart(carouselRef.current.scrollLeft);
+    justDragged.current = false;
+  };
+
+  const handleCarouselMouseLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleCarouselMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
+    const diff = Math.abs(e.clientX - dragStartClientX.current);
+    if (diff > 5) {
+      justDragged.current = true;
+    }
+    setIsDragging(false);
+  };
+
+  const handleCarouselMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging || !carouselRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - carouselRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5;
+    carouselRef.current.scrollLeft = scrollLeftStart - walk;
+  };
+
+  const handleImageClick = (src: string, alt: string) => {
+    if (justDragged.current) {
+      justDragged.current = false;
+      return;
+    }
+    openLightbox(src, alt);
+  };
 
   useEffect(() => {
     document.title =
@@ -298,11 +368,11 @@ export default function OpenHousePage() {
   return (
     <>
       {/* Hero */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section ref={heroRef} className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-black">
           {heroInView && (
             <iframe
-              className="absolute top-1/2 left-[70%] md:left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 border-0"
+              className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 border-0"
               src="https://player.vimeo.com/video/1160946921?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&background=1"
               title="Aviation Background"
               allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
@@ -314,15 +384,23 @@ export default function OpenHousePage() {
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/60 to-black/80 z-10" />
 
-        <div className="relative z-20 max-w-4xl mx-auto px-6 lg:px-8 text-center pt-20">
-          <motion.h1
+        <div className="relative z-20 w-full max-w-4xl mx-auto px-6 lg:px-8 text-center pt-20">
+          <motion.p
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: transitionDuration ?? 0.8 }}
+            className="text-[#C5A572] uppercase tracking-[0.2em] text-sm md:text-base mb-4 font-medium"
+          >
+            Aspiring Aviators
+          </motion.p>
+
+          <motion.h1
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.1 }}
             className="text-[32px] md:text-5xl lg:text-[48px] font-bold mb-6 leading-tight text-white"
           >
-            Bangalore&apos;s Only{" "}
-            <span className="text-[#C5A572]">Pilot Career Open House</span>
+            Join Bangalore&apos;s Only Pilot Career Open House
           </motion.h1>
 
           <motion.p
@@ -334,14 +412,25 @@ export default function OpenHousePage() {
             Where Bangalore&apos;s future pilots are made.
           </motion.p>
 
-          <motion.p
+          <motion.div
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.35 }}
-            className="text-base text-[#C5A572] mb-10 tracking-[1px]"
+            className="flex flex-wrap items-center justify-center gap-4 md:gap-8 mb-10 text-base text-[#C5A572] tracking-[1px]"
           >
-            April 11, 2026 · 11:30 AM onwards · WindChasers HQ, Bangalore
-          </motion.p>
+            <span className="flex items-center gap-2">
+              <Calendar className="w-4 h-4 text-[#C5A572]" />
+              <span>April 11, 2026</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <Clock className="w-4 h-4 text-[#C5A572]" />
+              <span>11:30 AM onwards</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-[#C5A572]" />
+              <span>WindChasers HQ, Bangalore</span>
+            </span>
+          </motion.div>
 
           <motion.div
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
@@ -401,9 +490,9 @@ export default function OpenHousePage() {
         </div>
       </section>
 
-      {/* Meet Our Instructors */}
+      {/* Past open houses gallery */}
       <section className="py-20 px-6 lg:px-8 bg-gradient-to-b from-[#1A1A1A] to-[#2A2A2A]">
-        <div className="max-w-[1200px] mx-auto">
+        <div className="max-w-7xl mx-auto">
           <motion.h2
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -411,26 +500,46 @@ export default function OpenHousePage() {
             transition={{ duration: transitionDuration ?? 0.6 }}
             className="text-4xl md:text-5xl font-bold text-center mb-14 text-[#C5A572]"
           >
-            Meet Our Instructors
+            Our Past Open Houses
           </motion.h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {INSTRUCTORS.map(({ initials, name, role, cred, desc }, i) => (
+          {/* Horizontal scroll carousel */}
+          <div
+            ref={carouselRef}
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 cursor-grab active:cursor-grabbing select-none"
+            onMouseDown={handleCarouselMouseDown}
+            onMouseLeave={handleCarouselMouseLeave}
+            onMouseUp={handleCarouselMouseUp}
+            onMouseMove={handleCarouselMouseMove}
+          >
+            {GALLERY_VIDEOS.map((v, i) => (
+              <GalleryVideo key={v} src={v} index={i} draggedRef={justDragged} />
+            ))}
+            {GALLERY_IMAGES.map(({ src, alt, position }, i) => (
               <motion.div
-                key={name}
-                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                key={src.src}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.97 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : i * 0.07 }}
-                className="rounded-lg p-10 text-center bg-[#1A1A1A]/60 border border-white/5"
+                transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : (GALLERY_VIDEOS.length + i) * 0.05 }}
+                className="flex-shrink-0 snap-start overflow-hidden rounded-lg cursor-pointer group active:cursor-grabbing"
+                onClick={() => handleImageClick(src.src, alt)}
               >
-                <div className="w-[120px] h-[120px] mx-auto rounded-full bg-gradient-to-br from-[#C5A572] to-[#8a6d43] flex items-center justify-center text-black font-bold text-2xl mb-4">
-                  {initials}
-                </div>
-                <h3 className="text-white font-semibold text-base mb-1">{name}</h3>
-                <p className="text-[#C5A572] text-sm mb-1">{role}</p>
-                <p className="text-gray-500 text-xs mb-4">{cred}</p>
-                <p className="text-gray-400 text-sm">{desc}</p>
+                <Image
+                  src={src}
+                  alt={alt}
+                  height={280}
+                  width={500}
+                  className="h-[280px] w-auto object-cover transition-transform duration-[400ms] group-hover:scale-[1.03]"
+                  style={{
+                    objectPosition: position,
+                    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                  sizes="auto"
+                  loading={i < 3 ? "eager" : "lazy"}
+                  priority={i < 3}
+                  placeholder="blur"
+                />
               </motion.div>
             ))}
           </div>
@@ -505,16 +614,6 @@ export default function OpenHousePage() {
               <div className="h-2 w-full bg-[#333] rounded-full overflow-hidden">
                 <div className="h-full w-[72%] bg-[#C5A572] rounded-full" />
               </div>
-            </div>
-
-            {/* Trust badges */}
-            <div className="flex flex-wrap justify-center gap-3 mb-8">
-              {TRUST_BADGES.map((badge) => (
-                <div key={badge} className="flex items-center gap-2 bg-[#252525] border border-white/10 rounded-full px-4 py-2 text-xs text-gray-300">
-                  <CheckCircle className="w-4 h-4 text-[#C5A572]" />
-                  <span>{badge}</span>
-                </div>
-              ))}
             </div>
 
             {blocked ? (
@@ -751,68 +850,6 @@ export default function OpenHousePage() {
               </form>
             )}
           </motion.div>
-        </div>
-      </section>
-
-      {/* Past open houses gallery */}
-      <section className="py-20 px-6 lg:px-8 bg-[#111]">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: transitionDuration ?? 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-center mb-14 text-[#C5A572]"
-          >
-            From our past open houses
-          </motion.h2>
-
-          {/* Videos: horizontal scroll on mobile, 2-col grid on desktop */}
-          <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory lg:grid lg:grid-cols-2 lg:overflow-visible lg:pb-0 mb-10">
-            {GALLERY_VIDEOS.map((v, i) => (
-              <GalleryVideo key={v} src={v} index={i} />
-            ))}
-          </div>
-
-          {/* Images: uniform 16:9 grid, lightbox on click */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
-            {GALLERY_IMAGES.map(({ src, alt, position }, i) => (
-              <motion.div
-                key={src.src}
-                initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.97 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : i * 0.05 }}
-                className="relative aspect-video overflow-hidden rounded-lg cursor-pointer group focus-within:ring-2 focus-within:ring-[#C5A572]/60 hover:shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition-shadow"
-                onClick={() => openLightbox(src.src, alt)}
-              >
-                <button
-                  type="button"
-                  className="absolute inset-0 w-full h-full p-0 border-0 bg-transparent"
-                  onClick={() => openLightbox(src.src, alt)}
-                  aria-label={`View larger image: ${alt}`}
-                >
-                  <Image
-                    src={src}
-                    alt={alt}
-                    fill
-                    className="object-cover transition-transform duration-[400ms] group-hover:scale-[1.03]"
-                    style={{
-                      objectPosition: position,
-                      transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-                    }}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    loading={i < 3 ? "eager" : "lazy"}
-                    priority={i < 3}
-                    placeholder="blur"
-                  />
-                </button>
-                <div className="absolute inset-0 z-10 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-                  <span className="text-[#C5A572] font-semibold">View</span>
-                </div>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
