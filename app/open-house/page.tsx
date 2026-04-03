@@ -359,7 +359,7 @@ export default function OpenHousePage() {
     setSubmitting(true);
     try {
       const trackingData = getTrackingData();
-      const res = await fetch("/api/leads", {
+      const res = await fetch("/api/open-house", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
