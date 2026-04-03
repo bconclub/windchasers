@@ -170,7 +170,7 @@ function GalleryVideo({ src, index, draggedRef }: { src: string; index: number; 
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: index * 0.1 }}
-      className="relative flex-shrink-0 snap-start overflow-hidden rounded-lg cursor-pointer group active:cursor-grabbing"
+      className="relative flex-shrink-0 snap-start overflow-hidden rounded-lg cursor-pointer group active:cursor-grabbing w-[260px] h-[200px]"
       onClick={togglePlay}
     >
       <video
@@ -179,7 +179,7 @@ function GalleryVideo({ src, index, draggedRef }: { src: string; index: number; 
         muted
         loop
         playsInline
-        className="h-[280px] w-auto object-cover"
+        className="w-full h-full object-cover rounded-lg"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
       />
@@ -506,7 +506,7 @@ export default function OpenHousePage() {
           {/* Horizontal scroll carousel */}
           <div
             ref={carouselRef}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 cursor-grab active:cursor-grabbing select-none"
+            className="flex flex-row overflow-x-auto gap-4 pb-2 scrollbar-hide snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none"
             onMouseDown={handleCarouselMouseDown}
             onMouseLeave={handleCarouselMouseLeave}
             onMouseUp={handleCarouselMouseUp}
@@ -522,15 +522,15 @@ export default function OpenHousePage() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : (GALLERY_VIDEOS.length + i) * 0.05 }}
-                className="flex-shrink-0 snap-start overflow-hidden rounded-lg cursor-pointer group active:cursor-grabbing"
+                className="flex-shrink-0 snap-start overflow-hidden rounded-lg cursor-pointer group active:cursor-grabbing w-[260px] h-[200px]"
                 onClick={() => handleImageClick(src.src, alt)}
               >
                 <Image
                   src={src}
                   alt={alt}
-                  height={280}
-                  width={500}
-                  className="h-[280px] w-auto object-cover transition-transform duration-[400ms] group-hover:scale-[1.03]"
+                  width={260}
+                  height={200}
+                  className="w-full h-full object-cover rounded-lg transition-transform duration-[400ms] group-hover:scale-[1.03]"
                   style={{
                     objectPosition: position,
                     transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
@@ -841,7 +841,7 @@ export default function OpenHousePage() {
                   disabled={submitting}
                   className="w-full bg-[#C5A572] text-black h-12 rounded-lg font-semibold text-lg hover:bg-[#C5A572]/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1A1A]"
                 >
-                  {submitting ? "Registering..." : "Register for Free"}
+                  {submitting ? "Registering..." : "Reserve My Seat"}
                 </button>
 
                 <p className="text-white/50 text-xs text-center">
