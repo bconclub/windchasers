@@ -85,7 +85,6 @@ const WHO_SHOULD_ATTEND = [
 const GALLERY_VIDEOS = [
   "Open hosue 5.mp4",
   "Open House May 4.mp4",
-  "SnapInsta.to_AQON7tga2fQpN5m1Ud2WRyJKpvSyLHIidvDWsvuwpiCkZlV0-oAIHCUrfCjBi0pnxOD1ddsZQWYg71BiH30ZQEpYCzwwF-1YKkrWFY0.mp4",
   "WC Open House Nove 2024.mp4",
 ];
 
@@ -144,25 +143,8 @@ function useInView<T extends HTMLElement>(options?: IntersectionObserverInit) {
   return { ref, isInView };
 }
 
-function GalleryVideo({ src, index, draggedRef }: { src: string; index: number; draggedRef?: React.MutableRefObject<boolean> }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
+function GalleryVideo({ src, index }: { src: string; index: number }) {
   const shouldReduceMotion = useReducedMotion();
-
-  const togglePlay = () => {
-    if (draggedRef?.current) {
-      draggedRef.current = false;
-      return;
-    }
-    if (!videoRef.current) return;
-    if (isPlaying) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
-
   return (
     <motion.div
       key={src}
@@ -170,26 +152,16 @@ function GalleryVideo({ src, index, draggedRef }: { src: string; index: number; 
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: index * 0.1 }}
-      className="relative flex-shrink-0 snap-start overflow-hidden rounded-lg cursor-pointer group active:cursor-grabbing w-[260px] h-[200px]"
-      onClick={togglePlay}
+      className="flex-shrink-0 snap-start overflow-hidden rounded-lg group active:cursor-grabbing"
     >
-      <video
-        ref={videoRef}
-        src={asset(src)}
-        muted
-        loop
-        playsInline
-        className="w-full h-full object-cover rounded-lg"
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-      />
-      {!isPlaying && (
-        <div className="absolute inset-0 flex items-center justify-center bg-black/40 transition-opacity">
-          <div className="w-14 h-14 rounded-full bg-[#C5A572]/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-            <Play className="w-6 h-6 text-black fill-black ml-1" />
-          </div>
-        </div>
-      )}
+      <div className="flex-shrink-0 w-fit">
+        <video
+          src={asset(src)}
+          controls
+          playsInline
+          className="h-[260px] w-auto rounded-lg"
+        />
+      </div>
     </motion.div>
   );
 }
@@ -539,14 +511,14 @@ export default function OpenHousePage() {
           {/* Horizontal scroll carousel */}
           <div
             ref={carouselRef}
-            className="flex flex-row overflow-x-auto gap-4 pb-2 scrollbar-hide snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none"
+            className="flex flex-row overflow-x-auto gap-4 pb-2 scrollbar-hide snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none items-end"
             onMouseDown={handleCarouselMouseDown}
             onMouseLeave={handleCarouselMouseLeave}
             onMouseUp={handleCarouselMouseUp}
             onMouseMove={handleCarouselMouseMove}
           >
             {GALLERY_VIDEOS.map((v, i) => (
-              <GalleryVideo key={v} src={v} index={i} draggedRef={justDragged} />
+              <GalleryVideo key={v} src={v} index={i} />
             ))}
             {GALLERY_IMAGES.map(({ src, alt, position }, i) => (
               <motion.div
@@ -555,23 +527,18 @@ export default function OpenHousePage() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : (GALLERY_VIDEOS.length + i) * 0.05 }}
-                className="flex-shrink-0 snap-start overflow-hidden rounded-lg cursor-pointer group active:cursor-grabbing w-[260px] h-[200px]"
+                className="flex-shrink-0 snap-start overflow-hidden rounded-lg cursor-pointer group active:cursor-grabbing"
                 onClick={() => handleImageClick(src.src, alt)}
               >
-                <Image
-                  src={src}
+                <img
+                  src={src.src}
                   alt={alt}
-                  width={260}
-                  height={200}
-                  className="w-full h-full object-cover rounded-lg transition-transform duration-[400ms] group-hover:scale-[1.03]"
+                  className="h-[260px] w-auto object-contain rounded-lg transition-transform duration-[400ms] group-hover:scale-[1.03]"
                   style={{
                     objectPosition: position,
                     transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
-                  sizes="auto"
                   loading={i < 3 ? "eager" : "lazy"}
-                  priority={i < 3}
-                  placeholder="blur"
                 />
               </motion.div>
             ))}
