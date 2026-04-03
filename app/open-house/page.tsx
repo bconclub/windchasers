@@ -214,8 +214,11 @@ export default function OpenHousePage() {
   const [blocked, setBlocked] = useState(false);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState<string>("");
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const carouselRef = useRef<HTMLDivElement>(null);
+  const registerRef = useRef<HTMLElement>(null);
+  const [showStickyBar, setShowStickyBar] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeftStart, setScrollLeftStart] = useState(0);
@@ -269,6 +272,36 @@ export default function OpenHousePage() {
     const t = setTimeout(() => router.push("/"), 3000);
     return () => clearTimeout(t);
   }, [blocked, router]);
+
+  useEffect(() => {
+    if (showSuccess) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showSuccess]);
+
+  useEffect(() => {
+    const section = registerRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowStickyBar(false);
+        } else {
+          setShowStickyBar(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   const validateForm = useCallback((): boolean => {
     const newErrors: FormErrors = {};
@@ -350,7 +383,7 @@ export default function OpenHousePage() {
       });
 
       if (!res.ok) throw new Error("Submission failed");
-      router.push("/thank-you?type=open-house");
+      setShowSuccess(true);
     } catch {
       setSubmitError("Something went wrong. Please try again.");
       setSubmitting(false);
@@ -441,7 +474,7 @@ export default function OpenHousePage() {
               onClick={scrollToRegister}
               className="bg-[#C5A572] text-black px-10 py-4 rounded-lg font-semibold text-lg hover:bg-[#C5A572]/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
-              Reserve Your Spot
+              Confirm Your Seat
             </button>
           </motion.div>
         </div>
@@ -588,6 +621,7 @@ export default function OpenHousePage() {
 
       {/* Registration form */}
       <section
+        ref={registerRef}
         id="register"
         className="py-20 px-6 lg:px-8 bg-[#1A1A1A] scroll-mt-20"
       >
@@ -841,7 +875,7 @@ export default function OpenHousePage() {
                   disabled={submitting}
                   className="w-full bg-[#C5A572] text-black h-12 rounded-lg font-semibold text-lg hover:bg-[#C5A572]/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1A1A]"
                 >
-                  {submitting ? "Registering..." : "Reserve My Seat"}
+                  {submitting ? "Registering..." : "Confirm Your Seat"}
                 </button>
 
                 <p className="text-white/50 text-xs text-center">
@@ -887,6 +921,76 @@ export default function OpenHousePage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Success Popup */}
+      <AnimatePresence>
+        {showSuccess && (
+          <motion.div
+            initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: shouldReduceMotion ? 1 : 0 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+            className="fixed inset-0 z-[60] bg-black/90 flex items-center justify-center p-6"
+            aria-modal="true"
+            role="dialog"
+            aria-label="Registration confirmed"
+          >
+            <motion.div
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.92, y: shouldReduceMotion ? 0 : 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.92, y: shouldReduceMotion ? 0 : 16 }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full max-w-md rounded-2xl border border-[#C5A572]/30 bg-[#1A1A1A] p-8 text-center shadow-2xl"
+            >
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C5A572]/10">
+                <CheckCircle className="h-10 w-10 text-[#C5A572]" />
+              </div>
+              <h3 className="mb-2 text-2xl font-bold text-white">
+                Your seat is confirmed.
+              </h3>
+              <p className="mb-8 text-gray-300">
+                See you on April 11 at 11:30 AM, WindChasers HQ Bangalore.
+              </p>
+
+              {role === "student" ? (
+                <a
+                  href="https://chat.whatsapp.com/COsk2RyqhcL8wrh6dn4irg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center rounded-lg bg-[#C5A572] px-6 py-3.5 font-semibold text-black transition-colors hover:bg-[#C5A572]/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1A1A]"
+                >
+                  Join the Student WhatsApp Group
+                </a>
+              ) : role === "parent" ? (
+                <a
+                  href="https://chat.whatsapp.com/ChCxl1miiSN1WS2S4oGpAZ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-full items-center justify-center rounded-lg bg-[#C5A572] px-6 py-3.5 font-semibold text-black transition-colors hover:bg-[#C5A572]/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1A1A]"
+                >
+                  Join the Parent WhatsApp Group
+                </a>
+              ) : null}
+
+              <p className="mt-4 text-xs text-gray-400">
+                We&apos;ll send you reminders and event details in the group.
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Sticky mobile CTA */}
+      {showStickyBar && !showSuccess && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-md border-t border-white/10 px-4 py-3">
+          <button
+            onClick={() => document.getElementById("register")?.scrollIntoView({ behavior: shouldReduceMotion ? "auto" : "smooth" })}
+            className="w-full bg-[#C5A572] text-black py-3 rounded-lg font-semibold text-base hover:bg-[#C5A572]/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1A1A]"
+          >
+            Confirm Your Seat
+          </button>
+        </div>
+      )}
     </>
   );
 }
