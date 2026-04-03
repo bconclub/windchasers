@@ -187,6 +187,7 @@ export default function OpenHousePage() {
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState<string>("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const carouselRef = useRef<HTMLDivElement>(null);
   const registerRef = useRef<HTMLElement>(null);
@@ -617,7 +618,16 @@ export default function OpenHousePage() {
               </div>
             </div>
 
-            {blocked ? (
+            {submitted ? (
+              <div className="rounded-lg border border-[#C5A572]/30 bg-[#252525] p-8 text-center">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#C5A572]/10">
+                  <CheckCircle className="h-6 w-6 text-[#C5A572]" />
+                </div>
+                <p className="text-white text-lg font-semibold leading-relaxed">
+                  Your seat is confirmed. See you on April 11 at 11:30 AM.
+                </p>
+              </div>
+            ) : blocked ? (
               <motion.div
                 initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -907,8 +917,18 @@ export default function OpenHousePage() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.92, y: shouldReduceMotion ? 0 : 16 }}
               transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full max-w-md rounded-2xl border border-[#C5A572]/30 bg-[#1A1A1A] p-8 text-center shadow-2xl"
+              className="relative w-full max-w-md rounded-2xl border border-[#C5A572]/30 bg-[#1A1A1A] p-8 text-center shadow-2xl"
             >
+              <button
+                onClick={() => {
+                  setShowSuccess(false);
+                  setSubmitted(true);
+                }}
+                className="absolute top-3 right-3 text-white hover:text-white/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 rounded p-1"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
               <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C5A572]/10">
                 <CheckCircle className="h-10 w-10 text-[#C5A572]" />
               </div>
@@ -948,7 +968,7 @@ export default function OpenHousePage() {
       </AnimatePresence>
 
       {/* Sticky mobile CTA */}
-      {showStickyBar && !showSuccess && (
+      {showStickyBar && !showSuccess && !submitted && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-md border-t border-white/10 px-4 py-3">
           <button
             onClick={() => document.getElementById("register")?.scrollIntoView({ behavior: shouldReduceMotion ? "auto" : "smooth" })}
