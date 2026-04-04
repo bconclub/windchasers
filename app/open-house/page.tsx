@@ -85,8 +85,8 @@ const WHO_SHOULD_ATTEND = [
 ];
 
 const GALLERY_VIDEOS = [
-  { src: "Open hosue 5.mp4", startTime: 0 },
-  { src: "Open House May 4.mp4", startTime: 5 },
+  "Open hosue 5.mp4",
+  "Open House May 4.mp4",
 ];
 
 const GALLERY_IMAGES = [
@@ -144,26 +144,7 @@ function useInView<T extends HTMLElement>(options?: IntersectionObserverInit) {
   return { ref, isInView };
 }
 
-function GalleryVideo({ src, startTime }: { src: string; startTime: number }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video && startTime > 0) {
-      video.currentTime = startTime;
-    }
-  }, [startTime]);
-
-  return (
-    <video
-      ref={videoRef}
-      src={src}
-      controls
-      playsInline
-      className="w-full h-full object-contain rounded-lg"
-    />
-  );
-}
 
 export default function OpenHousePage() {
   const router = useRouter();
@@ -538,7 +519,7 @@ export default function OpenHousePage() {
             {/* Videos - first row */}
             {GALLERY_VIDEOS.map((v, i) => (
               <motion.div
-                key={v.src}
+                key={v}
                 initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -546,7 +527,12 @@ export default function OpenHousePage() {
                 className="overflow-hidden rounded-lg bg-black"
                 style={{ aspectRatio: '9/16' }}
               >
-                <GalleryVideo src={asset(v.src)} startTime={v.startTime} />
+                <video
+                  src={asset(v)}
+                  controls
+                  playsInline
+                  className="w-full h-full object-contain rounded-lg"
+                />
               </motion.div>
             ))}
             {/* Images - fill remaining slots in two rows */}
