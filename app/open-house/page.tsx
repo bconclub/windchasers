@@ -86,7 +86,7 @@ const WHO_SHOULD_ATTEND = [
 
 const GALLERY_VIDEOS = [
   { src: "Open hosue 5.mp4", startTime: 0 },
-  { src: "Open House May 4.mp4", startTime: 10 },
+  { src: "Open House May 4.mp4", startTime: 20 },
 ];
 
 const GALLERY_IMAGES = [
