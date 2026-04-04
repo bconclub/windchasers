@@ -26,26 +26,19 @@ export async function POST(request: Request) {
 
     const result = await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: `${process.env.GOOGLE_SHEET_TAB}!A:P`,
+      range: `${process.env.GOOGLE_SHEET_TAB}!A:H`,
       valueInputOption: "USER_ENTERED",
       requestBody: {
         values: [
           [
-            new Date().toISOString(),
-            data.name || "",
-            data.phone || "",
-            data.email || "",
-            data.status || "",
-            data.city || "",
-            data.parentAttending || "",
-            data.role || "",
-            data.utm_source || "",
-            data.utm_medium || "",
-            data.utm_campaign || "",
-            data.utm_term || "",
-            data.utm_content || "",
-            data.landingPage || "",
-            data.sessionId || "",
+            new Date().toISOString(),      // Date (A)
+            data.role || '',               // Type (B) - "student" or "parent"
+            data.name || '',               // Name (C)
+            data.phone || '',              // Phone (D)
+            data.email || '',              // Email (E)
+            data.city || '',               // City (F)
+            data.parentAttending || '',    // With Someone (G)
+            data.status || '',             // Status (H)
           ],
         ],
       },
