@@ -3,7 +3,15 @@
     "allow": [
       "Bash(npx create-next-app:*)",
       "Bash(npm install:*)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfix: add explicit z-0 to video background to ensure hero text is visible\n\nThe video background container needed an explicit z-index to ensure proper\nstacking order with the overlay \\(z-10\\) and content \\(z-20\\) layers.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push)",
+      "Bash(timeout:*)",
+      "Bash(git push:*)",
+      "Bash(git commit:*)",
+      "Bash(gh run list:*)"
     ]
   }
 }

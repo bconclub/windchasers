@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Phone } from "lucide-react";
+import { Phone, MessageCircle } from "lucide-react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -41,7 +41,27 @@ export default function Navbar() {
             </Link>
 
             {/* Hamburger Menu Button - Desktop & Mobile */}
-            {isOpenHouse ? (
+            {isSummerCamp ? (
+              /* Summer Camp - Show Contact Buttons */
+              <div className="flex items-center gap-2">
+                <a
+                  href="tel:+919036263630"
+                  className="flex items-center gap-2 bg-gold text-dark px-3 sm:px-4 py-2 rounded-full font-medium text-sm hover:bg-gold/90 transition-colors"
+                >
+                  <Phone className="w-4 h-4" />
+                  <span className="hidden sm:inline">Call</span>
+                </a>
+                <a
+                  href="https://wa.me/919036263630"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-green-600 text-white px-3 sm:px-4 py-2 rounded-full font-medium text-sm hover:bg-green-700 transition-colors"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  <span className="hidden sm:inline">WhatsApp</span>
+                </a>
+              </div>
+            ) : isOpenHouse ? (
               <a
                 href="tel:+919591004043"
                 className="flex items-center gap-2 bg-[#C5A572] text-black px-4 py-2 rounded-full font-medium text-sm hover:bg-[#C5A572]/90 transition-colors"
