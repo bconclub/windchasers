@@ -14,8 +14,8 @@ import {
   Shield,
   Users,
   MapPin,
-  Clock,
   Calendar,
+  Clock,
   ChevronDown,
   Phone,
   Mail,
@@ -55,7 +55,6 @@ interface FormData {
   interest: string;
   batchPreference: string;
   location: string;
-  timeline: string;
 }
 
 // Day cards data
@@ -111,16 +110,6 @@ const campIncludes = [
   "Transportation (if applicable)",
 ];
 
-// Gallery images
-const galleryImages = [
-  { src: "/open house/WC November 2024.jpg", alt: "Kids flying drones outdoors" },
-  { src: "/facility/WC5.webp", alt: "Simulator training session" },
-  { src: "/facility/WC3.webp", alt: "Robotics workshop" },
-  { src: "/facility/WC4.webp", alt: "3D printing in action" },
-  { src: "/open house/Open HOuse 1.jpg", alt: "Aircraft visit group photo" },
-  { src: "/open house/WC Open house April 15.jpg", alt: "Certificate distribution moment" },
-];
-
 // FAQ items
 const faqItems = [
   {
@@ -154,7 +143,6 @@ export default function SummerCampPage() {
     interest: "",
     batchPreference: "",
     location: "",
-    timeline: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -186,7 +174,6 @@ export default function SummerCampPage() {
         interest: "",
         batchPreference: "",
         location: "",
-        timeline: "",
       });
     }, 3000);
   };
@@ -755,38 +742,6 @@ export default function SummerCampPage() {
                   </div>
                 </div>
 
-                {/* Timeline */}
-                <div>
-                  <label className="block text-white font-medium mb-3">
-                    When are you finalizing summer plans?
-                  </label>
-                  <div className="grid grid-cols-3 gap-4">
-                    {["This week", "Within 2 weeks", "Just exploring"].map((timeline) => (
-                      <label
-                        key={timeline}
-                        className={`flex items-center justify-center gap-2 p-4 rounded-xl border cursor-pointer transition-all ${
-                          formData.timeline === timeline
-                            ? "border-gold bg-gold/10"
-                            : "border-white/20 bg-white/5 hover:border-white/40"
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="timeline"
-                          value={timeline}
-                          checked={formData.timeline === timeline}
-                          onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
-                          className="sr-only"
-                        />
-                        <Clock className={`w-4 h-4 ${formData.timeline === timeline ? "text-gold" : "text-white/40"}`} />
-                        <span className={`text-sm font-medium text-center ${formData.timeline === timeline ? "text-gold" : "text-white/80"}`}>
-                          {timeline}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
                 {/* Submit Button */}
                 <button
                   type="submit"
@@ -812,48 +767,7 @@ export default function SummerCampPage() {
         </div>
       </section>
 
-      {/* Section 7: Gallery */}
-      <section className="py-20 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div {...fadeInUp} className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-              From Past <span className="text-gold">Camps</span>
-            </h2>
-            <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              Glimpses of unforgettable moments from our previous Young Aviators camps
-            </p>
-          </motion.div>
-
-          <motion.div
-            {...staggerContainer}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-4"
-          >
-            {galleryImages.map((image, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative aspect-video rounded-xl overflow-hidden"
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-dark/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-0 left-0 right-0 p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <p className="text-white text-sm font-medium">{image.alt}</p>
-                </div>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Section 8: FAQ */}
+      {/* Section 7: FAQ */}
       <section className="py-20 px-6 lg:px-8 bg-accent-dark">
         <div className="max-w-3xl mx-auto">
           <motion.div {...fadeInUp} className="text-center mb-16">
