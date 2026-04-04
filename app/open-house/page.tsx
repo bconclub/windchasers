@@ -85,7 +85,6 @@ const WHO_SHOULD_ATTEND = [
 const GALLERY_VIDEOS = [
   "Open hosue 5.mp4",
   "Open House May 4.mp4",
-  "WC Open House Nove 2024.mp4",
 ];
 
 const GALLERY_IMAGES = [
