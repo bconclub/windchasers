@@ -184,7 +184,7 @@ export default function SummerCampPage() {
   return (
     <div className="min-h-screen bg-dark">
       {/* Section 1: Hero */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <Image
@@ -197,7 +197,7 @@ export default function SummerCampPage() {
           <div className="absolute inset-0 bg-gradient-to-b from-dark/80 via-dark/90 to-dark" />
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-24 pb-12">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 pt-4 pb-12">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -212,7 +212,7 @@ export default function SummerCampPage() {
               className="inline-flex items-center gap-2 bg-gold/20 border border-gold/40 rounded-full px-4 py-2 mb-8"
             >
               <Sparkles className="w-4 h-4 text-gold" />
-              <span className="text-gold text-sm font-medium">Summer 2025 Enrollment Open</span>
+              <span className="text-gold text-sm font-medium">Summer 2026 Enrollment Open</span>
             </motion.div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight text-white">
@@ -383,7 +383,7 @@ export default function SummerCampPage() {
           {/* Form */}
           <motion.div
             {...scaleIn}
-            className="bg-dark border border-white/10 rounded-2xl p-8"
+            className="bg-dark border border-white/10 rounded-2xl p-4 sm:p-8"
           >
             {submitSuccess ? (
               <div className="text-center py-12">
@@ -409,26 +409,26 @@ export default function SummerCampPage() {
                       required
                       value={formData.parentName}
                       onChange={(e) => setFormData({ ...formData, parentName: e.target.value })}
-                      className="w-full bg-white/5 border border-white/20 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-gold focus:outline-none transition-colors"
+                      className="w-full min-h-[56px] bg-white/5 border border-white/20 rounded-xl py-3 pl-12 pr-4 text-base text-white placeholder:text-white/40 focus:border-gold focus:outline-none transition-colors"
                       placeholder="Enter your full name"
                     />
                   </div>
                 </div>
 
                 {/* Phone & Email */}
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className="block text-white font-medium mb-2">
                       Phone Number
                     </label>
                     <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none" />
                       <input
                         type="tel"
                         required
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full bg-white/5 border border-white/20 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-gold focus:outline-none transition-colors"
+                        className="w-full min-h-[56px] bg-white/5 border border-white/20 rounded-xl py-3 pl-12 pr-4 text-base text-white placeholder:text-white/40 focus:border-gold focus:outline-none transition-colors"
                         placeholder="+91 98765 43210"
                       />
                     </div>
@@ -439,13 +439,13 @@ export default function SummerCampPage() {
                       Email Address
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40" />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none" />
                       <input
                         type="email"
                         required
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full bg-white/5 border border-white/20 rounded-xl py-3 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-gold focus:outline-none transition-colors"
+                        className="w-full min-h-[56px] bg-white/5 border border-white/20 rounded-xl py-3 pl-12 pr-4 text-base text-white placeholder:text-white/40 focus:border-gold focus:outline-none transition-colors"
                         placeholder="parent@email.com"
                       />
                     </div>
@@ -453,7 +453,7 @@ export default function SummerCampPage() {
                 </div>
 
                 {/* Child&apos;s Age & Interest */}
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
                   <div>
                     <label className="block text-white font-medium mb-2">
                       Child&apos;s Age
@@ -463,7 +463,7 @@ export default function SummerCampPage() {
                         required
                         value={formData.childAge}
                         onChange={(e) => setFormData({ ...formData, childAge: e.target.value })}
-                        className="w-full bg-white/5 border border-white/20 rounded-xl py-3 px-4 text-white appearance-none focus:border-gold focus:outline-none transition-colors cursor-pointer"
+                        className="w-full min-h-[56px] bg-white/5 border border-white/20 rounded-xl py-3 px-4 text-base text-white appearance-none focus:border-gold focus:outline-none transition-colors cursor-pointer"
                       >
                         <option value="" disabled>Select age group</option>
                         <option value="8-9">8-9 years</option>
@@ -471,7 +471,7 @@ export default function SummerCampPage() {
                         <option value="12-13">12-13 years</option>
                         <option value="14-15">14-15 years</option>
                       </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none" />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-white/40 pointer-events-none" />
                     </div>
                   </div>
                   <div>
@@ -483,7 +483,7 @@ export default function SummerCampPage() {
                         required
                         value={formData.interest}
                         onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
-                        className="w-full bg-white/5 border border-white/20 rounded-xl py-3 px-4 text-white appearance-none focus:border-gold focus:outline-none transition-colors cursor-pointer"
+                        className="w-full min-h-[56px] bg-white/5 border border-white/20 rounded-xl py-3 px-4 text-base text-white appearance-none focus:border-gold focus:outline-none transition-colors cursor-pointer"
                       >
                         <option value="" disabled>Select interest</option>
                         <option value="drones">Flying drones</option>
@@ -492,7 +492,7 @@ export default function SummerCampPage() {
                         <option value="aircraft">Aircraft visit</option>
                         <option value="all">All of it</option>
                       </select>
-                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 pointer-events-none" />
+                      <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-white/40 pointer-events-none" />
                     </div>
                   </div>
                 </div>
@@ -502,11 +502,11 @@ export default function SummerCampPage() {
                   <label className="block text-white font-medium mb-3">
                     Batch Preference
                   </label>
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="flex flex-col sm:grid sm:grid-cols-3 gap-3">
                     {["April 6-10", "April 20-24", "Either works"].map((batch) => (
                       <label
                         key={batch}
-                        className={`flex items-center justify-center gap-2 p-4 rounded-xl border cursor-pointer transition-all ${
+                        className={`flex items-center justify-center gap-2 min-h-[56px] px-4 rounded-xl border cursor-pointer transition-all ${
                           formData.batchPreference === batch
                             ? "border-gold bg-gold/10"
                             : "border-white/20 bg-white/5 hover:border-white/40"
@@ -520,8 +520,8 @@ export default function SummerCampPage() {
                           onChange={(e) => setFormData({ ...formData, batchPreference: e.target.value })}
                           className="sr-only"
                         />
-                        <Calendar className={`w-4 h-4 ${formData.batchPreference === batch ? "text-gold" : "text-white/40"}`} />
-                        <span className={`text-sm font-medium ${formData.batchPreference === batch ? "text-gold" : "text-white/80"}`}>
+                        <Calendar className={`w-4 h-4 flex-shrink-0 ${formData.batchPreference === batch ? "text-gold" : "text-white/40"}`} />
+                        <span className={`text-sm sm:text-base font-medium whitespace-nowrap ${formData.batchPreference === batch ? "text-gold" : "text-white/80"}`}>
                           {batch}
                         </span>
                       </label>
@@ -533,7 +533,7 @@ export default function SummerCampPage() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-gold text-dark py-4 rounded-xl font-bold text-lg hover:bg-gold/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full min-h-[56px] mt-6 bg-gold text-dark py-4 rounded-xl font-bold text-lg hover:bg-gold/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
                     <>

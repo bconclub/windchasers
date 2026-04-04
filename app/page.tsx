@@ -322,7 +322,7 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-bold mb-3 text-white group-hover:text-gold transition-colors">Expert Guidance</h3>
               <p className="text-white/60 leading-relaxed">
-                Ex-Air Force instructors with thousands of flight hours. Real-world experience in the cockpit.
+                Certified flight instructors with thousands of flight hours. Real-world experience in the cockpit.
               </p>
             </motion.div>
 

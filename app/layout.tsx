@@ -14,7 +14,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Windchasers - India's Top Pilot Training Academy- Bangalore",
-  description: "DGCA approved pilot training with real cost transparency. Ex-Air Force instructors. No false promises.",
+  description: "DGCA approved pilot training with real cost transparency. Certified flight instructors. No false promises.",
   icons: {
     icon: [
       { url: "/favicon.ico" },
