@@ -144,6 +144,27 @@ function useInView<T extends HTMLElement>(options?: IntersectionObserverInit) {
   return { ref, isInView };
 }
 
+function GalleryVideo({ src, startTime }: { src: string; startTime: number }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video && startTime > 0) {
+      video.currentTime = startTime;
+    }
+  }, [startTime]);
+
+  return (
+    <video
+      ref={videoRef}
+      src={src}
+      controls
+      playsInline
+      className="w-full h-full object-contain rounded-lg"
+    />
+  );
+}
+
 export default function OpenHousePage() {
   const router = useRouter();
   const { sessionId, utmParams } = useTracking();
@@ -525,12 +546,7 @@ export default function OpenHousePage() {
                 className="overflow-hidden rounded-lg bg-black"
                 style={{ aspectRatio: '9/16' }}
               >
-                <video
-                  src={`${asset(v.src)}${v.startTime > 0 ? `#t=${v.startTime}s` : ''}`}
-                  controls
-                  playsInline
-                  className="w-full h-full object-contain rounded-lg"
-                />
+                <GalleryVideo src={asset(v.src)} startTime={v.startTime} />
               </motion.div>
             ))}
             {/* Images - fill remaining slots in two rows */}
