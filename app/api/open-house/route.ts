@@ -5,6 +5,13 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
+    console.log('ENV CHECK:', {
+      email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+      sheetId: process.env.GOOGLE_SHEET_ID,
+      tab: process.env.GOOGLE_SHEET_TAB,
+      hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
+    });
+
     const auth = new google.auth.GoogleAuth({
       credentials: {
         client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
@@ -15,7 +22,9 @@ export async function POST(request: Request) {
 
     const sheets = google.sheets({ version: "v4", auth });
 
-    await sheets.spreadsheets.values.append({
+    console.log('Attempting Sheets API call...');
+
+    const result = await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
       range: `${process.env.GOOGLE_SHEET_TAB}!A:P`,
       valueInputOption: "USER_ENTERED",
@@ -42,9 +51,11 @@ export async function POST(request: Request) {
       },
     });
 
-    return NextResponse.json({ success: true });
+    console.log('Sheets API success:', JSON.stringify(result.data));
+
+    return NextResponse.json({ success: true, data: result.data });
   } catch (err) {
-    console.error("Sheets API error:", err);
-    return NextResponse.json({ success: false }, { status: 500 });
+    console.error('Sheets error full:', JSON.stringify(err, Object.getOwnPropertyNames(err)));
+    return NextResponse.json({ success: false, error: String(err) }, { status: 500 });
   }
 }
