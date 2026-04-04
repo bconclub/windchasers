@@ -20,7 +20,9 @@ import {
   Clock,
   MapPin,
   Play,
+  Phone,
 } from "lucide-react";
+import Head from "next/head";
 import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
 import oh1 from "@/public/open house/Open HOuse 1.jpg";
@@ -142,29 +144,6 @@ function useInView<T extends HTMLElement>(options?: IntersectionObserverInit) {
   return { ref, isInView };
 }
 
-function GalleryVideo({ src, index }: { src: string; index: number }) {
-  const shouldReduceMotion = useReducedMotion();
-  return (
-    <motion.div
-      key={src}
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: index * 0.1 }}
-      className="flex-shrink-0 snap-start overflow-hidden rounded-lg group active:cursor-grabbing"
-    >
-      <div className="flex-shrink-0 w-fit">
-        <video
-          src={asset(src)}
-          controls
-          playsInline
-          className="h-[260px] w-auto rounded-lg"
-        />
-      </div>
-    </motion.div>
-  );
-}
-
 export default function OpenHousePage() {
   const router = useRouter();
   const { sessionId, utmParams } = useTracking();
@@ -188,56 +167,14 @@ export default function OpenHousePage() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const carouselRef = useRef<HTMLDivElement>(null);
   const registerRef = useRef<HTMLElement>(null);
   const [showStickyBar, setShowStickyBar] = useState(true);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeftStart, setScrollLeftStart] = useState(0);
-  const dragStartClientX = useRef(0);
-  const justDragged = useRef(false);
-
-  const handleCarouselMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!carouselRef.current) return;
-    setIsDragging(true);
-    dragStartClientX.current = e.clientX;
-    setStartX(e.pageX - carouselRef.current.offsetLeft);
-    setScrollLeftStart(carouselRef.current.scrollLeft);
-    justDragged.current = false;
-  };
-
-  const handleCarouselMouseLeave = () => {
-    setIsDragging(false);
-  };
-
-  const handleCarouselMouseUp = (e: React.MouseEvent<HTMLDivElement>) => {
-    const diff = Math.abs(e.clientX - dragStartClientX.current);
-    if (diff > 5) {
-      justDragged.current = true;
-    }
-    setIsDragging(false);
-  };
-
-  const handleCarouselMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!isDragging || !carouselRef.current) return;
-    e.preventDefault();
-    const x = e.pageX - carouselRef.current.offsetLeft;
-    const walk = (x - startX) * 1.5;
-    carouselRef.current.scrollLeft = scrollLeftStart - walk;
-  };
 
   const handleImageClick = (src: string, alt: string) => {
-    if (justDragged.current) {
-      justDragged.current = false;
-      return;
-    }
     openLightbox(src, alt);
   };
 
-  useEffect(() => {
-    document.title =
-      "Pilot Career Open House Bangalore · April 11 · WindChasers";
-  }, []);
+
 
   useEffect(() => {
     if (!blocked) return;
@@ -372,6 +309,20 @@ export default function OpenHousePage() {
 
   return (
     <>
+      <Head>
+        <title>Pilot Career Open House Bangalore · April 11, 2026 · WindChasers</title>
+        <meta
+          name="description"
+          content="Join WindChasers' Pilot Career Open House in Bangalore on April 11, 2026. Meet airline captains, explore CPL training paths, get cost breakdowns, and secure your aviation career roadmap. Limited seats available."
+        />
+        <meta property="og:title" content="Pilot Career Open House Bangalore · April 11, 2026 · WindChasers" />
+        <meta
+          property="og:description"
+          content="Join Bangalore's premier Pilot Career Open House. Meet airline captains, explore CPL training paths, and get expert guidance on your aviation career."
+        />
+        <meta property="og:type" content="website" />
+      </Head>
+
       {/* Hero */}
       <section ref={heroRef} className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-black">
@@ -441,6 +392,7 @@ export default function OpenHousePage() {
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.5 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <button
               onClick={scrollToRegister}
@@ -448,6 +400,13 @@ export default function OpenHousePage() {
             >
               Confirm Your Seat
             </button>
+            <a
+              href="tel:+919591004043"
+              className="flex items-center gap-2 text-white/80 hover:text-[#C5A572] transition-colors"
+            >
+              <Phone className="w-5 h-5" />
+              <span>+91 95910 04043</span>
+            </a>
           </motion.div>
         </div>
       </section>
@@ -508,37 +467,46 @@ export default function OpenHousePage() {
             Our Past Open Houses
           </motion.h2>
 
-          {/* Horizontal scroll carousel */}
-          <div
-            ref={carouselRef}
-            className="flex flex-row overflow-x-auto gap-4 pb-2 scrollbar-hide snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none items-end"
-            onMouseDown={handleCarouselMouseDown}
-            onMouseLeave={handleCarouselMouseLeave}
-            onMouseUp={handleCarouselMouseUp}
-            onMouseMove={handleCarouselMouseMove}
-          >
+          {/* Two-row grid gallery */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {/* Videos - first row */}
             {GALLERY_VIDEOS.map((v, i) => (
-              <GalleryVideo key={v} src={v} index={i} />
+              <motion.div
+                key={v}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : i * 0.1 }}
+                className="overflow-hidden rounded-lg"
+              >
+                <video
+                  src={asset(v)}
+                  controls
+                  playsInline
+                  className="w-full h-[200px] md:h-[240px] object-cover rounded-lg"
+                />
+              </motion.div>
             ))}
-            {GALLERY_IMAGES.map(({ src, alt, position }, i) => (
+            {/* Images - fill remaining slots in two rows */}
+            {GALLERY_IMAGES.slice(0, 6).map(({ src, alt, position }, i) => (
               <motion.div
                 key={src.src}
-                initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.97 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.45, delay: shouldReduceMotion ? 0 : (GALLERY_VIDEOS.length + i) * 0.05 }}
-                className="flex-shrink-0 snap-start overflow-hidden rounded-lg cursor-pointer group active:cursor-grabbing"
+                transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : (GALLERY_VIDEOS.length + i) * 0.1 }}
+                className="overflow-hidden rounded-lg cursor-pointer group"
                 onClick={() => handleImageClick(src.src, alt)}
               >
                 <img
                   src={src.src}
                   alt={alt}
-                  className="h-[260px] w-auto object-contain rounded-lg transition-transform duration-[400ms] group-hover:scale-[1.03]"
+                  className="w-full h-[200px] md:h-[240px] object-cover rounded-lg transition-transform duration-[400ms] group-hover:scale-[1.05]"
                   style={{
                     objectPosition: position,
                     transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
-                  loading={i < 3 ? "eager" : "lazy"}
+                  loading={i < 4 ? "eager" : "lazy"}
                 />
               </motion.div>
             ))}

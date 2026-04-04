@@ -63,24 +63,28 @@ const dayCards = [
     title: "Drone Mastery",
     description: "Take off, navigate, land. Each student gets hands-on real drone flying time.",
     icon: Plane,
+    image: "/junior aviators/001.webp",
   },
   {
     day: "Day 2",
     title: "Flight Simulator Training",
     description: "Pilot certified simulators with aviation professionals. Cockpit familiarization.",
     icon: Monitor,
+    image: "/junior aviators/002.webp",
   },
   {
     day: "Day 3",
     title: "Robotics & Aerospace STEM",
     description: "Build and program robots. Understand sensors, motors, and automation.",
     icon: Cpu,
+    image: "/junior aviators/003.webp",
   },
   {
     day: "Day 4",
     title: "Aeromodelling & 3D Printing",
     description: "Design, print, and assemble model aircraft. Learn aircraft parts and concepts.",
     icon: Printer,
+    image: "/junior aviators/004.webp",
   },
   {
     day: "Day 5",
@@ -322,207 +326,48 @@ export default function SummerCampPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="group relative bg-dark border border-white/10 rounded-2xl p-6 hover:border-gold/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-gold/10"
+                className="group relative bg-dark border border-white/10 rounded-2xl overflow-hidden hover:border-gold/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-gold/10"
               >
+                {/* Image */}
+                {card.image && (
+                  <div className="relative h-40 w-full overflow-hidden">
+                    <Image
+                      src={card.image}
+                      alt={card.title}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-dark to-transparent" />
+                  </div>
+                )}
+
                 {/* Day Badge */}
-                <div className="absolute -top-3 left-6 bg-gold text-dark text-xs font-bold px-3 py-1 rounded-full">
+                <div className={`absolute bg-gold text-dark text-xs font-bold px-3 py-1 rounded-full ${card.image ? 'top-32 left-4' : '-top-3 left-6'}`}>
                   {card.day}
                 </div>
 
-                {/* Icon */}
-                <div className="w-14 h-14 mb-4 flex items-center justify-center rounded-xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20 mt-2">
-                  <card.icon className="w-7 h-7 text-gold" />
-                </div>
-
                 {/* Content */}
-                <h3 className="text-xl font-bold mb-2 text-white group-hover:text-gold transition-colors">
-                  {card.title}
-                </h3>
-                <p className="text-white/60 leading-relaxed text-sm">
-                  {card.description}
-                </p>
+                <div className="p-6 pt-8">
+                  {/* Icon */}
+                  <div className="w-12 h-12 mb-4 flex items-center justify-center rounded-xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                    <card.icon className="w-6 h-6 text-gold" />
+                  </div>
+
+                  <h3 className="text-xl font-bold mb-2 text-white group-hover:text-gold transition-colors">
+                    {card.title}
+                  </h3>
+                  <p className="text-white/60 leading-relaxed text-sm">
+                    {card.description}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* Section 3: Camp Includes */}
-      <section className="py-20 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div {...fadeInUp} className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-              Everything <span className="text-gold">Included</span>
-            </h2>
-            <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              No hidden costs. Everything your child needs for an amazing week.
-            </p>
-          </motion.div>
-
-          <motion.div
-            {...staggerContainer}
-            className="grid md:grid-cols-3 gap-4"
-          >
-            {campIncludes.map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.05 }}
-                className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-colors"
-              >
-                <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-gold/20">
-                  <CheckCircle className="w-5 h-5 text-gold" />
-                </div>
-                <span className="text-white/90 font-medium text-sm">{item}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Section 4: Safety & Supervision */}
-      <section className="py-20 px-6 lg:px-8 bg-accent-dark">
-        <div className="max-w-7xl mx-auto">
-          <motion.div {...fadeInUp} className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-              Safety <span className="text-gold">&</span> Supervision
-            </h2>
-            <p className="text-white/60 text-lg max-w-2xl mx-auto">
-              Your child&apos;s safety is our top priority. Professional care at every step.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* Safety First */}
-            <motion.div
-              {...scaleIn}
-              className="bg-dark border border-white/10 rounded-2xl p-8"
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-gold/10 border border-gold/20">
-                  <Shield className="w-7 h-7 text-gold" />
-                </div>
-                <h3 className="text-2xl font-bold text-white">Safety First</h3>
-              </div>
-              <ul className="space-y-4">
-                {[
-                  "Training supervised by aviation professionals (not college students)",
-                  "Safe drone flying environment with controlled zones",
-                  "Controlled simulator training with instructor oversight",
-                  "Student safety briefing on Day 1 mandatory",
-                  "First-aid trained staff on campus",
-                ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
-                    <span className="text-white/70">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            {/* The Environment */}
-            <motion.div
-              {...scaleIn}
-              transition={{ delay: 0.2 }}
-              className="bg-dark border border-white/10 rounded-2xl p-8"
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-gold/10 border border-gold/20">
-                  <Users className="w-7 h-7 text-gold" />
-                </div>
-                <h3 className="text-2xl font-bold text-white">The Environment</h3>
-              </div>
-              <ul className="space-y-4">
-                {[
-                  "10 AM - 5 PM structured schedule (no loose time)",
-                  "Professional instructors only",
-                  "Small batch sizes for personalized attention",
-                  "WindChasers certified training facility",
-                  "DGCA recognized training infrastructure",
-                ].map((item, index) => (
-                  <li key={index} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
-                    <span className="text-white/70">{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 5: Who Should Attend */}
-      <section className="py-20 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div {...fadeInUp} className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
-              Who Should <span className="text-gold">Attend</span>
-            </h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* For Curious Kids */}
-            <motion.div
-              {...scaleIn}
-              className="group bg-gradient-to-br from-dark to-accent-dark border border-white/10 rounded-2xl p-8 hover:border-gold/30 transition-all duration-300"
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
-                  <Sparkles className="w-8 h-8 text-gold" />
-                </div>
-                <div>
-                  <div className="text-gold text-sm font-medium mb-1">Ages 8-15</div>
-                  <h3 className="text-2xl font-bold text-white">For Curious Kids</h3>
-                </div>
-              </div>
-              <p className="text-white/70 mb-6 leading-relaxed">
-                Perfect for kids obsessed with drones, video games, robotics, or anything that flies. 
-                No prior experience needed. Just curiosity and excitement.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {["Loves technology", "Enjoys hands-on activities", "Asks 'how does this work'"].map((trait) => (
-                  <span key={trait} className="bg-white/10 text-white/80 text-xs px-3 py-1.5 rounded-full">
-                    {trait}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* For Proactive Parents */}
-            <motion.div
-              {...scaleIn}
-              transition={{ delay: 0.2 }}
-              className="group bg-gradient-to-br from-dark to-accent-dark border border-white/10 rounded-2xl p-8 hover:border-gold/30 transition-all duration-300"
-            >
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
-                  <Award className="w-8 h-8 text-gold" />
-                </div>
-                <div>
-                  <div className="text-gold text-sm font-medium mb-1">Parents</div>
-                  <h3 className="text-2xl font-bold text-white">Who Want More Than Daycare</h3>
-                </div>
-              </div>
-              <p className="text-white/70 mb-6 leading-relaxed">
-                You want a summer experience that builds real skills, boosts confidence, and creates memories. 
-                Not just screen time or generic activities.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {["STEM learning", "Professional supervision", "Career exposure", "Physical activity"].map((benefit) => (
-                  <span key={benefit} className="bg-white/10 text-white/80 text-xs px-3 py-1.5 rounded-full">
-                    {benefit}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 6: Registration Form */}
-      <section ref={formRef} className="py-20 px-6 lg:px-8 bg-accent-dark">
+      {/* Section 3: Registration Form */}
+      <section ref={formRef} className="py-20 px-6 lg:px-8">
         <div className="max-w-3xl mx-auto">
           <motion.div {...fadeInUp} className="text-center mb-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
@@ -707,7 +552,181 @@ export default function SummerCampPage() {
         </div>
       </section>
 
-      {/* Section 7: FAQ */}
+      {/* Section 4: Camp Includes */}
+      <section className="py-20 px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <motion.div {...fadeInUp} className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+              Everything <span className="text-gold">Included</span>
+            </h2>
+            <p className="text-white/60 text-lg max-w-2xl mx-auto">
+              No hidden costs. Everything your child needs for an amazing week.
+            </p>
+          </motion.div>
+
+          <motion.div
+            {...staggerContainer}
+            className="grid md:grid-cols-3 gap-4"
+          >
+            {campIncludes.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: index * 0.05 }}
+                className="flex items-center gap-4 bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-colors"
+              >
+                <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full bg-gold/20">
+                  <CheckCircle className="w-5 h-5 text-gold" />
+                </div>
+                <span className="text-white/90 font-medium text-sm">{item}</span>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section 5: Safety & Supervision */}
+      <section className="py-20 px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <motion.div {...fadeInUp} className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+              Safety <span className="text-gold">&</span> Supervision
+            </h2>
+            <p className="text-white/60 text-lg max-w-2xl mx-auto">
+              Your child&apos;s safety is our top priority. Professional care at every step.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Safety First */}
+            <motion.div
+              {...scaleIn}
+              className="bg-accent-dark border border-white/10 rounded-2xl p-8"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-gold/10 border border-gold/20">
+                  <Shield className="w-7 h-7 text-gold" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">Safety First</h3>
+              </div>
+              <ul className="space-y-4">
+                {[
+                  "Training supervised by aviation professionals (not college students)",
+                  "Safe drone flying environment with controlled zones",
+                  "Controlled simulator training with instructor oversight",
+                  "Student safety briefing on Day 1 mandatory",
+                  "First-aid trained staff on campus",
+                ].map((item, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+                    <span className="text-white/70">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* The Environment */}
+            <motion.div
+              {...scaleIn}
+              transition={{ delay: 0.2 }}
+              className="bg-accent-dark border border-white/10 rounded-2xl p-8"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-gold/10 border border-gold/20">
+                  <Users className="w-7 h-7 text-gold" />
+                </div>
+                <h3 className="text-2xl font-bold text-white">The Environment</h3>
+              </div>
+              <ul className="space-y-4">
+                {[
+                  "10 AM - 5 PM structured schedule (no loose time)",
+                  "Professional instructors only",
+                  "Small batch sizes for personalized attention",
+                  "WindChasers certified training facility",
+                  "DGCA recognized training infrastructure",
+                ].map((item, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-gold flex-shrink-0 mt-0.5" />
+                    <span className="text-white/70">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 6: Who Should Attend */}
+      <section className="py-20 px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <motion.div {...fadeInUp} className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+              Who Should <span className="text-gold">Attend</span>
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* For Curious Kids */}
+            <motion.div
+              {...scaleIn}
+              className="group bg-gradient-to-br from-dark to-accent-dark border border-white/10 rounded-2xl p-8 hover:border-gold/30 transition-all duration-300"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                  <Sparkles className="w-8 h-8 text-gold" />
+                </div>
+                <div>
+                  <div className="text-gold text-sm font-medium mb-1">Ages 8-15</div>
+                  <h3 className="text-2xl font-bold text-white">For Curious Kids</h3>
+                </div>
+              </div>
+              <p className="text-white/70 mb-6 leading-relaxed">
+                Perfect for kids obsessed with drones, video games, robotics, or anything that flies. 
+                No prior experience needed. Just curiosity and excitement.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {["Loves technology", "Enjoys hands-on activities", "Asks 'how does this work'"].map((trait) => (
+                  <span key={trait} className="bg-white/10 text-white/80 text-xs px-3 py-1.5 rounded-full">
+                    {trait}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* For Proactive Parents */}
+            <motion.div
+              {...scaleIn}
+              transition={{ delay: 0.2 }}
+              className="group bg-gradient-to-br from-dark to-accent-dark border border-white/10 rounded-2xl p-8 hover:border-gold/30 transition-all duration-300"
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-16 h-16 flex items-center justify-center rounded-2xl bg-gold/10 group-hover:bg-gold/20 transition-colors border border-gold/20">
+                  <Award className="w-8 h-8 text-gold" />
+                </div>
+                <div>
+                  <div className="text-gold text-sm font-medium mb-1">Parents</div>
+                  <h3 className="text-2xl font-bold text-white">Who Want More Than Daycare</h3>
+                </div>
+              </div>
+              <p className="text-white/70 mb-6 leading-relaxed">
+                You want a summer experience that builds real skills, boosts confidence, and creates memories. 
+                Not just screen time or generic activities.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {["STEM learning", "Professional supervision", "Career exposure", "Physical activity"].map((benefit) => (
+                  <span key={benefit} className="bg-white/10 text-white/80 text-xs px-3 py-1.5 rounded-full">
+                    {benefit}
+                  </span>
+                ))}
+              </div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+
       <section className="py-20 px-6 lg:px-8 bg-accent-dark">
         <div className="max-w-3xl mx-auto">
           <motion.div {...fadeInUp} className="text-center mb-16">
