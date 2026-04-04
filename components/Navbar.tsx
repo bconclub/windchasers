@@ -5,16 +5,16 @@ import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { Phone } from "lucide-react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   
-  // Hide entire navbar on open house page, hide menu only on summer camp
-  const hideNavbar = pathname === "/open-house";
-  const hideMenu = pathname === "/summercamp" || hideNavbar;
-  
-  if (hideNavbar) return null;
+  // Hide menu on summer camp page, show contact button on open house
+  const isSummerCamp = pathname === "/summercamp";
+  const isOpenHouse = pathname === "/open-house";
+  const hideMenu = isSummerCamp;
 
   const links = [
     { href: "/dgca", label: "DGCA Ground Classes" },
@@ -41,7 +41,16 @@ export default function Navbar() {
             </Link>
 
             {/* Hamburger Menu Button - Desktop & Mobile */}
-            {!hideMenu && (
+            {isOpenHouse ? (
+              <a
+                href="tel:+919591004043"
+                className="flex items-center gap-2 bg-[#C5A572] text-black px-4 py-2 rounded-full font-medium text-sm hover:bg-[#C5A572]/90 transition-colors"
+              >
+                <Phone className="w-4 h-4" />
+                <span className="hidden sm:inline">+91 95910 04043</span>
+                <span className="sm:hidden">Call Us</span>
+              </a>
+            ) : !hideMenu && (
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="text-white z-[60] relative"
