@@ -323,8 +323,9 @@ export default function OpenHousePage() {
         <meta property="og:type" content="website" />
       </Head>
 
-      {/* Hero */}
+      {/* Hero - Glass Morphism Design */}
       <section ref={heroRef} className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
+        {/* Background Video */}
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-black">
           {heroInView && (
             <iframe
@@ -338,75 +339,113 @@ export default function OpenHousePage() {
             />
           )}
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/60 to-black/80 z-10" />
+        
+        {/* Radial Gradient Overlay */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.3)_0%,_transparent_70%)] z-10" />
+        <div className="absolute inset-0 bg-black/40 z-10" />
 
-        <div className="relative z-20 w-full max-w-4xl mx-auto px-6 lg:px-8 text-center pt-20">
-          <motion.p
-            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+        {/* Glass Container */}
+        <div className="relative z-20 w-full mx-4 md:mx-auto md:max-w-[700px] pt-20">
+          <motion.div
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: transitionDuration ?? 0.8 }}
-            className="text-[#C5A572] uppercase tracking-[0.2em] text-sm md:text-base mb-4 font-medium"
+            className="relative bg-white/5 backdrop-blur-[20px] border border-white/10 rounded-[24px] p-8 md:p-12 lg:p-[48px_64px] shadow-[0_25px_50px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]"
           >
-            Aspiring Aviators
-          </motion.p>
+            {/* Top Gradient Border */}
+            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#C5A572] to-transparent rounded-t-[24px]" />
+            
+            {/* Corner Accents */}
+            <div className="absolute top-4 left-4 w-5 h-5 border-l-2 border-t-2 border-[#C5A572]" />
+            <div className="absolute bottom-4 right-4 w-5 h-5 border-r-2 border-b-2 border-[#C5A572]" />
 
-          <motion.h1
-            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.1 }}
-            className="text-[32px] md:text-5xl lg:text-[48px] font-bold mb-6 leading-tight text-white"
-          >
-            Join Bangalore&apos;s Only Pilot Career Open House
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.2 }}
-            className="text-base md:text-xl text-gray-300 mb-8 font-normal"
-          >
-            Where Bangalore&apos;s future pilots are made.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.35 }}
-            className="flex flex-wrap items-center justify-center gap-4 md:gap-8 mb-10 text-base text-[#C5A572] tracking-[1px]"
-          >
-            <span className="flex items-center gap-2">
-              <Calendar className="w-4 h-4 text-[#C5A572]" />
-              <span>April 11, 2026</span>
-            </span>
-            <span className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-[#C5A572]" />
-              <span>11:30 AM onwards</span>
-            </span>
-            <span className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-[#C5A572]" />
-              <span>WindChasers HQ, Bangalore</span>
-            </span>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.5 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <button
-              onClick={scrollToRegister}
-              className="bg-[#C5A572] text-black px-10 py-4 rounded-lg font-semibold text-lg hover:bg-[#C5A572]/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+            {/* Top Label */}
+            <motion.p
+              initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: transitionDuration ?? 0.6, delay: shouldReduceMotion ? 0 : 0.1 }}
+              className="text-[#C5A572] text-xs uppercase tracking-[3px] mb-6 text-center font-medium"
             >
-              Confirm Your Seat
-            </button>
-            <a
-              href="tel:+919591004043"
-              className="flex items-center gap-2 text-white/80 hover:text-[#C5A572] transition-colors"
+              April 11, 2026 · In-Person Event
+            </motion.p>
+
+            {/* Main Headline */}
+            <motion.h1
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.2 }}
+              className="text-[28px] md:text-[48px] font-bold leading-[1.1] text-white text-center mb-4"
+              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
             >
-              <Phone className="w-5 h-5" />
-              <span>+91 95910 04043</span>
-            </a>
+              Bangalore&apos;s Pilot Career Open House
+            </motion.h1>
+
+            {/* Subheadline */}
+            <motion.p
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.3 }}
+              className="text-base md:text-lg text-gray-300 font-normal text-center mt-4"
+            >
+              Meet instructors. Tour the facility. Get your CPL roadmap.
+            </motion.p>
+
+            {/* Event Details Row */}
+            <motion.div
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.4 }}
+              className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0 mt-8 mb-10"
+            >
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-[#C5A572]" />
+                <span className="text-sm text-white">April 11, 2026</span>
+              </div>
+              <div className="hidden md:block w-px h-4 bg-white/20 mx-6" />
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-[#C5A572]" />
+                <span className="text-sm text-white">11:30 AM onwards</span>
+              </div>
+              <div className="hidden md:block w-px h-4 bg-white/20 mx-6" />
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-[#C5A572]" />
+                <span className="text-sm text-white">WindChasers HQ, Bangalore</span>
+              </div>
+            </motion.div>
+
+            {/* CTA Container */}
+            <motion.div
+              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.5 }}
+              className="text-center"
+            >
+              <button
+                onClick={scrollToRegister}
+                className="bg-[#C5A572] text-[#1A1A1A] px-8 md:px-10 py-4 rounded-full font-semibold text-base hover:bg-[#C5A572]/90 transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black shadow-[0_10px_30px_rgba(197,165,114,0.3)] hover:shadow-[0_15px_40px_rgba(197,165,114,0.4)] w-full md:w-auto"
+              >
+                Reserve Your Free Seat →
+              </button>
+              <p className="text-xs text-gray-400 mt-4">
+                Limited to 30 seats · Registration required
+              </p>
+            </motion.div>
+
+            {/* Phone Number */}
+            <motion.div
+              initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: transitionDuration ?? 0.6, delay: shouldReduceMotion ? 0 : 0.6 }}
+              className="flex items-center justify-center gap-2 mt-6"
+            >
+              <a
+                href="tel:+919591004043"
+                className="flex items-center gap-2 text-white/60 hover:text-[#C5A572] transition-colors text-sm"
+              >
+                <Phone className="w-4 h-4" />
+                <span>+91 95910 04043</span>
+              </a>
+            </motion.div>
           </motion.div>
         </div>
       </section>
