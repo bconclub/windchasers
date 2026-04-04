@@ -536,27 +536,6 @@ export default function SummerCampPage() {
             </p>
           </motion.div>
 
-          {/* Trust Badges */}
-          <motion.div
-            {...fadeInUp}
-            transition={{ delay: 0.2 }}
-            className="flex flex-wrap justify-center gap-4 mb-10"
-          >
-            {[
-              { icon: Award, text: "Certified Aviation Instructors" },
-              { icon: Users, text: "Trained 500+ Young Aviators" },
-              { icon: Shield, text: "DGCA Recognized Facility" },
-            ].map((badge, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2"
-              >
-                <badge.icon className="w-4 h-4 text-gold" />
-                <span className="text-white/80 text-sm font-medium">{badge.text}</span>
-              </div>
-            ))}
-          </motion.div>
-
           {/* Form */}
           <motion.div
             {...scaleIn}
