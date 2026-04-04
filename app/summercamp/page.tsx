@@ -54,7 +54,6 @@ interface FormData {
   childAge: string;
   interest: string;
   batchPreference: string;
-  location: string;
 }
 
 // Day cards data
@@ -142,7 +141,6 @@ export default function SummerCampPage() {
     childAge: "",
     interest: "",
     batchPreference: "",
-    location: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -173,7 +171,6 @@ export default function SummerCampPage() {
         childAge: "",
         interest: "",
         batchPreference: "",
-        location: "",
       });
     }, 3000);
   };
@@ -679,42 +676,6 @@ export default function SummerCampPage() {
                         <Calendar className={`w-4 h-4 ${formData.batchPreference === batch ? "text-gold" : "text-white/40"}`} />
                         <span className={`text-sm font-medium ${formData.batchPreference === batch ? "text-gold" : "text-white/80"}`}>
                           {batch}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Location */}
-                <div>
-                  <label className="block text-white font-medium mb-3">
-                    Do you reside in Bangalore?
-                  </label>
-                  <div className="grid grid-cols-3 gap-4">
-                    {[
-                      { value: "within-10km", label: "Yes - within 10km" },
-                      { value: "outer", label: "Yes - outer areas" },
-                      { value: "outside", label: "No - willing to travel" },
-                    ].map((option) => (
-                      <label
-                        key={option.value}
-                        className={`flex items-center justify-center gap-2 p-4 rounded-xl border cursor-pointer transition-all ${
-                          formData.location === option.value
-                            ? "border-gold bg-gold/10"
-                            : "border-white/20 bg-white/5 hover:border-white/40"
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="location"
-                          value={option.value}
-                          checked={formData.location === option.value}
-                          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                          className="sr-only"
-                        />
-                        <MapPin className={`w-4 h-4 ${formData.location === option.value ? "text-gold" : "text-white/40"}`} />
-                        <span className={`text-sm font-medium text-center ${formData.location === option.value ? "text-gold" : "text-white/80"}`}>
-                          {option.label}
                         </span>
                       </label>
                     ))}

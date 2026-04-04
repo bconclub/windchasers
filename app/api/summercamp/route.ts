@@ -71,7 +71,6 @@ export async function POST(request: NextRequest) {
       childAge,
       interest,
       batchPreference,
-      location,
     } = body;
 
     // Validate required fields
@@ -154,7 +153,6 @@ export async function POST(request: NextRequest) {
           childAge: formatAge(childAge),
           interest: formatInterest(interest),
           batchPreference: formatBatch(batchPreference),
-          location: location || "",
           timestamp,
           source: "Web Lead",
         }),
