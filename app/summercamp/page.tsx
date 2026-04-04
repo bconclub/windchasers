@@ -91,12 +91,14 @@ const dayCards = [
     title: "The Big Day - Aircraft Visit",
     description: "Real aircraft exploration, cockpit visit, interaction with pilots and engineers.",
     icon: Ticket,
+    image: "/junior aviators/005.webp",
   },
   {
     day: "Take Home",
     title: "What They Take Home",
     description: "STEM Kit, Young Aviators Certificate, Aircraft Visit Certificate, Camp T-shirt, Badge.",
     icon: Gift,
+    image: "/junior aviators/006.webp",
   },
 ];
 
