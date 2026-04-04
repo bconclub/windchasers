@@ -85,8 +85,8 @@ const WHO_SHOULD_ATTEND = [
 ];
 
 const GALLERY_VIDEOS = [
-  "Open hosue 5.mp4",
-  "Open House May 4.mp4",
+  { src: "Open hosue 5.mp4", startTime: 0 },
+  { src: "Open House May 4.mp4", startTime: 10 },
 ];
 
 const GALLERY_IMAGES = [
@@ -340,12 +340,12 @@ export default function OpenHousePage() {
           )}
         </div>
         
-        {/* Radial Gradient Overlay */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.3)_0%,_transparent_70%)] z-10" />
-        <div className="absolute inset-0 bg-black/40 z-10" />
+        {/* Lighter Radial Gradient Overlay - improves cockpit visibility */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.2)_0%,_rgba(0,0,0,0.5)_70%)] z-10" />
+        <div className="absolute inset-0 bg-black/20 z-10" />
 
         {/* Glass Container */}
-        <div className="relative z-20 w-full mx-4 md:mx-auto md:max-w-[700px] pt-20">
+        <div className="relative z-20 w-full px-4 md:px-0 md:mx-auto md:max-w-[700px] pt-20">
           <motion.div
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -355,11 +355,17 @@ export default function OpenHousePage() {
             {/* Top Gradient Border */}
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#C5A572] to-transparent rounded-t-[24px]" />
             
-            {/* Corner Accents */}
-            <div className="absolute top-4 left-4 w-5 h-5 border-l-2 border-t-2 border-[#C5A572]" />
-            <div className="absolute bottom-4 right-4 w-5 h-5 border-r-2 border-b-2 border-[#C5A572]" />
+            {/* Corner Accents - L-shapes */}
+            <div className="absolute top-5 left-5 w-5 h-5">
+              <div className="absolute top-0 left-0 w-5 h-[2px] bg-[#C5A572]" />
+              <div className="absolute top-0 left-0 w-[2px] h-5 bg-[#C5A572]" />
+            </div>
+            <div className="absolute bottom-5 right-5 w-5 h-5">
+              <div className="absolute bottom-0 right-0 w-5 h-[2px] bg-[#C5A572]" />
+              <div className="absolute bottom-0 right-0 w-[2px] h-5 bg-[#C5A572]" />
+            </div>
 
-            {/* Top Label */}
+            {/* Top Label - Small Caps */}
             <motion.p
               initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
               animate={{ opacity: 1 }}
@@ -369,15 +375,15 @@ export default function OpenHousePage() {
               April 11, 2026 · In-Person Event
             </motion.p>
 
-            {/* Main Headline */}
+            {/* Main Headline - Visual Hierarchy */}
             <motion.h1
               initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.2 }}
-              className="text-[28px] md:text-[48px] font-bold leading-[1.1] text-white text-center mb-4"
+              className="text-[28px] md:text-[48px] font-bold leading-[1.1] text-white text-center"
               style={{ textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
             >
-              Bangalore&apos;s Pilot Career Open House
+              Bangalore Aviation Open House
             </motion.h1>
 
             {/* Subheadline */}
@@ -387,7 +393,7 @@ export default function OpenHousePage() {
               transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.3 }}
               className="text-base md:text-lg text-gray-300 font-normal text-center mt-4"
             >
-              Meet instructors. Tour the facility. Get your CPL roadmap.
+              Meet pilots. Tour the facility. Experience simulators. Get your CPL roadmap.
             </motion.p>
 
             {/* Event Details Row */}
@@ -395,25 +401,25 @@ export default function OpenHousePage() {
               initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.4 }}
-              className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-0 mt-8 mb-10"
+              className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 mt-8 mb-10"
             >
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-[#C5A572]" />
                 <span className="text-sm text-white">April 11, 2026</span>
               </div>
-              <div className="hidden md:block w-px h-4 bg-white/20 mx-6" />
+              <div className="hidden md:block w-px h-4 bg-white/20" />
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-[#C5A572]" />
                 <span className="text-sm text-white">11:30 AM onwards</span>
               </div>
-              <div className="hidden md:block w-px h-4 bg-white/20 mx-6" />
+              <div className="hidden md:block w-px h-4 bg-white/20" />
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-[#C5A572]" />
                 <span className="text-sm text-white">WindChasers HQ, Bangalore</span>
               </div>
             </motion.div>
 
-            {/* CTA Container */}
+            {/* Premium Button Container */}
             <motion.div
               initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -422,7 +428,7 @@ export default function OpenHousePage() {
             >
               <button
                 onClick={scrollToRegister}
-                className="bg-[#C5A572] text-[#1A1A1A] px-8 md:px-10 py-4 rounded-full font-semibold text-base hover:bg-[#C5A572]/90 transition-all duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black shadow-[0_10px_30px_rgba(197,165,114,0.3)] hover:shadow-[0_15px_40px_rgba(197,165,114,0.4)] w-full md:w-auto"
+                className="bg-[#C5A572] text-[#1A1A1A] px-8 md:px-10 py-4 rounded-full font-semibold text-base hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(197,165,114,0.4)] transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black shadow-[0_10px_30px_rgba(197,165,114,0.3)] w-full md:w-auto"
               >
                 Reserve Your Free Seat →
               </button>
@@ -511,18 +517,19 @@ export default function OpenHousePage() {
             {/* Videos - first row */}
             {GALLERY_VIDEOS.map((v, i) => (
               <motion.div
-                key={v}
+                key={v.src}
                 initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : i * 0.1 }}
-                className="overflow-hidden rounded-lg"
+                className="overflow-hidden rounded-lg bg-black"
+                style={{ aspectRatio: '9/16' }}
               >
                 <video
-                  src={asset(v)}
+                  src={`${asset(v.src)}${v.startTime > 0 ? `#t=${v.startTime}s` : ''}`}
                   controls
                   playsInline
-                  className="w-full h-[200px] md:h-[240px] object-cover rounded-lg"
+                  className="w-full h-full object-contain rounded-lg"
                 />
               </motion.div>
             ))}
