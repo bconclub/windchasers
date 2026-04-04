@@ -2,11 +2,19 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  
+  // Hide entire navbar on open house page, hide menu only on summer camp
+  const hideNavbar = pathname === "/open-house";
+  const hideMenu = pathname === "/summercamp" || hideNavbar;
+  
+  if (hideNavbar) return null;
 
   const links = [
     { href: "/dgca", label: "DGCA Ground Classes" },
@@ -33,17 +41,19 @@ export default function Navbar() {
             </Link>
 
             {/* Hamburger Menu Button - Desktop & Mobile */}
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-white z-[60] relative"
-              aria-label="Toggle menu"
-            >
-              <div className="w-6 h-5 flex flex-col justify-between">
-                <span className={`w-full h-0.5 bg-white transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
-                <span className={`w-full h-0.5 bg-white transition-all ${isOpen ? 'opacity-0' : ''}`} />
-                <span className={`w-full h-0.5 bg-white transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
-              </div>
-            </button>
+            {!hideMenu && (
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="text-white z-[60] relative"
+                aria-label="Toggle menu"
+              >
+                <div className="w-6 h-5 flex flex-col justify-between">
+                  <span className={`w-full h-0.5 bg-white transition-all ${isOpen ? 'rotate-45 translate-y-2' : ''}`} />
+                  <span className={`w-full h-0.5 bg-white transition-all ${isOpen ? 'opacity-0' : ''}`} />
+                  <span className={`w-full h-0.5 bg-white transition-all ${isOpen ? '-rotate-45 -translate-y-2' : ''}`} />
+                </div>
+              </button>
+            )}
           </div>
         </div>
       </nav>
