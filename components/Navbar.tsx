@@ -45,14 +45,14 @@ export default function Navbar() {
               /* Summer Camp - Show Contact Buttons */
               <div className="flex items-center gap-2">
                 <a
-                  href="tel:+919036263630"
+                  href="tel:+919591004043"
                   className="flex items-center gap-2 bg-gold text-dark px-3 sm:px-4 py-2 rounded-full font-medium text-sm hover:bg-gold/90 transition-colors"
                 >
                   <Phone className="w-4 h-4" />
                   <span className="hidden sm:inline">Call</span>
                 </a>
                 <a
-                  href={`https://wa.me/919591000030?text=${encodeURIComponent("Hi WindChasers, I need more detail on Young Aviators Summer Camp")}`}
+                  href={`https://wa.me/919591004043?text=${encodeURIComponent("Hi WindChasers, I need more detail on Young Aviators Summer Camp")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-[#25D366] text-white hover:bg-[#128C7E] transition-colors"
@@ -74,7 +74,7 @@ export default function Navbar() {
                   <span className="hidden sm:inline">Call</span>
                 </a>
                 <a
-                  href={`https://wa.me/919591000030?text=${encodeURIComponent("Hi WindChasers, I need more detail on the open house")}`}
+                  href={`https://wa.me/919591004043?text=${encodeURIComponent("Hi WindChasers, I need more detail on the open house")}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-[#25D366] text-white hover:bg-[#128C7E] transition-colors"
