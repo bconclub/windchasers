@@ -135,7 +135,7 @@ const faqItems = [
   },
   {
     question: "Can I visit the facility first?",
-    answer: "Yes. Call +91 90362 63630 to schedule a campus tour before enrolling.",
+    answer: "Yes. Call +91 95910 04043 to schedule a campus tour before enrolling.",
   },
 ];
 
@@ -779,11 +779,11 @@ export default function SummerCampPage() {
           >
             <p className="text-white/60 mb-4">Still have questions?</p>
             <a
-              href="tel:+919036263630"
+              href="tel:+919591004043"
               className="inline-flex items-center gap-2 bg-white/5 border border-white/20 rounded-full px-6 py-3 text-white hover:bg-white/10 transition-colors"
             >
               <Phone className="w-5 h-5 text-gold" />
-              <span>Call +91 90362 63630</span>
+              <span>Call +91 95910 04043</span>
             </a>
           </motion.div>
         </div>
