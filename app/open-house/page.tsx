@@ -531,8 +531,12 @@ export default function OpenHousePage() {
                   src={asset(v)}
                   controls
                   playsInline
+                  preload="metadata"
                   className="w-full h-full object-contain rounded-lg"
-                />
+                >
+                  <source src={asset(v)} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               </motion.div>
             ))}
             {/* Images - fill remaining slots in two rows */}
