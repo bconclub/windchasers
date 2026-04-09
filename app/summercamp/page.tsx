@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { useState, useRef, FormEvent } from "react";
 import Image from "next/image";
-import LandingFooter from "@/components/LandingFooter";
 import {
   Plane,
   Monitor,
@@ -818,7 +817,6 @@ export default function SummerCampPage() {
         </div>
       </section>
 
-      <LandingFooter />
     </div>
   );
 }

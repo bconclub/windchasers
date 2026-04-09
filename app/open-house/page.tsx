@@ -25,7 +25,6 @@ import {
 import Head from "next/head";
 import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
-import LandingFooter from "@/components/LandingFooter";
 import oh1 from "@/public/open house/Open HOuse 1.jpg";
 import oh2 from "@/public/open house/Open Houe 2.jpg";
 import ohApr from "@/public/open house/WC Open house April 15.jpg";
@@ -999,7 +998,6 @@ export default function OpenHousePage() {
         </div>
       )}
 
-      <LandingFooter />
     </>
   );
 }

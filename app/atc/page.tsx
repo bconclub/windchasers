@@ -26,7 +26,6 @@ import {
 } from "lucide-react";
 import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
-import LandingFooter from "@/components/LandingFooter";
 
 const PROGRAM_CATEGORIES = [
   {
@@ -615,7 +614,6 @@ export default function ATCPage() {
         </div>
       </section>
 
-      <LandingFooter />
     </>
   );
 }
