@@ -2,7 +2,6 @@
 
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { useState, useRef, FormEvent } from "react";
-import Head from "next/head";
 import {
   Clock,
   User,
@@ -197,20 +196,6 @@ export default function ATCPage() {
 
   return (
     <>
-      <Head>
-        <title>ATC Training Program Bangalore | WindChasers Aviation Academy</title>
-        <meta
-          name="description"
-          content="Join WindChasers' ATC Training Program in Bangalore. 150 hours of structured preparation with expert trainers, live classes, and a clear path to becoming an Air Traffic Controller."
-        />
-        <meta property="og:title" content="ATC Training Program Bangalore | WindChasers Aviation Academy" />
-        <meta
-          property="og:description"
-          content="Structured ATC preparation with expert trainers, live classes, and a clear path to one of aviation's most critical careers."
-        />
-        <meta property="og:type" content="website" />
-      </Head>
-
       {/* Custom Navbar for ATC Page */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-dark/95 backdrop-blur-sm border-b border-white/10 overflow-visible">
         <div className="flex items-center justify-between h-20 px-4">
@@ -245,7 +230,6 @@ export default function ATCPage() {
               </a>
             </div>
           </div>
-        </div>
       </header>
 
       {/* Section 1: Hero */}
