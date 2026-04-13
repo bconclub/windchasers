@@ -19,13 +19,15 @@ export async function POST(request: Request) {
     let sheetsError = null;
 
     try {
-      sheetsResult = await appendToSheet("ATC Web Lead", "A:F", [
-        new Date().toISOString(),      // Timestamp (A)
-        data.name || "",               // Name (B)
-        data.phone || "",              // Phone (C)
-        data.email || "",              // Email (D)
-        data.city || "",               // City (E)
-        data.qualification || "",      // Qualification (F)
+      sheetsResult = await appendToSheet("ATC Web Lead", "A:H", [
+        data.name || "",               // A: Name
+        data.phone || "",              // B: Phone
+        data.email || "",              // C: Email
+        data.city || "",               // D: City
+        data.qualification || "",      // E: Qualification
+        "New Lead",                    // F: Status
+        "ATC Web Lead",                // G: Campaign
+        "",                            // H: Ad
       ]);
       console.log("ATC Sheets API success:", JSON.stringify(sheetsResult));
     } catch (sheetErr) {
