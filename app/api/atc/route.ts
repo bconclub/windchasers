@@ -5,7 +5,8 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
-    console.log("ATC Form Submission:", {
+    console.log("ATC API hit");
+    console.log("ATC Form Submission data:", {
       name: data.name,
       phone: data.phone,
       email: data.email,
@@ -14,22 +15,64 @@ export async function POST(request: Request) {
       hasUtm: !!data.utmParams,
     });
 
-    const result = await appendToSheet("ATC Web Lead", "A:F", [
-      new Date().toISOString(),      // Timestamp (A)
-      data.name || "",               // Name (B)
-      data.phone || "",              // Phone (C)
-      data.email || "",              // Email (D)
-      data.city || "",               // City (E)
-      data.qualification || "",      // Qualification (F)
-    ]);
+    let sheetsResult = null;
+    let sheetsError = null;
 
-    console.log("ATC Sheets API success:", JSON.stringify(result));
+    try {
+      sheetsResult = await appendToSheet("ATC Web Lead", "A:F", [
+        new Date().toISOString(),      // Timestamp (A)
+        data.name || "",               // Name (B)
+        data.phone || "",              // Phone (C)
+        data.email || "",              // Email (D)
+        data.city || "",               // City (E)
+        data.qualification || "",      // Qualification (F)
+      ]);
+      console.log("ATC Sheets API success:", JSON.stringify(sheetsResult));
+    } catch (sheetErr) {
+      sheetsError = sheetErr instanceof Error ? sheetErr.message : String(sheetErr);
+      console.error("ATC Sheets API error:", sheetsError);
+      // Continue to webhook fallback — don't fail the user request
+    }
 
-    return NextResponse.json({ success: true, data: result });
+    // Fallback to Proxe webhook for backup / if Sheets failed
+    try {
+      const webhookRes = await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "atc-lead",
+          name: data.name,
+          phone: data.phone,
+          email: data.email,
+          city: data.city,
+          qualification: data.qualification,
+          timestamp: new Date().toISOString(),
+          source: "ATC Lead",
+          sessionId: data.sessionId,
+          utmParams: data.utmParams,
+          referrer: data.referrer,
+          landingPage: data.landingPage,
+          pageViews: data.pageViews,
+          formSubmissions: data.formSubmissions,
+        }),
+      });
+      console.log("ATC Proxe webhook status:", webhookRes.status);
+    } catch (webhookErr) {
+      console.error("ATC Proxe webhook error:", webhookErr);
+    }
+
+    if (sheetsError) {
+      return NextResponse.json(
+        { success: true, warning: "Saved to backup. Sheets error: " + sheetsError },
+        { status: 200 }
+      );
+    }
+
+    return NextResponse.json({ success: true, data: sheetsResult });
   } catch (err) {
-    console.error("ATC Sheets error:", JSON.stringify(err, Object.getOwnPropertyNames(err)));
+    console.error("ATC API unhandled error:", JSON.stringify(err, Object.getOwnPropertyNames(err)));
     return NextResponse.json(
-      { success: false, error: String(err) },
+      { success: false, error: err instanceof Error ? err.message : String(err) },
       { status: 500 }
     );
   }

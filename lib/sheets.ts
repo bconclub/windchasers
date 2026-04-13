@@ -2,11 +2,26 @@ import { google } from "googleapis";
 
 const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID || "1J5cwsCuKI2XnIlUAbmqrl0uIm2fG_wenYx1xnZdQdgk";
 
+function normalizePrivateKey(key?: string): string | undefined {
+  if (!key) return undefined;
+  // Handle double-escaped \n, literal \n, and actual newlines
+  return key.replace(/\\n/g, "\n").replace(/\n/g, "\n").trim();
+}
+
 function getAuth() {
+  const clientEmail = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL;
+  const privateKey = normalizePrivateKey(process.env.GOOGLE_PRIVATE_KEY);
+
+  if (!clientEmail || !privateKey) {
+    throw new Error(
+      `Missing Google Sheets credentials. clientEmail=${!!clientEmail}, privateKey=${!!privateKey}`
+    );
+  }
+
   return new google.auth.GoogleAuth({
     credentials: {
-      client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+      client_email: clientEmail,
+      private_key: privateKey,
     },
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   });
