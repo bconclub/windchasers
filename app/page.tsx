@@ -10,7 +10,16 @@ import ImageCarousel from "@/components/ImageCarousel";
 
 export default function Home() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLIFrameElement>(null);
+
+  const sendVimeoCommand = (method: string, value?: number) => {
+    if (!videoRef.current?.contentWindow) return;
+    const msg: Record<string, unknown> = { method };
+    if (value !== undefined) msg.value = value;
+    videoRef.current.contentWindow.postMessage(JSON.stringify(msg), "https://player.vimeo.com");
+  };
 
   useEffect(() => {
     document.title = "Windchasers - India's Top Pilot Training Academy- Bangalore";
@@ -21,46 +30,10 @@ export default function Home() {
     pathSection?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Handle video looping within timeframe
+  // Sync mute state with Vimeo player
   useEffect(() => {
-    const handleMessage = (event: MessageEvent) => {
-      // Only accept messages from YouTube
-      if (event.origin !== 'https://www.youtube.com') return;
-      
-      try {
-        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
-        
-        // When video reaches end (394 seconds), restart at 334 seconds
-        if (data && data.event === 'onStateChange' && data.info === 0) {
-          // Video ended, seek to start time
-          if (videoRef.current?.contentWindow) {
-            videoRef.current.contentWindow.postMessage(
-              JSON.stringify({
-                event: 'command',
-                func: 'seekTo',
-                args: [334, true]
-              }),
-              'https://www.youtube.com'
-            );
-            // Play the video
-            videoRef.current.contentWindow.postMessage(
-              JSON.stringify({
-                event: 'command',
-                func: 'playVideo',
-                args: []
-              }),
-              'https://www.youtube.com'
-            );
-          }
-        }
-      } catch (e) {
-        // Not JSON, ignore
-      }
-    };
-
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
+    sendVimeoCommand("setVolume", isMuted ? 0 : 1);
+  }, [isMuted]);
 
   const videos = [
     {
@@ -123,8 +96,8 @@ export default function Home() {
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
           <iframe
             ref={videoRef}
-            className="absolute top-1/2 left-[70%] md:left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 border-0"
-            src="https://player.vimeo.com/video/1160946921?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&background=1"
+            className="absolute top-1/2 left-[70%] md:left-1/2 w-[150vw] h-[84.375vw] min-h-[150vh] min-w-[266.66vh] -translate-x-1/2 -translate-y-1/2 border-0"
+            src="https://player.vimeo.com/video/1160946921?autoplay=0&muted=0&controls=0&badge=0&byline=0&portrait=0&title=0&loop=1"
             title="Aviation Background"
             allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
             allowFullScreen
@@ -132,6 +105,68 @@ export default function Home() {
             style={{ pointerEvents: 'none' }}
           />
         </div>
+
+        {/* Play / Pause / Mute Controls */}
+        <div className="absolute bottom-6 right-6 z-20 flex items-center gap-3">
+          <button
+            onClick={() => {
+              if (isPlaying) {
+                sendVimeoCommand("pause");
+                setIsPlaying(false);
+              } else {
+                sendVimeoCommand("play");
+                setIsPlaying(true);
+              }
+            }}
+            className="w-12 h-12 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm flex items-center justify-center transition-colors border border-white/20"
+            aria-label={isPlaying ? "Pause video" : "Play video"}
+          >
+            {isPlaying ? (
+              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            )}
+          </button>
+
+          <button
+            onClick={() => setIsMuted(!isMuted)}
+            className="w-12 h-12 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm flex items-center justify-center transition-colors border border-white/20"
+            aria-label={isMuted ? "Unmute video" : "Mute video"}
+          >
+            {isMuted ? (
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+              </svg>
+            )}
+          </button>
+        </div>
+
+        {/* Center Play Button Overlay */}
+        {!isPlaying && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
+            <button
+              onClick={() => {
+                sendVimeoCommand("play");
+                setIsPlaying(true);
+              }}
+              className="pointer-events-auto w-20 h-20 rounded-full bg-[#C5A572]/90 hover:bg-[#C5A572] flex items-center justify-center transition-transform hover:scale-105 shadow-lg"
+              aria-label="Play video"
+            >
+              <svg className="w-8 h-8 text-[#1A1A1A] ml-1" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </button>
+          </div>
+        )}
 
         {/* Background overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-dark/70 via-dark/80 to-dark z-10" />

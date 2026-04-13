@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { appendToSheet } from "@/lib/sheets";
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,16 +14,13 @@ export async function POST(request: NextRequest) {
       tier,
       timestamp,
       source,
-      // UTM parameters (direct from form)
       utm_source,
       utm_medium,
       utm_campaign,
       utm_term,
       utm_content,
-      // Referrer and landing page
       referrer,
       landing_page,
-      // Tracking data
       sessionId,
       pageViews,
       utmParams,
@@ -31,7 +29,6 @@ export async function POST(request: NextRequest) {
       userInfo,
     } = body;
 
-    // Validate required fields
     if (!firstName || !lastName || !email || !phone || !scores || !tier) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -39,7 +36,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save assessment data with full tracking
+    const isoTimestamp = timestamp || new Date().toISOString();
+    const utmSource = utm_source || utmParams?.utm_source || "";
+    const utmMedium = utm_medium || utmParams?.utm_medium || "";
+    const utmCampaign = utm_campaign || utmParams?.utm_campaign || "";
+
+    // Write to Google Sheets
+    const result = await appendToSheet("Assessment", "A:L", [
+      isoTimestamp,                       // A: Date
+      `${firstName} ${lastName}`,         // B: Name
+      email,                              // C: Email
+      phone,                              // D: Phone
+      scores.qualification || 0,          // E: Qualification Score
+      scores.aptitude || 0,               // F: Aptitude Score
+      scores.readiness || 0,              // G: Readiness Score
+      scores.total || 0,                  // H: Total Score
+      tier,                               // I: Tier
+      answers?.length || 0,               // J: Answers Count
+      source || "",                       // K: Source
+      utmSource,                          // L: UTM Source
+    ]);
+
+    console.log("Assessment Sheets API success:", JSON.stringify(result));
+
+    // Backup to Proxe webhook
     const assessmentRecord = {
       firstName,
       lastName,
@@ -55,18 +75,15 @@ export async function POST(request: NextRequest) {
       tier,
       answersCount: answers?.length || 0,
       answers,
-      timestamp: timestamp || new Date().toISOString(),
+      timestamp: isoTimestamp,
       source: source || "",
-      // UTM parameters (prefer direct params, fallback to utmParams object)
-      utm_source: utm_source || utmParams?.utm_source || "",
-      utm_medium: utm_medium || utmParams?.utm_medium || "",
-      utm_campaign: utm_campaign || utmParams?.utm_campaign || "",
+      utm_source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
       utm_term: utm_term || utmParams?.utm_term || "",
       utm_content: utm_content || utmParams?.utm_content || "",
-      // Referrer and landing page
       referrer: referrer || "",
       landing_page: landing_page || "",
-      // Tracking data
       sessionId,
       pageViews,
       formSubmissions,
@@ -74,21 +91,11 @@ export async function POST(request: NextRequest) {
       assessmentData,
     };
 
-    // Send to PAT test webhook
     try {
-      const webhookPayload = {
-        type: "assessment",
-        ...assessmentRecord,
-      };
-      
-      console.log("Sending PAT test data to webhook:", JSON.stringify(webhookPayload, null, 2));
-      
       const webhookResponse = await fetch("https://build.goproxe.com/webhook/pat-test", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(webhookPayload),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "assessment", ...assessmentRecord }),
       });
       
       const responseText = await webhookResponse.text().catch(() => "Could not read response");
@@ -98,18 +105,10 @@ export async function POST(request: NextRequest) {
       } else {
         console.error("PAT test webhook returned error status:", webhookResponse.status);
         console.error("Error response:", responseText);
-        console.error("Payload sent:", JSON.stringify(webhookPayload, null, 2));
       }
     } catch (webhookError) {
       console.error("Error sending PAT test to webhook:", webhookError);
-      console.error("Error details:", webhookError instanceof Error ? webhookError.message : String(webhookError));
-      // Don't fail the request if webhook fails - assessment is still considered successful
     }
-
-    // TODO: Store in database
-    // TODO: Send to PROXe CRM with assessment score and tracking data
-    // TODO: Trigger email with results and personalized guidance
-    // TODO: Store page views, UTM params, session data
 
     return NextResponse.json(
       {

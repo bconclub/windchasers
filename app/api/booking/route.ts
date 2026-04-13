@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { appendToSheet } from "@/lib/sheets";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,13 +16,11 @@ export async function POST(request: NextRequest) {
       preferredDate, 
       preferredTime, 
       source,
-      // UTM parameters
       utm_source,
       utm_medium,
       utm_campaign,
       utm_term,
       utm_content,
-      // Tracking data
       referrer,
       landing_page,
       sessionId,
@@ -32,7 +31,6 @@ export async function POST(request: NextRequest) {
       assessmentData,
     } = body;
 
-    // Validate required fields (email and city are optional)
     const missingFields = [];
     if (!name) missingFields.push("name");
     if (!phone) missingFields.push("phone");
@@ -48,7 +46,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Save booking data with full tracking - send ALL form details to webhook
+    const timestamp = new Date().toISOString();
+    const utmSource = utm_source || utmParams?.utm_source || "";
+    const utmMedium = utm_medium || utmParams?.utm_medium || "";
+    const utmCampaign = utm_campaign || utmParams?.utm_campaign || "";
+
+    // Write to Google Sheets
+    const result = await appendToSheet("Booking", "A:N", [
+      timestamp,                          // A: Date
+      name,                               // B: Name
+      phone,                              // C: Phone
+      email || "",                        // D: Email
+      city || "",                         // E: City
+      parentGuardianName || "",           // F: Parent Guardian
+      interest,                           // G: Interest
+      demoType,                           // H: Demo Type
+      education || "",                    // I: Education
+      preferredDate,                      // J: Preferred Date
+      preferredTime || "",                // K: Preferred Time
+      source || "",                       // L: Source
+      utmSource,                          // M: UTM Source
+      utmCampaign,                        // N: UTM Campaign
+    ]);
+
+    console.log("Booking Sheets API success:", JSON.stringify(result));
+
+    // Backup to Proxe webhook
     const bookingRecord = {
       name,
       email: email || "",
@@ -61,17 +84,14 @@ export async function POST(request: NextRequest) {
       preferredDate,
       preferredTime: preferredTime || "",
       source: source || "",
-      timestamp: new Date().toISOString(),
-      // UTM parameters (prefer direct params, fallback to utmParams object)
-      utm_source: utm_source || utmParams?.utm_source || "",
-      utm_medium: utm_medium || utmParams?.utm_medium || "",
-      utm_campaign: utm_campaign || utmParams?.utm_campaign || "",
+      timestamp,
+      utm_source: utmSource,
+      utm_medium: utmMedium,
+      utm_campaign: utmCampaign,
       utm_term: utm_term || utmParams?.utm_term || "",
       utm_content: utm_content || utmParams?.utm_content || "",
-      // Referrer and landing page
       referrer: referrer || "",
       landing_page: landing_page || "",
-      // Tracking data
       sessionId,
       pageViews,
       formSubmissions,
@@ -79,17 +99,11 @@ export async function POST(request: NextRequest) {
       assessmentData,
     };
 
-    // Send to webhook
     try {
       const webhookResponse = await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: "booking",
-          ...bookingRecord,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "booking", ...bookingRecord }),
       });
       
       if (webhookResponse.ok) {
@@ -100,26 +114,13 @@ export async function POST(request: NextRequest) {
       }
     } catch (webhookError) {
       console.error("Error sending booking to webhook:", webhookError);
-      // Don't fail the request if webhook fails - booking is still considered successful
     }
-
-    // TODO: Store in database
-    // TODO: Send to PROXe CRM as a demo booking
-    // TODO: Send confirmation email to user
-    // TODO: Send notification to admin/sales team
-    // TODO: Integrate with calendar system for slot management
-
-    // TODO: Check availability for the preferred date
-    // For now, accept all bookings
 
     return NextResponse.json(
       {
         success: true,
         message: "Demo session booked successfully",
-        booking: {
-          demoType,
-          preferredDate,
-        },
+        booking: { demoType, preferredDate },
       },
       { status: 200 }
     );

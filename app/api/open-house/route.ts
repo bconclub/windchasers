@@ -1,54 +1,26 @@
 import { NextResponse } from "next/server";
-import { google } from "googleapis";
+import { appendToSheet } from "@/lib/sheets";
 
 export async function POST(request: Request) {
   try {
     const data = await request.json();
 
-    console.log('ENV CHECK:', {
-      email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-      sheetId: process.env.GOOGLE_SHEET_ID,
-      tab: process.env.GOOGLE_SHEET_TAB,
-      hasPrivateKey: !!process.env.GOOGLE_PRIVATE_KEY,
-    });
+    const result = await appendToSheet("Open House", "A:H", [
+      new Date().toISOString(),      // Date (A)
+      data.role || "",               // Type (B)
+      data.name || "",               // Name (C)
+      data.phone || "",              // Phone (D)
+      data.email || "",              // Email (E)
+      data.city || "",               // City (F)
+      data.parentAttending || "",    // With Someone (G)
+      data.status || "",             // Status (H)
+    ]);
 
-    const auth = new google.auth.GoogleAuth({
-      credentials: {
-        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-      },
-      scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-    });
+    console.log("Open House Sheets API success:", JSON.stringify(result));
 
-    const sheets = google.sheets({ version: "v4", auth });
-
-    console.log('Attempting Sheets API call...');
-
-    const result = await sheets.spreadsheets.values.append({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: `${process.env.GOOGLE_SHEET_TAB}!A:H`,
-      valueInputOption: "USER_ENTERED",
-      requestBody: {
-        values: [
-          [
-            new Date().toISOString(),      // Date (A)
-            data.role || '',               // Type (B) - "student" or "parent"
-            data.name || '',               // Name (C)
-            data.phone || '',              // Phone (D)
-            data.email || '',              // Email (E)
-            data.city || '',               // City (F)
-            data.parentAttending || '',    // With Someone (G)
-            data.status || '',             // Status (H)
-          ],
-        ],
-      },
-    });
-
-    console.log('Sheets API success:', JSON.stringify(result.data));
-
-    return NextResponse.json({ success: true, data: result.data });
+    return NextResponse.json({ success: true, data: result });
   } catch (err) {
-    console.error('Sheets error full:', JSON.stringify(err, Object.getOwnPropertyNames(err)));
+    console.error("Open House Sheets error:", JSON.stringify(err, Object.getOwnPropertyNames(err)));
     return NextResponse.json({ success: false, error: String(err) }, { status: 500 });
   }
 }

@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { useState, useRef, FormEvent } from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import { useState, useRef, useEffect, FormEvent } from "react";
+import Image from "next/image";
 import {
   Clock,
   User,
@@ -90,7 +91,6 @@ interface FormData {
   email: string;
   city: string;
   qualification: string;
-  preferredBatch: string;
 }
 
 interface FormErrors {
@@ -103,16 +103,22 @@ export default function ATCPage() {
   const shouldReduceMotion = useReducedMotion();
   const { sessionId, utmParams } = useTracking();
   const formRef = useRef<HTMLDivElement>(null);
-  const mobileVideoRef = useRef<HTMLDivElement>(null);
+  const desktopVideoRef = useRef<HTMLIFrameElement>(null);
+  const mobileVideoRef = useRef<HTMLIFrameElement>(null);
 
-  const { scrollYProgress } = useScroll({
-    target: mobileVideoRef,
-    offset: ["start end", "end start"],
-  });
+  const [isMuted, setIsMuted] = useState(true);
 
-  const videoScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.85, 1, 0.85]);
-  const videoWidth = useTransform(scrollYProgress, [0, 0.5, 1], ["45vw", "65vw", "45vw"]);
-  const videoOpacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.6, 1, 1, 0.6]);
+  const sendVimeoCommand = (iframeRef: React.RefObject<HTMLIFrameElement>, method: string, value?: number) => {
+    if (!iframeRef.current?.contentWindow) return;
+    const msg: Record<string, unknown> = { method };
+    if (value !== undefined) msg.value = value;
+    iframeRef.current.contentWindow.postMessage(JSON.stringify(msg), "https://player.vimeo.com");
+  };
+
+  useEffect(() => {
+    sendVimeoCommand(desktopVideoRef, "setVolume", isMuted ? 0 : 1);
+    sendVimeoCommand(mobileVideoRef, "setVolume", isMuted ? 0 : 1);
+  }, [isMuted]);
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -120,7 +126,6 @@ export default function ATCPage() {
     email: "",
     city: "",
     qualification: "",
-    preferredBatch: "",
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -128,6 +133,11 @@ export default function ATCPage() {
 
   const scrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: shouldReduceMotion ? "auto" : "smooth" });
+  };
+
+  const scrollToHighlights = () => {
+    const highlights = document.getElementById("program-highlights");
+    highlights?.scrollIntoView({ behavior: shouldReduceMotion ? "auto" : "smooth" });
   };
 
   const validateForm = (): boolean => {
@@ -174,7 +184,6 @@ export default function ATCPage() {
           email: formData.email,
           city: formData.city,
           qualification: formData.qualification,
-          preferredBatch: formData.preferredBatch,
           sessionId,
           utmParams,
           referrer: getStoredReferrer(),
@@ -195,46 +204,17 @@ export default function ATCPage() {
 
   return (
     <>
-      {/* Custom Navbar for ATC Page */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-dark/95 backdrop-blur-sm border-b border-white/10 overflow-visible">
-        <div className="flex items-center justify-between h-20 px-4">
-          {/* Logo */}
-          <a href="/" className="flex items-center flex-shrink-0">
-            <img
-              src="/images/White transparent.png"
-              alt="WindChasers"
-              className="h-8 w-auto max-w-[120px]"
-            />
-          </a>
-
-            {/* Right Side Buttons */}
-            <div className="flex items-center gap-2">
-              <a
-                href="tel:+919591004043"
-                className="flex items-center gap-2 bg-[#C5A572] text-black px-3 sm:px-4 py-2 rounded-full font-medium text-sm hover:bg-[#C5A572]/90 transition-colors"
-              >
-                <Phone className="w-4 h-4" />
-                <span className="hidden sm:inline">Call</span>
-              </a>
-              <a
-                href="https://wa.me/919591004043?text=Hi%20WindChasers%2C%20I%20want%20to%20know%20more%20about%20ATC%20at%20your%20academy"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center w-10 h-10 rounded-full bg-[#25D366] text-white hover:bg-[#128C7E] transition-colors"
-                aria-label="WhatsApp"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                </svg>
-              </a>
-            </div>
-          </div>
-      </header>
-
       {/* Section 1: Hero */}
       <section className="relative min-h-screen w-full flex flex-col justify-center overflow-hidden pt-20">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
+          <Image
+            src="/facility/WC1.webp"
+            alt="ATC Background"
+            fill
+            className="object-cover"
+            priority
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-dark/80 via-dark/90 to-dark" />
         </div>
 
@@ -242,14 +222,18 @@ export default function ATCPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* Left Content */}
             <div className="text-center md:text-left order-1">
-              <motion.p
-                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: transitionDuration ?? 0.6 }}
-                className="text-[#C5A572] text-xs uppercase tracking-[3px] mb-6 font-medium"
+              <motion.div
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : 0.1 }}
+                className="inline-flex items-center gap-2 bg-green-500/20 border border-green-500/40 rounded-full px-4 py-2 mb-4"
               >
-                Aviation Training
-              </motion.p>
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+                </span>
+                <span className="text-green-400 text-sm font-medium">Admissions Open</span>
+              </motion.div>
 
               <motion.h1
                 initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
@@ -279,42 +263,78 @@ export default function ATCPage() {
                   onClick={scrollToForm}
                   className="bg-[#C5A572] text-[#1A1A1A] px-8 py-4 rounded-lg font-semibold text-base hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(197,165,114,0.4)] transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60"
                 >
-                  Join the Next Batch
+                  Check Eligibility
                 </button>
               </motion.div>
             </div>
 
             {/* Right Content - Vimeo Video (Desktop) */}
-            <div className="hidden md:block order-2 w-[600px] h-[420px] rounded-2xl overflow-hidden">
-              <iframe
-                className="w-full h-full object-cover"
-                src="https://player.vimeo.com/video/1181225660?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&loop=1"
-                title="ATC Training Video"
-                allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                allowFullScreen
-                loading="eager"
-                style={{ pointerEvents: "none" }}
-              />
+            <div className="hidden md:flex order-2 justify-center">
+              <div className="w-[340px] h-[600px] rounded-2xl overflow-hidden relative shadow-2xl">
+                <iframe
+                  ref={desktopVideoRef}
+                  className="w-full h-full object-cover"
+                  src="https://player.vimeo.com/video/1181225660?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&loop=1&background=1"
+                  title="ATC Training Video"
+                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  loading="eager"
+                  style={{ pointerEvents: "none" }}
+                />
+                <button
+                  onClick={() => setIsMuted(!isMuted)}
+                  className="absolute bottom-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm flex items-center justify-center transition-colors border border-white/20"
+                  aria-label={isMuted ? "Unmute video" : "Mute video"}
+                >
+                  {isMuted ? (
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                    </svg>
+                  ) : (
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Mobile Video */}
-          <div className="md:hidden w-full h-[420px] rounded-2xl overflow-hidden mx-auto mt-12">
+          <div className="md:hidden w-full max-w-[340px] h-[520px] rounded-2xl overflow-hidden mx-auto mt-12 relative shadow-2xl">
             <iframe
+              ref={mobileVideoRef}
               className="w-full h-full object-cover"
-              src="https://player.vimeo.com/video/1181225660?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&loop=1"
+              src="https://player.vimeo.com/video/1181225660?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&loop=1&background=1"
               title="ATC Training Video"
               allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
               allowFullScreen
               loading="eager"
               style={{ pointerEvents: "none" }}
             />
+            <button
+              onClick={() => setIsMuted(!isMuted)}
+              className="absolute bottom-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm flex items-center justify-center transition-colors border border-white/20"
+              aria-label={isMuted ? "Unmute video" : "Mute video"}
+            >
+              {isMuted ? (
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                </svg>
+              ) : (
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                </svg>
+              )}
+            </button>
           </div>
         </div>
       </section>
 
       {/* Section 2: Program Highlights */}
-      <section className="py-20 px-6 lg:px-8 bg-[#1A1A1A]">
+      <section id="program-highlights" className="py-20 px-6 lg:px-8 bg-[#1A1A1A]">
         <div className="max-w-5xl mx-auto">
           <motion.h2
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
@@ -426,16 +446,16 @@ export default function ATCPage() {
         >
           <p className="text-[#C5A572] text-xs uppercase tracking-[3px] mb-4 font-medium">Investment</p>
           <p className="text-4xl md:text-6xl font-bold text-[#C5A572] mb-4">
-            Program Fee: INR 75,000
+            Program Fee: ₹75,000
           </p>
           <p className="text-gray-400 mb-10 max-w-xl mx-auto text-lg">
             Limited seats available. Start your ATC preparation with the right guidance.
           </p>
           <button
-            onClick={scrollToForm}
+            onClick={scrollToHighlights}
             className="bg-[#C5A572] text-[#1A1A1A] px-12 py-4 rounded-lg font-semibold text-lg hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(197,165,114,0.4)] transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60"
           >
-            Enquire Now
+            See What&apos;s Included
           </button>
         </motion.div>
       </section>
@@ -450,7 +470,7 @@ export default function ATCPage() {
             transition={{ duration: transitionDuration ?? 0.6 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
-              Get in touch.
+              Check Eligibility
             </h2>
             <p className="text-gray-400 text-center mb-10">
               Fill in your details and we will get back to you shortly.
@@ -577,32 +597,12 @@ export default function ATCPage() {
                   </div>
                 </div>
 
-                {/* Preferred Batch */}
-                <div>
-                  <label htmlFor="preferredBatch" className="block text-sm text-gray-300 mb-2">
-                    Preferred Batch
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="preferredBatch"
-                      value={formData.preferredBatch}
-                      onChange={(e) => setFormData((f) => ({ ...f, preferredBatch: e.target.value }))}
-                      className="w-full bg-[#1A1A1A] border border-[#444] rounded-lg px-4 h-12 text-white focus:outline-none focus:border-[#C5A572] transition-colors appearance-none pr-10"
-                    >
-                      <option value="">Select preferred batch</option>
-                      <option value="May 4-8">May 4-8</option>
-                      <option value="May 18-22">May 18-22</option>
-                    </select>
-                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
-                  </div>
-                </div>
-
                 <button
                   type="submit"
                   disabled={isSubmitting}
                   className="w-full bg-[#C5A572] text-[#1A1A1A] h-12 rounded-lg font-semibold text-lg hover:bg-[#C5A572]/90 transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#252525]"
                 >
-                  {isSubmitting ? "Submitting..." : "Enquire Now"}
+                  {isSubmitting ? "Submitting..." : "Check Eligibility"}
                 </button>
 
                 <p className="text-white/40 text-xs text-center">
@@ -613,6 +613,16 @@ export default function ATCPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Sticky mobile CTA */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-md border-t border-white/10 px-4 py-3">
+        <button
+          onClick={scrollToForm}
+          className="w-full bg-[#C5A572] text-black py-3 rounded-lg font-semibold text-base hover:bg-[#C5A572]/90 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1A1A]"
+        >
+          Check Eligibility
+        </button>
+      </div>
 
     </>
   );

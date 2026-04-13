@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { appendToSheet } from "@/lib/sheets";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,7 +13,6 @@ export async function POST(request: NextRequest) {
       city,
       status,
       parentAttending,
-      // UTM + tracking
       utm_source,
       utm_medium,
       utm_campaign,
@@ -27,7 +27,6 @@ export async function POST(request: NextRequest) {
       userInfo,
     } = body;
 
-    // Validate required fields
     if (!name || !email || !phone) {
       return NextResponse.json(
         { error: "Missing required fields" },
@@ -35,7 +34,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // TODO: Integrate with PROXe CRM
+    const timestamp = new Date().toISOString();
+    const utmSource = utm_source || utmParams?.utm_source || "";
+    const utmCampaign = utm_campaign || utmParams?.utm_campaign || "";
+
+    // Write to Google Sheets
+    const result = await appendToSheet("Leads", "A:J", [
+      timestamp,                          // A: Date
+      name,                               // B: Name
+      email,                              // C: Email
+      phone,                              // D: Phone
+      source || "website",                // E: Source
+      message || "",                      // F: Message
+      city || "",                         // G: City
+      status || "",                       // H: Status
+      parentAttending ?? "",              // I: Parent Attending
+      utmSource,                          // J: UTM Source
+    ]);
+
+    console.log("Leads Sheets API success:", JSON.stringify(result));
+
+    // Backup to Proxe webhook
     const leadRecord = {
       name,
       email,
@@ -45,14 +64,12 @@ export async function POST(request: NextRequest) {
       city: city || "",
       status: status || "",
       parentAttending: parentAttending ?? null,
-      timestamp: new Date().toISOString(),
-      // UTM parameters (prefer direct params, fallback to utmParams object)
-      utm_source: utm_source || utmParams?.utm_source || "",
+      timestamp,
+      utm_source: utmSource,
       utm_medium: utm_medium || utmParams?.utm_medium || "",
-      utm_campaign: utm_campaign || utmParams?.utm_campaign || "",
+      utm_campaign: utmCampaign,
       utm_term: utm_term || utmParams?.utm_term || "",
       utm_content: utm_content || utmParams?.utm_content || "",
-      // Tracking
       referrer: referrer || "",
       landing_page: landing_page || "",
       sessionId,
@@ -61,24 +78,15 @@ export async function POST(request: NextRequest) {
       userInfo,
     };
 
-    // Send to webhook
     try {
       await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: "lead",
-          ...leadRecord,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "lead", ...leadRecord }),
       });
     } catch (webhookError) {
       console.error("Error sending to webhook:", webhookError);
-      // Don't fail the request if webhook fails
     }
-
-    // TODO: Send to PROXe API
 
     return NextResponse.json(
       { success: true, message: "Lead captured successfully" },
