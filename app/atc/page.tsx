@@ -177,7 +177,7 @@ export default function ATCPage() {
 
     try {
       const trackingData = getTrackingData();
-      const res = await fetch("/api/atc", {
+      const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -186,6 +186,7 @@ export default function ATCPage() {
           email: formData.email,
           city: formData.city,
           qualification: formData.qualification,
+          source: "ATC Web Lead",
           sessionId,
           utmParams,
           referrer: getStoredReferrer(),

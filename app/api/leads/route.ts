@@ -13,6 +13,8 @@ export async function POST(request: NextRequest) {
       city,
       status,
       parentAttending,
+      qualification,
+      role,
       utm_source,
       utm_medium,
       utm_campaign,
@@ -21,48 +23,85 @@ export async function POST(request: NextRequest) {
       utmParams,
       referrer,
       landing_page,
+      landingPage,
       sessionId,
       pageViews,
       formSubmissions,
       userInfo,
     } = body;
 
-    if (!name || !email || !phone) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
     const timestamp = new Date().toISOString();
     const utmSource = utm_source || utmParams?.utm_source || "";
     const utmCampaign = utm_campaign || utmParams?.utm_campaign || "";
+    const resolvedLandingPage = landing_page || landingPage || "";
+    const resolvedReferrer = referrer || "";
 
-    // Write to Google Sheets
-    const result = await appendToSheet("Leads", "A:J", [
-      timestamp,                          // A: Date
-      name,                               // B: Name
-      email,                              // C: Email
-      phone,                              // D: Phone
-      source || "website",                // E: Source
-      message || "",                      // F: Message
-      city || "",                         // G: City
-      status || "",                       // H: Status
-      parentAttending ?? "",              // I: Parent Attending
-      utmSource,                          // J: UTM Source
-    ]);
+    let sheetsResult = null;
+    let sheetsError = null;
 
-    console.log("Leads Sheets API success:", JSON.stringify(result));
+    // Route to correct tab based on source
+    const normalizedSource = String(source || "").trim();
+    console.log("[LEADS API] source:", normalizedSource);
+    console.log("[LEADS API] body:", JSON.stringify(body, null, 2));
+
+    try {
+      if (normalizedSource === "ATC Web Lead" || normalizedSource === "ATC") {
+        sheetsResult = await appendToSheet("ATC Web Lead", "A:F", [
+          timestamp,
+          name || "",
+          phone || "",
+          email || "",
+          city || "",
+          qualification || "",
+        ]);
+      } else if (normalizedSource === "Open House" || normalizedSource === "open-house") {
+        sheetsResult = await appendToSheet("Open House", "A:H", [
+          timestamp,
+          role || "",
+          name || "",
+          phone || "",
+          email || "",
+          city || "",
+          parentAttending ?? "",
+          status || "",
+        ]);
+      } else {
+        // Default Leads tab
+        if (!name || !email || !phone) {
+          return NextResponse.json(
+            { error: "Missing required fields" },
+            { status: 400 }
+          );
+        }
+        sheetsResult = await appendToSheet("Leads", "A:J", [
+          timestamp,
+          name,
+          email,
+          phone,
+          normalizedSource || "website",
+          message || "",
+          city || "",
+          status || "",
+          parentAttending ?? "",
+          utmSource,
+        ]);
+      }
+      console.log("[LEADS API] Sheets success:", JSON.stringify(sheetsResult));
+    } catch (sheetErr) {
+      sheetsError = sheetErr instanceof Error ? sheetErr.message : String(sheetErr);
+      console.error("[LEADS API] Sheets error:", sheetsError);
+    }
 
     // Backup to Proxe webhook
     const leadRecord = {
-      name,
-      email,
-      phone,
-      source: source || "website",
+      name: name || "",
+      email: email || "",
+      phone: phone || "",
+      source: normalizedSource || "website",
       message: message || "",
       city: city || "",
       status: status || "",
+      qualification: qualification || "",
       parentAttending: parentAttending ?? null,
       timestamp,
       utm_source: utmSource,
@@ -70,8 +109,8 @@ export async function POST(request: NextRequest) {
       utm_campaign: utmCampaign,
       utm_term: utm_term || utmParams?.utm_term || "",
       utm_content: utm_content || utmParams?.utm_content || "",
-      referrer: referrer || "",
-      landing_page: landing_page || "",
+      referrer: resolvedReferrer,
+      landing_page: resolvedLandingPage,
       sessionId,
       pageViews,
       formSubmissions,
@@ -79,13 +118,21 @@ export async function POST(request: NextRequest) {
     };
 
     try {
-      await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
+      const webhookRes = await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type: "lead", ...leadRecord }),
       });
+      console.log("[LEADS API] Proxe webhook status:", webhookRes.status);
     } catch (webhookError) {
-      console.error("Error sending to webhook:", webhookError);
+      console.error("[LEADS API] Proxe webhook error:", webhookError);
+    }
+
+    if (sheetsError) {
+      return NextResponse.json(
+        { success: true, warning: "Saved to backup. Sheets error: " + sheetsError },
+        { status: 200 }
+      );
     }
 
     return NextResponse.json(
@@ -93,7 +140,7 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error capturing lead:", error);
+    console.error("[LEADS API] Unhandled error:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
