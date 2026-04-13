@@ -174,7 +174,7 @@ windchasers/
 - **Lead Form:** Name, Phone, Email, City, Qualification select
   - Submit to `/api/atc` → Google Sheets
   - Inline confirmation on success (no redirect)
-- **API:** `app/api/atc/route.ts` → Google Sheets (Sheet ID: `1J5cwsCuKI2XnIlUAbmqrl0uIm2fG_wenYx1xnZdQdgk`, Tab: `ATC Web Lead`)
+- **API:** `app/api/atc/route.ts` → Google Sheets (Sheet ID: `1J5cwsCuKI2XnIlUAbmqrl0uIm2fG_wenYx1xnZdQdgk`, Tab: `ATC`)
 - **Brochure:** `/public/atc/ATC_Brochure_Final.pdf`
 
 ### 10. Thank You (`/thank-you`)

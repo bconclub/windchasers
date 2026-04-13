@@ -19,14 +19,14 @@ export async function POST(request: Request) {
     let sheetsError = null;
 
     try {
-      sheetsResult = await appendToSheet("ATC Web Lead", "A:H", [
+      sheetsResult = await appendToSheet("ATC", "A:H", [
         data.name || "",               // A: Name
         data.phone || "",              // B: Phone
         data.email || "",              // C: Email
         data.city || "",               // D: City
         data.qualification || "",      // E: Qualification
         "New Lead",                    // F: Status
-        "ATC Web Lead",                // G: Campaign
+        "ATC",                         // G: Campaign
         "",                            // H: Ad
       ]);
       console.log("ATC Sheets API success:", JSON.stringify(sheetsResult));

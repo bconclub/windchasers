@@ -186,7 +186,7 @@ export default function ATCPage() {
           email: formData.email,
           city: formData.city,
           qualification: formData.qualification,
-          source: "ATC Web Lead",
+          source: "ATC",
           sessionId,
           utmParams,
           referrer: getStoredReferrer(),
