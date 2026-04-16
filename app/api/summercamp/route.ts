@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { appendToSheet } from "@/lib/sheets";
+import { appendToSheet, getSummerCampSheetTab, resolveSpreadsheetId } from "@/lib/sheets";
 
 // Helper function to format phone number with +91 prefix
 function formatPhone(phone: string): string {
@@ -86,9 +86,19 @@ export async function POST(request: NextRequest) {
     }
 
     const timestamp = new Date().toISOString();
+    const tab = getSummerCampSheetTab();
+    const spreadsheetId = resolveSpreadsheetId(
+      "GOOGLE_SHEET_ID_SUMMERCAMP",
+      "SUMMERCAMP_SHEET_ID",
+      "SUMMER_CAMP_SHEET_ID",
+      "CABIN_CREW_SHEET_ID",
+      "GOOGLE_SHEET_ID"
+    );
+    console.log("Summer Camp append tab:", tab);
+    console.log("Summer Camp spreadsheetId:", spreadsheetId);
 
     // Write to Google Sheets
-    const result = await appendToSheet("Summer Camp", "A:I", [
+    const result = await appendToSheet(tab, "A:I", [
       timestamp,                          // A: Date
       parentName,                         // B: Name
       formatPhone(phone),                 // C: Phone
@@ -98,7 +108,7 @@ export async function POST(request: NextRequest) {
       formatBatch(batchPreference),       // G: Batch
       "New Lead",                         // H: Status
       "Web Lead",                         // I: Source
-    ]);
+    ], spreadsheetId);
 
     console.log("Summer Camp Sheets API success:", JSON.stringify(result));
 
@@ -129,9 +139,7 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error("Error processing summer camp registration:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+    const message = error instanceof Error ? error.message : "Internal server error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

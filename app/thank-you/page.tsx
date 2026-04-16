@@ -194,7 +194,7 @@ function ThankYouContent() {
 
       case "atc":
         return {
-          title: "You’re on the list — ATC",
+          title: "You’re on the list ATC",
           icon: Radio,
           message:
             "Thanks for checking eligibility for our Air Traffic Controller preparation program. Our team will review your details and reach out shortly.",
@@ -243,7 +243,7 @@ function ThankYouContent() {
           role === "parent" ? "Join the Parent WhatsApp Group" : "Join the Student WhatsApp Group";
 
         return {
-          title: "You’re registered — Open House",
+          title: "You’re registered Open House",
           icon: Users,
           message:
             "Thank you for securing your seat for the Pilot Career Open House on April 11, 2026 at 11:30 AM. Join the WhatsApp group below for reminders and venue details.",
@@ -295,7 +295,7 @@ function ThankYouContent() {
 
       case "summercamp":
         return {
-          title: "Registration received — Summer Camp",
+          title: "Registration received Summer Camp",
           icon: Sparkles,
           message:
             "Thank you for registering for Junior Aviators Summer Camp. Our team will send camp details and the payment link via WhatsApp shortly.",
@@ -330,7 +330,7 @@ function ThankYouContent() {
                 </div>
               ) : null}
               <p className="text-white/70 text-sm">
-                Questions? WhatsApp or call us from the site header — we&apos;re happy to help before camp starts.
+                Questions? WhatsApp or call us from the site header; we&apos;re happy to help before camp starts.
               </p>
             </div>
           ),

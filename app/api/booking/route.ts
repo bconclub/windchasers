@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { appendToSheet } from "@/lib/sheets";
+import { appendToSheet, resolveSpreadsheetId } from "@/lib/sheets";
 
 export async function POST(request: NextRequest) {
   try {
@@ -51,6 +51,13 @@ export async function POST(request: NextRequest) {
     const utmMedium = utm_medium || utmParams?.utm_medium || "";
     const utmCampaign = utm_campaign || utmParams?.utm_campaign || "";
 
+    const spreadsheetId = resolveSpreadsheetId(
+      "GOOGLE_SHEET_ID_BOOKING",
+      "BOOKING_SHEET_ID",
+      "EVENT_DATA_2026_SHEET_ID",
+      "GOOGLE_SHEET_ID"
+    );
+
     // Write to Google Sheets
     const result = await appendToSheet("Booking", "A:N", [
       timestamp,                          // A: Date
@@ -67,7 +74,7 @@ export async function POST(request: NextRequest) {
       source || "",                       // L: Source
       utmSource,                          // M: UTM Source
       utmCampaign,                        // N: UTM Campaign
-    ]);
+    ], spreadsheetId);
 
     console.log("Booking Sheets API success:", JSON.stringify(result));
 

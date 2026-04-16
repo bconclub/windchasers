@@ -204,6 +204,10 @@ export default function ATCPage() {
         );
       }
 
+      if (typeof payload.warning === "string" && payload.warning.length > 0) {
+        throw new Error(payload.warning);
+      }
+
       const thankYouData = {
         program: "ATC",
         name: formData.name.trim(),

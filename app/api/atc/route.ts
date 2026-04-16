@@ -1,11 +1,44 @@
 import { NextResponse } from "next/server";
-import { appendToSheet } from "@/lib/sheets";
+import { appendToSheet, resolveSpreadsheetId } from "@/lib/sheets";
+
+const ATC_TAB_FROM_ENV = process.env.GOOGLE_SHEET_TAB_ATC?.trim();
+
+function atcRow(data: {
+  name?: string;
+  phone?: string;
+  email?: string;
+  city?: string;
+  qualification?: string;
+}) {
+  return [
+    data.name || "",
+    data.phone || "",
+    data.email || "",
+    data.city || "",
+    data.qualification || "",
+    "New Lead",
+    "",
+    "ATC",
+    "",
+  ];
+}
 
 export async function POST(request: Request) {
   try {
     const data = await request.json();
 
+    const tabsToTry = ATC_TAB_FROM_ENV
+      ? [ATC_TAB_FROM_ENV]
+      : ["ATC Web Lead", "ATC"];
+    const spreadsheetId = resolveSpreadsheetId(
+      "GOOGLE_SHEET_ID_ATC",
+      "ATC_SHEET_ID",
+      "GOOGLE_SHEET_ID"
+    );
+
     console.log("ATC API hit");
+    console.log("ATC sheet tab(s) to try:", tabsToTry.join(" → "));
+    console.log("ATC spreadsheetId:", spreadsheetId);
     console.log("ATC Form Submission data:", {
       name: data.name,
       phone: data.phone,
@@ -16,26 +49,20 @@ export async function POST(request: Request) {
     });
 
     let sheetsResult = null;
-    let sheetsError = null;
+    let sheetsError: string | null = null;
+    const row = atcRow(data);
 
-    try {
-      // Tab + columns match workbook "ATC Web Lead" (see sheet 1J5cwsCuKI2XnIlUAbmqrl0uIm2fG_wenYx1xnZdQdgk)
-      sheetsResult = await appendToSheet("ATC Web Lead", "A:I", [
-        data.name || "",               // A: Name
-        data.phone || "",              // B: Phone
-        data.email || "",              // C: email
-        data.city || "",               // D: City
-        data.qualification || "",      // E: Qualification
-        "New Lead",                    // F: Status
-        "",                            // G: (unused column in sheet)
-        "ATC",                         // H: Campaign
-        "",                            // I: Ad
-      ]);
-      console.log("ATC Sheets API success:", JSON.stringify(sheetsResult));
-    } catch (sheetErr) {
-      sheetsError = sheetErr instanceof Error ? sheetErr.message : String(sheetErr);
-      console.error("ATC Sheets API error:", sheetsError);
-      // Continue to webhook fallback — don't fail the user request
+    for (const tab of tabsToTry) {
+      try {
+        sheetsResult = await appendToSheet(tab, "A:I", row, spreadsheetId);
+        sheetsError = null;
+        console.log("ATC Sheets API success, tab:", tab, JSON.stringify(sheetsResult));
+        break;
+      } catch (sheetErr) {
+        const msg = sheetErr instanceof Error ? sheetErr.message : String(sheetErr);
+        console.error("ATC Sheets API error (tab " + tab + "):", msg);
+        sheetsError = msg;
+      }
     }
 
     // Fallback to Proxe webhook for backup / if Sheets failed

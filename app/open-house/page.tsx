@@ -293,8 +293,10 @@ export default function OpenHousePage() {
       router.push(
         `/thank-you?type=open-house&data=${encodeURIComponent(JSON.stringify(thankYouData))}`
       );
-    } catch {
-      setSubmitError("Something went wrong. Please try again.");
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : "Something went wrong. Please try again."
+      );
     } finally {
       setSubmitting(false);
     }

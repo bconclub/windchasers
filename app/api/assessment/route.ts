@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { appendToSheet } from "@/lib/sheets";
+import { appendToSheet, resolveSpreadsheetId } from "@/lib/sheets";
 
 export async function POST(request: NextRequest) {
   try {
@@ -41,6 +41,13 @@ export async function POST(request: NextRequest) {
     const utmMedium = utm_medium || utmParams?.utm_medium || "";
     const utmCampaign = utm_campaign || utmParams?.utm_campaign || "";
 
+    const spreadsheetId = resolveSpreadsheetId(
+      "GOOGLE_SHEET_ID_ASSESSMENT",
+      "ASSESSMENT_SHEET_ID",
+      "EVENT_DATA_2026_SHEET_ID",
+      "GOOGLE_SHEET_ID"
+    );
+
     // Write to Google Sheets
     const result = await appendToSheet("Assessment", "A:L", [
       isoTimestamp,                       // A: Date
@@ -55,7 +62,7 @@ export async function POST(request: NextRequest) {
       answers?.length || 0,               // J: Answers Count
       source || "",                       // K: Source
       utmSource,                          // L: UTM Source
-    ]);
+    ], spreadsheetId);
 
     console.log("Assessment Sheets API success:", JSON.stringify(result));
 

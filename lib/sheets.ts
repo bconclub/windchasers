@@ -1,6 +1,36 @@
 import { google } from "googleapis";
 
-const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID || "1J5cwsCuKI2XnIlUAbmqrl0uIm2fG_wenYx1xnZdQdgk";
+const DEFAULT_SPREADSHEET_ID =
+  process.env.GOOGLE_SHEET_ID || "1J5cwsCuKI2XnIlUAbmqrl0uIm2fG_wenYx1xnZdQdgk";
+
+/** Open House registrations — many VPS `.env` files use `GOOGLE_SHEET_TAB` for this. */
+export function getOpenHouseSheetTab(): string {
+  return (
+    process.env.GOOGLE_SHEET_TAB_OPEN_HOUSE?.trim() ||
+    process.env.GOOGLE_SHEET_TAB?.trim() ||
+    "Open House"
+  );
+}
+
+/** Summer Camp registrations — set `GOOGLE_SHEET_TAB_SUMMERCAMP` if the tab is not literally "Summer Camp". */
+export function getSummerCampSheetTab(): string {
+  return process.env.GOOGLE_SHEET_TAB_SUMMERCAMP?.trim() || "Summer Camp";
+}
+
+/** First non-empty env key wins; fallback is DEFAULT_SPREADSHEET_ID. */
+export function resolveSpreadsheetId(...envKeys: string[]): string {
+  for (const key of envKeys) {
+    const value = process.env[key]?.trim();
+    if (value) return value;
+  }
+  return DEFAULT_SPREADSHEET_ID;
+}
+
+/** A1 range with tab name — quote tab if it has spaces/special chars (Sheets API requirement). */
+export function formatSheetA1Range(tabName: string, a1Range: string): string {
+  const escaped = tabName.replace(/'/g, "''");
+  return `'${escaped}'!${a1Range}`;
+}
 
 function normalizePrivateKey(key?: string): string | undefined {
   if (!key) return undefined;
@@ -33,19 +63,22 @@ function getAuth() {
 export async function appendToSheet(
   tabName: string,
   range: string,
-  values: (string | number | boolean | null | undefined)[]
+  values: (string | number | boolean | null | undefined)[],
+  spreadsheetId?: string
 ) {
-  console.log("[SHEETS APPEND] spreadsheetId:", SPREADSHEET_ID);
+  const resolvedSpreadsheetId = spreadsheetId || DEFAULT_SPREADSHEET_ID;
+  const fullRange = formatSheetA1Range(tabName, range);
+  console.log("[SHEETS APPEND] spreadsheetId:", resolvedSpreadsheetId);
   console.log("[SHEETS APPEND] tabName:", tabName);
-  console.log("[SHEETS APPEND] range:", `${tabName}!${range}`);
+  console.log("[SHEETS APPEND] range:", fullRange);
   console.log("[SHEETS APPEND] values:", values);
 
   const auth = getAuth();
   const sheets = google.sheets({ version: "v4", auth });
 
   const result = await sheets.spreadsheets.values.append({
-    spreadsheetId: SPREADSHEET_ID,
-    range: `${tabName}!${range}`,
+    spreadsheetId: resolvedSpreadsheetId,
+    range: fullRange,
     valueInputOption: "USER_ENTERED",
     requestBody: {
       values: [values.map((v) => (v == null ? "" : String(v)))],

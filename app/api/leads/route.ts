@@ -1,5 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
-import { appendToSheet } from "@/lib/sheets";
+import { appendToSheet, getOpenHouseSheetTab, resolveSpreadsheetId } from "@/lib/sheets";
+
+const ATC_TAB_FROM_ENV = process.env.GOOGLE_SHEET_TAB_ATC?.trim();
+const ATC_SHEET_ID = resolveSpreadsheetId(
+  "GOOGLE_SHEET_ID_ATC",
+  "ATC_SHEET_ID",
+  "GOOGLE_SHEET_ID"
+);
+const OPEN_HOUSE_SHEET_ID = resolveSpreadsheetId(
+  "GOOGLE_SHEET_ID_OPEN_HOUSE",
+  "OPEN_HOUSE_SHEET_ID",
+  "EVENT_DATA_2026_SHEET_ID",
+  "GOOGLE_SHEET_ID"
+);
+const LEADS_SHEET_ID = resolveSpreadsheetId(
+  "GOOGLE_SHEET_ID_LEADS",
+  "LEADS_SHEET_ID",
+  "EVENT_DATA_2026_SHEET_ID",
+  "GOOGLE_SHEET_ID"
+);
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,19 +65,34 @@ export async function POST(request: NextRequest) {
 
     try {
       if (normalizedSource === "ATC Web Lead" || normalizedSource === "ATC") {
-        sheetsResult = await appendToSheet("ATC Web Lead", "A:I", [
-          name || "",               // A: Name
-          phone || "",              // B: Phone
-          email || "",              // C: email
-          city || "",               // D: City
-          qualification || "",    // E: Qualification
-          "New Lead",               // F: Status
-          "",                       // G: (unused column in sheet)
-          "ATC",                    // H: Campaign
-          "",                       // I: Ad
-        ]);
+        const atcTabs = ATC_TAB_FROM_ENV ? [ATC_TAB_FROM_ENV] : ["ATC Web Lead", "ATC"];
+        const atcRow = [
+          name || "",
+          phone || "",
+          email || "",
+          city || "",
+          qualification || "",
+          "New Lead",
+          "",
+          "ATC",
+          "",
+        ];
+        sheetsError = null;
+        for (const tab of atcTabs) {
+          try {
+            sheetsResult = await appendToSheet(tab, "A:I", atcRow, ATC_SHEET_ID);
+            sheetsError = null;
+            console.log("[LEADS API] ATC appended to tab:", tab);
+            break;
+          } catch (atcErr) {
+            const msg = atcErr instanceof Error ? atcErr.message : String(atcErr);
+            console.error("[LEADS API] ATC Sheets error (tab " + tab + "):", msg);
+            sheetsError = msg;
+            sheetsResult = null;
+          }
+        }
       } else if (normalizedSource === "Open House" || normalizedSource === "open-house") {
-        sheetsResult = await appendToSheet("Open House", "A:H", [
+        sheetsResult = await appendToSheet(getOpenHouseSheetTab(), "A:H", [
           timestamp,
           role || "",
           name || "",
@@ -67,7 +101,7 @@ export async function POST(request: NextRequest) {
           city || "",
           parentAttending ?? "",
           status || "",
-        ]);
+        ], OPEN_HOUSE_SHEET_ID);
       } else {
         // Default Leads tab
         if (!name || !email || !phone) {
@@ -87,7 +121,7 @@ export async function POST(request: NextRequest) {
           status || "",
           parentAttending ?? "",
           utmSource,
-        ]);
+        ], LEADS_SHEET_ID);
       }
       console.log("[LEADS API] Sheets success:", JSON.stringify(sheetsResult));
     } catch (sheetErr) {
