@@ -205,7 +205,8 @@ export default function ATCPage() {
       }
 
       if (typeof payload.warning === "string" && payload.warning.length > 0) {
-        throw new Error(payload.warning);
+        // Keep the UX unblocked when backup save succeeds but Sheets is unavailable.
+        console.warn("ATC submission warning:", payload.warning);
       }
 
       const thankYouData = {

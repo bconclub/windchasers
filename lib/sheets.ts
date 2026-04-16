@@ -28,7 +28,8 @@ export function resolveSpreadsheetId(...envKeys: string[]): string {
 
 /** A1 range with tab name - quote tab if it has spaces/special chars (Sheets API requirement). */
 export function formatSheetA1Range(tabName: string, a1Range: string): string {
-  const escaped = tabName.replace(/'/g, "''");
+  const normalizedTab = tabName.trim().replace(/^'(.*)'$/, "$1");
+  const escaped = normalizedTab.replace(/'/g, "''");
   return `'${escaped}'!${a1Range}`;
 }
 
