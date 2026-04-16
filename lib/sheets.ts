@@ -1,9 +1,9 @@
-import { google } from "googleapis";
+ï»¿import { google } from "googleapis";
 
 const DEFAULT_SPREADSHEET_ID =
   process.env.GOOGLE_SHEET_ID || "1J5cwsCuKI2XnIlUAbmqrl0uIm2fG_wenYx1xnZdQdgk";
 
-/** Open House registrations — many VPS `.env` files use `GOOGLE_SHEET_TAB` for this. */
+/** Open House registrations - many VPS `.env` files use `GOOGLE_SHEET_TAB` for this. */
 export function getOpenHouseSheetTab(): string {
   return (
     process.env.GOOGLE_SHEET_TAB_OPEN_HOUSE?.trim() ||
@@ -12,7 +12,7 @@ export function getOpenHouseSheetTab(): string {
   );
 }
 
-/** Summer Camp registrations — set `GOOGLE_SHEET_TAB_SUMMERCAMP` if the tab is not literally "Summer Camp". */
+/** Summer Camp registrations - set `GOOGLE_SHEET_TAB_SUMMERCAMP` if the tab is not literally "Summer Camp". */
 export function getSummerCampSheetTab(): string {
   return process.env.GOOGLE_SHEET_TAB_SUMMERCAMP?.trim() || "Summer Camp";
 }
@@ -26,7 +26,7 @@ export function resolveSpreadsheetId(...envKeys: string[]): string {
   return DEFAULT_SPREADSHEET_ID;
 }
 
-/** A1 range with tab name — quote tab if it has spaces/special chars (Sheets API requirement). */
+/** A1 range with tab name - quote tab if it has spaces/special chars (Sheets API requirement). */
 export function formatSheetA1Range(tabName: string, a1Range: string): string {
   const escaped = tabName.replace(/'/g, "''");
   return `'${escaped}'!${a1Range}`;
