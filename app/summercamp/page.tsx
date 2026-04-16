@@ -15,7 +15,6 @@ import {
   Shield,
   Users,
   MapPin,
-  Calendar,
   Clock,
   ChevronDown,
   Phone,
@@ -549,30 +548,23 @@ export default function SummerCampPage() {
                   <label className="block text-white font-medium mb-3">
                     Batch Preference
                   </label>
-                  <div className="flex flex-col sm:grid sm:grid-cols-3 gap-3">
-                    {availableBatches.map((batch) => (
-                      <label
-                        key={batch}
-                        className={`flex items-center justify-center gap-2 min-h-[56px] px-4 rounded-xl border cursor-pointer transition-all ${
-                          formData.batchPreference === batch
-                            ? "border-gold bg-gold/10"
-                            : "border-white/20 bg-white/5 hover:border-white/40"
-                        }`}
-                      >
-                        <input
-                          type="radio"
-                          name="batch"
-                          value={batch}
-                          checked={formData.batchPreference === batch}
-                          onChange={(e) => setFormData({ ...formData, batchPreference: e.target.value })}
-                          className="sr-only"
-                        />
-                        <Calendar className={`w-4 h-4 flex-shrink-0 ${formData.batchPreference === batch ? "text-gold" : "text-white/40"}`} />
-                        <span className={`text-sm sm:text-base font-medium whitespace-nowrap ${formData.batchPreference === batch ? "text-gold" : "text-white/80"}`}>
+                  <div className="relative">
+                    <select
+                      required
+                      value={formData.batchPreference}
+                      onChange={(e) => setFormData({ ...formData, batchPreference: e.target.value })}
+                      className="w-full min-h-[56px] bg-white/5 border border-white/20 rounded-xl py-3 pl-4 pr-12 text-base text-white appearance-none focus:border-gold focus:outline-none transition-colors cursor-pointer"
+                    >
+                      <option value="" disabled>
+                        Select preferred batch
+                      </option>
+                      {availableBatches.map((batch) => (
+                        <option key={batch} value={batch}>
                           {batch}
-                        </span>
-                      </label>
-                    ))}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-white/40 pointer-events-none" />
                   </div>
                 </div>
 

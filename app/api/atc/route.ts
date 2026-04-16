@@ -3,6 +3,11 @@ import { appendToSheet, resolveSpreadsheetId } from "@/lib/sheets";
 
 const ATC_TAB_FROM_ENV = process.env.GOOGLE_SHEET_TAB_ATC?.trim();
 
+function getAtcTabsToTry() {
+  const candidates = [ATC_TAB_FROM_ENV, "ATC Web Lead", "ATC"];
+  return candidates.filter((tab, idx, arr): tab is string => !!tab && arr.indexOf(tab) === idx);
+}
+
 function atcRow(data: {
   name?: string;
   phone?: string;
@@ -27,11 +32,7 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
-    const atcTab =
-      !ATC_TAB_FROM_ENV || ATC_TAB_FROM_ENV.toLowerCase() === "atc web lead"
-        ? "ATC"
-        : ATC_TAB_FROM_ENV;
-    const tabsToTry = [atcTab];
+    const tabsToTry = getAtcTabsToTry();
     const spreadsheetId = resolveSpreadsheetId(
       "GOOGLE_SHEET_ID_ATC",
       "ATC_SHEET_ID",

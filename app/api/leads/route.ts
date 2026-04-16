@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { appendToSheet, getOpenHouseSheetTab, resolveSpreadsheetId } from "@/lib/sheets";
 
 const ATC_TAB_FROM_ENV = process.env.GOOGLE_SHEET_TAB_ATC?.trim();
+function getAtcTabsToTry() {
+  const candidates = [ATC_TAB_FROM_ENV, "ATC Web Lead", "ATC"];
+  return candidates.filter((tab, idx, arr): tab is string => !!tab && arr.indexOf(tab) === idx);
+}
 const ATC_SHEET_ID = resolveSpreadsheetId(
   "GOOGLE_SHEET_ID_ATC",
   "ATC_SHEET_ID",
@@ -65,11 +69,7 @@ export async function POST(request: NextRequest) {
 
     try {
       if (normalizedSource === "ATC Web Lead" || normalizedSource === "ATC") {
-        const atcTab =
-          !ATC_TAB_FROM_ENV || ATC_TAB_FROM_ENV.toLowerCase() === "atc web lead"
-            ? "ATC"
-            : ATC_TAB_FROM_ENV;
-        const atcTabs = [atcTab];
+        const atcTabs = getAtcTabsToTry();
         const atcRow = [
           name || "",
           phone || "",

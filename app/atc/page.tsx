@@ -312,10 +312,10 @@ export default function ATCPage() {
 
             {/* Right Content - Vimeo Video (Desktop) */}
             <div className="hidden md:flex order-2 justify-center">
-              <div className="w-[340px] h-[600px] rounded-2xl overflow-hidden relative shadow-2xl">
+              <div className="w-[340px] h-[600px] rounded-[24px] overflow-hidden relative shadow-2xl">
                 <iframe
                   ref={desktopVideoRef}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover rounded-[24px]"
                   src="https://player.vimeo.com/video/1181225660?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&loop=1&background=1"
                   title="ATC Training Video"
                   allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
@@ -344,10 +344,10 @@ export default function ATCPage() {
           </div>
 
           {/* Mobile Video */}
-          <div className="md:hidden w-full max-w-[340px] h-[520px] rounded-2xl overflow-hidden mx-auto mt-12 relative shadow-2xl">
+          <div className="md:hidden w-full max-w-[340px] h-[520px] rounded-[24px] overflow-hidden mx-auto mt-12 relative shadow-2xl">
             <iframe
               ref={mobileVideoRef}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover rounded-[24px]"
               src="https://player.vimeo.com/video/1181225660?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&loop=1&background=1"
               title="ATC Training Video"
               allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
