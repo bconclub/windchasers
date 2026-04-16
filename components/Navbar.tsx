@@ -16,7 +16,8 @@ export default function Navbar() {
   const isOpenHouse = pathname === "/open-house";
   const isHome = pathname === "/";
   const isATC = pathname === "/atc";
-  const showCompact = isSummerCamp || isOpenHouse || isHome || isATC;
+  const isCabinCrew = pathname === "/cabin-crew";
+  const showCompact = isSummerCamp || isOpenHouse || isHome || isATC || isCabinCrew;
 
   const links = [
     { href: "/dgca", label: "DGCA Ground Classes" },
@@ -67,6 +68,8 @@ export default function Navbar() {
                       ? "Hi WindChasers, I need more detail on your pilot training programs"
                       : isATC
                       ? "Hi WindChasers, I want to know more about ATC at your academy"
+                      : isCabinCrew
+                      ? "Hi WindChasers, I want to know more about the Cabin Crew program."
                       : isSummerCamp
                       ? "Hi WindChasers, I need more detail on Young Aviators Summer Camp"
                       : "Hi WindChasers, I need more detail on the open house"
