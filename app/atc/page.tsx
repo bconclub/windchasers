@@ -108,6 +108,7 @@ export default function ATCPage() {
   const mobileVideoRef = useRef<HTMLIFrameElement>(null);
 
   const [isMuted, setIsMuted] = useState(true);
+  const [isDesktopViewport, setIsDesktopViewport] = useState(false);
 
   const sendVimeoCommand = (iframeRef: React.RefObject<HTMLIFrameElement>, method: string, value?: number) => {
     if (!iframeRef.current?.contentWindow) return;
@@ -117,9 +118,23 @@ export default function ATCPage() {
   };
 
   useEffect(() => {
-    sendVimeoCommand(desktopVideoRef, "setVolume", isMuted ? 0 : 1);
-    sendVimeoCommand(mobileVideoRef, "setVolume", isMuted ? 0 : 1);
-  }, [isMuted]);
+    const mediaQuery = window.matchMedia("(min-width: 768px)");
+    const syncViewport = () => setIsDesktopViewport(mediaQuery.matches);
+
+    syncViewport();
+    mediaQuery.addEventListener("change", syncViewport);
+
+    return () => mediaQuery.removeEventListener("change", syncViewport);
+  }, []);
+
+  useEffect(() => {
+    const activeRef = isDesktopViewport ? desktopVideoRef : mobileVideoRef;
+    const inactiveRef = isDesktopViewport ? mobileVideoRef : desktopVideoRef;
+
+    sendVimeoCommand(activeRef, "setVolume", isMuted ? 0 : 1);
+    sendVimeoCommand(inactiveRef, "setVolume", 0);
+    sendVimeoCommand(inactiveRef, "pause");
+  }, [isMuted, isDesktopViewport]);
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
