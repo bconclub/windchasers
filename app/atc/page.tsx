@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { useState, useRef, useEffect, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
   Clock,
@@ -16,7 +17,6 @@ import {
   BarChart,
   ClipboardList,
   Headphones,
-  CheckCircle,
   ChevronDown,
   MessageSquare,
   Target,
@@ -100,6 +100,7 @@ interface FormErrors {
 }
 
 export default function ATCPage() {
+  const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
   const { sessionId, utmParams } = useTracking();
   const formRef = useRef<HTMLDivElement>(null);
@@ -129,7 +130,6 @@ export default function ATCPage() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const scrollToForm = () => {
@@ -177,16 +177,16 @@ export default function ATCPage() {
 
     try {
       const trackingData = getTrackingData();
-      const res = await fetch("/api/leads", {
+      // Dedicated route → Google Sheet tab "ATC Web Lead" (A:I) + Proxe backup (see app/api/atc/route.ts)
+      const res = await fetch("/api/atc", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formData.name,
-          phone: formData.phone,
-          email: formData.email,
-          city: formData.city,
+          name: formData.name.trim(),
+          phone: formData.phone.trim(),
+          email: formData.email.trim(),
+          city: formData.city.trim(),
           qualification: formData.qualification,
-          source: "ATC",
           sessionId,
           utmParams,
           referrer: getStoredReferrer(),
@@ -196,17 +196,29 @@ export default function ATCPage() {
         }),
       });
 
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(errData.error || "Submission failed");
+      const payload = await res.json().catch(() => ({}));
+
+      if (!res.ok || payload.success === false) {
+        throw new Error(
+          typeof payload.error === "string" ? payload.error : "Submission failed. Please try again."
+        );
       }
 
-      setIsSubmitted(true);
+      const thankYouData = {
+        program: "ATC",
+        name: formData.name.trim(),
+        city: formData.city.trim(),
+        qualification: formData.qualification,
+      };
+      router.push(
+        `/thank-you?type=atc&data=${encodeURIComponent(JSON.stringify(thankYouData))}`
+      );
     } catch (err) {
-      setIsSubmitting(false);
       setSubmitError(
         err instanceof Error ? err.message : "Something went wrong. Please try again or contact us on WhatsApp."
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -486,21 +498,7 @@ export default function ATCPage() {
               Fill in your details and we will get back to you shortly.
             </p>
 
-            {isSubmitted ? (
-              <motion.div
-                initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: shouldReduceMotion ? 0 : undefined }}
-                className="bg-[#252525] border border-[#C5A572]/30 rounded-xl p-10 text-center"
-              >
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#C5A572]/10">
-                  <CheckCircle className="h-7 w-7 text-[#C5A572]" />
-                </div>
-                <h3 className="text-white text-xl font-semibold mb-2">Thank you for your interest.</h3>
-                <p className="text-gray-400">We&apos;ll reach out to you within 24 hours.</p>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} noValidate className="bg-[#252525] border border-white/10 rounded-xl p-8 space-y-6">
+            <form onSubmit={handleSubmit} noValidate className="bg-[#252525] border border-white/10 rounded-xl p-8 space-y-6">
                 {/* Name */}
                 <div>
                   <label htmlFor="name" className="block text-sm text-gray-300 mb-2">
@@ -636,7 +634,6 @@ export default function ATCPage() {
                   Your information is secure and will not be shared with third parties.
                 </p>
               </form>
-            )}
           </motion.div>
         </div>
       </section>

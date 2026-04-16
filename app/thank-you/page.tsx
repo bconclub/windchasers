@@ -4,7 +4,11 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { CheckCircle, Calendar, Mail, Phone, BookOpen, DollarSign, Award } from "lucide-react";
+import { CheckCircle, Calendar, Mail, Phone, BookOpen, DollarSign, Award, Radio, Users, Sparkles } from "lucide-react";
+import { trackMetaLead } from "@/lib/metaPixel";
+
+/** `type` query values that represent a captured lead — fire Meta Pixel `Lead` once per visit */
+const META_LEAD_FORM_TYPES = new Set(["atc", "open-house", "summercamp"]);
 
 function ThankYouContent() {
   const searchParams = useSearchParams();
@@ -12,21 +16,60 @@ function ThankYouContent() {
   const [formData, setFormData] = useState<any>(null);
 
   useEffect(() => {
-    document.title = "Thank You | WindChasers Aviation Academy";
-    
     const type = searchParams?.get("type");
     const data = searchParams?.get("data");
-    
+
     setFormType(type);
-    
+
     if (data) {
       try {
         setFormData(JSON.parse(decodeURIComponent(data)));
       } catch (e) {
         console.error("Error parsing form data:", e);
       }
+    } else {
+      setFormData(null);
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    if (!formType) return;
+    if (formType === "atc") {
+      document.title = "Thank You | ATC | WindChasers Aviation Academy";
+    } else if (formType === "open-house") {
+      document.title = "Thank You | Open House | WindChasers Aviation Academy";
+    } else if (formType === "summercamp") {
+      document.title = "Thank You | Summer Camp | WindChasers Aviation Academy";
+    } else {
+      document.title = "Thank You | WindChasers Aviation Academy";
+    }
+  }, [formType]);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !formType || !META_LEAD_FORM_TYPES.has(formType)) return;
+    const dedupeKey = `${formType}:${window.location.pathname}${window.location.search}`;
+    const w = window as Window & { __wcMetaLeadSent?: Set<string> };
+    w.__wcMetaLeadSent ??= new Set();
+    if (w.__wcMetaLeadSent.has(dedupeKey)) return;
+    w.__wcMetaLeadSent.add(dedupeKey);
+
+    if (formType === "atc") {
+      trackMetaLead({
+        content_name: "ATC Eligibility",
+        content_category: "atc",
+      });
+    } else if (formType === "open-house") {
+      trackMetaLead({
+        content_name: "Open House Registration",
+        content_category: "open_house",
+      });
+    } else if (formType === "summercamp") {
+      trackMetaLead({
+        content_name: "Summer Camp Registration",
+        content_category: "summer_camp",
+      });
+    }
+  }, [formType]);
 
   const getTierInfo = (tier: string) => {
     const tiers = {
@@ -146,6 +189,155 @@ function ThankYouContent() {
             "Check your email for a confirmation message",
             "Our team will call you within 24 hours to confirm",
             "Prepare any questions you'd like to ask during the demo",
+          ],
+        };
+
+      case "atc":
+        return {
+          title: "You’re on the list — ATC",
+          icon: Radio,
+          message:
+            "Thanks for checking eligibility for our Air Traffic Controller preparation program. Our team will review your details and reach out shortly.",
+          details: (
+            <div className="space-y-4">
+              {formData && (formData.name || formData.city || formData.qualification) ? (
+                <div className="bg-accent-dark/50 rounded-lg p-4 border border-gold/30">
+                  <h3 className="text-lg font-bold text-gold mb-3">What we received</h3>
+                  <ul className="space-y-2 text-white/80 text-sm">
+                    {formData.name ? (
+                      <li>
+                        <strong className="text-white/90">Name:</strong> {formData.name}
+                      </li>
+                    ) : null}
+                    {formData.city ? (
+                      <li>
+                        <strong className="text-white/90">City:</strong> {formData.city}
+                      </li>
+                    ) : null}
+                    {formData.qualification ? (
+                      <li>
+                        <strong className="text-white/90">Qualification:</strong> {formData.qualification}
+                      </li>
+                    ) : null}
+                  </ul>
+                </div>
+              ) : null}
+              <p className="text-white/70 text-sm">
+                Prefer to talk sooner? WhatsApp us from the header or book a general demo to explore all paths at WindChasers.
+              </p>
+            </div>
+          ),
+          nextSteps: [
+            "We’ll contact you within 24 hours on the phone number you provided",
+            "Check your email (including spam) for follow-ups from our team",
+            "Have your academic documents ready for the next conversation",
+          ],
+        };
+
+      case "open-house": {
+        const waStudent = "https://chat.whatsapp.com/COsk2RyqhcL8wrh6dn4irg";
+        const waParent = "https://chat.whatsapp.com/ChCxl1miiSN1WS2S4oGpAZ";
+        const role = formData?.role as string | undefined;
+        const waHref = role === "parent" ? waParent : waStudent;
+        const waLabel =
+          role === "parent" ? "Join the Parent WhatsApp Group" : "Join the Student WhatsApp Group";
+
+        return {
+          title: "You’re registered — Open House",
+          icon: Users,
+          message:
+            "Thank you for securing your seat for the Pilot Career Open House on April 11, 2026 at 11:30 AM. Join the WhatsApp group below for reminders and venue details.",
+          details: (
+            <div className="space-y-4">
+              {formData && (formData.name || formData.city || formData.role) ? (
+                <div className="bg-accent-dark/50 rounded-lg p-4 border border-gold/30">
+                  <h3 className="text-lg font-bold text-gold mb-3">Registration summary</h3>
+                  <ul className="space-y-2 text-white/80 text-sm">
+                    {formData.name ? (
+                      <li>
+                        <strong className="text-white/90">Name:</strong> {formData.name}
+                      </li>
+                    ) : null}
+                    {formData.city ? (
+                      <li>
+                        <strong className="text-white/90">City:</strong> {formData.city}
+                      </li>
+                    ) : null}
+                    {formData.role ? (
+                      <li>
+                        <strong className="text-white/90">Attending as:</strong>{" "}
+                        {formData.role === "parent" ? "Parent / Guardian" : "Student / Aspiring Pilot"}
+                      </li>
+                    ) : null}
+                  </ul>
+                </div>
+              ) : null}
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-full items-center justify-center rounded-lg bg-gold px-6 py-3.5 font-semibold text-dark transition-colors hover:bg-gold/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
+              >
+                {waLabel}
+              </a>
+              <p className="text-white/50 text-xs text-center">
+                We&apos;ll send reminders and event details in the group.
+              </p>
+            </div>
+          ),
+          nextSteps: [
+            "Join the WhatsApp group above so you don’t miss updates",
+            "Add April 11, 2026 · 11:30 AM to your calendar",
+            "Bring a parent if you’re a student (optional but encouraged)",
+          ],
+        };
+      }
+
+      case "summercamp":
+        return {
+          title: "Registration received — Summer Camp",
+          icon: Sparkles,
+          message:
+            "Thank you for registering for Junior Aviators Summer Camp. Our team will send camp details and the payment link via WhatsApp shortly.",
+          details: (
+            <div className="space-y-4">
+              {formData &&
+              (formData.parentName || formData.childAge || formData.interest || formData.batch) ? (
+                <div className="bg-accent-dark/50 rounded-lg p-4 border border-gold/30">
+                  <h3 className="text-lg font-bold text-gold mb-3">What we received</h3>
+                  <ul className="space-y-2 text-white/80 text-sm">
+                    {formData.parentName ? (
+                      <li>
+                        <strong className="text-white/90">Parent:</strong> {formData.parentName}
+                      </li>
+                    ) : null}
+                    {formData.childAge ? (
+                      <li>
+                        <strong className="text-white/90">Child age group:</strong> {formData.childAge}
+                      </li>
+                    ) : null}
+                    {formData.interest ? (
+                      <li>
+                        <strong className="text-white/90">Interest:</strong> {formData.interest}
+                      </li>
+                    ) : null}
+                    {formData.batch ? (
+                      <li>
+                        <strong className="text-white/90">Batch:</strong> {formData.batch}
+                      </li>
+                    ) : null}
+                  </ul>
+                </div>
+              ) : null}
+              <p className="text-white/70 text-sm">
+                Questions? WhatsApp or call us from the site header — we&apos;re happy to help before camp starts.
+              </p>
+            </div>
+          ),
+          nextSteps: [
+            "Watch for a WhatsApp message with confirmation and payment steps",
+            "Check your email (including spam) for follow-up from our team",
+            "Note your preferred batch when you complete payment",
           ],
         };
 
@@ -382,6 +574,38 @@ function ThankYouContent() {
                 Take Assessment
               </Link>
             )}
+            {formType === "atc" && (
+              <>
+                <Link
+                  href="/demo"
+                  className="bg-gold text-dark px-8 py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors text-center"
+                >
+                  Book a Demo
+                </Link>
+                <Link
+                  href="/atc"
+                  className="bg-white/10 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-colors border border-white/20 text-center"
+                >
+                  ATC program
+                </Link>
+              </>
+            )}
+            {formType === "open-house" && (
+              <Link
+                href="/open-house"
+                className="bg-white/10 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-colors border border-white/20 text-center"
+              >
+                Open House details
+              </Link>
+            )}
+            {formType === "summercamp" && (
+              <Link
+                href="/summercamp"
+                className="bg-white/10 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-colors border border-white/20 text-center"
+              >
+                Summer Camp page
+              </Link>
+            )}
             {formType === "pricing" && (
               <Link
                 href="/pricing"
@@ -411,9 +635,9 @@ function ThankYouContent() {
               <Mail className="w-5 h-5" />
               <span>aviators@windchasers.in</span>
             </a>
-            <a href="tel:+919876543210" className="flex items-center gap-2 text-white/80 hover:text-gold transition-colors">
+            <a href="tel:+919591004043" className="flex items-center gap-2 text-white/80 hover:text-gold transition-colors">
               <Phone className="w-5 h-5" />
-              <span>+91 98765 43210</span>
+              <span>+91 95910 04043</span>
             </a>
           </div>
         </motion.div>

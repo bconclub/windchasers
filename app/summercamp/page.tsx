@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState, useRef, FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
   Plane,
@@ -139,7 +140,23 @@ const faqItems = [
   },
 ];
 
+const INTEREST_LABELS: Record<string, string> = {
+  drones: "Flying drones",
+  simulators: "Flight simulators",
+  robots: "Robotics",
+  aircraft: "Aircraft visit",
+  all: "All of the above",
+};
+
+const AGE_LABELS: Record<string, string> = {
+  "8-9": "8–9 years",
+  "10-11": "10–11 years",
+  "12-13": "12–13 years",
+  "14-15": "14–15 years",
+};
+
 export default function SummerCampPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     parentName: "",
     phone: "",
@@ -149,7 +166,7 @@ export default function SummerCampPage() {
     batchPreference: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
 
@@ -159,26 +176,45 @@ export default function SummerCampPage() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    setSubmitError("");
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    
-    setIsSubmitting(false);
-    setSubmitSuccess(true);
-    
-    // Reset form after 3 seconds
-    setTimeout(() => {
-      setSubmitSuccess(false);
-      setFormData({
-        parentName: "",
-        phone: "",
-        email: "",
-        childAge: "",
-        interest: "",
-        batchPreference: "",
+    try {
+      const res = await fetch("/api/summercamp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          parentName: formData.parentName.trim(),
+          phone: formData.phone.trim(),
+          email: formData.email.trim(),
+          childAge: formData.childAge,
+          interest: formData.interest,
+          batchPreference: formData.batchPreference,
+        }),
       });
-    }, 3000);
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok || payload.success === false) {
+        throw new Error(
+          typeof payload.error === "string" ? payload.error : "Registration failed. Please try again."
+        );
+      }
+
+      const thankYouData = {
+        program: "Summer Camp",
+        parentName: formData.parentName.trim(),
+        childAge: AGE_LABELS[formData.childAge] || formData.childAge,
+        interest: INTEREST_LABELS[formData.interest] || formData.interest,
+        batch: formData.batchPreference,
+      };
+      router.push(
+        `/thank-you?type=summercamp&data=${encodeURIComponent(JSON.stringify(thankYouData))}`
+      );
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : "Something went wrong. Please try again or call us."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -385,18 +421,7 @@ export default function SummerCampPage() {
             {...scaleIn}
             className="bg-dark border border-white/10 rounded-2xl p-4 sm:p-8"
           >
-            {submitSuccess ? (
-              <div className="text-center py-12">
-                <div className="w-20 h-20 mx-auto mb-6 flex items-center justify-center rounded-full bg-green-500/20">
-                  <CheckCircle className="w-10 h-10 text-green-500" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-2">Registration Received!</h3>
-                <p className="text-white/60">
-                  We&apos;ll send camp details and payment link via WhatsApp shortly.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Parent&apos;s Name */}
                 <div>
                   <label className="block text-white font-medium mb-2">
@@ -530,6 +555,12 @@ export default function SummerCampPage() {
                 </div>
 
                 {/* Submit Button */}
+                {submitError ? (
+                  <div className="rounded-lg border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+                    {submitError}
+                  </div>
+                ) : null}
+
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -549,7 +580,6 @@ export default function SummerCampPage() {
                   Limited seats available. Registration confirmation and payment link will be sent via WhatsApp.
                 </p>
               </form>
-            )}
           </motion.div>
         </div>
       </section>

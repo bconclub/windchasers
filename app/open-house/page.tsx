@@ -15,7 +15,6 @@ import {
   Wallet,
   GraduationCap,
   Users,
-  CheckCircle,
   Calendar,
   Clock,
   MapPin,
@@ -166,8 +165,6 @@ export default function OpenHousePage() {
   const [blocked, setBlocked] = useState(false);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState<string>("");
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   const registerRef = useRef<HTMLElement>(null);
   const [showStickyBar, setShowStickyBar] = useState(true);
@@ -183,17 +180,6 @@ export default function OpenHousePage() {
     const t = setTimeout(() => router.push("/"), 3000);
     return () => clearTimeout(t);
   }, [blocked, router]);
-
-  useEffect(() => {
-    if (showSuccess) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [showSuccess]);
 
   useEffect(() => {
     const section = registerRef.current;
@@ -293,10 +279,23 @@ export default function OpenHousePage() {
         }),
       });
 
-      if (!res.ok) throw new Error("Submission failed");
-      setShowSuccess(true);
+      const payload = await res.json().catch(() => ({}));
+      if (!res.ok || payload.success === false) {
+        throw new Error(typeof payload.error === "string" ? payload.error : "Submission failed");
+      }
+
+      const thankYouData = {
+        program: "Open House",
+        role,
+        name: form.name.trim(),
+        city: form.city.trim(),
+      };
+      router.push(
+        `/thank-you?type=open-house&data=${encodeURIComponent(JSON.stringify(thankYouData))}`
+      );
     } catch {
       setSubmitError("Something went wrong. Please try again.");
+    } finally {
       setSubmitting(false);
     }
   };
@@ -637,16 +636,7 @@ export default function OpenHousePage() {
               </div>
             </div>
 
-            {submitted ? (
-              <div className="rounded-lg border border-[#C5A572]/30 bg-[#252525] p-8 text-center">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#C5A572]/10">
-                  <CheckCircle className="h-6 w-6 text-[#C5A572]" />
-                </div>
-                <p className="text-white text-lg font-semibold leading-relaxed">
-                  Your seat is confirmed. See you on April 11 at 11:30 AM.
-                </p>
-              </div>
-            ) : blocked ? (
+            {blocked ? (
               <motion.div
                 initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -918,76 +908,8 @@ export default function OpenHousePage() {
         )}
       </AnimatePresence>
 
-      {/* Success Popup */}
-      <AnimatePresence>
-        {showSuccess && (
-          <motion.div
-            initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: shouldReduceMotion ? 1 : 0 }}
-            transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
-            className="fixed inset-0 z-[60] bg-black/90 flex items-center justify-center p-6"
-            aria-modal="true"
-            role="dialog"
-            aria-label="Registration confirmed"
-          >
-            <motion.div
-              initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.92, y: shouldReduceMotion ? 0 : 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.92, y: shouldReduceMotion ? 0 : 16 }}
-              transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="relative w-full max-w-md rounded-2xl border border-[#C5A572]/30 bg-[#1A1A1A] p-8 text-center shadow-2xl"
-            >
-              <button
-                onClick={() => {
-                  setShowSuccess(false);
-                  setSubmitted(true);
-                }}
-                className="absolute top-3 right-3 text-white hover:text-white/80 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 rounded p-1"
-                aria-label="Close"
-              >
-                <X className="w-5 h-5" />
-              </button>
-              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#C5A572]/10">
-                <CheckCircle className="h-10 w-10 text-[#C5A572]" />
-              </div>
-              <h3 className="mb-2 text-2xl font-bold text-white">
-                Your seat is confirmed.
-              </h3>
-              <p className="mb-8 text-gray-300">
-                See you on April 11 at 11:30 AM, WindChasers HQ Bangalore.
-              </p>
-
-              {role === "student" ? (
-                <a
-                  href="https://chat.whatsapp.com/COsk2RyqhcL8wrh6dn4irg"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex w-full items-center justify-center rounded-lg bg-[#C5A572] px-6 py-3.5 font-semibold text-black transition-colors hover:bg-[#C5A572]/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1A1A]"
-                >
-                  Join the Student WhatsApp Group
-                </a>
-              ) : role === "parent" ? (
-                <a
-                  href="https://chat.whatsapp.com/ChCxl1miiSN1WS2S4oGpAZ"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex w-full items-center justify-center rounded-lg bg-[#C5A572] px-6 py-3.5 font-semibold text-black transition-colors hover:bg-[#C5A572]/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1A1A1A]"
-                >
-                  Join the Parent WhatsApp Group
-                </a>
-              ) : null}
-
-              <p className="mt-4 text-xs text-gray-400">
-                We&apos;ll send you reminders and event details in the group.
-              </p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
       {/* Sticky mobile CTA */}
-      {showStickyBar && !showSuccess && !submitted && (
+      {showStickyBar && !blocked && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-md border-t border-white/10 px-4 py-3">
           <button
             onClick={() => document.getElementById("register")?.scrollIntoView({ behavior: shouldReduceMotion ? "auto" : "smooth" })}

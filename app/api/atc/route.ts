@@ -19,15 +19,17 @@ export async function POST(request: Request) {
     let sheetsError = null;
 
     try {
-      sheetsResult = await appendToSheet("ATC", "A:H", [
+      // Tab + columns match workbook "ATC Web Lead" (see sheet 1J5cwsCuKI2XnIlUAbmqrl0uIm2fG_wenYx1xnZdQdgk)
+      sheetsResult = await appendToSheet("ATC Web Lead", "A:I", [
         data.name || "",               // A: Name
         data.phone || "",              // B: Phone
-        data.email || "",              // C: Email
+        data.email || "",              // C: email
         data.city || "",               // D: City
         data.qualification || "",      // E: Qualification
         "New Lead",                    // F: Status
-        "ATC",                         // G: Campaign
-        "",                            // H: Ad
+        "",                            // G: (unused column in sheet)
+        "ATC",                         // H: Campaign
+        "",                            // I: Ad
       ]);
       console.log("ATC Sheets API success:", JSON.stringify(sheetsResult));
     } catch (sheetErr) {

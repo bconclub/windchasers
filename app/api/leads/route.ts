@@ -46,15 +46,16 @@ export async function POST(request: NextRequest) {
 
     try {
       if (normalizedSource === "ATC Web Lead" || normalizedSource === "ATC") {
-        sheetsResult = await appendToSheet("ATC", "A:H", [
+        sheetsResult = await appendToSheet("ATC Web Lead", "A:I", [
           name || "",               // A: Name
           phone || "",              // B: Phone
-          email || "",              // C: Email
+          email || "",              // C: email
           city || "",               // D: City
-          qualification || "",      // E: Qualification
+          qualification || "",    // E: Qualification
           "New Lead",               // F: Status
-          "ATC",                    // G: Campaign
-          "",                       // H: Ad
+          "",                       // G: (unused column in sheet)
+          "ATC",                    // H: Campaign
+          "",                       // I: Ad
         ]);
       } else if (normalizedSource === "Open House" || normalizedSource === "open-house") {
         sheetsResult = await appendToSheet("Open House", "A:H", [
