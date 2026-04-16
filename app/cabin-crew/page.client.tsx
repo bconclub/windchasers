@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import {
   Briefcase,
@@ -126,6 +127,7 @@ export default function CabinCrewPageClient({
   heroVideoEmbedSrc,
   galleryImages,
 }: CabinCrewPageClientProps) {
+  const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
   const transitionDuration = shouldReduceMotion ? 0 : undefined;
 
@@ -253,6 +255,12 @@ export default function CabinCrewPageClient({
         );
       }
 
+      const thankYouData = {
+        program: "Cabin Crew",
+        name: formData.name.trim(),
+        city: formData.city.trim(),
+        highestEducation: formData.highestEducation,
+      };
       setSubmitSuccess(true);
       setFormData({
         name: "",
@@ -265,6 +273,9 @@ export default function CabinCrewPageClient({
         joiningTimeline: "",
       });
       setCurrentStep(1);
+      router.push(
+        `/thank-you?type=cabin-crew&data=${encodeURIComponent(JSON.stringify(thankYouData))}`
+      );
     } catch (error) {
       setSubmitError(
         error instanceof Error
