@@ -14,6 +14,14 @@
 
 ---
 
+## Documentation freshness
+
+- **This file last updated:** 2026-04-16 (aligned with the workspace snapshot and `git` history below).
+- **Repository HEAD (latest commit):** `0b621e3` — 2026-04-13 23:55 +0530 — *fix: rename ATC sheet tab from 'ATC Web Lead' to 'ATC'*
+- **“Last changed” in the tables:** `git log -1` on that path (author commit date; timezone as stored by Git, typically `+0530`).
+
+---
+
 ## Build Structure
 
 ### Directory Structure
@@ -22,13 +30,13 @@
 windchasers/
 ├── app/
 │   ├── api/
-│   │   ├── assessment/route.ts       # Assessment submission → Proxe webhook
-│   │   ├── booking/route.ts          # Demo booking submission → Proxe webhook
-│   │   ├── leads/route.ts            # Lead capture → Proxe webhook
-│   │   ├── atc/route.ts              # ATC Training leads → Google Sheets
+│   │   ├── assessment/route.ts       # PAT → Sheets (Assessment) + pat-test webhook
+│   │   ├── booking/route.ts          # Demo → Sheets (Booking) + pilot-windchasers
+│   │   ├── leads/route.ts            # Routed leads (ATC / Open House / default) + Proxe backup
+│   │   ├── atc/route.ts              # Legacy ATC POST → Sheets + Proxe (page uses /api/leads)
+│   │   ├── pricing/route.ts          # Pricing → Sheets (Pricing) + pilot-windchasers
 │   │   ├── open-house/route.ts       # Open House registration → Google Sheets
-│   │   ├── pricing/route.ts          # Pricing inquiry → Proxe webhook
-│   │   └── summercamp/route.ts       # Summer Camp registration → Proxe + Google Sheets
+│   │   └── summercamp/route.ts       # Summer Camp → Sheets + Proxe (UI not wired yet)
 │   ├── assessment/page.tsx           # Pilot Aptitude Test (PAT)
 │   ├── atc/page.tsx                  # ATC Training Program page
 │   ├── demo/page.tsx                 # Book Demo page
@@ -37,7 +45,7 @@ windchasers/
 │   ├── international/page.tsx        # Pilot training abroad page
 │   ├── open-house/page.tsx           # Open House event registration (April 11, 2026)
 │   ├── pricing/page.tsx              # Pricing page (form-gated)
-│   ├── summercamp/page.tsx           # Summer Camp 2025 (Junior Aviators)
+│   ├── summercamp/page.tsx           # Summer Camp UI (form submit simulated; API exists)
 │   ├── summercamp/layout.tsx         # Summer Camp metadata
 │   ├── thank-you/page.tsx            # Post-form thank-you page
 │   ├── error.tsx                     # Global error UI
@@ -50,7 +58,7 @@ windchasers/
 │   ├── Analytics.tsx                 # GA + Clarity scripts
 │   ├── AssessmentForm.tsx            # 20-question PAT form
 │   ├── BookingForm.tsx               # Demo booking form (2-step)
-│   ├── ConditionalFooter.tsx         # Footer hidden on /demo, /assessment, /thank-you
+│   ├── ConditionalFooter.tsx         # Footer hidden on /demo, /assessment, /pricing, /open-house, /summercamp, /atc
 │   ├── DGCASubjectsGrid.tsx          # DGCA subjects grid
 │   ├── FloatingActionButtons.tsx     # Sticky CTAs — REMOVED from layout (Proxe conflict)
 │   ├── Footer.tsx                    # Site footer
@@ -68,6 +76,7 @@ windchasers/
 ├── lib/
 │   ├── analytics.ts                  # GA event helpers
 │   ├── sessionStorage.ts             # sessionStorage helpers
+│   ├── sheets.ts                     # Google Sheets append (service account)
 │   └── tracking.ts                   # UTM, tracking, form data helpers
 ├── public/
 │   ├── atc/                          # ATC_Brochure_Final.pdf
@@ -103,50 +112,73 @@ windchasers/
 
 ---
 
+## Pages & routes — index (last file change)
+
+| Route / area | Source file | Last changed (commit date) | Commit | Short summary |
+|--------------|-------------|-----------------------------|--------|----------------|
+| `/` | `app/page.tsx` | 2026-04-13 | `2110ece` | Homepage refresh tied to ATC / Sheets work |
+| `/dgca` | `app/dgca/page.tsx` | 2026-02-02 | `e9ac275` | UI updates + Proxe widget fix |
+| `/helicopter` | `app/helicopter/page.tsx` | 2026-02-02 | `e9ac275` | UI updates + Proxe widget fix |
+| `/international` | `app/international/page.tsx` | 2026-02-02 | `e9ac275` | UI updates + Proxe widget fix |
+| `/demo` | `app/demo/page.tsx` | 2026-02-02 | `e9ac275` | UI updates + Proxe widget fix |
+| `/assessment` | `app/assessment/page.tsx` | 2026-01-02 | `13b74a6` | Booking UX modal + H1 sizing |
+| `/pricing` | `app/pricing/page.tsx` | 2026-01-07 | `47bfb3b` | UTM on pricing form + UI |
+| `/atc` | `app/atc/page.tsx` | 2026-04-13 | `0b621e3` | ATC page + sheet tab naming |
+| `/atc` (metadata) | `app/atc/layout.tsx` | 2026-04-13 | `9059450` | Dedicated `<title>` / description for ATC |
+| `/thank-you` | `app/thank-you/page.tsx` | 2026-01-07 | `dfba7f7` | Assessment CTAs + 404 redirect behavior |
+| `/open-house` | `app/open-house/page.tsx` | 2026-04-09 | `333fdd9` | Remove duplicate landing footer |
+| `/summercamp` | `app/summercamp/page.tsx` | 2026-04-09 | `333fdd9` | Remove duplicate landing footer |
+| `/summercamp` (metadata) | `app/summercamp/layout.tsx` | 2026-04-04 | `71bf39d` | Open House gallery / meta / summer camp images |
+| Root shell | `app/layout.tsx` | 2026-04-04 | `c0d4211` | Summer camp–related layout pass |
+| Global error UI | `app/error.tsx` | 2026-01-02 | `13b74a6` | Same H1 / booking UX wave |
+| Not found | `app/not-found.tsx` | 2026-01-07 | `dfba7f7` | Redirect unknown URLs to `/` |
+
+---
+
 ## Pages & Routes
 
 ### 1. Homepage (`/`)
-**File:** `app/page.tsx`
+**File:** `app/page.tsx` — **Last changed:** 2026-04-13 (`2110ece`)
 
-- **Hero background:** Vimeo video `1160946921` (autoplay, muted, no controls) — shifted right on mobile (`left-[70%]`) to frame cockpit
+- **Hero background:** Vimeo video `1160946921` — iframe loads with `autoplay=0` & `muted=0`; user can **play / pause / mute** via bottom-right controls; `postMessage` syncs volume with mute. Framed wide (`min-h-[150vh]`, `left-[70%]` on small screens) to bias toward cockpit.
 - **Hero CTA:** "Choose Your Path" → smooth scroll to `#path-selection`
 - **Trust bar:** 100+ Successful Pilots · DGCA Approved Curriculum · Top Tier Instructors
 - **Path selection:** Split-screen (Airplane → `AirplanePathModal`, Helicopter → `/helicopter`)
-- **Video Gallery:** `VideoCarousel` with 10 Vimeo embeds (student journey clips)
+- **Video Gallery:** `VideoCarousel` with **10** Vimeo student clips (IDs in code include `1150069889` … `1150072494`; not the hero ID)
 - **Why WindChasers:** 6-card grid (Expert Guidance, Flexible Paths, Career Support, Advanced Simulators, Honest Pricing, Proven Track Record)
 - **Facility Gallery:** `ImageCarousel` with WC1–WC7.webp
 - **CTA section:** "Take Assessment" → `/assessment` | "Book Now" → `/demo`
 
 ### 2. DGCA Ground Classes (`/dgca`)
-**File:** `app/dgca/page.tsx`
+**File:** `app/dgca/page.tsx` — **Last changed:** 2026-02-02 (`e9ac275`)
 
 - 6 DGCA subjects: Air Navigation, Air Regulations, Aviation Meteorology, Technical General, Technical Specific, RTR
 - Exam format info + `DGCASubjectsGrid`
 - CTA buttons: "Book a Demo" (`?source=dgca`) and "Take Assessment" — Book a Demo button added **below** subjects grid
 
 ### 3. Helicopter Pilot License (`/helicopter`)
-**File:** `app/helicopter/page.tsx`
+**File:** `app/helicopter/page.tsx` — **Last changed:** 2026-02-02 (`e9ac275`)
 
 - 3-step training path: Ground School → Flight Training → License Issuance
 - Entry requirements + career opportunities (Offshore, Medical, VIP, Tourism, Agriculture, Utility)
-- CTA: "Take Assessment" (`?from=helicopter`)
+- CTA: primary **Book a Demo Session** → `/demo` (no `?source=` on that link today; booking form still understands `?source=helicopter` from other entry points)
 
 ### 4. Pilot Training Abroad (`/international`)
-**File:** `app/international/page.tsx`
+**File:** `app/international/page.tsx` — **Last changed:** 2026-02-02 (`e9ac275`)
 
 - Countries: USA, Canada, Hungary, New Zealand, Thailand, Australia (with flags)
 - Prerequisites, what's included, country-specific duration + highlights
 - CTA: "Book a Demo" (`?source=abroad`) + "Take Assessment"
 
 ### 5. Book Demo (`/demo`)
-**File:** `app/demo/page.tsx`
+**File:** `app/demo/page.tsx` — **Last changed:** 2026-02-02 (`e9ac275`)
 
 - Online vs campus visit comparison
 - `BookingForm`: 2-step, session-prefill, date/time selection (Mon–Sat, 10 AM–5 PM hourly)
 - Source params: `?source=dgca|helicopter|abroad`
 
 ### 6. Pilot Assessment Test (`/assessment`)
-**File:** `app/assessment/page.tsx`
+**File:** `app/assessment/page.tsx` — **Last changed:** 2026-01-02 (`13b74a6`) · metadata exported from same file
 
 - 20-question aptitude test via `AssessmentForm`
 - **Tier system:**
@@ -158,85 +190,79 @@ windchasers/
 - Results submitted to `/api/assessment` with full UTM + session tracking payload
 
 ### 7. Pricing (`/pricing`)
-**File:** `app/pricing/page.tsx`
+**File:** `app/pricing/page.tsx` — **Last changed:** 2026-01-07 (`47bfb3b`)
 
 - Gated by `PricingFormModal` (sessionStorage flag)
 - Packages: DGCA (4 or 6 subjects) and helicopter pricing
 - Query params: `?source=dgca|helicopter|abroad`, `?package=4|6`
 
 ### 8. ATC Training (`/atc`)
-**File:** `app/atc/page.tsx`
+**File:** `app/atc/page.tsx` — **Last changed:** 2026-04-13 (`0b621e3`) · **Metadata:** `app/atc/layout.tsx` (`9059450`)
 
-- **Hero:** Dark background (no video), left-aligned content with ATC tower placeholder image
-- **Program Highlights:** 12 cards (4-col desktop, 2-col mobile) with lucide-react icons
-- **Eligibility:** 3 gold-bordered cards (B.Sc Physics/Maths, B.E/B.Tech, Final-year students)
-- **Fee Section:** INR 75,000 with CTA to form
-- **Lead Form:** Name, Phone, Email, City, Qualification select
-  - Submit to `/api/atc` → Google Sheets
-  - Inline confirmation on success (no redirect)
-- **API:** `app/api/atc/route.ts` → Google Sheets (Sheet ID: `1J5cwsCuKI2XnIlUAbmqrl0uIm2fG_wenYx1xnZdQdgk`, Tab: `ATC`)
+- **Hero:** Full-bleed `/facility/WC1.webp` with dark gradient overlay (no hero video on this page)
+- **Program highlights:** Four pillar cards (Foundation; Language & Communication; Expert Instruction; Exam Readiness) with bullet lists and lucide icons
+- **Eligibility:** Three cards (B.Sc Physics/Maths; B.E/B.Tech; Final-year students)
+- **Fee:** Program fee **₹75,000** with CTA to the form
+- **Lead form:** Name, Phone, Email, City, Qualification — **submits to `/api/leads`** with `source: "ATC"` → Google Sheets tab **`ATC`**, range **`A:H`** (same spreadsheet ID as other tabs, from `GOOGLE_SHEET_ID` or default in `lib/sheets.ts`). **Proxe webhook** backup from `/api/leads` on all lead payloads.
+- **Inline success** on 200 response (no redirect)
+- **Legacy / alternate:** `app/api/atc/route.ts` still appends to **`ATC`** and can Proxe-fallback; the **live** ATC page does **not** call this route today
 - **Brochure:** `/public/atc/ATC_Brochure_Final.pdf`
 
+### 9. Open House (`/open-house`)
+**File:** `app/open-house/page.tsx` — **Last changed:** 2026-04-09 (`333fdd9`)
+
+- **Event:** Pilot Career Open House — April 11, 2026 · Bangalore
+- **Target audience:** Students (12th completed+) and Parents
+- **SEO:** `next/head` sets title *Pilot Career Open House Bangalore · April 11, 2026 · WindChasers* (+ matching `og:title`)
+- **Features:**
+  - Hero includes background Vimeo `1160946921` (`autoplay=1`, `muted=1`, `background=1`)
+  - Topics: 6-card grid — titles in code: *Step-by-step roadmap*, *Life after CPL*, *Career path after CPL*, *Cadet programme vs CPL*, *Money talk: what is the real cost?*, *Biggest mistakes student pilots make*
+  - Past open houses gallery (videos + images)
+  - Registration form with role selector (Student/Parent), validation, student-status rules
+  - WhatsApp group links (students vs parents)
+  - Sticky mobile CTA bar
+- **Submission:** `POST /api/open-house` → **Google Sheets** tab **`Open House`** only (`A:H` row)
+- **Images:** bundled imports from `/public/open house/` (see **Static Assets**)
+- **Videos:** MP4s under `/public/open house/` (see **Static Assets**)
+
 ### 10. Thank You (`/thank-you`)
-**File:** `app/thank-you/page.tsx`
+**File:** `app/thank-you/page.tsx` — **Last changed:** 2026-01-07 (`dfba7f7`)
 
 - Types: `type=booking|assessment|pricing`
 - Optional `data` payload for booking details or pricing access
 - Score display + tier badge on assessment completion
 
-### 9. Open House (`/open-house`)
-**File:** `app/open-house/page.tsx`
-
-- **Event:** Pilot Career Open House — April 11, 2026 · Bangalore
-- **Target audience:** Students (12th completed+) and Parents
-- **Features:**
-  - Glass morphism hero with event details
-  - Topics covered (6-card grid): CPL roadmap, Life after CPL, Career paths, Cadet vs CPL, Cost breakdown, Common mistakes
-  - Past open houses gallery (videos + images)
-  - Registration form with role selector (Student/Parent)
-  - Form validation with student status filtering (redirects if Below 12th)
-  - WhatsApp group links (separate for students & parents)
-  - Sticky mobile CTA bar
-- **Submission:** `/api/open-house` → Google Sheets
-- **Images:** 6 photos from `/public/open house/`
-- **Videos:** 2 MP4s from `/public/open house/`
-
 ### 11. Summer Camp (`/summercamp`)
-**File:** `app/summercamp/page.tsx`
+**File:** `app/summercamp/page.tsx` — **Last changed:** 2026-04-09 (`333fdd9`) · **Metadata:** `app/summercamp/layout.tsx` (`71bf39d`)
 
 - **Program:** Junior Aviators Summer Camp 2025
 - **Target:** Kids aged 8-15
 - **Duration:** 5 days (Mon–Fri, 10 AM – 5 PM)
-- **5-Day Journey:**
-  - Day 1: Drone Mastery (real outdoor flying)
-  - Day 2: Flight Simulator Training
-  - Day 3: Robotics & Aerospace STEM
-  - Day 4: Aeromodelling & 3D Printing
-  - Day 5: Aircraft Visit (real cockpit exploration)
-  - Take Home: STEM Kit, 2 Certificates, T-shirt, Badge
-- **Features:**
-  - Hero with event details bar
-  - 6 day cards with images
-  - Registration form with batch selection (April 6-10 / April 20-24)
-  - Camp includes checklist (9 items)
-  - Safety & Supervision section
-  - FAQ accordion (5 items)
-  - Final CTA section
-- **Submission:** `/api/summercamp` → Google Sheets + Proxe webhook
-- **Images:** 6 photos from `/public/junior aviators/001.webp` to `006.webp`
+- **5-Day Journey:** Drone → Simulator → Robotics/STEM → Aeromodelling/3D print → Aircraft visit; take-home kit/certificates/T-shirt/badge (as described on page)
+- **Features:** Hero, 6 day cards (`/public/junior aviators/001.webp`–`006.webp`), registration UI, checklist, safety, FAQ, final CTA
+- **Submission (current code):** Form handler **simulates** submit (`setTimeout` ~1.5s) and shows success — **does not** `fetch` `/api/summercamp`. The API route **`app/api/summercamp/route.ts`** still exists (Sheets + Proxe-style integration) for when the UI is wired.
+- **Footer:** Site `Footer` hidden here via `ConditionalFooter` (same as `/atc`, `/open-house`, etc.)
 
 ### 12. Error & Not Found
-- `app/error.tsx` — global error UI with retry and home actions
-- `app/not-found.tsx` — auto-redirects to homepage
+- **`app/error.tsx`** — **Last changed:** 2026-01-02 (`13b74a6`) — global error UI with retry and home actions
+- **`app/not-found.tsx`** — **Last changed:** 2026-01-07 (`dfba7f7`) — client redirect to `/` for unknown routes
 
 ---
 
 ## Components
 
 ### Navbar (`components/Navbar.tsx`)
-- Fixed nav, hamburger menu (mobile + desktop)
-- Slide-in menu panel with **close button** (added)
-- Links: DGCA Ground · Fly Abroad · Helicopter · Take Assessment · Book a Demo
+- **Last changed:** 2026-04-13 (`2110ece`)
+- Fixed nav, hamburger + full slide-in menu (with explicit **close** control)
+- **Logo:** `/images/White transparent.png`
+- **Compact header** (logo + call + WhatsApp only, no hamburger labels clutter) on: `/`, `/summercamp`, `/open-house`, `/atc` — full link row hidden on those routes per `pathname`
+- **Menu links:** DGCA Ground Classes · Pilot Training Abroad · Helicopter Pilot Training · Take Pilot Assessment · Book a Demo Session
+- **Home:** “Admissions Open” pulse + `tel:+919591004043` + WhatsApp preset text for general enquiries
+- **ATC / summer camp / open house:** WhatsApp deep links use context-specific default messages
+
+### ConditionalFooter (`components/ConditionalFooter.tsx`)
+- **Last changed:** 2026-04-13 (`2110ece`)
+- Omits `Footer` on: `/demo`, `/assessment`, `/pricing`, `/open-house`, `/summercamp`, `/atc`
 
 ### FloatingActionButtons (`components/FloatingActionButtons.tsx`)
 - File exists but **not mounted in layout**
@@ -247,6 +273,7 @@ windchasers/
 - Replaces floating CTA buttons as the primary engagement mechanism
 
 ### BookingForm (`components/BookingForm.tsx`)
+- **Last changed:** 2026-02-02 (`e9ac275`)
 - Source-aware prefill from URL params + sessionStorage
 - Demo type: Online / Campus Visit
 - Date/time: Mon–Sat, hourly slots 10 AM–5 PM
@@ -254,6 +281,7 @@ windchasers/
 - Submits to `/api/booking` with UTM + tracking payload
 
 ### AssessmentForm (`components/AssessmentForm.tsx`)
+- **Last changed:** 2026-01-07 (`dfba7f7`)
 - 20-question PAT
 - Tiered scoring (Premium/Strong/Moderate/Needs Improvement)
 - Submits to `/api/assessment`
@@ -271,26 +299,52 @@ windchasers/
 
 ## API Routes
 
-### Proxe Webhooks
-All routes send to Proxe webhooks at `https://build.goproxe.com/webhook/...`
+**Spreadsheet:** `appendToSheet` in `lib/sheets.ts` targets `GOOGLE_SHEET_ID` (default `1J5cwsCuKI2XnIlUAbmqrl0uIm2fG_wenYx1xnZdQdgk` if env unset). **Last touched there:** 2026-04-13 (`cb52876` logging).
 
-| Route | Webhook | Required Fields |
-|---|---|---|
-| `/api/booking` | `pilot-windchasers` | name, phone, interest, demoType, preferredDate |
-| `/api/assessment` | `pat-test` | firstName, lastName, email, phone, scores, tier |
-| `/api/leads` | `pilot-windchasers` | name, email, phone |
-| `/api/pricing` | `pilot-windchasers` | name, phone, startTimeline |
+**Proxe base:** `https://build.goproxe.com/webhook/...`
 
-### Google Sheets Integration
-| Route | Destination | Purpose |
-|---|---|---|
-| `/api/atc` | Google Sheets | ATC Training leads |
-| `/api/open-house` | Google Sheets | Open House registrations |
-| `/api/summercamp` | Google Sheets + Proxe | Summer Camp registrations |
+### Dual-write (Google Sheets + Proxe)
 
-All routes include UTM params, landing page, referrer, sessionId, pageViews, formSubmissions.
+| HTTP route | Sheet tab (range) | Proxe webhook | Notes |
+|------------|-------------------|---------------|--------|
+| `POST /api/booking` | `Booking` `A:N` | `pilot-windchasers` (`type: "booking"`) | Requires name, phone, interest, demoType, preferredDate |
+| `POST /api/assessment` | `Assessment` `A:L` | `pat-test` | PAT result + contact |
+| `POST /api/pricing` | `Pricing` `A:J` | `pilot-windchasers` | After modal submit |
+| `POST /api/summercamp` | `Summer Camp` `A:I` | `pilot-windchasers` (`type: "summer-camp"`) | **Server ready**; **UI on `/summercamp` does not call it yet** |
 
-**TODO:** Database integration, CRM, email automation, calendar slot management, admin dashboard.
+### Sheets only (no Proxe in handler)
+
+| HTTP route | Sheet tab (range) | Notes |
+|------------|-------------------|--------|
+| `POST /api/open-house` | `Open House` `A:H` | Used by Open House page |
+
+### `/api/leads` (router + backup webhook)
+
+- **Sheets:** Chooses tab by `source` — `ATC` / `ATC Web Lead` → **`ATC` `A:H`**; `Open House` / `open-house` → **`Open House` `A:H`**; else default **`Leads` `A:J`** (requires name, email, phone on default branch).
+- **Proxe:** Always posts `{ type: "lead", ... }` to **`pilot-windchasers`** as backup (even when Sheets succeeds).
+- **Used by:** **`/atc` page** (source `"ATC"`).
+
+### Legacy / unused by current UI
+
+| HTTP route | Behavior |
+|------------|----------|
+| `POST /api/atc` | Same pattern as older ATC handler: **`ATC` tab** + Proxe fallback. **Not** called by `app/atc/page.tsx` (that uses `/api/leads`). |
+
+### Handler source files — last `git` touch
+
+| File | Last changed | Commit |
+|------|----------------|--------|
+| `app/api/booking/route.ts` | 2026-04-13 | `2110ece` |
+| `app/api/assessment/route.ts` | 2026-04-13 | `2110ece` |
+| `app/api/pricing/route.ts` | 2026-04-13 | `2110ece` |
+| `app/api/open-house/route.ts` | 2026-04-13 | `2110ece` |
+| `app/api/summercamp/route.ts` | 2026-04-13 | `2110ece` |
+| `app/api/leads/route.ts` | 2026-04-13 | `0b621e3` |
+| `app/api/atc/route.ts` | 2026-04-13 | `0b621e3` |
+
+Client components send UTM/session fields where implemented (`BookingForm`, `AssessmentForm`, ATC lead, etc.). **`/api/open-house`** persists the JSON fields it receives; it does not duplicate the full tracking middleware picture.
+
+**TODO:** Database integration, CRM, email automation, calendar slot management, admin dashboard; **wire `/summercamp` form to `POST /api/summercamp`**.
 
 ---
 
@@ -343,7 +397,7 @@ All routes include UTM params, landing page, referrer, sessionId, pageViews, for
 |---|---|
 | Default | Windchasers - India's Top Pilot Training Academy- Bangalore |
 | Homepage | Same as default (set via `useEffect`) |
-| ATC | ATC Training Program Bangalore \| WindChasers Aviation Academy |
+| ATC | Air Traffic Controller Training \| WindChasers Aviation Academy (`app/atc/layout.tsx`) |
 | DGCA | DGCA Ground Classes \| WindChasers Aviation Academy |
 | International | Pilot Training Abroad \| WindChasers Aviation Academy |
 | Demo | Book Free Demo \| WindChasers Aviation Academy |
@@ -352,7 +406,7 @@ All routes include UTM params, landing page, referrer, sessionId, pageViews, for
 | Assessment | PAT - Pilot Aptitude Test \| WindChasers Aviation Academy |
 | Open House | Pilot Career Open House Bangalore · April 11, 2026 · WindChasers |
 | Summer Camp | Summer Camp 2025 \| WindChasers - Drone & Aviation Camp for Kids Bangalore |
-| Helicopter | Uses default title |
+| Helicopter | Inherits root `metadata.title` from `app/layout.tsx` (no page-level override) |
 
 ---
 
@@ -414,26 +468,27 @@ All routes include UTM params, landing page, referrer, sessionId, pageViews, for
 ## Implementation Status
 
 ### Completed
-- All pages with route-specific behavior
-- Responsive navigation with mobile close button
+- All marketing routes with route-specific layout/behavior
+- Responsive navigation (compact vs full), slide-in menu + close control
 - Proxe chat widget integrated (replaced FloatingActionButtons)
-- Vimeo hero video background
-- Booking form (session prefill + UTM tracking)
-- PAT assessment (new tier system: Premium/Strong/Moderate/Needs Improvement)
-- Pricing page (form-gated access)
-- Full UTM/session tracking on all form submissions
+- Homepage hero Vimeo with **manual play/pause/mute** controls (not autoplay-on-load)
+- Booking form (session prefill + UTM tracking) → **Sheets `Booking` tab** + Proxe
+- PAT assessment (tier system: Premium/Strong/Moderate/Needs Improvement) → **Sheets `Assessment`** + `pat-test` webhook
+- Pricing page (form-gated access) → **Sheets `Pricing`** + Proxe
+- UTM/session tracking on booking, assessment, pricing, ATC lead, and related APIs where fields are sent
 - Google Analytics + Microsoft Clarity + Meta Pixel
-- Image and video carousels (10 Vimeo clips)
+- Image and video carousels (10 Vimeo gallery clips on home)
 - DGCA page with Book a Demo below subjects grid
 - 404 auto-redirect to homepage
-- **Open House page** — Event registration with Google Sheets integration
-- **Summer Camp page** — Kids aviation camp with registration
-- **ATC Training page** — ATC program with lead form and Google Sheets integration
+- **Open House** — live `POST /api/open-house` → Sheets
+- **ATC** — lead form `POST /api/leads` (`source: "ATC"`) → Sheets **`ATC`** + Proxe backup
+- **ConditionalFooter** hides global footer on `/demo`, `/assessment`, `/pricing`, `/open-house`, `/summercamp`, `/atc`
 
 ### TODO
 - Database integration (bookings, pricing, assessments)
-- PROXe CRM API integration
+- Proxe CRM API integration (deeper than webhooks)
 - Email automation (confirmations, results)
 - Calendar slot management
 - Admin dashboard
 - Testimonials section
+- **Connect `/summercamp` registration UI to `POST /api/summercamp`** (server handler already writes Sheets + Proxe)
