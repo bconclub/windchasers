@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 
     for (const tab of tabsToTry) {
       try {
-        sheetsResult = await appendToSheet(tab, "A:I", row, spreadsheetId);
+        sheetsResult = await appendToSheet(tab, "A1:I1", row, spreadsheetId);
         sheetsError = null;
         console.log("ATC Sheets API success, tab:", tab, JSON.stringify(sheetsResult));
         break;

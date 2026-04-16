@@ -10,6 +10,8 @@ export const metadata: Metadata = {
 };
 
 const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"];
+const CABIN_CREW_VIMEO_EMBED =
+  "https://player.vimeo.com/video/1183684229?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&loop=1&background=1";
 
 async function getCabinCrewAssets() {
   const publicDir = path.join(process.cwd(), "public");
@@ -48,5 +50,11 @@ async function getCabinCrewAssets() {
 export default async function CabinCrewPage() {
   const { heroVideoSrc, galleryImages } = await getCabinCrewAssets();
 
-  return <CabinCrewPageClient heroVideoSrc={heroVideoSrc} galleryImages={galleryImages} />;
+  return (
+    <CabinCrewPageClient
+      heroVideoSrc={heroVideoSrc}
+      heroVideoEmbedSrc={CABIN_CREW_VIMEO_EMBED}
+      galleryImages={galleryImages}
+    />
+  );
 }

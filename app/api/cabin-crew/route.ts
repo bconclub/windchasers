@@ -14,14 +14,15 @@ export async function POST(request: Request) {
       data.phone || "",
       data.email || "",
       data.city || "",
-      data.completed12th || "",
-      data.age18plus || "",
+      data.highestEducation || "",
+      data.englishCommunication || "",
+      data.age || "",
       data.joiningTimeline || "",
     ]];
 
     let sheetsResult = null;
     for (const row of values) {
-      sheetsResult = await appendToSheet(CABIN_CREW_TAB, "A:H", row, CABIN_CREW_SHEET_ID);
+      sheetsResult = await appendToSheet(CABIN_CREW_TAB, "A:I", row, CABIN_CREW_SHEET_ID);
     }
 
     return NextResponse.json({ success: true, data: sheetsResult });

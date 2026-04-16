@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
         sheetsError = null;
         for (const tab of atcTabs) {
           try {
-            sheetsResult = await appendToSheet(tab, "A:I", atcRow, ATC_SHEET_ID);
+            sheetsResult = await appendToSheet(tab, "A1:I1", atcRow, ATC_SHEET_ID);
             sheetsError = null;
             console.log("[LEADS API] ATC appended to tab:", tab);
             break;
