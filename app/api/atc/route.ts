@@ -27,9 +27,11 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
-    const tabsToTry = ATC_TAB_FROM_ENV
-      ? [ATC_TAB_FROM_ENV]
-      : ["ATC Web Lead", "ATC"];
+    const atcTab =
+      !ATC_TAB_FROM_ENV || ATC_TAB_FROM_ENV.toLowerCase() === "atc web lead"
+        ? "ATC"
+        : ATC_TAB_FROM_ENV;
+    const tabsToTry = [atcTab];
     const spreadsheetId = resolveSpreadsheetId(
       "GOOGLE_SHEET_ID_ATC",
       "ATC_SHEET_ID",

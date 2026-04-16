@@ -155,8 +155,30 @@ const AGE_LABELS: Record<string, string> = {
   "14-15": "14–15 years",
 };
 
+const BATCH_WINDOWS = [
+  { label: "April 20-24", endDate: "2026-04-24" },
+  { label: "May 4-8", endDate: "2026-05-08" },
+  { label: "May 14-18", endDate: "2026-05-18" },
+];
+
+function getAvailableBatches() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const available = BATCH_WINDOWS
+    .filter((batch) => new Date(`${batch.endDate}T23:59:59`).getTime() >= today.getTime())
+    .map((batch) => batch.label);
+
+  if (available.length > 1) {
+    available.push("Either works");
+  }
+
+  return available;
+}
+
 export default function SummerCampPage() {
   const router = useRouter();
+  const availableBatches = getAvailableBatches();
   const [formData, setFormData] = useState<FormData>({
     parentName: "",
     phone: "",
@@ -528,7 +550,7 @@ export default function SummerCampPage() {
                     Batch Preference
                   </label>
                   <div className="flex flex-col sm:grid sm:grid-cols-3 gap-3">
-                    {["April 6-10", "April 20-24", "Either works"].map((batch) => (
+                    {availableBatches.map((batch) => (
                       <label
                         key={batch}
                         className={`flex items-center justify-center gap-2 min-h-[56px] px-4 rounded-xl border cursor-pointer transition-all ${

@@ -43,8 +43,9 @@ function formatInterest(interest: string): string {
 
 function formatBatch(batch: string): string {
   const batchMap: Record<string, string> = {
-    "April 6-10": "april_6-10",
     "April 20-24": "april_20-24",
+    "May 4-8": "may_4-8",
+    "May 14-18": "may_14-18",
     "Either works": "either_works",
   };
   return batchMap[batch] || batch.toLowerCase().replace(/\s+/g, "_");

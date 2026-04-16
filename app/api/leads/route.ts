@@ -65,7 +65,11 @@ export async function POST(request: NextRequest) {
 
     try {
       if (normalizedSource === "ATC Web Lead" || normalizedSource === "ATC") {
-        const atcTabs = ATC_TAB_FROM_ENV ? [ATC_TAB_FROM_ENV] : ["ATC Web Lead", "ATC"];
+        const atcTab =
+          !ATC_TAB_FROM_ENV || ATC_TAB_FROM_ENV.toLowerCase() === "atc web lead"
+            ? "ATC"
+            : ATC_TAB_FROM_ENV;
+        const atcTabs = [atcTab];
         const atcRow = [
           name || "",
           phone || "",

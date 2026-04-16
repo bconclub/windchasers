@@ -225,11 +225,20 @@ function ThankYouContent() {
               <p className="text-white/70 text-sm">
                 Prefer to talk sooner? WhatsApp us from the header or book a general demo to explore all paths at WindChasers.
               </p>
+              <a
+                href={`https://wa.me/919591004043?text=${encodeURIComponent(
+                  "Hi WindChasers, I just submitted the ATC eligibility form and want to chat."
+                )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-full items-center justify-center rounded-lg bg-gold px-6 py-3.5 font-semibold text-dark transition-colors hover:bg-gold/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
+              >
+                Chat on WhatsApp
+              </a>
             </div>
           ),
           nextSteps: [
             "We’ll contact you within 24 hours on the phone number you provided",
-            "Check your email (including spam) for follow-ups from our team",
             "Have your academic documents ready for the next conversation",
           ],
         };
