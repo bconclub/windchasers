@@ -360,9 +360,9 @@ function ThankYouContent() {
 
       case "cabin-crew": {
         const name = formData?.name || "I am";
-        const waText = `Hi, I am ${name} and I am interested in the Cabin Crew course.`;
+        const waText = `Hi, I am ${name} and I am interested in the Cabin Crew programme.`;
         return {
-          title: "Application received Cabin Crew",
+          title: "Application Received - Cabin Crew",
           icon: Sparkles,
           message:
             "Thank you for applying to our Cabin Crew program. Our team will connect with you shortly.",

@@ -508,10 +508,10 @@ export default function CabinCrewPageClient({
       <section id="cabin-crew-form" className="py-20 px-6 lg:px-8 bg-[#1A1A1A] scroll-mt-24">
         <div className="max-w-2xl mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-white text-center mb-3">
-            Start your application.
+            Join Cabin Crew Programme
           </h2>
           <p className="text-white/70 text-center mb-8">
-            Fill in your details. Our team will reach out within 24 hours.
+            Fill in your details, our team will reach out to you
           </p>
 
           <form
@@ -519,11 +519,6 @@ export default function CabinCrewPageClient({
             noValidate
             className="bg-gradient-to-br from-[#242424] via-[#1f1f1f] to-[#1b1b1b] border border-white/15 rounded-2xl p-6 md:p-8 space-y-6 shadow-[0_18px_40px_rgba(0,0,0,0.35)]"
           >
-            <div className="mb-1">
-              <p className="text-xs uppercase tracking-[0.18em] text-[#C5A572]/85 font-semibold">
-                Quick Application
-              </p>
-            </div>
             <div className="flex items-center justify-center gap-3 pb-2">
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
