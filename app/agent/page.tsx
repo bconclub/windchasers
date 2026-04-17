@@ -11,9 +11,6 @@ export default function AgentPage() {
       />
 
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-2xl md:text-3xl font-semibold text-white mb-4">
-          Agent
-        </h1>
         <div id="windchasers-web-agent" className="min-h-[560px]" />
       </div>
     </section>
