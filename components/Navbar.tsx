@@ -23,6 +23,7 @@ export default function Navbar() {
     { href: "/dgca", label: "DGCA Ground Classes" },
     { href: "/international", label: "Pilot Training Abroad" },
     { href: "/helicopter", label: "Helicopter Pilot Training" },
+    { href: "/agent", label: "Agent Page" },
     { href: "/assessment", label: "Take Pilot Assessment" },
     { href: "/demo", label: "Book a Demo Session" },
   ];
