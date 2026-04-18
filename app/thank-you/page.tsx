@@ -4,11 +4,16 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { CheckCircle, Calendar, Mail, Phone, BookOpen, DollarSign, Award, Radio, Users, Sparkles } from "lucide-react";
+import { CheckCircle, Calendar, Mail, Phone, BookOpen, DollarSign, Award, Radio, Users, Sparkles, Video } from "lucide-react";
 import { trackMetaLead } from "@/lib/metaPixel";
+import {
+  WEBINAR_ZOOM_REGISTER_URL,
+  WEBINAR_PARENT_WHATSAPP_GROUP_URL,
+  WEBINAR_STUDENT_WHATSAPP_GROUP_URL,
+} from "@/lib/webinar";
 
-/** `type` query values that represent a captured lead — fire Meta Pixel `Lead` once per visit */
-const META_LEAD_FORM_TYPES = new Set(["atc", "open-house", "summercamp", "cabin-crew"]);
+/** `type` query values that represent a captured lead - fire Meta Pixel `Lead` once per visit */
+const META_LEAD_FORM_TYPES = new Set(["atc", "open-house", "summercamp", "cabin-crew", "webinar"]);
 
 function ThankYouContent() {
   const searchParams = useSearchParams();
@@ -42,6 +47,8 @@ function ThankYouContent() {
       document.title = "Thank You | Summer Camp | WindChasers Aviation Academy";
     } else if (formType === "cabin-crew") {
       document.title = "Thank You | Cabin Crew | WindChasers Aviation Academy";
+    } else if (formType === "webinar") {
+      document.title = "Thank You | Webinar | WindChasers Aviation Academy";
     } else {
       document.title = "Thank You | WindChasers Aviation Academy";
     }
@@ -74,6 +81,11 @@ function ThankYouContent() {
       trackMetaLead({
         content_name: "Cabin Crew Registration",
         content_category: "cabin_crew",
+      });
+    } else if (formType === "webinar") {
+      trackMetaLead({
+        content_name: "Webinar Registration",
+        content_category: "webinar",
       });
     }
   }, [formType]);
@@ -306,6 +318,73 @@ function ThankYouContent() {
             "Join the WhatsApp group above so you don’t miss updates",
             "Add April 11, 2026 · 11:30 AM to your calendar",
             "Bring a parent if you’re a student (optional but encouraged)",
+          ],
+        };
+      }
+
+      case "webinar": {
+        const waStudent = WEBINAR_STUDENT_WHATSAPP_GROUP_URL;
+        const waParent = WEBINAR_PARENT_WHATSAPP_GROUP_URL;
+        const role = formData?.role as string | undefined;
+        const waHref = role === "parent" ? waParent : waStudent;
+        const waLabel =
+          role === "parent" ? "Join the Parent WhatsApp Group" : "Join the Student WhatsApp Group";
+        const programTitle = (formData?.program as string | undefined) ?? "our live webinar";
+
+        return {
+          title: "You're registered for the webinar",
+          icon: Video,
+          message: `Thank you for sharing your details for ${programTitle}. If you haven’t yet, complete Zoom registration - Zoom will email your join link. Use the WhatsApp group below for reminders.`,
+          details: (
+            <div className="space-y-4">
+              <a
+                href={WEBINAR_ZOOM_REGISTER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-full items-center justify-center rounded-lg bg-gold px-6 py-3.5 font-semibold text-dark transition-colors hover:bg-gold/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
+              >
+                Register on Zoom
+              </a>
+              {formData && (formData.name || formData.city || formData.role) ? (
+                <div className="bg-accent-dark/50 rounded-lg p-4 border border-gold/30">
+                  <h3 className="text-lg font-bold text-gold mb-3">Registration summary</h3>
+                  <ul className="space-y-2 text-white/80 text-sm">
+                    {formData.name ? (
+                      <li>
+                        <strong className="text-white/90">Name:</strong> {formData.name}
+                      </li>
+                    ) : null}
+                    {formData.city ? (
+                      <li>
+                        <strong className="text-white/90">City:</strong> {formData.city}
+                      </li>
+                    ) : null}
+                    {formData.role ? (
+                      <li>
+                        <strong className="text-white/90">Registered as:</strong>{" "}
+                        {formData.role === "parent" ? "Parent" : "Student"}
+                      </li>
+                    ) : null}
+                  </ul>
+                </div>
+              ) : null}
+              <a
+                href={waHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-full items-center justify-center rounded-lg bg-[#25D366] px-6 py-3.5 font-semibold text-white transition-colors hover:bg-[#1ebe5d] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
+              >
+                {waLabel}
+              </a>
+              <p className="text-white/50 text-xs text-center">
+                Reminders for April 25, 2026 will be shared in the group.
+              </p>
+            </div>
+          ),
+          nextSteps: [
+            "Check your inbox for the Zoom link (and spam folder just in case)",
+            "Join the WhatsApp group so you don’t miss the go-live reminder",
+            "Add April 25, 2026 to your calendar",
           ],
         };
       }
@@ -681,6 +760,14 @@ function ThankYouContent() {
                 className="bg-white/10 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-colors border border-white/20 text-center"
               >
                 Cabin Crew page
+              </Link>
+            )}
+            {formType === "webinar" && (
+              <Link
+                href="/webinar"
+                className="bg-white/10 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-colors border border-white/20 text-center"
+              >
+                All webinars
               </Link>
             )}
             {formType === "pricing" && (

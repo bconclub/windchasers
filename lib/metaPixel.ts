@@ -1,5 +1,5 @@
 /**
- * Meta (Facebook) Pixel — fbq is injected in app/layout.tsx
+ * Meta (Facebook) Pixel - fbq is injected in app/layout.tsx
  */
 
 declare global {

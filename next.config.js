@@ -1,5 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      { source: "/webinar/government-aviation", destination: "/webinar/parents", permanent: true },
+      { source: "/webinar/pilot-roadmap", destination: "/webinar/students", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

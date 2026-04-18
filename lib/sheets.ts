@@ -17,6 +17,11 @@ export function getSummerCampSheetTab(): string {
   return process.env.GOOGLE_SHEET_TAB_SUMMERCAMP?.trim() || "Summer Camp";
 }
 
+/** Webinar registrations - set `GOOGLE_SHEET_TAB_WEBINAR` if the tab name differs. */
+export function getWebinarSheetTab(): string {
+  return process.env.GOOGLE_SHEET_TAB_WEBINAR?.trim() || "Webinar";
+}
+
 /** First non-empty env key wins; fallback is DEFAULT_SPREADSHEET_ID. */
 export function resolveSpreadsheetId(...envKeys: string[]): string {
   for (const key of envKeys) {
