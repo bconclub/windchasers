@@ -79,27 +79,24 @@ export default function WebinarStudentsPage() {
     return () => observer.disconnect();
   }, []);
 
-  const { ref: heroRef, isInView: heroInView } = useInView<HTMLElement>();
-
   return (
     <>
-      {/* Hero - same pattern as open house */}
-      <section ref={heroRef} className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-black">
-          {heroInView && (
-            <iframe
-              className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 border-0"
-              src="https://player.vimeo.com/video/1160946921?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&background=1"
-              title="Aviation background"
-              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-              allowFullScreen
-              loading="eager"
-              style={{ pointerEvents: "none" }}
-            />
-          )}
+      {/* Hero */}
+      <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/WC HEro.webp"
+            alt=""
+            fill
+            priority
+            className="object-cover object-center scale-105"
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-[#1a1205]/92 to-[#1A1A1A]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_120%_80%_at_50%_-20%,rgba(197,165,114,0.18),transparent_55%)]" />
         </div>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.2)_0%,_rgba(0,0,0,0.5)_70%)] z-10" />
-        <div className="absolute inset-0 bg-black/20 z-10" />
+        <div className="absolute inset-0 z-[5] bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.25)_0%,_rgba(0,0,0,0.5)_70%)]" />
+        <div className="absolute inset-0 z-[5] bg-black/15" />
 
         <div className="relative z-20 w-full px-4 md:px-0 md:mx-auto md:max-w-[700px] pt-20 pb-8">
           <motion.div
