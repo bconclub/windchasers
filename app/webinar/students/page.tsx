@@ -171,7 +171,7 @@ export default function WebinarStudentsPage() {
               initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.3 }}
-              className="text-base md:text-lg text-gray-300 font-normal text-center mt-5 max-w-xl mx-auto leading-relaxed"
+              className="text-sm sm:text-base md:text-lg text-gray-300 font-normal text-center mt-5 max-w-xl mx-auto leading-relaxed"
             >
               Free live session for aspiring pilots and families: DGCA pathway, real costs, cadet vs CPL, and your plan for 2026.
             </motion.p>

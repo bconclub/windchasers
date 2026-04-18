@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { X } from "lucide-react";
+import { Pause, Play, X } from "lucide-react";
 import oh1 from "@/public/open house/Open HOuse 1.jpg";
 import oh2 from "@/public/open house/Open Houe 2.jpg";
 import ohApr from "@/public/open house/WC Open house April 15.jpg";
@@ -24,6 +24,95 @@ const GALLERY_IMAGES = [
   { src: ohApr2, alt: "Instructor explaining career paths to attendees", position: "center" },
   { src: ohNov, alt: "November open house presentation session", position: "top center" },
 ] as const;
+
+function OpenHouseGalleryVideo({ src }: { src: string }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const sync = () => setPlaying(!v.paused);
+    sync();
+    v.addEventListener("play", sync);
+    v.addEventListener("pause", sync);
+    v.addEventListener("ended", sync);
+    return () => {
+      v.removeEventListener("play", sync);
+      v.removeEventListener("pause", sync);
+      v.removeEventListener("ended", sync);
+    };
+  }, [src]);
+
+  const primePosterFrame = useCallback(() => {
+    const v = videoRef.current;
+    if (!v || v.readyState < 2) return;
+    try {
+      if (v.currentTime === 0 && Number.isFinite(v.duration) && v.duration > 0) {
+        v.currentTime = Math.min(0.15, v.duration * 0.02);
+      }
+    } catch {
+      /* seek may fail on some sources until enough data */
+    }
+  }, []);
+
+  const toggle = useCallback(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      void v.play().catch(() => {});
+    } else {
+      v.pause();
+    }
+  }, []);
+
+  return (
+    <div className="relative h-full w-full">
+      <video
+        ref={videoRef}
+        src={src}
+        playsInline
+        preload="metadata"
+        muted
+        className="h-full w-full object-contain rounded-lg"
+        onLoadedData={primePosterFrame}
+        onLoadedMetadata={primePosterFrame}
+      >
+        <source src={src} type="video/mp4" />
+      </video>
+
+      {!playing ? (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            const v = videoRef.current;
+            if (v) v.muted = false;
+            toggle();
+          }}
+          className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-black/35 transition hover:bg-black/45 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+          aria-label="Play video"
+        >
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 text-[#1A1A1A] shadow-lg ring-2 ring-black/20">
+            <Play className="h-8 w-8 ml-0.5" fill="currentColor" aria-hidden />
+          </span>
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            toggle();
+          }}
+          className="absolute bottom-3 left-1/2 z-10 flex h-11 w-11 -translate-x-1/2 items-center justify-center rounded-full border border-white/25 bg-black/60 text-white shadow-lg backdrop-blur-sm transition hover:bg-black/75 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/70"
+          aria-label="Pause video"
+        >
+          <Pause className="h-5 w-5" fill="currentColor" aria-hidden />
+        </button>
+      )}
+    </div>
+  );
+}
 
 type Props = {
   id?: string;
@@ -74,7 +163,7 @@ export default function WindChasersPastOpenHousesGallery({
             </motion.p>
           ) : null}
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
             {GALLERY_VIDEOS.map((v, i) => (
               <motion.div
                 key={v}
@@ -82,19 +171,10 @@ export default function WindChasersPastOpenHousesGallery({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : i * 0.1 }}
-                className="overflow-hidden rounded-lg bg-black"
+                className="min-h-0 overflow-hidden rounded-lg bg-black"
                 style={{ aspectRatio: "9/16" }}
               >
-                <video
-                  src={openHouseMediaUrl(v)}
-                  controls
-                  playsInline
-                  preload="metadata"
-                  className="w-full h-full object-contain rounded-lg"
-                >
-                  <source src={openHouseMediaUrl(v)} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
+                <OpenHouseGalleryVideo src={openHouseMediaUrl(v)} />
               </motion.div>
             ))}
             {GALLERY_IMAGES.map(({ src, alt, position }, i) => (
@@ -107,13 +187,13 @@ export default function WindChasersPastOpenHousesGallery({
                   duration: shouldReduceMotion ? 0 : 0.5,
                   delay: shouldReduceMotion ? 0 : (GALLERY_VIDEOS.length + i) * 0.1,
                 }}
-                className="overflow-hidden rounded-lg cursor-pointer group"
+                className="flex h-full min-h-[200px] overflow-hidden rounded-lg cursor-pointer group md:min-h-[240px]"
                 onClick={() => openLightbox(src.src, alt)}
               >
                 <img
                   src={src.src}
                   alt={alt}
-                  className="w-full h-[200px] md:h-[240px] object-cover rounded-lg transition-transform duration-[400ms] group-hover:scale-[1.05]"
+                  className="h-full w-full object-cover rounded-lg transition-transform duration-[400ms] group-hover:scale-[1.05]"
                   style={{
                     objectPosition: position,
                     transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",

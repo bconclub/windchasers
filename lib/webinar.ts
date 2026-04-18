@@ -5,6 +5,12 @@ export const WEBINAR_START_ISO = "2026-04-25T16:00:00+05:30";
 export const WEBINAR_ZOOM_REGISTER_URL =
   "https://us06web.zoom.us/meeting/register/WjrhvFLgSCy4H7xQUZ2urg";
 
+/**
+ * Parents webinar CTA. Today this is the same session as the student roadmap webinar; point this
+ * to a separate Zoom registration URL if you run a dedicated parents-only meeting.
+ */
+export const WEBINAR_PARENT_ZOOM_REGISTER_URL = WEBINAR_ZOOM_REGISTER_URL;
+
 /** Vimeo ID for the marketing preview next to the countdown (player embed). */
 export const WEBINAR_PROMO_VIMEO_ID = "1184303137";
 
