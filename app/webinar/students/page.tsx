@@ -13,6 +13,7 @@ import {
   Users,
   Wallet,
 } from "lucide-react";
+import WindChasersPastOpenHousesGallery from "@/components/marketing/WindChasersPastOpenHousesGallery";
 import WebinarHeroDetails from "@/components/webinar/WebinarHeroDetails";
 import WebinarCountdownVideoSection from "@/components/webinar/WebinarCountdownVideoSection";
 import {
@@ -299,6 +300,13 @@ export default function WebinarStudentsPage() {
           </div>
         </div>
       </section>
+
+      <WindChasersPastOpenHousesGallery
+        id="windchasers-events"
+        heading="Events at WindChasers"
+        description="Open houses, simulator time, and community mornings with our team. The same highlights we feature on our in-person open house page."
+        sectionClassName="py-20 px-6 lg:px-8 bg-gradient-to-b from-[#1E1E1E] to-[#1A1A1A] border-t border-white/5"
+      />
 
       {showStickyBar && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-md border-t border-white/10 px-4 py-3">

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { BookOpen, Calendar, Clock, Video } from "lucide-react";
+import WindChasersPastOpenHousesGallery from "@/components/marketing/WindChasersPastOpenHousesGallery";
 import WebinarCountdownVideoSection from "@/components/webinar/WebinarCountdownVideoSection";
 import WebinarHeroDetails from "@/components/webinar/WebinarHeroDetails";
 import {
@@ -29,6 +30,8 @@ export interface WebinarLandingProps {
   visualTagline?: string;
   /** Zoom registration URL (default: shared WindChasers webinar registration). */
   zoomRegisterUrl?: string;
+  /** Past open house photos and recap videos (same grid as /open-house). */
+  showPastEventsGallery?: boolean;
 }
 
 export default function WebinarLanding({
@@ -43,6 +46,7 @@ export default function WebinarLanding({
   heroVisualLayout = "card",
   visualTagline,
   zoomRegisterUrl = WEBINAR_ZOOM_REGISTER_URL,
+  showPastEventsGallery = true,
 }: WebinarLandingProps) {
   const shouldReduceMotion = useReducedMotion();
   const transitionDuration = shouldReduceMotion ? 0 : undefined;
@@ -258,6 +262,15 @@ export default function WebinarLanding({
           </motion.div>
         </div>
       </section>
+
+      {showPastEventsGallery ? (
+        <WindChasersPastOpenHousesGallery
+          id="windchasers-events"
+          heading="Events at WindChasers"
+          description="Open houses, simulator time, and community mornings with our team. The same highlights we feature on our in-person open house page."
+          sectionClassName="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#1A1A1A] to-[#2A2A2A] border-t border-white/5"
+        />
+      ) : null}
 
       {showStickyBar && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#141414]/95 backdrop-blur-md border-t border-white/10 px-4 py-3">

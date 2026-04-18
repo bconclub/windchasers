@@ -1,11 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
-  X,
   ChevronDown,
   AlertTriangle,
   Route,
@@ -24,16 +23,7 @@ import {
 import Head from "next/head";
 import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
-import oh1 from "@/public/open house/Open HOuse 1.jpg";
-import oh2 from "@/public/open house/Open Houe 2.jpg";
-import ohApr from "@/public/open house/WC Open house April 15.jpg";
-import ohApr1 from "@/public/open house/WC Open house April 15 1.jpg";
-import ohApr2 from "@/public/open house/WC Open house April 15 2.jpg";
-import ohNov from "@/public/open house/WC November 2024.jpg";
-
-// URL-encode filenames from public/open house/
-const asset = (filename: string) =>
-  `/open%20house/${encodeURIComponent(filename)}`;
+import WindChasersPastOpenHousesGallery from "@/components/marketing/WindChasersPastOpenHousesGallery";
 
 const TOPICS = [
   { Icon: Route, title: "Step-by-step roadmap", desc: "The exact path from completing 12th to holding a CPL. No gaps." },
@@ -81,20 +71,6 @@ const WHO_SHOULD_ATTEND = [
     subtext: "Want to understand investment, safety, and career prospects before your child commits.",
     bullets: ["Full cost breakdown", "Career stability info", "Training safety standards"],
   },
-];
-
-const GALLERY_VIDEOS = [
-  "Open hosue 5.mp4",
-  "Open House May 4.mp4",
-];
-
-const GALLERY_IMAGES = [
-  { src: oh1, alt: "Open house attendees listening to presentations", position: "center" },
-  { src: oh2, alt: "Commercial pilot answering student questions", position: "center" },
-  { src: ohApr, alt: "Students and parents at WindChasers open house", position: "center" },
-  { src: ohApr1, alt: "Hands-on simulator experience at open house", position: "center" },
-  { src: ohApr2, alt: "Instructor explaining career paths to attendees", position: "center" },
-  { src: ohNov, alt: "November open house presentation session", position: "top center" },
 ];
 
 type Role = "" | "student" | "parent";
@@ -163,15 +139,8 @@ export default function OpenHousePage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [blocked, setBlocked] = useState(false);
-  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
-  const [lightboxAlt, setLightboxAlt] = useState<string>("");
-
   const registerRef = useRef<HTMLElement>(null);
   const [showStickyBar, setShowStickyBar] = useState(true);
-
-  const handleImageClick = (src: string, alt: string) => {
-    openLightbox(src, alt);
-  };
 
 
 
@@ -300,11 +269,6 @@ export default function OpenHousePage() {
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const openLightbox = (src: string, alt: string) => {
-    setLightboxSrc(src);
-    setLightboxAlt(alt);
   };
 
   const transitionDuration = shouldReduceMotion ? 0 : undefined;
@@ -502,70 +466,7 @@ export default function OpenHousePage() {
         </div>
       </section>
 
-      {/* Past open houses gallery */}
-      <section className="py-20 px-6 lg:px-8 bg-gradient-to-b from-[#1A1A1A] to-[#2A2A2A]">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: transitionDuration ?? 0.6 }}
-            className="text-4xl md:text-5xl font-bold text-center mb-14 text-[#C5A572]"
-          >
-            Our Past Open Houses
-          </motion.h2>
-
-          {/* Two-row grid gallery */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {/* Videos - first row */}
-            {GALLERY_VIDEOS.map((v, i) => (
-              <motion.div
-                key={v}
-                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : i * 0.1 }}
-                className="overflow-hidden rounded-lg bg-black"
-                style={{ aspectRatio: '9/16' }}
-              >
-                <video
-                  src={asset(v)}
-                  controls
-                  playsInline
-                  preload="metadata"
-                  className="w-full h-full object-contain rounded-lg"
-                >
-                  <source src={asset(v)} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              </motion.div>
-            ))}
-            {/* Images - fill remaining slots in two rows */}
-            {GALLERY_IMAGES.slice(0, 6).map(({ src, alt, position }, i) => (
-              <motion.div
-                key={src.src}
-                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : (GALLERY_VIDEOS.length + i) * 0.1 }}
-                className="overflow-hidden rounded-lg cursor-pointer group"
-                onClick={() => handleImageClick(src.src, alt)}
-              >
-                <img
-                  src={src.src}
-                  alt={alt}
-                  className="w-full h-[200px] md:h-[240px] object-cover rounded-lg transition-transform duration-[400ms] group-hover:scale-[1.05]"
-                  style={{
-                    objectPosition: position,
-                    transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
-                  }}
-                  loading={i < 4 ? "eager" : "lazy"}
-                />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <WindChasersPastOpenHousesGallery id="past-open-houses" />
 
       {/* Who Should Attend */}
       <section className="py-20 px-6 lg:px-8 bg-[#1E1E1E]">
@@ -874,41 +775,6 @@ export default function OpenHousePage() {
           </motion.div>
         </div>
       </section>
-
-      {/* Lightbox */}
-      <AnimatePresence>
-        {lightboxSrc && (
-          <motion.div
-            initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: shouldReduceMotion ? 1 : 0 }}
-            transition={{ duration: shouldReduceMotion ? 0 : undefined }}
-            className="fixed inset-0 z-50 bg-black/92 flex items-center justify-center p-4"
-            onClick={() => setLightboxSrc(null)}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Image lightbox"
-          >
-            <button
-              className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 rounded p-1"
-              onClick={() => setLightboxSrc(null)}
-              aria-label="Close lightbox"
-            >
-              <X className="w-8 h-8" />
-            </button>
-            <motion.img
-              initial={{ scale: shouldReduceMotion ? 1 : 0.92 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: shouldReduceMotion ? 1 : 0.92 }}
-              transition={{ duration: shouldReduceMotion ? 0 : undefined }}
-              src={lightboxSrc}
-              alt={lightboxAlt}
-              className="max-w-full max-h-[90vh] rounded-xl shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Sticky mobile CTA */}
       {showStickyBar && !blocked && (
