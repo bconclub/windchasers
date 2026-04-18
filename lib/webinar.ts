@@ -5,6 +5,9 @@ export const WEBINAR_START_ISO = "2026-04-25T16:00:00+05:30";
 export const WEBINAR_ZOOM_REGISTER_URL =
   "https://us06web.zoom.us/meeting/register/WjrhvFLgSCy4H7xQUZ2urg";
 
+/** Vimeo ID for the marketing preview next to the countdown (player embed). */
+export const WEBINAR_PROMO_VIMEO_ID = "1184303137";
+
 /** Parents webinar landing - exclusive parents WhatsApp community. */
 export const WEBINAR_PARENT_WHATSAPP_GROUP_URL =
   "https://chat.whatsapp.com/ChCxl1miiSN1WS2S4oGpAZ";

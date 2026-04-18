@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import WebinarLanding from "@/components/webinar/WebinarLanding";
-import { WEBINAR_PARENT_WHATSAPP_GROUP_URL } from "@/lib/webinar";
 
 export const metadata: Metadata = {
   title: "Parents Webinar · April 25, 2026 · WindChasers",
@@ -31,9 +30,6 @@ export default function WebinarParentsPage() {
       heroVisualSrc="/open%20house/WC%20Open%20house%20April%2015.jpg"
       heroVisualAlt="WindChasers session for parents and students"
       visualTagline="Clear answers for families navigating aviation careers."
-      whatsappGroupUrl={WEBINAR_PARENT_WHATSAPP_GROUP_URL}
-      whatsappGroupLabel="Join the parents WhatsApp group"
-      whatsappBody="Hi WindChasers, I want to join the parents WhatsApp group for the April 25 webinar."
     />
   );
 }

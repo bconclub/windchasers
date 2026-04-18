@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vimeo/player": "^2.30.3",
     "framer-motion": "^11.0.8",
     "googleapis": "^171.4.0",
     "lucide-react": "^0.562.0",

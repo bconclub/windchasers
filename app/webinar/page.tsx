@@ -36,7 +36,7 @@ export default function WebinarIndexPage() {
           rel="noopener noreferrer"
           className="inline-flex items-center justify-center rounded-full bg-[#C5A572] text-[#1A1A1A] px-8 py-3.5 font-semibold text-base hover:bg-[#C5A572]/90 transition-colors shadow-lg shadow-[#C5A572]/20"
         >
-          Register on Zoom
+          Register for the webinar
         </a>
       </div>
       <ul className="max-w-xl mx-auto space-y-4">

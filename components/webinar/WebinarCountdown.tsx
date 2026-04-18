@@ -31,7 +31,7 @@ export default function WebinarCountdown({
   const live = diff <= 0;
 
   const unit = (value: number, u: string) => (
-    <div className="flex flex-col items-center min-w-[4.5rem] sm:min-w-[5.5rem]">
+    <div className="flex flex-col items-center min-w-0 w-full max-w-[5.5rem]">
       <span
         className="text-3xl sm:text-4xl md:text-5xl font-bold tabular-nums text-[#C5A572] drop-shadow-[0_0_24px_rgba(197,165,114,0.35)]"
         suppressHydrationWarning
@@ -64,19 +64,10 @@ export default function WebinarCountdown({
           We&apos;re live - join now below
         </p>
       ) : (
-        <div className="relative flex flex-wrap items-center justify-center gap-4 sm:gap-6 md:gap-9 py-1">
+        <div className="relative grid grid-cols-4 gap-x-2 gap-y-2 sm:gap-x-4 md:gap-x-6 items-start justify-items-center py-1 max-w-xl mx-auto w-full">
           {unit(days, "Days")}
-          <span className="text-[#C5A572]/40 text-2xl font-light pb-6 hidden sm:inline" aria-hidden>
-            :
-          </span>
           {unit(hours, "Hours")}
-          <span className="text-[#C5A572]/40 text-2xl font-light pb-6 hidden sm:inline" aria-hidden>
-            :
-          </span>
           {unit(minutes, "Min")}
-          <span className="text-[#C5A572]/40 text-2xl font-light pb-6 hidden sm:inline" aria-hidden>
-            :
-          </span>
           {unit(seconds, "Sec")}
         </div>
       )}
