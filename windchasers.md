@@ -43,7 +43,7 @@ windchasers/
 │   ├── dgca/page.tsx                 # DGCA Ground Classes page
 │   ├── helicopter/page.tsx           # Helicopter Pilot License page
 │   ├── international/page.tsx        # Pilot training abroad page
-│   ├── open-house/page.tsx           # Open House event registration (April 11, 2026)
+│   ├── open-house/page.tsx           # Open House event registration (May 9, 2026)
 │   ├── pricing/page.tsx              # Pricing page (form-gated)
 │   ├── summercamp/page.tsx           # Summer Camp UI (form submit simulated; API exists)
 │   ├── summercamp/layout.tsx         # Summer Camp metadata
@@ -129,6 +129,7 @@ windchasers/
 | `/open-house` | `app/open-house/page.tsx` | 2026-04-09 | `333fdd9` | Remove duplicate landing footer |
 | `/summercamp` | `app/summercamp/page.tsx` | 2026-04-09 | `333fdd9` | Remove duplicate landing footer |
 | `/summercamp` (metadata) | `app/summercamp/layout.tsx` | 2026-04-04 | `71bf39d` | Open House gallery / meta / summer camp images |
+| `/stitch` | `app/stitch/page.tsx` | 2026-04-20 | *new* | Stitch Design Studio — browse & generate UI designs |
 | Root shell | `app/layout.tsx` | 2026-04-04 | `c0d4211` | Summer camp–related layout pass |
 | Global error UI | `app/error.tsx` | 2026-01-02 | `13b74a6` | Same H1 / booking UX wave |
 | Not found | `app/not-found.tsx` | 2026-01-07 | `dfba7f7` | Redirect unknown URLs to `/` |
@@ -211,9 +212,9 @@ windchasers/
 ### 9. Open House (`/open-house`)
 **File:** `app/open-house/page.tsx` - **Last changed:** 2026-04-09 (`333fdd9`)
 
-- **Event:** Pilot Career Open House - April 11, 2026 · Bangalore
+- **Event:** Pilot Career Open House - May 9, 2026 (Saturday) · Bangalore
 - **Target audience:** Students (12th completed+) and Parents
-- **SEO:** `next/head` sets title *Pilot Career Open House Bangalore · April 11, 2026 · WindChasers* (+ matching `og:title`)
+- **SEO:** `next/head` sets title *Pilot Career Open House Bangalore · May 9, 2026 · WindChasers* (+ matching `og:title`)
 - **Features:**
   - Hero includes background Vimeo `1160946921` (`autoplay=1`, `muted=1`, `background=1`)
   - Topics: 6-card grid - titles in code: *Step-by-step roadmap*, *Life after CPL*, *Career path after CPL*, *Cadet programme vs CPL*, *Money talk: what is the real cost?*, *Biggest mistakes student pilots make*
@@ -243,7 +244,17 @@ windchasers/
 - **Submission (current code):** Form handler **simulates** submit (`setTimeout` ~1.5s) and shows success - **does not** `fetch` `/api/summercamp`. The API route **`app/api/summercamp/route.ts`** still exists (Sheets + Proxe-style integration) for when the UI is wired.
 - **Footer:** Site `Footer` hidden here via `ConditionalFooter` (same as `/atc`, `/open-house`, etc.)
 
-### 12. Error & Not Found
+### 12. Stitch Design Studio (`/stitch`)
+**File:** `app/stitch/page.tsx` - **Last changed:** 2026-04-20
+
+- **Internal tool** for browsing and generating UI designs via Google Stitch
+- Lists Stitch projects, screens per project, screenshots & HTML download URLs
+- Generate new screens from text prompts with device type selector (Desktop/Mobile/Tablet/Agnostic)
+- Preview modal for screenshots
+- Client-side React with Framer Motion animations
+- Dark theme matching site design system (gold `#C5A572` accents)
+
+### 13. Error & Not Found
 - **`app/error.tsx`** - **Last changed:** 2026-01-02 (`13b74a6`) - global error UI with retry and home actions
 - **`app/not-found.tsx`** - **Last changed:** 2026-01-07 (`dfba7f7`) - client redirect to `/` for unknown routes
 
@@ -344,6 +355,19 @@ windchasers/
 
 Client components send UTM/session fields where implemented (`BookingForm`, `AssessmentForm`, ATC lead, etc.). **`/api/open-house`** persists the JSON fields it receives; it does not duplicate the full tracking middleware picture.
 
+### Stitch API Routes
+
+| HTTP route | Method | Description |
+|------------|--------|-------------|
+| `/api/stitch/projects` | `GET` | List all accessible Stitch projects |
+| `/api/stitch/screens?projectId={id}` | `GET` | List screens in a project (with screenshot + HTML URLs) |
+| `/api/stitch/screen?projectId={id}&screenId={id}` | `GET` | Fetch a single screen's metadata |
+| `/api/stitch/generate` | `POST` | Generate a new screen from a prompt (`{ projectId, prompt, deviceType }`) |
+
+**Env:** `STITCH_API_KEY` (required), `STITCH_HOST` (optional override).
+**SDK:** `@google/stitch-sdk` — `Stitch`, `StitchToolClient`, `StitchProxy`.
+**MCP:** `npm run stitch:mcp` (stdio server) — configured in `.cursor/mcp.json` and `.claude/mcp.json`.
+
 **TODO:** Database integration, CRM, email automation, calendar slot management, admin dashboard; **wire `/summercamp` form to `POST /api/summercamp`**.
 
 ---
@@ -404,7 +428,7 @@ Client components send UTM/session fields where implemented (`BookingForm`, `Ass
 | Pricing | Pricing \| WindChasers Aviation Academy |
 | Thank You | Thank You \| WindChasers Aviation Academy |
 | Assessment | PAT - Pilot Aptitude Test \| WindChasers Aviation Academy |
-| Open House | Pilot Career Open House Bangalore · April 11, 2026 · WindChasers |
+| Open House | Pilot Career Open House Bangalore · May 9, 2026 · WindChasers |
 | Summer Camp | Summer Camp 2025 \| WindChasers - Drone & Aviation Camp for Kids Bangalore |
 | Helicopter | Inherits root `metadata.title` from `app/layout.tsx` (no page-level override) |
 
@@ -483,6 +507,7 @@ Client components send UTM/session fields where implemented (`BookingForm`, `Ass
 - **Open House** - live `POST /api/open-house` → Sheets
 - **ATC** - lead form `POST /api/leads` (`source: "ATC"`) → Sheets **`ATC`** + Proxe backup
 - **ConditionalFooter** hides global footer on `/demo`, `/assessment`, `/pricing`, `/open-house`, `/summercamp`, `/atc`
+- **Stitch Integration** — `@google/stitch-sdk` with API routes + `/stitch` Design Studio dashboard + MCP server
 
 ### TODO
 - Database integration (bookings, pricing, assessments)

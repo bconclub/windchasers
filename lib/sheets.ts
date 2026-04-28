@@ -8,7 +8,7 @@ export function getOpenHouseSheetTab(): string {
   return (
     process.env.GOOGLE_SHEET_TAB_OPEN_HOUSE?.trim() ||
     process.env.GOOGLE_SHEET_TAB?.trim() ||
-    "Open House"
+    "9th May Open Confirms"
   );
 }
 

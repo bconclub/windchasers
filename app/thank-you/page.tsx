@@ -275,7 +275,7 @@ function ThankYouContent() {
           title: "You’re registered Open House",
           icon: Users,
           message:
-            "Thank you for securing your seat for the Pilot Career Open House on April 11, 2026 at 11:30 AM. Join the WhatsApp group below for reminders and venue details.",
+            "Thank you for securing your seat for the Pilot Career Open House on Saturday, May 9, 2026 at 11:30 AM. Join the WhatsApp group below for reminders and venue details.",
           details: (
             <div className="space-y-4">
               {formData && (formData.name || formData.city || formData.role) ? (
@@ -316,7 +316,7 @@ function ThankYouContent() {
           ),
           nextSteps: [
             "Join the WhatsApp group above so you don’t miss updates",
-            "Add April 11, 2026 · 11:30 AM to your calendar",
+            "Add Saturday, May 9, 2026 · 11:30 AM to your calendar",
             "Bring a parent if you’re a student (optional but encouraged)",
           ],
         };

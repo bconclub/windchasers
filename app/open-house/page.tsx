@@ -277,12 +277,12 @@ export default function OpenHousePage() {
   return (
     <>
       <Head>
-        <title>Pilot Career Open House Bangalore · April 11, 2026 · WindChasers</title>
+        <title>Pilot Career Open House Bangalore · May 9, 2026 · WindChasers</title>
         <meta
           name="description"
-          content="Join WindChasers' Pilot Career Open House in Bangalore on April 11, 2026. Meet airline captains, explore CPL training paths, get cost breakdowns, and secure your aviation career roadmap. Limited seats available."
+          content="Join WindChasers' Pilot Career Open House in Bangalore on May 9, 2026. Meet airline captains, explore CPL training paths, get cost breakdowns, and secure your aviation career roadmap. Limited seats available."
         />
-        <meta property="og:title" content="Pilot Career Open House Bangalore · April 11, 2026 · WindChasers" />
+        <meta property="og:title" content="Pilot Career Open House Bangalore · May 9, 2026 · WindChasers" />
         <meta
           property="og:description"
           content="Join Bangalore's premier Pilot Career Open House. Meet airline captains, explore CPL training paths, and get expert guidance on your aviation career."
@@ -339,7 +339,7 @@ export default function OpenHousePage() {
               transition={{ duration: transitionDuration ?? 0.6, delay: shouldReduceMotion ? 0 : 0.1 }}
               className="text-[#C5A572] text-xs uppercase tracking-[3px] mb-6 text-center font-medium"
             >
-              April 11, 2026 · In-Person Event
+              May 9, 2026 · In-Person Event
             </motion.p>
 
             {/* Main Headline - Visual Hierarchy */}
@@ -372,7 +372,7 @@ export default function OpenHousePage() {
             >
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-[#C5A572]" />
-                <span className="text-sm text-white">April 11, 2026</span>
+                <span className="text-sm text-white">Sat, May 9, 2026</span>
               </div>
               <div className="hidden md:block w-px h-4 bg-white/20" />
               <div className="flex items-center gap-2">
@@ -525,7 +525,7 @@ export default function OpenHousePage() {
               Secure Your Seat
             </h2>
             <p className="text-gray-400 text-center mb-6">
-              Only 30 seats available · April 11, 2026 · 11:30 AM
+              Only 30 seats available · Sat, May 9, 2026 · 11:30 AM
             </p>
 
             {/* Scarcity bar */}

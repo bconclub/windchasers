@@ -16,6 +16,8 @@ export const openHouseMediaUrl = (filename: string) =>
 
 const GALLERY_VIDEOS = ["Open hosue 5.mp4", "Open House May 4.mp4"] as const;
 
+const GALLERY_VIMEO_VIDEOS = ["1187211172"] as const;
+
 const GALLERY_IMAGES = [
   { src: oh1, alt: "Open house attendees listening to presentations", position: "center" },
   { src: oh2, alt: "Commercial pilot answering student questions", position: "center" },
@@ -24,6 +26,43 @@ const GALLERY_IMAGES = [
   { src: ohApr2, alt: "Instructor explaining career paths to attendees", position: "center" },
   { src: ohNov, alt: "November open house presentation session", position: "top center" },
 ] as const;
+
+function OpenHouseGalleryVimeoVideo({ vimeoId }: { vimeoId: string }) {
+  const [playing, setPlaying] = useState(false);
+
+  if (!playing) {
+    return (
+      <button
+        type="button"
+        onClick={() => setPlaying(true)}
+        className="relative h-full w-full rounded-lg overflow-hidden bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black group"
+        aria-label="Play video"
+      >
+        <img
+          src={`https://vumbnail.com/${vimeoId}.jpg`}
+          alt=""
+          className="h-full w-full object-cover transition-transform duration-[400ms] group-hover:scale-[1.05]"
+          loading="lazy"
+        />
+        <span className="absolute inset-0 flex items-center justify-center bg-black/35 transition group-hover:bg-black/45">
+          <span className="flex h-16 w-16 items-center justify-center rounded-full bg-white/95 text-[#1A1A1A] shadow-lg ring-2 ring-black/20">
+            <Play className="h-8 w-8 ml-0.5" fill="currentColor" aria-hidden />
+          </span>
+        </span>
+      </button>
+    );
+  }
+
+  return (
+    <iframe
+      src={`https://player.vimeo.com/video/${vimeoId}?autoplay=1&loop=1&byline=0&title=0&portrait=0&dnt=1`}
+      className="h-full w-full rounded-lg border-0"
+      allow="autoplay; fullscreen; picture-in-picture"
+      allowFullScreen
+      title="Open house video"
+    />
+  );
+}
 
 function OpenHouseGalleryVideo({ src }: { src: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -164,13 +203,26 @@ export default function WindChasersPastOpenHousesGallery({
           ) : null}
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-stretch">
+            {GALLERY_VIMEO_VIDEOS.map((vimeoId, i) => (
+              <motion.div
+                key={vimeoId}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : i * 0.1 }}
+                className="min-h-0 overflow-hidden rounded-lg bg-black"
+                style={{ aspectRatio: "9/16" }}
+              >
+                <OpenHouseGalleryVimeoVideo vimeoId={vimeoId} />
+              </motion.div>
+            ))}
             {GALLERY_VIDEOS.map((v, i) => (
               <motion.div
                 key={v}
                 initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : i * 0.1 }}
+                transition={{ duration: shouldReduceMotion ? 0 : 0.5, delay: shouldReduceMotion ? 0 : (GALLERY_VIMEO_VIDEOS.length + i) * 0.1 }}
                 className="min-h-0 overflow-hidden rounded-lg bg-black"
                 style={{ aspectRatio: "9/16" }}
               >
@@ -185,7 +237,7 @@ export default function WindChasersPastOpenHousesGallery({
                 viewport={{ once: true }}
                 transition={{
                   duration: shouldReduceMotion ? 0 : 0.5,
-                  delay: shouldReduceMotion ? 0 : (GALLERY_VIDEOS.length + i) * 0.1,
+                  delay: shouldReduceMotion ? 0 : (GALLERY_VIMEO_VIDEOS.length + GALLERY_VIDEOS.length + i) * 0.1,
                 }}
                 className="flex h-full min-h-[200px] overflow-hidden rounded-lg cursor-pointer group md:min-h-[240px]"
                 onClick={() => openLightbox(src.src, alt)}
