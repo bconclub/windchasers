@@ -42,7 +42,7 @@ function DemoPageContent() {
         <div className="flex gap-4 mb-16 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide lg:grid lg:grid-cols-2 lg:overflow-visible lg:pb-0">
           <button
             onClick={() => handleCardClick("online")}
-            className="bg-gradient-to-br from-accent-dark to-dark p-6 md:p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group flex-shrink-0 w-[85vw] md:w-auto snap-center"
+            className="bg-gradient-to-br from-accent-dark to-dark p-6 md:p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group flex-shrink-0 w-[78vw] md:w-auto snap-center"
           >
             <div className="flex items-center mb-6">
               <div className="w-14 h-14 rounded-lg bg-gold/10 flex items-center justify-center mr-4">
@@ -88,7 +88,7 @@ function DemoPageContent() {
 
           <button
             onClick={() => handleCardClick("offline")}
-            className="bg-gradient-to-br from-accent-dark to-dark p-6 md:p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group flex-shrink-0 w-[85vw] md:w-auto snap-center"
+            className="bg-gradient-to-br from-accent-dark to-dark p-6 md:p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group flex-shrink-0 w-[78vw] md:w-auto snap-center"
           >
             <div className="flex items-center mb-6">
               <div className="w-14 h-14 rounded-lg bg-gold/10 flex items-center justify-center mr-4">

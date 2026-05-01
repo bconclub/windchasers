@@ -113,26 +113,9 @@ export async function POST(request: NextRequest) {
 
     console.log("Summer Camp Sheets API success:", JSON.stringify(result));
 
-    // Backup to Proxe webhook
-    try {
-      await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "summer-camp",
-          parentName,
-          phone: formatPhone(phone),
-          email: email.toLowerCase().trim(),
-          childAge: formatAge(childAge),
-          interest: formatInterest(interest),
-          batchPreference: formatBatch(batchPreference),
-          timestamp,
-          source: "Web Lead",
-        }),
-      });
-    } catch (proxeError) {
-      console.error("Error sending to Proxe webhook:", proxeError);
-    }
+    // Note: dead build.goproxe.com webhook removed. PROXe is now reached via
+    // the unified /api/leads proxy. Summer Camp is not yet wired to /api/leads
+    // (see GPFC scope - PAT-only first).
 
     return NextResponse.json(
       { success: true, message: "Registration successful" },

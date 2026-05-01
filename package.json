@@ -6,9 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "stitch:mcp": "npx tsx scripts/stitch-mcp-server.ts"
   },
   "dependencies": {
+    "@google/stitch-sdk": "^0.1.0",
     "@vimeo/player": "^2.30.3",
     "framer-motion": "^11.0.8",
     "googleapis": "^171.4.0",

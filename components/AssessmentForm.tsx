@@ -1,843 +1,513 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { trackFormSubmission, getStoredUTMParams, getLandingPage, getStoredReferrer, sendTrackingData } from "@/lib/tracking";
-import { getUserSessionData, saveUserSessionData, markAssessmentCompleted } from "@/lib/sessionStorage";
-import { trackPilotLead } from "@/lib/analytics";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-interface Question {
-  id: number;
-  question: string;
-  type: "text" | "radio";
-  options?: string[];
-  section: string;
-  points: { [key: string]: number } | ((value: any) => number);
+import EligibilityGate from "@/components/assessment/EligibilityGate";
+import IdentityCapture, {
+  type IdentityFields,
+} from "@/components/assessment/IdentityCapture";
+import QuestionScreen from "@/components/assessment/QuestionScreen";
+import ResumePrompt from "@/components/assessment/ResumePrompt";
+import SubmittingState from "@/components/assessment/SubmittingState";
+
+import {
+  PAT_QUESTIONS,
+  PAT_QUESTION_COUNT,
+  PAT_SECTION_HEADERS,
+} from "@/lib/pat-questions";
+import { scoreAnswers, type PATAnswerInput } from "@/lib/pat-scoring";
+import {
+  readEligibility,
+  writeEligibility,
+  readProgress,
+  writeProgress,
+  clearProgress,
+  hasResumeableProgress,
+  type PATProgress,
+} from "@/lib/pat-storage";
+import {
+  trackFormSubmission,
+  getStoredUTMParamsFull,
+  recordAssessmentSession,
+} from "@/lib/tracking";
+import {
+  trackPilotLead,
+  trackAssessmentStarted,
+} from "@/lib/analytics";
+import {
+  getUserSessionData,
+  saveUserSessionData,
+  markAssessmentCompleted,
+} from "@/lib/sessionStorage";
+
+type Phase =
+  | "loading"
+  | "resume_prompt"
+  | "gate"
+  | "identity_mini"
+  | "questions"
+  | "identity_full"
+  | "submitting"
+  | "error";
+
+interface ErrorState {
+  message: string;
 }
 
-const questions: Question[] = [
-  // SECTION 1: QUALIFICATION (50 points)
-  {
-    id: 1,
-    question: "Please Enter Your Age",
-    type: "text",
-    section: "qualification",
-    points: (age: string) => {
-      const ageNum = parseInt(age);
-      return ageNum >= 17 && ageNum <= 30 ? 10 : 5;
-    },
-  },
-  {
-    id: 2,
-    question: "What is your current educational status?",
-    type: "radio",
-    options: [
-      "Completed 12th/+2 with Physics, Chemistry, Mathematics",
-      "Completed 12th/+2 with Biology/Commerce/Arts",
-      "Currently in 12th/+2 with PCM",
-      "Below 12th standard",
-    ],
-    section: "qualification",
-    points: { "0": 15, "1": 8, "2": 12, "3": 0 },
-  },
-  {
-    id: 3,
-    question: "What percentage did you score in 12th Physics?",
-    type: "radio",
-    options: ["Above 60%", "50-60%", "Below 50%", "Haven't appeared yet"],
-    section: "qualification",
-    points: { "0": 12.5, "1": 8, "2": 4, "3": 6 },
-  },
-  {
-    id: 4,
-    question: "What percentage did you score in 12th Mathematics?",
-    type: "radio",
-    options: ["Above 60%", "50-60%", "Below 50%", "Haven't appeared yet"],
-    section: "qualification",
-    points: { "0": 12.5, "1": 8, "2": 4, "3": 6 },
-  },
-  // SECTION 2: APTITUDE (50 points)
-  // Aviation IQ (15pts)
-  {
-    id: 5,
-    question: "What does ATC stand for?",
-    type: "radio",
-    options: [
-      "Air Traffic Control",
-      "Automatic Traffic Control",
-      "Aviation Technical Center",
-      "Air Transport Commission",
-    ],
-    section: "aptitude",
-    points: { "0": 3, "1": 0, "2": 0, "3": 0 },
-  },
-  {
-    id: 6,
-    question: "Which four forces act on an aircraft during flight?",
-    type: "radio",
-    options: [
-      "Lift, Weight, Thrust, Drag",
-      "Speed, Height, Wind, Power",
-      "Engine, Wings, Fuel, Pilot",
-      "Forward, Backward, Up, Down",
-    ],
-    section: "aptitude",
-    points: { "0": 3, "1": 0, "2": 0, "3": 0 },
-  },
-  {
-    id: 7,
-    question: "What creates 'lift' in an aircraft?",
-    type: "radio",
-    options: [
-      "The engine pushing the plane forward",
-      "Air moving faster over the wing's top surface",
-      "The pilot pulling up on controls",
-      "Hot air rising from the ground",
-    ],
-    section: "aptitude",
-    points: { "0": 0, "1": 3, "2": 0, "3": 0 },
-  },
-  {
-    id: 8,
-    question: "Which organization regulates civil aviation in India?",
-    type: "radio",
-    options: ["ISRO", "DRDO", "DGCA", "AAI"],
-    section: "aptitude",
-    points: { "0": 0, "1": 0, "2": 3, "3": 0 },
-  },
-  {
-    id: 9,
-    question: "What is the function of an aircraft's ailerons?",
-    type: "radio",
-    options: [
-      "Control up and down movement",
-      "Control left and right turning (roll)",
-      "Control engine speed",
-      "Control landing gear",
-    ],
-    section: "aptitude",
-    points: { "0": 0, "1": 3, "2": 0, "3": 0 },
-  },
-  // Math Aptitude (15pts)
-  {
-    id: 10,
-    question: "If an aircraft travels at 600 km/h, how far will it travel in 2.5 hours?",
-    type: "radio",
-    options: ["1200 km", "1500 km", "1800 km", "2100 km"],
-    section: "aptitude",
-    points: { "0": 0, "1": 3.75, "2": 0, "3": 0 },
-  },
-  {
-    id: 11,
-    question: "What is 15% of 1200?",
-    type: "radio",
-    options: ["150", "180", "200", "240"],
-    section: "aptitude",
-    points: { "0": 0, "1": 3.75, "2": 0, "3": 0 },
-  },
-  {
-    id: 12,
-    question: "Convert 180 minutes into hours",
-    type: "radio",
-    options: ["2 hours", "2.5 hours", "3 hours", "3.5 hours"],
-    section: "aptitude",
-    points: { "0": 0, "1": 0, "2": 3.75, "3": 0 },
-  },
-  {
-    id: 13,
-    question: "A triangle has angles 70° and 40°. What is the third angle?",
-    type: "radio",
-    options: ["60°", "70°", "80°", "90°"],
-    section: "aptitude",
-    points: { "0": 0, "1": 3.75, "2": 0, "3": 0 },
-  },
-  // Communication Skills (10pts)
-  {
-    id: 14,
-    question: "Choose the correct sentence:",
-    type: "radio",
-    options: [
-      "The pilot and the co-pilot was ready",
-      "The pilot and the co-pilot were ready",
-      "The pilot and the co-pilot is ready",
-      "The pilot and the co-pilot be ready",
-    ],
-    section: "aptitude",
-    points: { "0": 0, "1": 3.33, "2": 0, "3": 0 },
-  },
-  {
-    id: 15,
-    question: "Fill in the blank: 'Aviation is a field that ___ precision.'",
-    type: "radio",
-    options: ["require", "requires", "requiring", "require"],
-    section: "aptitude",
-    points: { "0": 0, "1": 3.33, "2": 0, "3": 0 },
-  },
-  {
-    id: 16,
-    question: "Which sentence shows proper aviation communication?",
-    type: "radio",
-    options: [
-      "Hey, we're going to land now",
-      "Flight 123 requesting permission to land",
-      "Can we land the plane please?",
-      "We want to come down now",
-    ],
-    section: "aptitude",
-    points: { "0": 0, "1": 3.34, "2": 0, "3": 0 },
-  },
-  // Decision Making (10pts)
-  {
-    id: 17,
-    question: "How do you usually react under pressure?",
-    type: "radio",
-    options: [
-      "Stay calm and focus on the solution",
-      "Get anxious but try to manage",
-      "Panic and lose control",
-      "Avoid the situation",
-    ],
-    section: "aptitude",
-    points: { "0": 5, "1": 3, "2": 0, "3": 1 },
-  },
-  {
-    id: 18,
-    question: "If you make a mistake during an important task",
-    type: "radio",
-    options: [
-      "Immediately acknowledge and correct it",
-      "Try to fix it quietly without telling anyone",
-      "Hope nobody notices",
-      "Blame external factors",
-    ],
-    section: "aptitude",
-    points: { "0": 5, "1": 2, "2": 0, "3": 0 },
-  },
-  // SECTION 3: READINESS (50 points)
-  {
-    id: 19,
-    question: "Pilot training costs ₹45-70 lakhs. How prepared are you financially?",
-    type: "radio",
-    options: [
-      "Fully arranged/family can afford",
-      "50% arranged, exploring education loans",
-      "Starting to research funding options",
-      "Not sure about the costs involved",
-    ],
-    section: "readiness",
-    points: { "0": 20, "1": 15, "2": 10, "3": 5 },
-  },
-  {
-    id: 20,
-    question: "When do you plan to start pilot training?",
-    type: "radio",
-    options: [
-      "Within 3 months",
-      "3-6 months",
-      "6-12 months",
-      "Just exploring options",
-    ],
-    section: "readiness",
-    points: { "0": 15, "1": 12, "2": 8, "3": 4 },
-  },
-  {
-    id: 21,
-    question: "How much research have you done about pilot careers?",
-    type: "radio",
-    options: [
-      "Extensively researched requirements and career paths",
-      "Good research on basics",
-      "Some research, learning more",
-      "This is my first time learning about it",
-    ],
-    section: "readiness",
-    points: { "0": 15, "1": 12, "2": 8, "3": 4 },
-  },
-];
+function emptyProgress(): PATProgress {
+  return {
+    eligibility: null,
+    identityCaptured: false,
+    identity: {},
+    currentQuestionIndex: 0,
+    answersById: {},
+    updatedAt: new Date().toISOString(),
+  };
+}
 
-const sectionBreaks = [
-  { after: 4, title: "Time to Show Your Aviation IQ" },
-  { after: 9, title: "Crunch Those Numbers Like a Captain!" },
-  { after: 13, title: "Clear Communication = Safe Flights!" },
-  { after: 16, title: "Cool Under Pressure? Prove It!" },
-  { after: 18, title: "Ready to Fly With Your Dreams?" },
-];
+function isAllAnswered(answersById: Record<string, string | number>): boolean {
+  return PAT_QUESTIONS.every((q) => {
+    const v = answersById[String(q.id)];
+    return v !== "" && v !== null && v !== undefined;
+  });
+}
 
 export default function AssessmentForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<(string | number)[]>(new Array(questions.length).fill(""));
-  const [showContactForm, setShowContactForm] = useState(false);
-  const [showResults, setShowResults] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [sourceFrom, setSourceFrom] = useState<string | null>(null);
-  const [contactInfo, setContactInfo] = useState({
-    firstName: "",
-    lastName: "",
-    phone: "",
-    email: "",
-  });
 
-  // Read 'from' URL param on mount
+  const [phase, setPhase] = useState<Phase>("loading");
+  const [progress, setProgress] = useState<PATProgress>(() => emptyProgress());
+  const [error, setError] = useState<ErrorState | null>(null);
+
+  const sourceFrom = useMemo(() => searchParams?.get("from") ?? null, [searchParams]);
+  const startedFiredRef = useRef(false);
+
+  // ---- Hydrate from localStorage on mount -----------------------------------
   useEffect(() => {
-    try {
-      const fromParam = searchParams?.get("from");
-      if (fromParam) {
-        setSourceFrom(fromParam);
-      }
-    } catch (error) {
-      console.error("Error reading search params:", error);
+    const stored = readProgress();
+    const eligibilityFromKey = readEligibility();
+
+    if (stored && hasResumeableProgress()) {
+      setProgress(stored);
+      setPhase("resume_prompt");
+      return;
     }
-  }, [searchParams]);
 
-  // Load user data from sessionStorage when contact form is shown
-  useEffect(() => {
-    if (showContactForm) {
+    if (eligibilityFromKey === "no") {
+      // User previously answered No on this device. Send them to /early.
+      router.replace("/assessment/early");
+      return;
+    }
+
+    if (eligibilityFromKey === "yes") {
+      // Past gate. Pull anything we already know about them from sessionStorage
+      // (interest pages, prior submissions) so we can short-circuit identity_mini.
       const userData = getUserSessionData();
-      if (userData) {
-        setContactInfo({
-          firstName: userData.firstName || "",
-          lastName: userData.lastName || "",
-          phone: userData.phone || "",
-          email: userData.email || "",
-        });
-      }
-    }
-  }, [showContactForm]);
-
-  const handleAnswer = (value: string | number, autoAdvance: boolean = false) => {
-    const newAnswers = [...answers];
-    newAnswers[currentQuestion] = value;
-    setAnswers(newAnswers);
-    
-    // Auto-advance to next question if it's a radio button selection
-    if (autoAdvance) {
-      // Small delay to show the selection before moving
-      setTimeout(() => {
-        if (currentQuestion < questions.length - 1) {
-          setCurrentQuestion(currentQuestion + 1);
-        } else {
-          setShowContactForm(true);
-        }
-      }, 300);
-    }
-  };
-
-  const handleNext = () => {
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    } else {
-      setShowContactForm(true);
-    }
-  };
-
-  const handleBack = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    }
-  };
-
-  const calculateScores = () => {
-    let qualificationScore = 0;
-    let aptitudeScore = 0;
-    let readinessScore = 0;
-
-    questions.forEach((q, index) => {
-      const answer = answers[index];
-      if (answer === "" || answer === null) return;
-
-      let points = 0;
-      if (typeof q.points === "function") {
-        points = q.points(answer);
+      if (userData?.firstName) {
+        setProgress((prev) => ({
+          ...prev,
+          eligibility: "yes",
+          identity: {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            email: userData.email,
+            phone: userData.phone,
+            city: userData.city,
+          },
+        }));
+        setPhase("questions");
       } else {
-        points = q.points[String(answer)] || 0;
+        setProgress((prev) => ({ ...prev, eligibility: "yes" }));
+        setPhase("identity_mini");
       }
+      return;
+    }
 
-      if (q.section === "qualification") qualificationScore += points;
-      else if (q.section === "aptitude") aptitudeScore += points;
-      else if (q.section === "readiness") readinessScore += points;
+    setPhase("gate");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Persist progress on every meaningful change
+  useEffect(() => {
+    if (phase === "loading" || phase === "resume_prompt" || phase === "gate") return;
+    writeProgress(progress);
+  }, [progress, phase]);
+
+  // GA4 assessment_started fires once per visit when the user enters the
+  // question phase from the Yes path.
+  useEffect(() => {
+    if (phase === "questions" && !startedFiredRef.current) {
+      startedFiredRef.current = true;
+      trackAssessmentStarted({ audience: "student" });
+    }
+  }, [phase]);
+
+  // ---- Gate handlers --------------------------------------------------------
+  function handleGateAnswer(answer: "yes" | "no") {
+    writeEligibility(answer);
+    if (answer === "no") {
+      clearProgress();
+      router.push("/assessment/early");
+      return;
+    }
+    const next: PATProgress = { ...emptyProgress(), eligibility: "yes" };
+    setProgress(next);
+    setPhase("identity_mini");
+  }
+
+  // ---- Resume handlers ------------------------------------------------------
+  function handleResume() {
+    if (!progress.eligibility) {
+      setPhase("gate");
+      return;
+    }
+    if (!progress.identity?.firstName) {
+      setPhase("identity_mini");
+      return;
+    }
+    if (isAllAnswered(progress.answersById) && !progress.identityCaptured) {
+      setPhase("identity_full");
+      return;
+    }
+    setPhase("questions");
+  }
+
+  function handleStartOver() {
+    clearProgress();
+    setProgress(emptyProgress());
+    setPhase("gate");
+  }
+
+  // ---- Identity (mini) ------------------------------------------------------
+  function handleIdentityMiniSubmit(fields: Partial<IdentityFields>) {
+    const firstName = (fields.firstName ?? "").trim();
+    if (!firstName) return;
+
+    saveUserSessionData({ firstName });
+    setProgress((prev) => ({
+      ...prev,
+      identity: { ...prev.identity, firstName },
+    }));
+    setPhase("questions");
+  }
+
+  // ---- Identity (full) ------------------------------------------------------
+  function handleIdentityFullSubmit(fields: Partial<IdentityFields>) {
+    // Single-name model: firstName already holds the full name from mini.
+    // lastName is unused (kept on the type for back-compat with sessionStorage).
+    const completed = {
+      email: (fields.email ?? "").trim(),
+      phone: (fields.phone ?? "").trim(),
+      city: (fields.city ?? "").trim(),
+    };
+
+    saveUserSessionData(completed);
+    setProgress((prev) => {
+      const merged: PATProgress = {
+        ...prev,
+        identityCaptured: true,
+        identity: { ...prev.identity, ...completed },
+      };
+      // Submit immediately once full identity is captured. Pass merged so the
+      // setState batching does not race the submit.
+      void submitAssessment(prev.answersById, merged);
+      return merged;
     });
+  }
 
-    const totalScore = qualificationScore + aptitudeScore + readinessScore;
+  // ---- Question handlers ----------------------------------------------------
+  const currentQuestion = PAT_QUESTIONS[progress.currentQuestionIndex];
+  const currentValue = currentQuestion
+    ? progress.answersById[String(currentQuestion.id)]
+    : undefined;
 
-    return {
-      qualification: Math.round(qualificationScore),
-      aptitude: Math.round(aptitudeScore),
-      readiness: Math.round(readinessScore),
-      total: Math.round(totalScore),
-    };
-  };
+  const sectionHeader = useMemo(() => {
+    if (!currentQuestion) return null;
+    const match = PAT_SECTION_HEADERS.find(
+      (h) => h.afterIndex === progress.currentQuestionIndex - 1
+    );
+    return match?.title ?? null;
+  }, [progress.currentQuestionIndex, currentQuestion]);
 
-  const getTier = (totalScore: number) => {
-    if (totalScore >= 140) return "premium";
-    if (totalScore >= 120) return "strong";
-    if (totalScore >= 90) return "moderate";
-    return "not-ready";
-  };
+  const isLast = progress.currentQuestionIndex === PAT_QUESTION_COUNT - 1;
+  const canProceed =
+    currentValue !== "" && currentValue !== undefined && currentValue !== null;
 
-  const getTierInfo = (tier: string) => {
-    const tiers = {
-      premium: {
-        label: "Premium Tier",
-        headline: "You're Flight-Ready",
-        subhead: "Your score qualifies you for immediate enrollment. Book your consultation now.",
-        color: "text-gold",
-        bgColor: "bg-gold/20",
-        borderColor: "border-gold",
-        description: "Premium tier: You're in the top 15% of applicants. Let's map your fastest path to the cockpit.",
-        nextSteps: [
-          "Detailed breakdown sent to your email",
-          "Our team calls within 24 hours",
-        ],
-        ctaText: "Book a Demo",
-        ctaLink: "/booking",
-      },
-      strong: {
-        label: "Strong Tier",
-        headline: "You're Qualified",
-        subhead: "Your score shows strong potential. Let's discuss the right training path for you.",
-        color: "text-green-400",
-        bgColor: "bg-green-400/20",
-        borderColor: "border-green-400",
-        description: "",
-        nextSteps: [
-          "Email breakdown sent",
-          "Consultation call within 48 hours",
-        ],
-        ctaText: "Book a Demo",
-        ctaLink: "/booking",
-      },
-      moderate: {
-        label: "Moderate Tier",
-        headline: "You Have Potential",
-        subhead: "Your score shows gaps we can address. Book a consultation to explore your options.",
-        color: "text-yellow-400",
-        bgColor: "bg-yellow-400/20",
-        borderColor: "border-yellow-400",
-        description: "",
-        nextSteps: [
-          "Email analysis sent",
-          "Team reaches out within 72 hours",
-        ],
-        ctaText: "Book a Demo",
-        ctaLink: "/booking",
-      },
-      "not-ready": {
-        label: "Not Ready Yet",
-        headline: "Build Your Foundation",
-        subhead: "Let's work together to strengthen your foundation and prepare you for pilot training.",
-        color: "text-red-400",
-        bgColor: "bg-red-400/20",
-        borderColor: "border-red-400",
-        description: "Don't worry! Building a strong foundation first will set you up for success. We can help guide you.",
-        nextSteps: [
-          "Email analysis sent",
-          "Team reaches out within 72 hours",
-        ],
-        ctaText: "Book a Demo",
-        ctaLink: "/booking",
-      },
-    };
-    return tiers[tier as keyof typeof tiers];
-  };
+  function handleAnswer(value: string | number, autoAdvance: boolean) {
+    if (!currentQuestion) return;
+    const key = String(currentQuestion.id);
+    setProgress((prev) => ({
+      ...prev,
+      answersById: { ...prev.answersById, [key]: value },
+    }));
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    const scores = calculateScores();
-    const tier = getTier(scores.total);
-    const tierInfo = getTierInfo(tier);
+    if (!autoAdvance) return;
+    window.setTimeout(() => {
+      goNext({ ...progress.answersById, [key]: value });
+    }, 280);
+  }
+
+  function goNext(answersById: Record<string, string | number> = progress.answersById) {
+    if (progress.currentQuestionIndex < PAT_QUESTION_COUNT - 1) {
+      setProgress((prev) => ({
+        ...prev,
+        answersById,
+        currentQuestionIndex: prev.currentQuestionIndex + 1,
+      }));
+    } else {
+      // End of test. Persist any final answer, then move into identity_full.
+      setProgress((prev) => ({
+        ...prev,
+        answersById,
+      }));
+      setPhase("identity_full");
+    }
+  }
+
+  function goBack() {
+    if (progress.currentQuestionIndex === 0) return;
+    setProgress((prev) => ({
+      ...prev,
+      currentQuestionIndex: prev.currentQuestionIndex - 1,
+    }));
+  }
+
+  // ---- Submission -----------------------------------------------------------
+  async function submitAssessment(
+    answersById: Record<string, string | number>,
+    snapshot: PATProgress
+  ) {
+    setPhase("submitting");
+    setError(null);
+
+    // PROXe-shaped answers: { question_id, answer } per the /api/leads contract.
+    const answersForUpstream = PAT_QUESTIONS.map((q) => ({
+      question_id: q.id,
+      answer: answersById[String(q.id)] ?? null,
+    }));
+
+    // Internal scoring payload retains questionId for compatibility with
+    // lib/pat-scoring (single source of truth).
+    const answersForScoring: PATAnswerInput[] = PAT_QUESTIONS.map((q) => ({
+      questionId: q.id,
+      answer: answersById[String(q.id)] ?? null,
+    }));
+
+    // Client preview only - PROXe receives whatever the client computes.
+    const preview = scoreAnswers(answersForScoring);
+
+    const utm = getStoredUTMParamsFull();
 
     try {
-      // Determine source from URL param (from=dgca/helicopter/abroad)
-      const finalSource = sourceFrom || 'unknown';
-      
-      // Get stored UTM params, landing page, and referrer
-      const utmParams = getStoredUTMParams();
-      const landingPage = getLandingPage();
-      const referrer = getStoredReferrer();
-
-      const response = await fetch("/api/assessment", {
+      const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          firstName: contactInfo.firstName,
-          lastName: contactInfo.lastName,
-          email: contactInfo.email,
-          phone: contactInfo.phone,
-          answers: answers.map((ans, idx) => ({
-            questionId: questions[idx].id,
-            answer: ans,
-          })),
-          scores,
-          tier,
-          timestamp: new Date().toISOString(),
-          source: finalSource,
-          // Include UTM parameters
-          utm_source: utmParams.utm_source || "",
-          utm_medium: utmParams.utm_medium || "",
-          utm_campaign: utmParams.utm_campaign || "",
-          utm_term: utmParams.utm_term || "",
-          utm_content: utmParams.utm_content || "",
-          // Include referrer and landing page
-          referrer: referrer || "",
-          landing_page: landingPage || "",
+          type: "pat",
+          name: (snapshot.identity.firstName ?? "").trim(),
+          phone: snapshot.identity.phone ?? "",
+          email: snapshot.identity.email ?? "",
+          city: snapshot.identity.city ?? "",
+          audience: "student",
+          page_url:
+            typeof window !== "undefined" ? window.location.href : undefined,
+          utm: {
+            source: utm.utm_source || undefined,
+            medium: utm.utm_medium || undefined,
+            campaign: utm.utm_campaign || undefined,
+            term: utm.utm_term || undefined,
+            content: utm.utm_content || undefined,
+          },
+          data: {
+            answers: answersForUpstream,
+            scores: {
+              qualification: preview.subScores.qualification,
+              aptitude: preview.subScores.aptitude,
+              readiness: preview.subScores.readiness,
+              total: preview.total,
+            },
+            tier: preview.tier,
+            // The eligibility gate has already routed the user past Class 12;
+            // Below-12 aspirants are sent to /assessment/early instead.
+            eligible_class_12_pass: true,
+          },
         }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
-        console.error("Assessment submission failed:", response.status, errorData);
-        throw new Error(errorData.error || "Failed to submit assessment");
+      const payload = (await res.json().catch(() => ({}))) as {
+        ok?: boolean;
+        error?: string;
+        message?: string;
+      };
+      if (!res.ok || payload.ok === false) {
+        throw new Error(
+          typeof payload.message === "string"
+            ? payload.message
+            : typeof payload.error === "string"
+              ? payload.error
+              : "We could not save your assessment. Please try again."
+        );
       }
 
-      trackFormSubmission("assessment", {
-        name: `${contactInfo.firstName} ${contactInfo.lastName}`,
-        email: contactInfo.email,
-        phone: contactInfo.phone,
-        score: scores.total,
-        tier,
-      });
+      // PROXe is the system of record now; the proxy does not return scores
+      // back to the client. Fall back to the local preview.
+      const finalScores = preview.subScores;
+      const finalTotal = preview.total;
+      const finalTier = preview.tier;
 
-      // Track pilot lead
-      trackPilotLead(finalSource, 'assessment_completion');
-      
-      // Send complete tracking data
-      await sendTrackingData("/api/assessment", {
-        formData: {
-          firstName: contactInfo.firstName,
-          lastName: contactInfo.lastName,
-          email: contactInfo.email,
-          phone: contactInfo.phone,
+      trackFormSubmission(
+        "assessment",
+        {
+          name: `${snapshot.identity.firstName ?? ""} ${snapshot.identity.lastName ?? ""}`.trim(),
+          email: snapshot.identity.email,
+          phone: snapshot.identity.phone,
+          score: finalTotal,
+          tier: finalTier,
         },
-        source: finalSource,
-      });
+        sourceFrom || undefined
+      );
 
-      // Save to sessionStorage: user data, score, tier, and interest
+      trackPilotLead(sourceFrom || "unknown", "assessment_completion");
+      recordAssessmentSession(answersForScoring, finalTotal, finalTier);
+
       saveUserSessionData({
-        firstName: contactInfo.firstName,
-        lastName: contactInfo.lastName,
-        email: contactInfo.email,
-        phone: contactInfo.phone,
+        firstName: snapshot.identity.firstName,
+        lastName: snapshot.identity.lastName,
+        email: snapshot.identity.email,
+        phone: snapshot.identity.phone,
+        city: snapshot.identity.city,
         interest: sourceFrom || undefined,
-        assessmentScore: scores.total,
-        tier,
+        assessmentScore: finalTotal,
+        tier: finalTier,
       });
-
-      // Mark assessment as completed
       markAssessmentCompleted();
+      clearProgress();
 
-      setIsSubmitting(false);
-      
-      // Redirect to thank you page with assessment data
-      const thankYouData = {
-        score: scores.total,
-        tier: tier,
-        qualificationScore: scores.qualification,
-        aptitudeScore: scores.aptitude,
-        readinessScore: scores.readiness,
-      };
-      const dataParam = encodeURIComponent(JSON.stringify(thankYouData));
-      window.location.href = `/thank-you?type=assessment&data=${dataParam}`;
-    } catch (error) {
-      console.error("Failed to submit assessment:", error);
-      setIsSubmitting(false);
+      const data = encodeURIComponent(
+        JSON.stringify({
+          score: finalTotal,
+          tier: finalTier,
+          qualificationScore: finalScores.qualification,
+          aptitudeScore: finalScores.aptitude,
+          readinessScore: finalScores.readiness,
+          audience: "student",
+          name: snapshot.identity.firstName,
+        })
+      );
+      window.location.href = `/thank-you?type=assessment&data=${data}`;
+    } catch (err) {
+      console.error("Assessment submission failed:", err);
+      setError({
+        message:
+          err instanceof Error
+            ? err.message
+            : "We could not save your assessment. Please try again.",
+      });
+      setPhase("error");
     }
-  };
+  }
 
-  const progress = ((currentQuestion + 1) / questions.length) * 100;
-  const currentQ = questions[currentQuestion];
-  const canProceed = answers[currentQuestion] !== "" && answers[currentQuestion] !== null;
-
-  // Show section break
-  const sectionBreak = sectionBreaks.find((sb) => sb.after === currentQuestion);
-
-  if (showContactForm && !showResults) {
-    const scores = calculateScores();
+  // ---- Render ---------------------------------------------------------------
+  if (phase === "loading") {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-2xl mx-auto"
-      >
-        <h2 className="text-3xl font-bold mb-2 text-center text-gold">
-          Enter Your Details
-        </h2>
-        <p className="text-white/70 text-center mb-8">
-          Get your complete PAT score and personalized guidance
-        </p>
-        <div className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="firstName" className="block text-sm font-medium mb-2">
-                First Name <span className="text-red-400">*</span>
-              </label>
-              <input
-                type="text"
-                id="firstName"
-                required
-                value={contactInfo.firstName}
-                onChange={(e) => {
-                  const newValue = e.target.value;
-                  setContactInfo({ ...contactInfo, firstName: newValue });
-                  saveUserSessionData({ firstName: newValue });
-                }}
-                className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-white"
-              />
-            </div>
-            <div>
-              <label htmlFor="lastName" className="block text-sm font-medium mb-2">
-                Last Name <span className="text-red-400">*</span>
-              </label>
-              <input
-                type="text"
-                id="lastName"
-                required
-                value={contactInfo.lastName}
-                onChange={(e) => {
-                  const newValue = e.target.value;
-                  setContactInfo({ ...contactInfo, lastName: newValue });
-                  saveUserSessionData({ lastName: newValue });
-                }}
-                className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-white"
-              />
-            </div>
-          </div>
-          <div>
-            <label htmlFor="phone" className="block text-sm font-medium mb-2">
-              Phone (with country code) <span className="text-red-400">*</span>
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              required
-              placeholder="+91 9876543210"
-              value={contactInfo.phone}
-              onChange={(e) => {
-                const newValue = e.target.value;
-                setContactInfo({ ...contactInfo, phone: newValue });
-                saveUserSessionData({ phone: newValue });
-              }}
-              className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-white"
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium mb-2">
-              Email <span className="text-red-400">*</span>
-            </label>
-            <input
-              type="email"
-              id="email"
-              required
-              value={contactInfo.email}
-              onChange={(e) => {
-                const newValue = e.target.value;
-                setContactInfo({ ...contactInfo, email: newValue });
-                saveUserSessionData({ email: newValue });
-              }}
-              className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-white"
-            />
-          </div>
-          <button
-            onClick={handleSubmit}
-            disabled={
-              !contactInfo.firstName ||
-              !contactInfo.lastName ||
-              !contactInfo.phone ||
-              !contactInfo.email ||
-              isSubmitting
-            }
-            className="w-full bg-gold text-dark py-4 rounded-lg font-semibold hover:bg-gold/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSubmitting ? "Submitting..." : "View Results"}
-          </button>
-        </div>
-      </motion.div>
+      <div className="text-center py-16">
+        <div className="inline-block w-10 h-10 border-2 border-[#C5A572]/40 border-t-[#C5A572] rounded-full animate-spin" />
+      </div>
     );
   }
 
-  if (showResults) {
-    const scores = calculateScores();
-    const tier = getTier(scores.total);
-    const tierInfo = getTierInfo(tier);
-
+  if (phase === "resume_prompt") {
+    const answeredCount = Object.values(progress.answersById).filter(
+      (v) => v !== "" && v !== null && v !== undefined
+    ).length;
     return (
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        className="max-w-4xl mx-auto"
-      >
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Your PAT<br />
-            <span className="text-gold">Pilot Aptitude Test</span> Results
-          </h2>
-          <div className={`text-7xl font-bold mb-4 ${tierInfo.color}`}>
-            {scores.total}/150
-          </div>
-          <div
-            className={`inline-block px-6 py-3 rounded-full ${tierInfo.bgColor} ${tierInfo.borderColor} border-2 mb-4`}
-          >
-            <span className={`text-xl font-bold ${tierInfo.color}`}>
-              {tierInfo.label}
+      <ResumePrompt
+        questionsAnswered={answeredCount}
+        totalQuestions={PAT_QUESTION_COUNT}
+        onResume={handleResume}
+        onStartOver={handleStartOver}
+      />
+    );
+  }
+
+  if (phase === "gate") {
+    return <EligibilityGate onAnswer={handleGateAnswer} />;
+  }
+
+  if (phase === "identity_mini") {
+    return (
+      <IdentityCapture
+        mode="mini"
+        initial={progress.identity}
+        onSubmit={handleIdentityMiniSubmit}
+      />
+    );
+  }
+
+  if (phase === "identity_full") {
+    return (
+      <IdentityCapture
+        mode="full"
+        initial={progress.identity}
+        onSubmit={handleIdentityFullSubmit}
+      />
+    );
+  }
+
+  if (phase === "submitting") {
+    return <SubmittingState />;
+  }
+
+  if (phase === "error") {
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="relative bg-[#1A1A1A] border-t-2 border-red-500 rounded-xl p-8">
+          <div className="absolute -top-3 left-6">
+            <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+              Submission failed
             </span>
           </div>
-          <p className="text-white/70 max-w-2xl mx-auto text-lg">
-            {tierInfo.description}
+          <h2 className="text-2xl font-bold text-white mt-2 mb-3">
+            Something went wrong.
+          </h2>
+          <p className="text-white/70 mb-6">
+            {error?.message ??
+              "We could not save your assessment. Please try again."}
           </p>
-        </div>
-
-        <div className="bg-accent-dark p-8 rounded-lg border border-white/10 mb-8">
-          <h3 className="text-2xl font-bold mb-6 text-gold">Score Breakdown</h3>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div>
-              <div className="text-sm text-white/60 mb-2">Qualification</div>
-              <div className="text-3xl font-bold text-gold">{scores.qualification}/50</div>
-            </div>
-            <div>
-              <div className="text-sm text-white/60 mb-2">Aptitude</div>
-              <div className="text-3xl font-bold text-gold">{scores.aptitude}/50</div>
-            </div>
-            <div>
-              <div className="text-sm text-white/60 mb-2">Readiness</div>
-              <div className="text-3xl font-bold text-gold">{scores.readiness}/50</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button
-            onClick={() => window.print()}
-            className="bg-gold text-dark px-8 py-4 rounded-lg font-semibold hover:bg-gold/90 transition-colors"
+            type="button"
+            onClick={() => {
+              setError(null);
+              setPhase("identity_full");
+            }}
+            className="bg-[#C5A572] text-[#1A1A1A] px-6 py-3 rounded-lg font-semibold hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(197,165,114,0.4)] transition-all duration-300"
           >
-            Download Detailed Report
+            Try again
           </button>
         </div>
-      </motion.div>
+      </div>
     );
+  }
+
+  // phase === "questions"
+  if (!currentQuestion) {
+    return null;
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
-      {/* Disclaimer - Show only on first question */}
-      {currentQuestion === 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6 p-4 bg-gold/20 border-2 border-gold/50 rounded-lg shadow-lg shadow-gold/20"
-        >
-          <p className="text-sm text-white text-center">
-            <span className="font-bold text-gold">Note:</span> This assessment is designed for aspiring pilots who are starting their journey, not for licensed pilots.
-          </p>
-        </motion.div>
-      )}
-
-      {/* Progress Bar */}
-      <div className="mb-8">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm text-white/60">
-            Question {currentQuestion + 1} of {questions.length}
-          </span>
-          <span className="text-sm text-white/60">{Math.round(progress)}%</span>
-        </div>
-        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-gold"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ duration: 0.3 }}
-          />
-        </div>
-      </div>
-
-      {/* Section Break */}
-      {sectionBreak && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
-        >
-          <h3 className="text-2xl md:text-3xl font-bold text-gold">
-            {sectionBreak.title}
-          </h3>
-        </motion.div>
-      )}
-
-      {/* Question */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentQuestion}
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -20 }}
-          transition={{ duration: 0.3 }}
-          className="mb-8"
-        >
-          <h2 className="text-2xl md:text-3xl font-bold mb-8">
-            {currentQ.question}
-          </h2>
-
-          {currentQ.type === "text" ? (
-            <input
-              type="number"
-              value={answers[currentQuestion] || ""}
-              onChange={(e) => handleAnswer(e.target.value)}
-              placeholder="Enter your age"
-              className="w-full px-4 py-3 bg-accent-dark border-2 border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-white text-lg"
-            />
-          ) : (
-            <div className="space-y-4">
-              {currentQ.options?.map((option, index) => (
-                <motion.button
-                  key={index}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => handleAnswer(index, true)}
-                  className={`w-full p-6 text-left rounded-lg border-2 transition-all ${
-                    answers[currentQuestion] === index
-                      ? "border-gold bg-gold/10"
-                      : "border-white/20 hover:border-white/40 bg-accent-dark"
-                  }`}
-                >
-                  <div className="flex items-center">
-                    <div
-                      className={`w-6 h-6 rounded-full border-2 mr-4 flex items-center justify-center ${
-                        answers[currentQuestion] === index
-                          ? "border-gold"
-                          : "border-white/40"
-                      }`}
-                    >
-                      {answers[currentQuestion] === index && (
-                        <div className="w-3 h-3 rounded-full bg-gold" />
-                      )}
-                    </div>
-                    <span className="font-medium">{option}</span>
-                  </div>
-                </motion.button>
-              ))}
-            </div>
-          )}
-        </motion.div>
-      </AnimatePresence>
-
-      {/* Navigation */}
-      <div className="flex justify-between">
-        <button
-          onClick={handleBack}
-          disabled={currentQuestion === 0}
-          className="px-6 py-3 text-white/60 hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          ← Back
-        </button>
-        <button
-          onClick={handleNext}
-          disabled={!canProceed}
-          className="px-6 py-3 bg-gold text-dark rounded-lg font-semibold hover:bg-gold/90 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          {currentQuestion === questions.length - 1 ? "Continue" : "Next →"}
-        </button>
-      </div>
-    </div>
+    <QuestionScreen
+      question={currentQuestion}
+      currentIndex={progress.currentQuestionIndex}
+      totalCount={PAT_QUESTION_COUNT}
+      sectionHeader={sectionHeader}
+      currentValue={currentValue}
+      onAnswer={handleAnswer}
+      onBack={goBack}
+      onNext={() => goNext()}
+      isLast={isLast}
+      canProceed={canProceed}
+    />
   );
 }

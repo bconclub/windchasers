@@ -30,28 +30,9 @@ export async function POST(request: Request) {
       console.error("Cabin Crew Sheets error:", sheetsError);
     }
 
-    // Backup to Proxe webhook even if Sheets fails
-    try {
-      await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "cabin-crew",
-          name: data.name || "",
-          phone: data.phone || "",
-          email: data.email || "",
-          city: data.city || "",
-          highestEducation: data.highestEducation || "",
-          englishCommunication: data.englishCommunication || "",
-          age: data.age || "",
-          joiningTimeline: data.joiningTimeline || "",
-          source: "Cabin Crew Web Lead",
-          timestamp: new Date().toISOString(),
-        }),
-      });
-    } catch (webhookErr) {
-      console.error("Cabin Crew Proxe webhook error:", webhookErr);
-    }
+    // Note: dead build.goproxe.com webhook removed. PROXe is now reached via
+    // the unified /api/leads proxy. Cabin Crew is not yet wired to /api/leads
+    // (see GPFC scope - PAT-only first).
 
     if (sheetsError) {
       return NextResponse.json(

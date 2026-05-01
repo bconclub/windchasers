@@ -30,7 +30,7 @@
 windchasers/
 ├── app/
 │   ├── api/
-│   │   ├── assessment/route.ts       # PAT → Sheets (Assessment) + pat-test webhook
+│   │   # (removed) assessment/route.ts - PAT now goes through /api/leads (PROXe proxy)
 │   │   ├── booking/route.ts          # Demo → Sheets (Booking) + pilot-windchasers
 │   │   ├── leads/route.ts            # Routed leads (ATC / Open House / default) + Proxe backup
 │   │   ├── atc/route.ts              # Legacy ATC POST → Sheets + Proxe (page uses /api/leads)
@@ -312,28 +312,31 @@ windchasers/
 
 **Spreadsheet:** `appendToSheet` in `lib/sheets.ts` targets `GOOGLE_SHEET_ID` (default `1J5cwsCuKI2XnIlUAbmqrl0uIm2fG_wenYx1xnZdQdgk` if env unset). **Last touched there:** 2026-04-13 (`cb52876` logging).
 
-**Proxe base:** `https://build.goproxe.com/webhook/...`
+**Proxe base (current):** `https://proxe.windchasers.in` via the unified `/api/leads` proxy. The legacy `build.goproxe.com/webhook/*` endpoints are dead and removed from the codebase.
 
-### Dual-write (Google Sheets + Proxe)
+### `/api/leads` (PROXe proxy)
 
-| HTTP route | Sheet tab (range) | Proxe webhook | Notes |
-|------------|-------------------|---------------|--------|
-| `POST /api/booking` | `Booking` `A:N` | `pilot-windchasers` (`type: "booking"`) | Requires name, phone, interest, demoType, preferredDate |
-| `POST /api/assessment` | `Assessment` `A:L` | `pat-test` | PAT result + contact |
-| `POST /api/pricing` | `Pricing` `A:J` | `pilot-windchasers` | After modal submit |
-| `POST /api/summercamp` | `Summer Camp` `A:I` | `pilot-windchasers` (`type: "summer-camp"`) | **Server ready**; **UI on `/summercamp` does not call it yet** |
+Single forwarding route at `app/api/leads/route.ts`. Authenticates with `PROXE_INBOUND_API_KEY` or `PROXE_LANDING_API_KEY` and forwards the captured payload to PROXe. Three submission types:
 
-### Sheets only (no Proxe in handler)
+- `type: "pat"` → PROXe `/api/agent/leads/inbound` with PAT scores, tier, answers, eligibility flag.
+- `type: "page"` → PROXe `/api/integrations/landing-pages` for generic landing-page captures.
+- `type: "event"` → PROXe `/api/agent/leads/inbound` for visit / demo / eligibility events.
+
+Currently wired callers: AssessmentForm (`type: "pat"`). Other forms still write to Sheets only and will be migrated to `/api/leads` in subsequent passes.
+
+### Sheets-only routes (PROXe migration pending)
 
 | HTTP route | Sheet tab (range) | Notes |
 |------------|-------------------|--------|
-| `POST /api/open-house` | `Open House` `A:H` | Used by Open House page |
-
-### `/api/leads` (router + backup webhook)
-
-- **Sheets:** Chooses tab by `source` - `ATC` / `ATC Web Lead` → **`ATC` `A:H`**; `Open House` / `open-house` → **`Open House` `A:H`**; else default **`Leads` `A:J`** (requires name, email, phone on default branch).
-- **Proxe:** Always posts `{ type: "lead", ... }` to **`pilot-windchasers`** as backup (even when Sheets succeeds).
-- **Used by:** **`/atc` page** (source `"ATC"`).
+| `POST /api/booking` | `Booking` `A:N` | Demo / campus booking. To be wired as `event_name: "demo_booked"`. |
+| `POST /api/pricing` | `Pricing` `A:J` | Modal submit. To be wired as `form_name: "pricing_modal"`. |
+| `POST /api/summercamp` | `Summer Camp` `A:I` | Server ready; UI does not call it yet. |
+| `POST /api/open-house` | `Open House` `A:H` | Used by Open House page. |
+| `POST /api/atc` | `ATC Web Lead` `A:I` | Used by `/atc` page. |
+| `POST /api/students` | `Students Web Lead` `A:I` | Used by `/students` page (wired in GTM phase). |
+| `POST /api/parents` | `Parents Web Lead` `A:I` | Used by `/parents` page (wired in GTM phase). |
+| `POST /api/cabin-crew` | `Cabin Crew` `A:I` | Used by `/cabin-crew` page. |
+| `POST /api/assessment-early` | `Assessment Early` `A:M` | Used by `/assessment/early` page. |
 
 ### Legacy / unused by current UI
 
@@ -497,7 +500,7 @@ Client components send UTM/session fields where implemented (`BookingForm`, `Ass
 - Proxe chat widget integrated (replaced FloatingActionButtons)
 - Homepage hero Vimeo with **manual play/pause/mute** controls (not autoplay-on-load)
 - Booking form (session prefill + UTM tracking) → **Sheets `Booking` tab** + Proxe
-- PAT assessment (tier system: Premium/Strong/Moderate/Needs Improvement) → **Sheets `Assessment`** + `pat-test` webhook
+- PAT assessment (tier system: Premium/Strong/Moderate/Needs Improvement) → **`/api/leads`** with `type: "pat"` (PROXe proxy)
 - Pricing page (form-gated access) → **Sheets `Pricing`** + Proxe
 - UTM/session tracking on booking, assessment, pricing, ATC lead, and related APIs where fields are sent
 - Google Analytics + Microsoft Clarity + Meta Pixel

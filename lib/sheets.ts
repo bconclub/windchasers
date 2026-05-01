@@ -22,6 +22,16 @@ export function getWebinarSheetTab(): string {
   return process.env.GOOGLE_SHEET_TAB_WEBINAR?.trim() || "Webinar";
 }
 
+/** Students CPL funnel - set `GOOGLE_SHEET_TAB_STUDENTS` once the tab is created. */
+export function getStudentsSheetTab(): string {
+  return process.env.GOOGLE_SHEET_TAB_STUDENTS?.trim() || "Students Web Lead";
+}
+
+/** Parents CPL funnel - set `GOOGLE_SHEET_TAB_PARENTS` once the tab is created. */
+export function getParentsSheetTab(): string {
+  return process.env.GOOGLE_SHEET_TAB_PARENTS?.trim() || "Parents Web Lead";
+}
+
 /** First non-empty env key wins; fallback is DEFAULT_SPREADSHEET_ID. */
 export function resolveSpreadsheetId(...envKeys: string[]): string {
   for (const key of envKeys) {

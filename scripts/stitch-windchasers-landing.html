@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Wind Chasers Aviation Academy | Atmospheric Precision</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-on-surface": "#313030",
+                        "tertiary-fixed-dim": "#dcc39d",
+                        "on-primary-fixed": "#271900",
+                        "on-tertiary-container": "#4c3c1f",
+                        "on-surface-variant": "#d1c5b6",
+                        "on-background": "#e5e2e1",
+                        "on-tertiary": "#3d2e13",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed-variant": "#005322",
+                        "inverse-primary": "#745a2e",
+                        "surface-container-high": "#2a2a2a",
+                        "primary-fixed": "#ffdeab",
+                        "on-secondary-fixed": "#002109",
+                        "on-primary-fixed-variant": "#5a4319",
+                        "tertiary": "#dcc39d",
+                        "outline-variant": "#4d463b",
+                        "surface-container": "#20201f",
+                        "on-surface": "#e5e2e1",
+                        "surface-container-highest": "#353535",
+                        "on-tertiary-fixed-variant": "#554427",
+                        "tertiary-fixed": "#f9dfb8",
+                        "secondary-container": "#06c85d",
+                        "surface-container-low": "#1c1b1b",
+                        "on-primary-container": "#513b11",
+                        "on-primary": "#412d04",
+                        "surface-bright": "#393939",
+                        "on-error-container": "#ffdad6",
+                        "surface-tint": "#e4c28c",
+                        "on-tertiary-fixed": "#261902",
+                        "tertiary-container": "#bea682",
+                        "surface-variant": "#353535",
+                        "on-secondary": "#003915",
+                        "background": "#131313",
+                        "inverse-surface": "#e5e2e1",
+                        "surface": "#131313",
+                        "surface-container-lowest": "#0e0e0e",
+                        "primary-fixed-dim": "#e4c28c",
+                        "primary": "#e4c28c",
+                        "secondary-fixed-dim": "#3de273",
+                        "secondary": "#41e575",
+                        "secondary-fixed": "#66ff8e",
+                        "outline": "#998f82",
+                        "on-secondary-container": "#004d1f",
+                        "on-error": "#690005",
+                        "surface-dim": "#131313",
+                        "primary-container": "#c5a572",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-nav { background: rgba(14, 14, 14, 0.6); backdrop-filter: blur(20px); }
+        .hero-gradient { background: linear-gradient(to bottom, rgba(19, 19, 19, 0) 0%, rgba(19, 19, 19, 1) 100%); }
+        .gold-glow { box-shadow: 0 0 20px rgba(197, 165, 114, 0.15); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Header: TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-stone-950/60 backdrop-blur-xl">
+<nav class="flex justify-between items-center px-12 py-6 max-w-[1920px] mx-auto font-manrope tracking-tight">
+<div class="text-2xl font-bold tracking-tighter text-stone-50">WIND CHASERS</div>
+<div class="hidden md:flex items-center space-x-12">
+<a class="text-stone-400 font-medium hover:text-stone-50 transition-colors duration-300" href="#">Academy</a>
+<a class="text-amber-500 border-b-2 border-amber-500 pb-1 hover:text-stone-50 transition-colors duration-300" href="#">Vibe</a>
+<a class="text-stone-400 font-medium hover:text-stone-50 transition-colors duration-300" href="#">Path</a>
+<a class="text-stone-400 font-medium hover:text-stone-50 transition-colors duration-300" href="#">Mentors</a>
+</div>
+<button class="bg-primary-container text-on-primary-container px-8 py-3 rounded-full font-bold text-sm tracking-wide scale-95 active:scale-90 transition-transform uppercase">
+                Apply Now
+            </button>
+</nav>
+</header>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-60" data-alt="dramatic wide angle shot of a modern jet cockpit at night with glowing amber instrumentation and digital flight displays" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaJvmGCC6fazmArP7_W1S-qCrREJePXSPsOLiZId65JZaJ5pPUBMM0pQHrJaMqUK7bqo4oVGB6famt8SKLXMRQqYX-yKBZ1Tj4g3g1NYjE7rmHSwGoqsncLNbw2nz1jMN2fz6_V94xTMs1b3s6QEnHLX5eQgdJXtcXmx0f59OUnP1Oxxb-zJ4-N_0S1FOsAYhS-lhzH_JqV9dZIWrciiNIwdTTcr7bzay5wz60k51CxfGFSGjHona5_meTZRoizTtAgTN2g-5bUjO2"/>
+<div class="absolute inset-0 hero-gradient"></div>
+</div>
+<div class="relative z-10 max-w-[1400px] px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-8 space-y-8">
+<div class="inline-flex items-center space-x-3 px-4 py-2 bg-surface-container-highest rounded-full text-xs font-bold tracking-[0.2em] text-primary uppercase">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span>Elite Flight Training</span>
+</div>
+<h1 class="font-headline text-6xl md:text-8xl font-extrabold tracking-tighter text-white leading-tight">
+                    Why Settle for <br/><span class="text-primary italic">Grounded?</span>
+</h1>
+<p class="text-on-surface-variant text-xl md:text-2xl max-w-2xl leading-relaxed font-light">
+                    Most academies treat you like a roll number. At Wind Chasers, we treat you like a Captain in training. Engineered for the future of aviation.
+                </p>
+<div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 pt-6">
+<button class="bg-primary hover:bg-primary-container text-on-primary px-10 py-5 rounded-lg font-bold text-lg transition-all gold-glow flex items-center group">
+                        Start My Journey
+                        <span class="material-symbols-outlined ml-2 group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<button class="border border-outline-variant text-white px-10 py-5 rounded-lg font-bold text-lg hover:bg-white/5 transition-all">
+                        Explore Programs
+                    </button>
+</div>
+</div>
+<div class="lg:col-span-4 hidden lg:block">
+<div class="bg-surface-container/60 backdrop-blur-xl border border-outline-variant/30 p-8 rounded-2xl space-y-6">
+<div class="flex justify-between items-center border-b border-outline-variant/20 pb-4">
+<span class="text-xs uppercase tracking-widest text-on-surface-variant">Next Batch Starts</span>
+<span class="text-primary font-bold">15 NOV 2024</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">public</span>
+</div>
+<div>
+<h4 class="font-bold text-white">Global Access</h4>
+<p class="text-xs text-on-surface-variant">USA, Canada, NZ Training</p>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">verified</span>
+</div>
+<div>
+<h4 class="font-bold text-white">DGCA Certified</h4>
+<p class="text-xs text-on-surface-variant">100% Exam Pass Rate</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- The Vibe Section -->
+<section class="py-32 bg-surface-container-lowest">
+<div class="max-w-[1400px] mx-auto px-12">
+<div class="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
+<div class="max-w-2xl">
+<span class="text-primary font-bold tracking-[0.3em] text-xs uppercase block mb-4">The Experience</span>
+<h2 class="text-5xl md:text-6xl font-headline font-bold text-white tracking-tighter">Atmospheric Precision.</h2>
+</div>
+<p class="text-on-surface-variant max-w-sm text-right leading-relaxed">
+                    We don't just teach flight; we engineer professional aviators through world-class simulators and global exposure.
+                </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- International Exposure -->
+<div class="group relative overflow-hidden rounded-3xl h-[600px]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="cinematic view of a small propeller plane flying over a lush mountain landscape at sunrise" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHljZP3ypAootIGahDgWTRCIW41l0fL6IFv4bifNm-kZC0hR1PfPEicr4mNwyYOKVS4SxWDLFUa6-vinhJUoOqWOCfyYVzHKqNxApX2BR9aKpwkZj88rssyhyqdm0NEniuYM2tUp0l20uIQ7yzaiJS98grZlLTQ6ufg9SASBm0nu5NDfFyUG8-2485a358ONu2geEIW4TVc-UQe5Tj5ZBiiwuZqkksbQLxezzM4LEXmTWEwGKP1xkntaPLz5-iECmsANSxrvMCLtk0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent p-10 flex flex-col justify-end">
+<h3 class="text-3xl font-headline font-bold text-white mb-4">International Exposure</h3>
+<p class="text-on-surface-variant leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            Train where the world flies. Gain 200+ hours in the world's most beautiful skies across USA, Canada, and NZ.
+                        </p>
+</div>
+</div>
+<!-- Modern Simulators -->
+<div class="group relative overflow-hidden rounded-3xl h-[600px] mt-12 md:mt-24">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="ultra-realistic flight simulator cockpit with high-definition screens displaying a runway landing approach" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRNxzGpb1LRhPin8py-mDBNlgyJ_SnAL_J82qB-h_NU9Cp4OgMrxtZGCucuhF-6FcO0fqRwEW98XWmtqptAYQaKZCvQjit4AtTMwIBRwOjtWmqqrXWjx917WVZjYn2E9CePR__LuuuvoQBqE8oMvf7xFw6SObmVx7c9Be89P9V5IIm2QHO1Nfoo1j1DI_7MqBkP9qaCbJIfLoSIxPbGoLnHgCjwdfUzKkIn_ZAYIfrmR8iQdsIghTkbDLRUtbtYiVbenCh1VE3Cm-j"/>
+<div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent p-10 flex flex-col justify-end">
+<h3 class="text-3xl font-headline font-bold text-white mb-4">Modern Simulators</h3>
+<p class="text-on-surface-variant leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            Master the Airbus A320 and Boeing 737 platforms before you ever step into a heavy metal cockpit.
+                        </p>
+</div>
+</div>
+<!-- Expert Mentors -->
+<div class="group relative overflow-hidden rounded-3xl h-[600px]">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="a senior airline captain in uniform mentoring a young cadet in front of a modern aircraft" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSV7Z4Jjdc2G9YL0UeI4fBMMcMgUT0X9DMnuT7K2RhH8bm3wLI-5Pqn9KssEVs3cEb60n9qhOkusFm--CMXSfozHvqnvj5DofnecEpXEsBF7Ayn_6ZYClCdSaqigg_THPTvsnYLXlnbVpKIuZ4y5ZGS5OYFoLGC02K578Z6rFxqNYysvejYjHlXTSJ_sO3rDRjr1bAtISxbr8xrVrcIghEohcQtO30Pe0Fe2FZheqpWNBIpTF-8gJpu1-3Yo8Oh5nhpEid8cN7HxoI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/20 to-transparent p-10 flex flex-col justify-end">
+<h3 class="text-3xl font-headline font-bold text-white mb-4">Expert Mentors</h3>
+<p class="text-on-surface-variant leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            Learn from ex-Air Force and Senior Airline Captains who bring thousands of real-world flight hours.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- The Path Section -->
+<section class="py-32 bg-background border-y border-outline-variant/10">
+<div class="max-w-[1400px] mx-auto px-12">
+<div class="text-center mb-24">
+<h2 class="text-5xl md:text-7xl font-headline font-extrabold text-white tracking-tighter mb-6">
+                    3 Steps to Your CPL
+                </h2>
+<div class="w-24 h-1 bg-primary mx-auto"></div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-16 relative">
+<!-- Step 1 -->
+<div class="relative group">
+<div class="text-[12rem] font-headline font-black text-white/5 absolute -top-32 -left-8 pointer-events-none">01</div>
+<div class="space-y-6 relative z-10">
+<div class="w-16 h-16 bg-surface-container-highest rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors duration-500">
+<span class="material-symbols-outlined text-4xl">school</span>
+</div>
+<h3 class="text-2xl font-bold text-white">Ground School Mastery</h3>
+<p class="text-on-surface-variant leading-relaxed">
+                            Conquer the DGCA exams with our AI-driven mock tests and structured ground classes that translate complex theory into cockpit intuition.
+                        </p>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="relative group">
+<div class="text-[12rem] font-headline font-black text-white/5 absolute -top-32 -left-8 pointer-events-none">02</div>
+<div class="space-y-6 relative z-10">
+<div class="w-16 h-16 bg-surface-container-highest rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors duration-500">
+<span class="material-symbols-outlined text-4xl">flight_takeoff</span>
+</div>
+<h3 class="text-2xl font-bold text-white">Global Wings</h3>
+<p class="text-on-surface-variant leading-relaxed">
+                            Fast-track your 200+ flight hours at top-tier international bases. Experience diverse weather, terrains, and advanced ATC environments.
+                        </p>
+</div>
+</div>
+<!-- Step 3 -->
+<div class="relative group">
+<div class="text-[12rem] font-headline font-black text-white/5 absolute -top-32 -left-8 pointer-events-none">03</div>
+<div class="space-y-6 relative z-10">
+<div class="w-16 h-16 bg-surface-container-highest rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors duration-500">
+<span class="material-symbols-outlined text-4xl">check_circle</span>
+</div>
+<h3 class="text-2xl font-bold text-white">Airline Ready</h3>
+<p class="text-on-surface-variant leading-relaxed">
+                            Finish with a Type Rating and dedicated placement assistance. We bridge the gap between having a license and having a career.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof Section -->
+<section class="py-32 bg-surface-container-lowest overflow-hidden">
+<div class="max-w-[1400px] mx-auto px-12">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
+<div class="relative">
+<div class="absolute -top-12 -left-12 w-64 h-64 bg-primary/10 rounded-full blur-3xl"></div>
+<div class="relative rounded-[40px] overflow-hidden border-8 border-surface-container-high gold-glow">
+<img class="w-full h-[600px] object-cover" data-alt="proud young male graduate pilot in a clean white uniform smiling in front of a private hangar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA23LF9n_ykaOt2BQ0h0m_5t_lcuA90uIwocZmoInpy4LyC7aKj9hmZQHlRPfTBMFsYe4QjEZCouuB-BDXJvEVc8gI6gUYj13yP-8hnRMwn6HKclsDtfmOPhPSAqtvSwCt5hqP8G1dVd2y7oC9jzpd8A7LFHjuxy7ev8_3ikpjwb-LffUYJ2frobTKeaMCeKyZ5PKVXnVzAMnMlmml3eVEV7PQpoouXnFF-FdeJbZyxdWvohkOlrgiFYjH7bFzd2QYpGjzJnwO7AeYq"/>
+</div>
+<div class="absolute -bottom-8 -right-8 bg-surface-container-highest p-8 rounded-3xl border border-outline-variant/30 max-w-xs shadow-2xl">
+<div class="flex text-primary mb-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="text-sm font-medium text-white italic">"Wind Chasers didn't just give me a license; they gave me a career."</p>
+<div class="mt-4 flex items-center space-x-3">
+<div class="w-10 h-10 rounded-full bg-stone-700 flex items-center justify-center font-bold text-primary">A</div>
+<div>
+<h5 class="text-sm font-bold text-white">Aditya</h5>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest">CPL Graduate</p>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-12">
+<h2 class="text-5xl md:text-6xl font-headline font-bold text-white tracking-tighter leading-tight">
+                        From Bengaluru to the World.
+                    </h2>
+<div class="space-y-8">
+<div class="flex items-start space-x-6">
+<div class="mt-2 w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0"></div>
+<p class="text-xl text-on-surface-variant font-light italic">
+                                "I went from wondering if I could do it, to flying solo in New Zealand within 6 months. The mentors here are not just teachers; they are senior captains who care about your future."
+                            </p>
+</div>
+<div class="grid grid-cols-2 gap-8 pt-8">
+<div>
+<div class="text-4xl font-headline font-bold text-white">1,200+</div>
+<p class="text-sm text-primary uppercase tracking-widest font-bold mt-1">Flight Hours Logged</p>
+</div>
+<div>
+<div class="text-4xl font-headline font-bold text-white">98%</div>
+<p class="text-sm text-primary uppercase tracking-widest font-bold mt-1">Placement Success</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Closing CTA Section -->
+<section class="py-32 relative overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover opacity-30" data-alt="wide scenic aerial view from a cockpit overlooking a sea of clouds during sunset with vibrant orange and purple hues" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCby0NpMGFsmbfC6aGDpD6rdcKF73_QmpM-TkiovfkjQC83CejR6ruqvIEObm1g_xobwvmnOXRfennGJ2Rv2pNuu03tw5iuzpDN8SMoNjX3OrJc9P1WyRVfOBXTMJJQB8DFaKSUdGNsZ0euNyzgUyPt53EzXFgfTRcJ10L5wWO6XuRWzM5rQTnkqcObB5zZp7HEh3wxCw4IP5K6buqm2uVMHUHyqIgTZxoKGn0t9dKVHS9cKpCtMtKh1I3IKhQL7rANcQtjKGVk7Nf6"/>
+<div class="absolute inset-0 bg-stone-950/80"></div>
+</div>
+<div class="relative z-10 max-w-4xl mx-auto px-12 text-center space-y-10">
+<h2 class="text-5xl md:text-7xl font-headline font-extrabold text-white tracking-tighter">
+                Ready to Earn Your Wings?
+            </h2>
+<p class="text-2xl text-on-surface-variant font-light max-w-2xl mx-auto">
+                Don’t let your dream stay on standby. Join the next batch and start your flight training today.
+            </p>
+<div class="pt-10">
+<button class="bg-primary hover:bg-primary-container text-on-primary px-16 py-6 rounded-full font-bold text-xl transition-all gold-glow scale-110 hover:scale-105 active:scale-95 group">
+                    Start My Journey
+                    <span class="material-symbols-outlined ml-2 align-middle group-hover:translate-x-1 transition-transform">flight_takeoff</span>
+</button>
+<p class="mt-8 text-on-surface-variant/60 text-sm uppercase tracking-[0.2em]">Next intake: November 15th • Limited seats available</p>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-stone-950 py-20 border-t border-stone-800/30">
+<div class="max-w-[1920px] mx-auto px-12">
+<div class="flex flex-col md:flex-row justify-between items-center gap-12">
+<div class="flex flex-col items-center md:items-start space-y-6">
+<div class="text-lg font-bold text-stone-50">WIND CHASERS</div>
+<p class="text-stone-500 font-inter text-sm max-w-xs text-center md:text-left">
+                        Precision in every flight. The elite choice for commercial pilot training in India.
+                    </p>
+</div>
+<div class="flex flex-wrap justify-center gap-10">
+<a class="text-stone-500 text-sm hover:text-amber-400 transition-colors" href="#">Privacy Policy</a>
+<a class="text-stone-500 text-sm hover:text-amber-400 transition-colors" href="#">Terms of Service</a>
+<a class="text-stone-500 text-sm hover:text-amber-400 transition-colors" href="#">Fleet Logistics</a>
+<a class="text-stone-500 text-sm hover:text-amber-400 transition-colors" href="#">Safety Standards</a>
+</div>
+<div class="flex space-x-6">
+<a class="w-10 h-10 rounded-full border border-stone-800 flex items-center justify-center text-stone-500 hover:text-primary transition-all" href="#">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"></path></svg>
+</a>
+<a class="w-10 h-10 rounded-full border border-stone-800 flex items-center justify-center text-stone-500 hover:text-primary transition-all" href="#">
+<svg class="w-5 h-5 fill-current" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path></svg>
+</a>
+</div>
+</div>
+<div class="mt-16 text-center text-stone-500 text-xs">
+                © 2024 Wind Chasers Aviation Academy. Precision in every flight.
+            </div>
+</div>
+</footer>
+</body></html>

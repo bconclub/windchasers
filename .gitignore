@@ -27,6 +27,10 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# IDE / editor MCP configs (may contain plaintext API keys, never commit)
+.claude/
+.cursor/
+
 # vercel
 .vercel
 

@@ -4,16 +4,34 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { CheckCircle, Calendar, Mail, Phone, BookOpen, DollarSign, Award, Radio, Users, Sparkles, Video } from "lucide-react";
+import { CheckCircle, Calendar, Mail, Phone, BookOpen, DollarSign, Award, Radio, Users, Sparkles, Video, GraduationCap } from "lucide-react";
 import { trackMetaLead } from "@/lib/metaPixel";
+import {
+  trackAssessmentCompleted,
+  trackEarlyStageLead,
+  trackGoogleAdsConversion,
+} from "@/lib/analytics";
+import { getTierCopy, type PATTier } from "@/lib/pat-scoring";
 import {
   WEBINAR_ZOOM_REGISTER_URL,
   WEBINAR_PARENT_WHATSAPP_GROUP_URL,
   WEBINAR_STUDENT_WHATSAPP_GROUP_URL,
 } from "@/lib/webinar";
 
-/** `type` query values that represent a captured lead - fire Meta Pixel `Lead` once per visit */
-const META_LEAD_FORM_TYPES = new Set(["atc", "open-house", "summercamp", "cabin-crew", "webinar"]);
+/**
+ * `type` query values that represent a captured lead - fire Meta Pixel `Lead`
+ * once per visit. `assessment` is included intentionally: the prior exclusion
+ * rule was wrong, PAT completion is a primary lead signal.
+ */
+const META_LEAD_FORM_TYPES = new Set([
+  "atc",
+  "open-house",
+  "summercamp",
+  "cabin-crew",
+  "webinar",
+  "assessment",
+  "assessment-early",
+]);
 
 function ThankYouContent() {
   const searchParams = useSearchParams();
@@ -49,6 +67,10 @@ function ThankYouContent() {
       document.title = "Thank You | Cabin Crew | WindChasers Aviation Academy";
     } else if (formType === "webinar") {
       document.title = "Thank You | Webinar | WindChasers Aviation Academy";
+    } else if (formType === "assessment") {
+      document.title = "Your PAT Score | WindChasers Aviation Academy";
+    } else if (formType === "assessment-early") {
+      document.title = "Thank You | PAT Early Path | WindChasers Aviation Academy";
     } else {
       document.title = "Thank You | WindChasers Aviation Academy";
     }
@@ -87,78 +109,33 @@ function ThankYouContent() {
         content_name: "Webinar Registration",
         content_category: "webinar",
       });
+    } else if (formType === "assessment") {
+      trackMetaLead({
+        content_name: "PAT Completed",
+        content_category: "assessment",
+      });
+      trackAssessmentCompleted({
+        tier: typeof formData?.tier === "string" ? formData.tier : "moderate",
+        total_score: typeof formData?.score === "number" ? formData.score : 0,
+        audience: "student",
+      });
+      trackGoogleAdsConversion({
+        value: typeof formData?.score === "number" ? formData.score : undefined,
+        transactionId: dedupeKey,
+      });
+    } else if (formType === "assessment-early") {
+      trackMetaLead({
+        content_name: "PAT Early Path",
+        content_category: "assessment_early",
+      });
+      trackEarlyStageLead();
+      trackGoogleAdsConversion({ transactionId: dedupeKey });
     }
-  }, [formType]);
+  }, [formType, formData]);
 
-  const getTierInfo = (tier: string) => {
-    const tiers = {
-      premium: {
-        label: "Premium Tier",
-        headline: "You're Flight-Ready",
-        subhead: "Your score qualifies you for immediate enrollment. Book your consultation now.",
-        color: "text-gold",
-        bgColor: "bg-gold/20",
-        borderColor: "border-gold",
-        description: "Premium tier: You're in the top 15% of applicants. Let's map your fastest path to the cockpit.",
-        nextSteps: [
-          "Detailed breakdown sent to your email",
-          "Our team calls within 24 hours",
-        ],
-        ctaText: "Book a Demo",
-        ctaLink: "/booking",
-        rankPercentile: 15,
-      },
-      strong: {
-        label: "Strong Tier",
-        headline: "You're Qualified",
-        subhead: "Your score shows strong potential. Let's discuss the right training path for you.",
-        color: "text-green-400",
-        bgColor: "bg-green-400/20",
-        borderColor: "border-green-400",
-        description: "",
-        nextSteps: [
-          "Email breakdown sent",
-          "Consultation call within 48 hours",
-        ],
-        ctaText: "Book a Demo",
-        ctaLink: "/booking",
-        rankPercentile: 30,
-      },
-      moderate: {
-        label: "Moderate Tier",
-        headline: "You Have Potential",
-        subhead: "Your score shows gaps we can address. Book a consultation to explore your options.",
-        color: "text-yellow-400",
-        bgColor: "bg-yellow-400/20",
-        borderColor: "border-yellow-400",
-        description: "",
-        nextSteps: [
-          "Email analysis sent",
-          "Team reaches out within 72 hours",
-        ],
-        ctaText: "Book a Demo",
-        ctaLink: "/booking",
-        rankPercentile: 50,
-      },
-      "not-ready": {
-        label: "Not Ready Yet",
-        headline: "Build Your Foundation",
-        subhead: "Let's work together to strengthen your foundation and prepare you for pilot training.",
-        color: "text-red-400",
-        bgColor: "bg-red-400/20",
-        borderColor: "border-red-400",
-        description: "Don't worry! Building a strong foundation first will set you up for success. We can help guide you.",
-        nextSteps: [
-          "Email analysis sent",
-          "Team reaches out within 72 hours",
-        ],
-        ctaText: "Book a Demo",
-        ctaLink: "/booking",
-        rankPercentile: 70,
-      },
-    };
-    return tiers[tier as keyof typeof tiers] || tiers.moderate;
-  };
+  // Tier copy lives in lib/pat-scoring.ts so the client preview and the
+  // /thank-you display always agree.
+  const getTierInfo = (tier: string) => getTierCopy(tier as PATTier);
 
   const getFormContent = () => {
     switch (formType) {
@@ -624,6 +601,51 @@ function ThankYouContent() {
           isAssessment: true,
           tierInfo: tierInfo,
         };
+
+      case "assessment-early": {
+        const earlyName =
+          (formData?.name as string | undefined)?.split(" ")[0] || "there";
+        return {
+          title: `Thanks ${earlyName}, we will be in touch.`,
+          icon: GraduationCap,
+          message:
+            "We have your details. A counsellor will reach out with the right next step for your stage. In the meantime, here is what to do now.",
+          details: (
+            <div className="space-y-4">
+              <a
+                href="/Pilot-Training-Roadmap-2026.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center bg-gold text-dark px-6 py-4 rounded-lg font-semibold hover:bg-gold/90 transition-colors"
+              >
+                Download the Pilot Training Roadmap 2026
+              </a>
+              <a
+                href="https://windchasers.in/pre-cadet-program/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full text-center border border-gold text-gold px-6 py-4 rounded-lg font-semibold hover:bg-gold/10 transition-colors"
+              >
+                Explore the Pre-Cadet Program
+              </a>
+              <Link
+                href="/demo"
+                className="block w-full text-center border border-white/20 text-white px-6 py-4 rounded-lg font-semibold hover:bg-white/5 transition-colors"
+              >
+                Talk to a counsellor
+              </Link>
+              <p className="text-white/50 text-xs text-center pt-2">
+                Come back and take the PAT once you complete Class 12.
+              </p>
+            </div>
+          ),
+          nextSteps: [
+            "Look out for our WhatsApp message in the next 24 hours",
+            "Read the Pilot Training Roadmap 2026 to understand the path",
+            "Bookmark the Pre-Cadet Program page for when you are ready",
+          ],
+        };
+      }
 
       case "pricing":
         return {

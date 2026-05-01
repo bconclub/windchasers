@@ -68,32 +68,10 @@ export async function POST(request: Request) {
       }
     }
 
-    // Fallback to Proxe webhook for backup / if Sheets failed
-    try {
-      const webhookRes = await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "atc-lead",
-          name: data.name,
-          phone: data.phone,
-          email: data.email,
-          city: data.city,
-          qualification: data.qualification,
-          timestamp: new Date().toISOString(),
-          source: "ATC Lead",
-          sessionId: data.sessionId,
-          utmParams: data.utmParams,
-          referrer: data.referrer,
-          landingPage: data.landingPage,
-          pageViews: data.pageViews,
-          formSubmissions: data.formSubmissions,
-        }),
-      });
-      console.log("ATC Proxe webhook status:", webhookRes.status);
-    } catch (webhookErr) {
-      console.error("ATC Proxe webhook error:", webhookErr);
-    }
+    // Note: dead build.goproxe.com webhook removed. PROXe is now reached via
+    // the unified /api/leads proxy. ATC is not yet wired to /api/leads (see
+    // GPFC scope - PAT-only first). Re-add a /api/leads "page" or "event" call
+    // here once that handover is approved.
 
     if (sheetsError) {
       return NextResponse.json(

@@ -83,15 +83,9 @@ export async function POST(request: NextRequest) {
       assessmentData,
     };
 
-    try {
-      await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "pricing", ...pricingRecord }),
-      });
-    } catch (webhookError) {
-      console.error("Error sending to webhook:", webhookError);
-    }
+    // Note: dead build.goproxe.com webhook removed. PROXe is now reached via
+    // the unified /api/leads proxy. Pricing is not yet wired to /api/leads
+    // (see GPFC scope - PAT-only first).
 
     return NextResponse.json(
       { success: true, message: "Pricing inquiry submitted successfully" },

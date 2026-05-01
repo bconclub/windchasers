@@ -106,22 +106,10 @@ export async function POST(request: NextRequest) {
       assessmentData,
     };
 
-    try {
-      const webhookResponse = await fetch("https://build.goproxe.com/webhook/pilot-windchasers", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "booking", ...bookingRecord }),
-      });
-      
-      if (webhookResponse.ok) {
-        console.log("Booking webhook sent successfully");
-      } else {
-        const errorText = await webhookResponse.text().catch(() => "Unknown error");
-        console.error("Webhook returned error status:", webhookResponse.status, errorText);
-      }
-    } catch (webhookError) {
-      console.error("Error sending booking to webhook:", webhookError);
-    }
+    // Note: dead build.goproxe.com webhook removed. PROXe is now reached via
+    // the unified /api/leads proxy. Booking is not yet wired to /api/leads
+    // (see GPFC scope - PAT-only first). Re-add as a /api/leads "event" call
+    // (event_name: "demo_booked") once the handover is approved.
 
     return NextResponse.json(
       {

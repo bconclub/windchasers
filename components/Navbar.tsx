@@ -24,7 +24,17 @@ export default function Navbar() {
   const isWebinar = pathname?.startsWith("/webinar") ?? false;
   const isWebinarParent = pathname === "/webinar/parents";
   const isWebinarStudents = pathname === "/webinar/students";
-  const showCompact = isSummerCamp || isOpenHouse || isHome || isATC || isCabinCrew || isWebinar;
+  const isStudents = pathname === "/students";
+  const isParents = pathname === "/parents";
+  const showCompact =
+    isSummerCamp ||
+    isOpenHouse ||
+    isHome ||
+    isATC ||
+    isCabinCrew ||
+    isWebinar ||
+    isStudents ||
+    isParents;
 
   const compactWhatsAppHref =
     isWebinarParent
@@ -44,7 +54,11 @@ export default function Navbar() {
                       ? "Hi WindChasers, I have a question about the April 25 webinar"
                       : isOpenHouse
                         ? "Hi WindChasers, I need more detail on the open house"
-                        : "Hi WindChasers, I need more detail on pilot training"
+                        : isStudents
+                          ? "Hi WindChasers, I am a student exploring pilot training. Please share details."
+                          : isParents
+                            ? "Hi WindChasers, I am a parent exploring pilot training for my child. Please share details."
+                            : "Hi WindChasers, I need more detail on pilot training"
           )}`;
 
   const links = [
