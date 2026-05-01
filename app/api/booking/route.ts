@@ -103,30 +103,42 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ── Forward to PROXe via the unified /api/leads route ───────────────────
-    // Booking maps to a "event" type submission with event_name="demo_booked".
-    // /api/leads handles auth, normalisation, logging, and the upstream call.
+    // ── Forward to PROXe directly ───────────────────────────────────────────
+    // We hit PROXe's /api/agent/leads/inbound directly (rather than going via
+    // the local /api/leads route) because the VPS Node process can't reliably
+    // self-fetch its own public hostname (nginx/SSL termination layer).
+    // Same env vars that /api/leads uses, same upstream URL, same shape.
     const audience: "parent" | "student" = parentGuardianName
       ? "parent"
       : "student";
 
-    const leadsPayload = {
-      type: "event" as const,
+    const proxeBaseUrl = (process.env.PROXE_BASE_URL ?? "").trim();
+    const proxeApiKey = (process.env.PROXE_INBOUND_API_KEY ?? "").trim();
+    if (!proxeBaseUrl || !proxeApiKey) {
+      console.error(
+        "Booking: PROXE_BASE_URL or PROXE_INBOUND_API_KEY is not set"
+      );
+      return NextResponse.json(
+        { error: "Server is not configured to talk to PROXe" },
+        { status: 500 }
+      );
+    }
+
+    const upstreamUrl = `${proxeBaseUrl.replace(/\/+$/, "")}/api/agent/leads/inbound`;
+    const upstreamPayload = {
       name,
       phone,
       email: email || undefined,
+      source: "event",
+      campaign: utmCampaign || null,
       city: city || undefined,
-      audience,
-      page_url: landing_page || undefined,
-      utm: {
-        source: utmSource || undefined,
-        medium: utmMedium || undefined,
-        campaign: utmCampaign || undefined,
-        term: utmTerm || undefined,
-        content: utmContent || undefined,
-      },
-      data: {
+      brand: "windchasers",
+      notes: "demo_booked",
+      custom_fields: {
+        form_type: "demo_booked",
         event_name: "demo_booked",
+        audience,
+        page_url: landing_page || undefined,
         interest,
         demo_type: demoType,
         education: education || undefined,
@@ -140,31 +152,50 @@ export async function POST(request: NextRequest) {
         form_submissions: formSubmissions,
         user_info: userInfo,
         assessment_data: assessmentData,
+        utm_source: utmSource || undefined,
+        utm_medium: utmMedium || undefined,
+        utm_campaign: utmCampaign || undefined,
+        utm_term: utmTerm || undefined,
+        utm_content: utmContent || undefined,
       },
     };
 
-    const leadsUrl = new URL("/api/leads", request.url);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10_000);
+
     let proxeRes: Response;
     try {
-      proxeRes = await fetch(leadsUrl, {
+      proxeRes = await fetch(upstreamUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(leadsPayload),
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": proxeApiKey,
+        },
+        body: JSON.stringify(upstreamPayload),
+        signal: controller.signal,
         cache: "no-store",
       });
     } catch (fetchErr) {
+      const isAbort =
+        fetchErr instanceof DOMException && fetchErr.name === "AbortError";
       console.error(
-        "Booking → /api/leads fetch failed:",
-        fetchErr instanceof Error ? fetchErr.message : fetchErr
+        "Booking → PROXe fetch failed:",
+        isAbort
+          ? "timeout"
+          : fetchErr instanceof Error
+            ? fetchErr.message
+            : fetchErr
       );
       return NextResponse.json(
         { error: "Could not reach PROXe; please try again in a moment." },
         { status: 502 }
       );
+    } finally {
+      clearTimeout(timeoutId);
     }
 
     let proxeJson:
-      | { ok?: boolean; lead_id?: string; message?: string; error?: string }
+      | { lead_id?: string; is_new?: boolean; message?: string; error?: string }
       | null = null;
     try {
       proxeJson = await proxeRes.json();
@@ -174,7 +205,7 @@ export async function POST(request: NextRequest) {
 
     if (!proxeRes.ok) {
       console.error(
-        "Booking → /api/leads non-OK:",
+        "Booking → PROXe non-OK:",
         proxeRes.status,
         proxeJson
       );
