@@ -60,11 +60,8 @@ export default function RootLayout({
           />
         </noscript>
         {/* End Meta Pixel Code */}
-        {/* Proxe Widget */}
-        <Script
-          src="https://agent.windchasers.in/widget/embed.js"
-          strategy="afterInteractive"
-        />
+        {/* PROXe widget intentionally NOT loaded globally. Only mounted per-page
+            where we want it (currently only /pilot-training-students). */}
         <Analytics />
         <TrackingProvider>
           <Navbar />

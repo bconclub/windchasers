@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Manrope } from "next/font/google";
 import {
   ArrowRight,
@@ -25,6 +26,11 @@ export const metadata: Metadata = {
 export default function PilotTrainingStudents() {
   return (
     <div className={`${manrope.variable} bg-background text-on-surface font-sans`}>
+      {/* PROXe widget - scoped to this page only (test deployment) */}
+      <Script
+        src="https://proxe.windchasers.in/api/widget/embed.js"
+        strategy="afterInteractive"
+      />
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
