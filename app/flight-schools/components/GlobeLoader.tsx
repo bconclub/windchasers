@@ -9,9 +9,10 @@ type Props = Omit<ComponentProps<typeof Globe>, "ref" | "onGlobeClick" | "onPoin
   onAltitudeChange?: (altitude: number, lat: number, lng: number) => void;
   paused?: boolean;
   resetKey?: number;
+  zoomTarget?: { lat: number; lng: number; key: number };
 };
 
-export default function GlobeLoader({ onAltitudeChange, paused, resetKey, ...props }: Props) {
+export default function GlobeLoader({ onAltitudeChange, paused, resetKey, zoomTarget, ...props }: Props) {
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const controlsRef = useRef<any>(null);
 
@@ -74,6 +75,13 @@ export default function GlobeLoader({ onAltitudeChange, paused, resetKey, ...pro
       globeRef.current.pointOfView({ altitude: 2.5 }, 700);
     }
   }, [resetKey]);
+
+  // Search-triggered zoom: spin globe to country then zoom in
+  useEffect(() => {
+    if (zoomTarget && zoomTarget.key > 0) {
+      zoomTo(zoomTarget.lat, zoomTarget.lng);
+    }
+  }, [zoomTarget?.key, zoomTo]);
 
   return (
     <Globe

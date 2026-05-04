@@ -3,11 +3,13 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
+import { Search, X as XIcon } from "lucide-react";
 import { FlightSchool, SchoolFilters } from "@/types/flight-school";
 import FilterBar, { GLOBE_STYLES, GlobeStyleKey } from "./FilterBar";
 import { MapStyleKey } from "../lib/globe-config";
 import SchoolDrawer from "./SchoolDrawer";
 import LeadFormModal from "./LeadFormModal";
+import FlyoverModal from "./FlyoverModal";
 import schoolsJson from "@/data/flight-schools.json";
 
 const schools = schoolsJson as FlightSchool[];
@@ -49,23 +51,67 @@ export default function FlightSchoolsMap() {
   });
   const [selectedSchool, setSelectedSchool] = useState<FlightSchool | null>(null);
   const [showLeadModal, setShowLeadModal] = useState(false);
+  const [flyoverSchool, setFlyoverSchool] = useState<FlightSchool | null>(null);
 
   const [viewMode, setViewMode] = useState<"globe" | "map">("globe");
-  // Ref mirrors viewMode to avoid stale closures in altitude handler
   const viewModeRef = useRef<"globe" | "map">("globe");
   useEffect(() => { viewModeRef.current = viewMode; }, [viewMode]);
-  // Lock flag: ignore altitude changes while globe camera is animating back to world view
   const transitionLockRef = useRef(false);
 
   const [mapSeed, setMapSeed] = useState({ lat: 20, lng: 0, zoom: 5 });
   const [mapStyle, setMapStyle] = useState<MapStyleKey>("satellite");
-  // Incrementing this tells GlobeLoader to animate camera back to world view
   const [globeResetKey, setGlobeResetKey] = useState(0);
-  // Active globe texture
   const [globeStyle, setGlobeStyle] = useState<GlobeStyleKey>("blue-marble");
   const globeImageUrl = GLOBE_STYLES.find((s) => s.key === globeStyle)?.url ?? "/globe/earth-blue-marble.jpg";
 
-  // Keep LeafletMap mounted once first shown so it doesn't blank on re-show
+  // Search bar state
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const [zoomTarget, setZoomTarget] = useState<{ lat: number; lng: number; key: number } | undefined>();
+
+  // Country → lat/lng from schools data
+  const countryCenters = useMemo(() => {
+    const map: Record<string, { lat: number; lng: number }> = {};
+    schools.forEach((s) => {
+      if (!map[s.country]) map[s.country] = { lat: s.lat, lng: s.lng };
+    });
+    return map;
+  }, []);
+
+  const countries = useMemo(
+    () => Array.from(new Set(schools.map((s) => s.country))).sort(),
+    []
+  );
+
+  const filteredSuggestions = useMemo(() => {
+    if (!searchQuery.trim()) return countries;
+    return countries.filter((c) =>
+      c.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery, countries]);
+
+  // Close search dropdown on outside click
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  function handleCountrySearch(country: string) {
+    const center = countryCenters[country];
+    if (!center) return;
+    setSearchQuery(country);
+    setSearchOpen(false);
+    // Zoom globe to that country — altitude handler will trigger flat map
+    setZoomTarget({ lat: center.lat, lng: center.lng, key: Date.now() });
+  }
+
+  // Keep LeafletMap mounted once first shown
   const [leafletMounted, setLeafletMounted] = useState(false);
   useEffect(() => {
     if (viewMode === "map" && !leafletMounted) setLeafletMounted(true);
@@ -98,15 +144,9 @@ export default function FlightSchoolsMap() {
     });
   }, [filters]);
 
-  const countries = useMemo(
-    () => Array.from(new Set(schools.map((s) => s.country))).sort(),
-    []
-  );
-
   const handleAltitudeChange = useCallback(
     (altitude: number, lat: number, lng: number) => {
       if (viewModeRef.current !== "globe") return;
-      // Ignore while camera is animating back to world view (prevents immediate re-trigger)
       if (transitionLockRef.current) return;
       if (altitude < ZOOM_IN_THRESHOLD) {
         const zoom = Math.max(5, Math.min(9, Math.round(5 - Math.log2(Math.max(altitude, 0.1) / 1.5))));
@@ -123,7 +163,6 @@ export default function FlightSchoolsMap() {
     setViewMode("globe");
     viewModeRef.current = "globe";
     setGlobeResetKey((k) => k + 1);
-    // Unlock after globe animation completes (700ms animate + buffer)
     setTimeout(() => { transitionLockRef.current = false; }, 1200);
   }, []);
 
@@ -151,7 +190,7 @@ export default function FlightSchoolsMap() {
       className="relative w-full overflow-hidden bg-[#060b14]"
       style={{ height: "calc(100vh - 80px)" }}
     >
-      {/* ── Globe layer ─────────────────────────────────────────────── */}
+      {/* ── Globe layer ────────────────────────────────────────────── */}
       <div
         style={{
           position: "absolute",
@@ -180,6 +219,7 @@ export default function FlightSchoolsMap() {
             onAltitudeChange={handleAltitudeChange}
             paused={viewMode === "map"}
             resetKey={globeResetKey}
+            zoomTarget={zoomTarget}
           />
         )}
         {dimensions.width === 0 && (
@@ -189,7 +229,7 @@ export default function FlightSchoolsMap() {
         )}
       </div>
 
-      {/* ── Flat map layer — stays mounted after first show ─────────── */}
+      {/* ── Flat map layer ─────────────────────────────────────────── */}
       <div
         style={{
           position: "absolute",
@@ -216,6 +256,51 @@ export default function FlightSchoolsMap() {
         )}
       </div>
 
+      {/* ── Country search bar — top-left ───────────────────────────── */}
+      <div
+        ref={searchRef}
+        className="absolute top-4 left-4 z-[400]"
+        style={{ width: 240 }}
+      >
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search country…"
+            value={searchQuery}
+            onChange={(e) => { setSearchQuery(e.target.value); setSearchOpen(true); }}
+            onFocus={() => setSearchOpen(true)}
+            className="w-full bg-[#1A1A1A]/95 backdrop-blur-sm border border-white/20 rounded px-3 py-2.5 pl-9 pr-8 text-white text-sm placeholder-white/30 outline-none focus:border-[#C5A572]/60 transition-colors"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => { setSearchQuery(""); setSearchOpen(false); }}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+            >
+              <XIcon className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Suggestions dropdown */}
+        {searchOpen && filteredSuggestions.length > 0 && (
+          <div className="absolute top-full left-0 right-0 mt-1 bg-[#1A1A1A] border border-white/20 rounded shadow-2xl overflow-hidden z-10">
+            {filteredSuggestions.map((country) => (
+              <button
+                key={country}
+                onMouseDown={(e) => { e.preventDefault(); handleCountrySearch(country); }}
+                className="w-full text-left px-4 py-2.5 text-sm text-white/70 hover:bg-[#C5A572]/10 hover:text-white transition-colors flex items-center justify-between group"
+              >
+                <span>{country}</span>
+                <span className="text-[10px] text-white/20 group-hover:text-[#C5A572]/60 transition-colors">
+                  {schools.filter(s => s.country === country).length} school{schools.filter(s => s.country === country).length !== 1 ? "s" : ""}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* ── Hint pill ───────────────────────────────────────────────── */}
       <div
         className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[500]"
@@ -226,7 +311,7 @@ export default function FlightSchoolsMap() {
         </div>
       </div>
 
-      {/* ── Filter bar — top-right so it doesn't clash with left drawer */}
+      {/* ── Filter bar — top-right ───────────────────────────────────── */}
       <div className="absolute top-4 right-4 z-[400]">
         <FilterBar
           filters={filters}
@@ -246,6 +331,7 @@ export default function FlightSchoolsMap() {
         school={selectedSchool}
         onClose={() => setSelectedSchool(null)}
         onConsult={() => setShowLeadModal(true)}
+        onFlyover={selectedSchool ? () => setFlyoverSchool(selectedSchool) : undefined}
       />
 
       {/* ── Lead modal ──────────────────────────────────────────────── */}
@@ -255,6 +341,17 @@ export default function FlightSchoolsMap() {
             key="lead-modal"
             school={selectedSchool}
             onClose={() => setShowLeadModal(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* ── Flyover modal ───────────────────────────────────────────── */}
+      <AnimatePresence>
+        {flyoverSchool && (
+          <FlyoverModal
+            key={flyoverSchool.id}
+            school={flyoverSchool}
+            onClose={() => setFlyoverSchool(null)}
           />
         )}
       </AnimatePresence>
