@@ -54,6 +54,8 @@ export default function FlightSchoolsMap() {
   // Ref mirrors viewMode to avoid stale closures in altitude handler
   const viewModeRef = useRef<"globe" | "map">("globe");
   useEffect(() => { viewModeRef.current = viewMode; }, [viewMode]);
+  // Lock flag: ignore altitude changes while globe camera is animating back to world view
+  const transitionLockRef = useRef(false);
 
   const [mapSeed, setMapSeed] = useState({ lat: 20, lng: 0, zoom: 5 });
   const [mapStyle, setMapStyle] = useState<MapStyleKey>("satellite");
@@ -103,8 +105,9 @@ export default function FlightSchoolsMap() {
 
   const handleAltitudeChange = useCallback(
     (altitude: number, lat: number, lng: number) => {
-      // Guard against stale closure re-triggering map when returning to globe
       if (viewModeRef.current !== "globe") return;
+      // Ignore while camera is animating back to world view (prevents immediate re-trigger)
+      if (transitionLockRef.current) return;
       if (altitude < ZOOM_IN_THRESHOLD) {
         const zoom = Math.max(5, Math.min(9, Math.round(5 - Math.log2(Math.max(altitude, 0.1) / 1.5))));
         setMapSeed({ lat, lng, zoom });
@@ -115,26 +118,27 @@ export default function FlightSchoolsMap() {
     []
   );
 
-  const handleMapZoomOut = useCallback(() => {
+  const returnToGlobe = useCallback(() => {
+    transitionLockRef.current = true;
     setViewMode("globe");
     viewModeRef.current = "globe";
     setGlobeResetKey((k) => k + 1);
+    // Unlock after globe animation completes (700ms animate + buffer)
+    setTimeout(() => { transitionLockRef.current = false; }, 1200);
   }, []);
+
+  const handleMapZoomOut = useCallback(() => returnToGlobe(), [returnToGlobe]);
 
   const handleViewModeToggle = useCallback(() => {
     if (viewModeRef.current === "globe") {
-      // Switch to map at current globe camera position
-      const zoom = 4;
-      setMapSeed((s) => ({ ...s, zoom }));
+      setMapSeed((s) => ({ ...s, zoom: 4 }));
       setViewMode("map");
       viewModeRef.current = "map";
       if (!leafletMounted) setLeafletMounted(true);
     } else {
-      setViewMode("globe");
-      viewModeRef.current = "globe";
-      setGlobeResetKey((k) => k + 1);
+      returnToGlobe();
     }
-  }, [leafletMounted]);
+  }, [leafletMounted, returnToGlobe]);
 
   const hint =
     viewMode === "globe"
