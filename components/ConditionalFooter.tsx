@@ -21,7 +21,8 @@ export default function ConditionalFooter() {
     pathname === "/students" ||
     pathname === "/parents" ||
     pathname === "/gtm" ||
-    pathname?.startsWith("/webinar")
+    pathname?.startsWith("/webinar") ||
+    pathname === "/flight-schools"
   ) {
     return null;
   }

@@ -2,6 +2,25 @@
 @tailwind components;
 @tailwind utilities;
 
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Leaflet permanent tooltips — strip default white bubble, use our dark theme */
+.leaflet-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.leaflet-tooltip::before {
+  display: none !important;
+}
+
 /* Mobile scroll fix - prevent content from hiding under fixed navbar */
 html {
   scroll-padding-top: 100px;

@@ -26,6 +26,7 @@ export default function Navbar() {
   const isWebinarStudents = pathname === "/webinar/students";
   const isStudents = pathname === "/students";
   const isParents = pathname === "/parents";
+  const isFlightSchools = pathname === "/flight-schools";
   const showCompact =
     isSummerCamp ||
     isOpenHouse ||
@@ -34,7 +35,8 @@ export default function Navbar() {
     isCabinCrew ||
     isWebinar ||
     isStudents ||
-    isParents;
+    isParents ||
+    isFlightSchools;
 
   const compactWhatsAppHref =
     isWebinarParent
@@ -58,7 +60,9 @@ export default function Navbar() {
                           ? "Hi WindChasers, I am a student exploring pilot training. Please share details."
                           : isParents
                             ? "Hi WindChasers, I am a parent exploring pilot training for my child. Please share details."
-                            : "Hi WindChasers, I need more detail on pilot training"
+                            : isFlightSchools
+                              ? "Hi WindChasers, I want to explore international flight school options. Please guide me."
+                              : "Hi WindChasers, I need more detail on pilot training"
           )}`;
 
   const links = [
