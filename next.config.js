@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['react-leaflet', '@react-leaflet/core'],
+  transpilePackages: ['react-leaflet', '@react-leaflet/core', 'maplibre-gl'],
   async redirects() {
     return [
       { source: "/webinar/government-aviation", destination: "/webinar/parents", permanent: true },

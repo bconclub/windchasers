@@ -1,6 +1,5 @@
 "use client";
 
-import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Pause, Play, PlaneTakeoff } from "lucide-react";
@@ -38,6 +37,15 @@ export default function FlyoverModal({ school, onClose }: Props) {
     let destroyed = false;
 
     (async () => {
+      // Inject maplibre CSS once (avoids static import which breaks server builds)
+      if (!document.getElementById("maplibre-css")) {
+        const link = document.createElement("link");
+        link.id = "maplibre-css";
+        link.rel = "stylesheet";
+        link.href = "https://unpkg.com/maplibre-gl@4/dist/maplibre-gl.css";
+        document.head.appendChild(link);
+      }
+
       const ml = (await import("maplibre-gl")).default;
       if (destroyed || !containerRef.current) return;
 
