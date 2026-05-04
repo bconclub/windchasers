@@ -118,9 +118,23 @@ export default function FlightSchoolsMap() {
   const handleMapZoomOut = useCallback(() => {
     setViewMode("globe");
     viewModeRef.current = "globe";
-    // Animate globe camera back out to world view
     setGlobeResetKey((k) => k + 1);
   }, []);
+
+  const handleViewModeToggle = useCallback(() => {
+    if (viewModeRef.current === "globe") {
+      // Switch to map at current globe camera position
+      const zoom = 4;
+      setMapSeed((s) => ({ ...s, zoom }));
+      setViewMode("map");
+      viewModeRef.current = "map";
+      if (!leafletMounted) setLeafletMounted(true);
+    } else {
+      setViewMode("globe");
+      viewModeRef.current = "globe";
+      setGlobeResetKey((k) => k + 1);
+    }
+  }, [leafletMounted]);
 
   const hint =
     viewMode === "globe"
@@ -215,6 +229,7 @@ export default function FlightSchoolsMap() {
           onFiltersChange={setFilters}
           countries={countries}
           viewMode={viewMode}
+          onViewModeToggle={handleViewModeToggle}
           globeStyle={globeStyle}
           onGlobeStyleChange={setGlobeStyle}
           mapStyle={mapStyle}

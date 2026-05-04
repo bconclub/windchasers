@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown, X, Globe, Map } from "lucide-react";
 import { SchoolFilters } from "@/types/flight-school";
 import { GLOBE_STYLES, GlobeStyleKey, MAP_STYLES, MapStyleKey } from "../lib/globe-config";
 
@@ -14,6 +14,7 @@ interface Props {
   onFiltersChange: (f: SchoolFilters) => void;
   countries: string[];
   viewMode: "globe" | "map";
+  onViewModeToggle: () => void;
   globeStyle: GlobeStyleKey;
   onGlobeStyleChange: (key: GlobeStyleKey) => void;
   mapStyle: MapStyleKey;
@@ -25,6 +26,7 @@ export default function FilterBar({
   onFiltersChange,
   countries,
   viewMode,
+  onViewModeToggle,
   globeStyle,
   onGlobeStyleChange,
   mapStyle,
@@ -63,6 +65,26 @@ export default function FilterBar({
 
   return (
     <div className="flex flex-col gap-2 w-56 md:w-64">
+      {/* Globe ↔ Map toggle */}
+      <button
+        onClick={onViewModeToggle}
+        className="w-full flex items-center justify-between bg-[#1A1A1A]/95 backdrop-blur-sm border border-[#C5A572]/40 rounded px-3 py-2.5 hover:border-[#C5A572]/80 transition-colors group"
+      >
+        <div className="flex items-center gap-2">
+          {viewMode === "globe" ? (
+            <Map className="w-4 h-4 text-[#C5A572]" />
+          ) : (
+            <Globe className="w-4 h-4 text-[#C5A572]" />
+          )}
+          <span className="text-sm text-white/80 group-hover:text-white transition-colors">
+            {viewMode === "globe" ? "Switch to Map" : "Switch to Globe"}
+          </span>
+        </div>
+        <span className="text-[10px] text-[#C5A572]/60 uppercase tracking-wider">
+          {viewMode === "globe" ? "2D" : "3D"}
+        </span>
+      </button>
+
       {/* Country */}
       <select
         value={filters.country}

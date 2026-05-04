@@ -140,7 +140,7 @@ export default function PilotTrainingStudents() {
                 <span className="text-xs uppercase tracking-widest text-on-surface-variant">
                   Next Batch Starts
                 </span>
-                <span className="text-primary font-bold">15 NOV 2024</span>
+                <span className="text-primary font-bold">7 MAY 2026</span>
               </div>
               <div className="space-y-4">
                 <div className="flex items-center space-x-4">
