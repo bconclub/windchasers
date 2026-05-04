@@ -1,5 +1,6 @@
 "use client";
 
+import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Pause, Play, PlaneTakeoff } from "lucide-react";
@@ -38,7 +39,6 @@ export default function FlyoverModal({ school, onClose }: Props) {
 
     (async () => {
       const ml = (await import("maplibre-gl")).default;
-      await import("maplibre-gl/dist/maplibre-gl.css");
       if (destroyed || !containerRef.current) return;
 
       const map = new ml.Map({
@@ -80,7 +80,6 @@ export default function FlyoverModal({ school, onClose }: Props) {
         zoom: 9,
         pitch: 20,
         bearing: 0,
-        antialias: true,
         interactive: true, // allow manual pan/zoom during flyover
       });
 
