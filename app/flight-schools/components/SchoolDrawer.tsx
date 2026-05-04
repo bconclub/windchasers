@@ -2,17 +2,16 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowUpRight, PlaneTakeoff } from "lucide-react";
+import { X, ArrowUpRight } from "lucide-react";
 import { FlightSchool } from "@/types/flight-school";
 
 interface Props {
   school: FlightSchool | null;
   onClose: () => void;
   onConsult: () => void;
-  onFlyover?: () => void;
 }
 
-export default function SchoolDrawer({ school, onClose, onConsult, onFlyover }: Props) {
+export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -225,17 +224,6 @@ export default function SchoolDrawer({ school, onClose, onConsult, onFlyover }: 
                 <p className="text-white/60 text-sm leading-relaxed mb-6">
                   {school.notes}
                 </p>
-              )}
-
-              {/* Fly Here CTA */}
-              {onFlyover && (
-                <button
-                  onClick={onFlyover}
-                  className="w-full py-3 mb-2 flex items-center justify-center gap-2 bg-transparent border border-[#C5A572]/40 text-[#C5A572] text-sm font-semibold rounded hover:bg-[#C5A572]/10 hover:border-[#C5A572]/70 transition-colors"
-                >
-                  <PlaneTakeoff className="w-4 h-4" />
-                  Fly Here
-                </button>
               )}
 
               {/* CTA */}

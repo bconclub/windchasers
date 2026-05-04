@@ -15,8 +15,14 @@ async function main() {
   });
   const stitch = new Stitch(client);
 
-  const project = stitch.project("11599633216802750147");
-  const screen = await project.getScreen("b824dad9b47b439bba7f5252b3d652f8");
+  // Accept project + screen IDs from CLI args, fall back to defaults.
+  const projectId = process.argv[2] || "11599633216802750147";
+  const screenId = process.argv[3] || "b824dad9b47b439bba7f5252b3d652f8";
+  const outFile =
+    process.argv[4] || `scripts/stitch-${screenId.slice(0, 8)}.html`;
+
+  const project = stitch.project(projectId);
+  const screen = await project.getScreen(screenId);
 
   const htmlUrl = await screen.getHtml();
   const imageUrl = await screen.getImage();
@@ -27,8 +33,8 @@ async function main() {
   // Download HTML
   const htmlRes = await fetch(htmlUrl);
   const html = await htmlRes.text();
-  fs.writeFileSync("scripts/stitch-windchasers-landing.html", html);
-  console.log("Saved HTML to scripts/stitch-windchasers-landing.html");
+  fs.writeFileSync(outFile, html);
+  console.log("Saved HTML to", outFile);
 
   await client.close();
 }

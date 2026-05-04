@@ -9,7 +9,6 @@ import FilterBar, { GLOBE_STYLES, GlobeStyleKey } from "./FilterBar";
 import { MapStyleKey } from "../lib/globe-config";
 import SchoolDrawer from "./SchoolDrawer";
 import LeadFormModal from "./LeadFormModal";
-const FlyoverModal = dynamic(() => import("./FlyoverModal"), { ssr: false });
 import schoolsJson from "@/data/flight-schools.json";
 
 const schools = schoolsJson as FlightSchool[];
@@ -51,7 +50,6 @@ export default function FlightSchoolsMap() {
   });
   const [selectedSchool, setSelectedSchool] = useState<FlightSchool | null>(null);
   const [showLeadModal, setShowLeadModal] = useState(false);
-  const [flyoverSchool, setFlyoverSchool] = useState<FlightSchool | null>(null);
 
   const [viewMode, setViewMode] = useState<"globe" | "map">("globe");
   const viewModeRef = useRef<"globe" | "map">("globe");
@@ -331,7 +329,6 @@ export default function FlightSchoolsMap() {
         school={selectedSchool}
         onClose={() => setSelectedSchool(null)}
         onConsult={() => setShowLeadModal(true)}
-        onFlyover={selectedSchool ? () => setFlyoverSchool(selectedSchool) : undefined}
       />
 
       {/* ── Lead modal ──────────────────────────────────────────────── */}
@@ -345,16 +342,6 @@ export default function FlightSchoolsMap() {
         )}
       </AnimatePresence>
 
-      {/* ── Flyover modal ───────────────────────────────────────────── */}
-      <AnimatePresence>
-        {flyoverSchool && (
-          <FlyoverModal
-            key={flyoverSchool.id}
-            school={flyoverSchool}
-            onClose={() => setFlyoverSchool(null)}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 }
