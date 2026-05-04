@@ -9,7 +9,7 @@ import FilterBar, { GLOBE_STYLES, GlobeStyleKey } from "./FilterBar";
 import { MapStyleKey } from "../lib/globe-config";
 import SchoolDrawer from "./SchoolDrawer";
 import LeadFormModal from "./LeadFormModal";
-import FlyoverModal from "./FlyoverModal";
+const FlyoverModal = dynamic(() => import("./FlyoverModal"), { ssr: false });
 import schoolsJson from "@/data/flight-schools.json";
 
 const schools = schoolsJson as FlightSchool[];
