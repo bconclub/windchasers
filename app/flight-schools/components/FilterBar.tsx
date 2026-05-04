@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, X, Globe, Map } from "lucide-react";
+import { ChevronDown, X, Globe, Map, SlidersHorizontal } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { SchoolFilters } from "@/types/flight-school";
 import { GLOBE_STYLES, GlobeStyleKey, MAP_STYLES, MapStyleKey } from "../lib/globe-config";
 
@@ -33,8 +34,11 @@ export default function FilterBar({
   onMapStyleChange,
 }: Props) {
   const [certOpen, setCertOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
   const certRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
+  // Close cert dropdown on outside click
   useEffect(() => {
     function handler(e: MouseEvent) {
       if (certRef.current && !certRef.current.contains(e.target as Node)) {
@@ -45,8 +49,24 @@ export default function FilterBar({
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // Close panel on outside click
+  useEffect(() => {
+    function handler(e: MouseEvent) {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+        setPanelOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
   const hasFilters =
     filters.country || filters.certifications.length > 0 || filters.partnerOnly;
+
+  const activeFilterCount =
+    (filters.country ? 1 : 0) +
+    filters.certifications.length +
+    (filters.partnerOnly ? 1 : 0);
 
   function toggleCert(cert: string) {
     const has = filters.certifications.includes(cert);
@@ -63,12 +83,13 @@ export default function FilterBar({
       ? filters.certifications.join(", ")
       : "All Certifications";
 
-  return (
-    <div className="flex flex-col gap-2 w-56 md:w-64">
+  // ── Shared panel content ─────────────────────────────────────────────
+  const PanelContent = () => (
+    <div className="flex flex-col gap-3">
       {/* Globe ↔ Map toggle */}
       <button
-        onClick={onViewModeToggle}
-        className="w-full flex items-center justify-between bg-[#1A1A1A]/95 backdrop-blur-sm border border-[#C5A572]/40 rounded px-3 py-2.5 hover:border-[#C5A572]/80 transition-colors group"
+        onClick={() => { onViewModeToggle(); setPanelOpen(false); }}
+        className="w-full flex items-center justify-between bg-white/5 border border-[#C5A572]/40 rounded-lg px-3 py-2.5 hover:border-[#C5A572]/70 transition-colors group"
       >
         <div className="flex items-center gap-2">
           {viewMode === "globe" ? (
@@ -89,7 +110,7 @@ export default function FilterBar({
       <select
         value={filters.country}
         onChange={(e) => onFiltersChange({ ...filters, country: e.target.value })}
-        className="w-full bg-[#1A1A1A]/95 backdrop-blur-sm text-white text-sm border border-white/20 rounded px-3 py-2 outline-none focus:border-[#C5A572]/60 cursor-pointer"
+        className="w-full bg-white/5 text-white text-sm border border-white/20 rounded-lg px-3 py-2.5 outline-none focus:border-[#C5A572]/60 cursor-pointer"
       >
         <option value="">All Countries</option>
         {countries.map((c) => (
@@ -97,17 +118,17 @@ export default function FilterBar({
         ))}
       </select>
 
-      {/* Certifications multi-select */}
+      {/* Certifications */}
       <div ref={certRef} className="relative">
         <button
           onClick={() => setCertOpen((o) => !o)}
-          className="w-full flex items-center justify-between bg-[#1A1A1A]/95 backdrop-blur-sm text-white text-sm border border-white/20 rounded px-3 py-2 hover:border-white/40 transition-colors"
+          className="w-full flex items-center justify-between bg-white/5 text-white text-sm border border-white/20 rounded-lg px-3 py-2.5 hover:border-white/40 transition-colors"
         >
           <span className="text-white/70 truncate">{certLabel}</span>
           <ChevronDown className={`w-4 h-4 text-white/40 flex-shrink-0 ml-2 transition-transform ${certOpen ? "rotate-180" : ""}`} />
         </button>
         {certOpen && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-[#1A1A1A] border border-white/20 rounded shadow-2xl z-10">
+          <div className="absolute top-full left-0 right-0 mt-1 bg-[#1a1a1a] border border-white/20 rounded-lg shadow-2xl z-10 overflow-hidden">
             {CERTS.map((cert) => (
               <label key={cert} className="flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 cursor-pointer">
                 <input
@@ -123,8 +144,8 @@ export default function FilterBar({
         )}
       </div>
 
-      {/* Partner only toggle */}
-      <label className="flex items-center gap-2.5 bg-[#1A1A1A]/95 backdrop-blur-sm border border-white/20 rounded px-3 py-2 cursor-pointer hover:border-white/40 transition-colors">
+      {/* Partner only */}
+      <label className="flex items-center gap-2.5 bg-white/5 border border-white/20 rounded-lg px-3 py-2.5 cursor-pointer hover:border-white/40 transition-colors">
         <input
           type="checkbox"
           checked={filters.partnerOnly}
@@ -134,49 +155,34 @@ export default function FilterBar({
         <span className="text-sm text-white/70">WC Partners only</span>
       </label>
 
-      {/* Globe style picker — shown in globe mode */}
-      {viewMode === "globe" && (
-        <div className="bg-[#1A1A1A]/95 backdrop-blur-sm border border-white/20 rounded px-3 py-2">
-          <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">Globe style</p>
-          <div className="flex gap-1.5 flex-wrap">
-            {GLOBE_STYLES.map((s) => (
+      {/* Style picker */}
+      <div className="bg-white/5 border border-white/20 rounded-lg px-3 py-2.5">
+        <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">
+          {viewMode === "globe" ? "Globe style" : "Map style"}
+        </p>
+        <div className="flex gap-1.5 flex-wrap">
+          {(viewMode === "globe" ? GLOBE_STYLES : MAP_STYLES).map((s) => {
+            const active = viewMode === "globe" ? globeStyle === s.key : mapStyle === s.key;
+            return (
               <button
                 key={s.key}
-                onClick={() => onGlobeStyleChange(s.key)}
+                onClick={() =>
+                  viewMode === "globe"
+                    ? onGlobeStyleChange(s.key as GlobeStyleKey)
+                    : onMapStyleChange(s.key as MapStyleKey)
+                }
                 className={`text-[11px] px-2.5 py-1 rounded-full border transition-all ${
-                  globeStyle === s.key
+                  active
                     ? "bg-[#C5A572] border-[#C5A572] text-black font-semibold"
                     : "border-white/20 text-white/50 hover:border-white/40 hover:text-white/80"
                 }`}
               >
                 {s.label}
               </button>
-            ))}
-          </div>
+            );
+          })}
         </div>
-      )}
-
-      {/* Map style picker — shown in flat map mode */}
-      {viewMode === "map" && (
-        <div className="bg-[#1A1A1A]/95 backdrop-blur-sm border border-white/20 rounded px-3 py-2">
-          <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">Map style</p>
-          <div className="flex gap-1.5 flex-wrap">
-            {MAP_STYLES.map((s) => (
-              <button
-                key={s.key}
-                onClick={() => onMapStyleChange(s.key)}
-                className={`text-[11px] px-2.5 py-1 rounded-full border transition-all ${
-                  mapStyle === s.key
-                    ? "bg-[#C5A572] border-[#C5A572] text-black font-semibold"
-                    : "border-white/20 text-white/50 hover:border-white/40 hover:text-white/80"
-                }`}
-              >
-                {s.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      </div>
 
       {/* Reset */}
       {hasFilters && (
@@ -188,6 +194,63 @@ export default function FilterBar({
           Reset filters
         </button>
       )}
+    </div>
+  );
+
+  return (
+    <div ref={panelRef}>
+      {/* ── Trigger button (always visible) ─────────────────────────── */}
+      <button
+        onClick={() => setPanelOpen((o) => !o)}
+        className="relative flex items-center gap-2 bg-[#1A1A1A]/95 backdrop-blur-sm border border-white/20 rounded-full px-3.5 py-2.5 hover:border-[#C5A572]/50 transition-colors"
+      >
+        <SlidersHorizontal className="w-4 h-4 text-white/60" />
+        <span className="text-sm text-white/70 hidden sm:block">Filters</span>
+        {activeFilterCount > 0 && (
+          <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#C5A572] text-black text-[10px] font-bold flex items-center justify-center">
+            {activeFilterCount}
+          </span>
+        )}
+      </button>
+
+      {/* ── Dropdown panel (desktop: drops down; mobile: slides from right) ── */}
+      <AnimatePresence>
+        {panelOpen && (
+          <>
+            {/* Mobile backdrop */}
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/40 z-[390] sm:hidden"
+              onClick={() => setPanelOpen(false)}
+            />
+
+            {/* Panel */}
+            <motion.div
+              key="panel"
+              initial={{ opacity: 0, y: -8, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.97 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className="absolute right-0 top-12 w-72 bg-[#111]/98 backdrop-blur-md border border-white/15 rounded-2xl p-4 shadow-2xl z-[400]"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-semibold text-white/80 tracking-wide">Map Controls</h3>
+                <button
+                  onClick={() => setPanelOpen(false)}
+                  className="w-6 h-6 flex items-center justify-center text-white/30 hover:text-white/70 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+              <PanelContent />
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
