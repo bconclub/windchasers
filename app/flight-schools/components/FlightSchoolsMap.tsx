@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
 import { FlightSchool, SchoolFilters } from "@/types/flight-school";
 import FilterBar, { GLOBE_STYLES, GlobeStyleKey } from "./FilterBar";
+import { MapStyleKey } from "../lib/globe-config";
 import SchoolDrawer from "./SchoolDrawer";
 import LeadFormModal from "./LeadFormModal";
 import schoolsJson from "@/data/flight-schools.json";
@@ -54,7 +55,8 @@ export default function FlightSchoolsMap() {
   const viewModeRef = useRef<"globe" | "map">("globe");
   useEffect(() => { viewModeRef.current = viewMode; }, [viewMode]);
 
-  const [mapSeed, setMapSeed] = useState({ lat: 20, lng: 0, zoom: 3 });
+  const [mapSeed, setMapSeed] = useState({ lat: 20, lng: 0, zoom: 5 });
+  const [mapStyle, setMapStyle] = useState<MapStyleKey>("satellite");
   // Incrementing this tells GlobeLoader to animate camera back to world view
   const [globeResetKey, setGlobeResetKey] = useState(0);
   // Active globe texture
@@ -104,7 +106,7 @@ export default function FlightSchoolsMap() {
       // Guard against stale closure re-triggering map when returning to globe
       if (viewModeRef.current !== "globe") return;
       if (altitude < ZOOM_IN_THRESHOLD) {
-        const zoom = Math.max(3, Math.min(7, Math.round(3 - Math.log2(Math.max(altitude, 0.1) / 1.5))));
+        const zoom = Math.max(5, Math.min(9, Math.round(5 - Math.log2(Math.max(altitude, 0.1) / 1.5))));
         setMapSeed({ lat, lng, zoom });
         setViewMode("map");
         viewModeRef.current = "map";
@@ -191,7 +193,7 @@ export default function FlightSchoolsMap() {
             currentLat={mapSeed.lat}
             currentLng={mapSeed.lng}
             currentZoom={mapSeed.zoom}
-            globeStyle={globeStyle}
+            mapStyle={mapStyle}
           />
         )}
       </div>
@@ -212,9 +214,11 @@ export default function FlightSchoolsMap() {
           filters={filters}
           onFiltersChange={setFilters}
           countries={countries}
+          viewMode={viewMode}
           globeStyle={globeStyle}
           onGlobeStyleChange={setGlobeStyle}
-          showGlobeStyles={viewMode === "globe"}
+          mapStyle={mapStyle}
+          onMapStyleChange={setMapStyle}
         />
       </div>
 

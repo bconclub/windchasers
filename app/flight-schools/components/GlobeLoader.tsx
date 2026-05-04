@@ -21,7 +21,7 @@ export default function GlobeLoader({ onAltitudeChange, paused, resetKey, ...pro
     if (!globe) return;
     if (controlsRef.current) controlsRef.current.autoRotate = false;
     // Animate in close enough to cross ZOOM_IN_THRESHOLD (1.5) smoothly
-    globe.pointOfView({ lat, lng, altitude: 0.15 }, 1400);
+    globe.pointOfView({ lat, lng, altitude: 0.05 }, 1400);
   }, []);
 
   // Click anywhere on the globe surface → zoom there

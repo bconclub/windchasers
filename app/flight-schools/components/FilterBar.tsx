@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, X } from "lucide-react";
 import { SchoolFilters } from "@/types/flight-school";
-import { GLOBE_STYLES, GlobeStyleKey } from "../lib/globe-config";
+import { GLOBE_STYLES, GlobeStyleKey, MAP_STYLES, MapStyleKey } from "../lib/globe-config";
 
 export { GLOBE_STYLES, type GlobeStyleKey };
 
@@ -13,18 +13,22 @@ interface Props {
   filters: SchoolFilters;
   onFiltersChange: (f: SchoolFilters) => void;
   countries: string[];
+  viewMode: "globe" | "map";
   globeStyle: GlobeStyleKey;
   onGlobeStyleChange: (key: GlobeStyleKey) => void;
-  showGlobeStyles?: boolean;
+  mapStyle: MapStyleKey;
+  onMapStyleChange: (key: MapStyleKey) => void;
 }
 
 export default function FilterBar({
   filters,
   onFiltersChange,
   countries,
+  viewMode,
   globeStyle,
   onGlobeStyleChange,
-  showGlobeStyles = true,
+  mapStyle,
+  onMapStyleChange,
 }: Props) {
   const [certOpen, setCertOpen] = useState(false);
   const certRef = useRef<HTMLDivElement>(null);
@@ -108,8 +112,8 @@ export default function FilterBar({
         <span className="text-sm text-white/70">WC Partners only</span>
       </label>
 
-      {/* Globe style picker */}
-      {showGlobeStyles && (
+      {/* Globe style picker — shown in globe mode */}
+      {viewMode === "globe" && (
         <div className="bg-[#1A1A1A]/95 backdrop-blur-sm border border-white/20 rounded px-3 py-2">
           <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">Globe style</p>
           <div className="flex gap-1.5 flex-wrap">
@@ -119,6 +123,28 @@ export default function FilterBar({
                 onClick={() => onGlobeStyleChange(s.key)}
                 className={`text-[11px] px-2.5 py-1 rounded-full border transition-all ${
                   globeStyle === s.key
+                    ? "bg-[#C5A572] border-[#C5A572] text-black font-semibold"
+                    : "border-white/20 text-white/50 hover:border-white/40 hover:text-white/80"
+                }`}
+              >
+                {s.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Map style picker — shown in flat map mode */}
+      {viewMode === "map" && (
+        <div className="bg-[#1A1A1A]/95 backdrop-blur-sm border border-white/20 rounded px-3 py-2">
+          <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">Map style</p>
+          <div className="flex gap-1.5 flex-wrap">
+            {MAP_STYLES.map((s) => (
+              <button
+                key={s.key}
+                onClick={() => onMapStyleChange(s.key)}
+                className={`text-[11px] px-2.5 py-1 rounded-full border transition-all ${
+                  mapStyle === s.key
                     ? "bg-[#C5A572] border-[#C5A572] text-black font-semibold"
                     : "border-white/20 text-white/50 hover:border-white/40 hover:text-white/80"
                 }`}

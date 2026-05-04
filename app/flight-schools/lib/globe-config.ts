@@ -7,23 +7,36 @@ export const GLOBE_STYLES = [
 
 export type GlobeStyleKey = (typeof GLOBE_STYLES)[number]["key"];
 
-// CartoDB tiles have full-world coverage at every zoom level (no grey-box artifact).
-// Esri satellite looks great but breaks at low zoom — CartoDB is the reliable choice.
-export const MAP_TILES: Record<GlobeStyleKey, { url: string; attribution: string }> = {
-  "blue-marble": {
-    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+// Flat map styles — independent from globe style
+export const MAP_STYLES = [
+  {
+    key: "satellite",
+    label: "Satellite",
+    url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    attribution: "Tiles &copy; Esri &mdash; Source: Esri, USGS, NOAA",
+    subdomains: false,
   },
-  "day": {
-    url: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
-  },
-  "night": {
+  {
+    key: "dark",
+    label: "Dark",
     url: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+    attribution: "&copy; <a href='https://carto.com/attributions'>CARTO</a>",
+    subdomains: true,
   },
-  "dark": {
-    url: "https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}.png",
-    attribution: '&copy; <a href="https://carto.com/attributions">CARTO</a>',
+  {
+    key: "terrain",
+    label: "Terrain",
+    url: "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+    attribution: "&copy; <a href='https://opentopomap.org'>OpenTopoMap</a>",
+    subdomains: true,
   },
-};
+  {
+    key: "light",
+    label: "Light",
+    url: "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png",
+    attribution: "&copy; <a href='https://carto.com/attributions'>CARTO</a>",
+    subdomains: true,
+  },
+] as const;
+
+export type MapStyleKey = (typeof MAP_STYLES)[number]["key"];

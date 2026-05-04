@@ -108,8 +108,8 @@ export default function PilotTrainingStudents() {
               <span>Elite Flight Training</span>
             </div>
             <h1 className="font-[family-name:var(--font-headline)] text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-white leading-tight">
-              Why Settle for <br />
-              <span className="text-primary italic">Grounded?</span>
+              Start your <br />
+              <span className="text-primary italic">Pilot Career</span>
             </h1>
             <p className="text-on-surface-variant text-lg md:text-2xl max-w-2xl leading-relaxed font-light">
               Most academies treat you like a roll number. At Wind Chasers, we

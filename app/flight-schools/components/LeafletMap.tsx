@@ -12,7 +12,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { FlightSchool } from "@/types/flight-school";
-import { GlobeStyleKey, MAP_TILES } from "../lib/globe-config";
+import { MapStyleKey, MAP_STYLES } from "../lib/globe-config";
 
 // Forces Leaflet to recalculate tile grid when container becomes visible
 function SizeInvalidator({ visible }: { visible: boolean }) {
@@ -57,7 +57,7 @@ interface Props {
   currentLat: number;
   currentLng: number;
   currentZoom: number;
-  globeStyle: GlobeStyleKey;
+  mapStyle: MapStyleKey;
 }
 
 export default function LeafletMap({
@@ -71,26 +71,24 @@ export default function LeafletMap({
   currentLat,
   currentLng,
   currentZoom,
-  globeStyle,
+  mapStyle,
 }: Props) {
-  const tile = MAP_TILES[globeStyle];
-  // Esri tiles don't use subdomains; CartoDB does
-  const isEsri = tile.url.includes("arcgisonline");
+  const style = MAP_STYLES.find((s) => s.key === mapStyle) ?? MAP_STYLES[0];
 
   return (
     <MapContainer
       center={[initialLat, initialLng]}
       zoom={initialZoom}
       minZoom={2}
-      maxZoom={14}
+      maxZoom={18}
       style={{ width: "100%", height: "100%" }}
       zoomControl={false}
     >
       <TileLayer
-        key={tile.url}
-        url={tile.url}
-        attribution={tile.attribution}
-        {...(!isEsri && { subdomains: "abcd" })}
+        key={style.url}
+        url={style.url}
+        attribution={style.attribution}
+        {...(style.subdomains && { subdomains: "abcd" })}
         maxZoom={19}
       />
       {/* Zoom controls — bottom-right so they don't overlap the left drawer */}
