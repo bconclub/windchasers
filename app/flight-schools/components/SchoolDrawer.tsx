@@ -252,8 +252,8 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                 </a>
               )}
 
-              {/* Notes */}
-              {school.notes && (
+              {/* Notes — only show when curated, not the auto-import boilerplate */}
+              {school.notes && !/^Imported from Google Places/i.test(school.notes) && (
                 <p className="text-white/60 text-sm leading-relaxed mb-6">
                   {school.notes}
                 </p>
