@@ -92,6 +92,16 @@ export default function LeafletMap({
         {...(style.subdomains && { subdomains: "abcd" })}
         maxZoom={19}
       />
+      {/* Country / city name overlay for tile sources that ship without labels */}
+      {style.labelsUrl && (
+        <TileLayer
+          key={`${style.url}-labels`}
+          url={style.labelsUrl}
+          {...(style.subdomains && { subdomains: "abcd" })}
+          maxZoom={19}
+          pane="overlayPane"
+        />
+      )}
       {/* Zoom controls — bottom-right so they don't overlap the left drawer */}
       <ZoomControl position="bottomright" />
       <SizeInvalidator visible={visible} />

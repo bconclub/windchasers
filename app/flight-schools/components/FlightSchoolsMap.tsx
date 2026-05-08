@@ -108,8 +108,15 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
     if (!center) return;
     setSearchQuery(country);
     setSearchOpen(false);
-    // Zoom globe to that country — altitude handler will trigger flat map
-    setZoomTarget({ lat: center.lat, lng: center.lng, key: Date.now() });
+    // Apply the country filter so only that country's schools remain
+    setFilters((f) => ({ ...f, country }));
+    if (viewMode === "map") {
+      // Recenter the flat map on the country at a regional zoom
+      setMapSeed({ lat: center.lat, lng: center.lng, zoom: 6 });
+    } else {
+      // Globe: trigger fly-to; altitude handler will hand off to flat map
+      setZoomTarget({ lat: center.lat, lng: center.lng, key: Date.now() });
+    }
   }
 
   // Keep LeafletMap mounted once first shown

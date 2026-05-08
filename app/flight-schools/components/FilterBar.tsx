@@ -202,10 +202,10 @@ export default function FilterBar({
       {/* ── Trigger button (always visible) ─────────────────────────── */}
       <button
         onClick={() => setPanelOpen((o) => !o)}
-        className="relative flex items-center gap-2 bg-[#1A1A1A]/95 backdrop-blur-sm border border-white/20 rounded-full px-3.5 py-2.5 hover:border-[#C5A572]/50 transition-colors"
+        className="relative flex items-center gap-2 bg-[#0a0a0a]/95 backdrop-blur-sm border border-[#C5A572]/40 rounded-full px-3.5 py-2.5 hover:border-[#C5A572]/80 transition-colors shadow-[0_4px_18px_rgba(0,0,0,0.45)]"
       >
-        <SlidersHorizontal className="w-4 h-4 text-white/60" />
-        <span className="text-sm text-white/70 hidden sm:block">Filters</span>
+        <SlidersHorizontal className="w-4 h-4 text-[#C5A572]" />
+        <span className="text-sm text-white/85 hidden sm:block">Filters</span>
         {activeFilterCount > 0 && (
           <span className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#C5A572] text-black text-[10px] font-bold flex items-center justify-center">
             {activeFilterCount}
