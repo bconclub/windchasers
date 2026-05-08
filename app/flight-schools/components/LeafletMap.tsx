@@ -36,11 +36,12 @@ function FlyToCenter({ lat, lng, zoom }: { lat: number; lng: number; zoom: numbe
   return null;
 }
 
-// Zooming all the way out returns to globe
+// Zooming all the way out returns to globe.
+// Threshold is < 2 so the world-view default at zoom 2 isn't bounced.
 function ZoomWatcher({ onZoomOut }: { onZoomOut: () => void }) {
   useMapEvents({
     zoomend: (e) => {
-      if (e.target.getZoom() <= 2) onZoomOut();
+      if (e.target.getZoom() < 2) onZoomOut();
     },
   });
   return null;

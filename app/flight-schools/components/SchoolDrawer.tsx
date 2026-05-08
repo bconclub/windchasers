@@ -11,6 +11,52 @@ interface Props {
   onConsult: () => void;
 }
 
+/**
+ * Bayesian-weighted Google rating, normalised to 0–100.
+ * - Pulls a 5-star single-review school back toward the global mean.
+ * - Rewards volume of reviews up to a saturation point.
+ * Returns null when there isn't enough signal to score (no rating).
+ */
+function computeQualityScore(rating: number | null | undefined, reviewCount: number | null | undefined): number | null {
+  if (rating == null) return null;
+  const m = 4.0;        // Prior mean — flight schools tend to skew positive
+  const C = 30;         // Prior weight (pretend each school starts with C reviews at the mean)
+  const n = Math.max(0, reviewCount ?? 0);
+  const adjusted = (rating * n + m * C) / (n + C);
+  return Math.round(Math.min(100, Math.max(0, adjusted * 20)));
+}
+
+function ScoreRing({ rating, reviewCount }: { rating: number | null | undefined; reviewCount: number | null | undefined }) {
+  const score = computeQualityScore(rating, reviewCount);
+  if (score == null) return null;
+  const r = 28;
+  const c = 2 * Math.PI * r;
+  const offset = c * (1 - score / 100);
+  const tone = score >= 85 ? "#C5A572" : score >= 70 ? "#8FA8FF" : "#A0A0A0";
+  return (
+    <div className="relative w-[72px] h-[72px] flex-shrink-0" aria-label={`Quality score ${score} of 100`}>
+      <svg width="72" height="72" viewBox="0 0 72 72" className="-rotate-90">
+        <circle cx="36" cy="36" r={r} stroke="rgba(255,255,255,0.08)" strokeWidth="5" fill="none" />
+        <circle
+          cx="36"
+          cy="36"
+          r={r}
+          stroke={tone}
+          strokeWidth="5"
+          fill="none"
+          strokeDasharray={c}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+        />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-white font-bold text-lg leading-none">{score}</span>
+        <span className="text-white/40 text-[9px] uppercase tracking-wider mt-0.5">quality</span>
+      </div>
+    </div>
+  );
+}
+
 export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -112,11 +158,6 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                         DGCA Convertible
                       </span>
                     )}
-                    {school.wcClassification && school.wcClassification !== "verified_school" && (
-                      <span className="px-2 py-0.5 bg-blue-400/10 text-blue-200 text-xs rounded border border-blue-300/20">
-                        {school.wcClassification.replace(/_/g, " ")}
-                      </span>
-                    )}
                   </div>
                     <div className="flex items-center gap-2">
                     <h2 className="text-xl font-bold text-white leading-tight">
@@ -146,7 +187,7 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                     )}
                   </div>
                   <p className="text-white/50 text-sm mt-0.5 leading-snug">
-                    {school.formattedAddress || `${school.city}, ${school.country}`}
+                    {school.city ? `${school.city}, ${school.country}` : school.country}
                   </p>
                 </div>
                 <button
@@ -215,50 +256,41 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                 </div>
               )}
 
-              {/* Stats grid */}
-              <div className="grid grid-cols-2 gap-3 mb-5">
-                {typeof school.wcScore === "number" && (
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <p className="text-white/40 text-xs mb-1">WC Score</p>
-                    <p className="text-white font-semibold text-sm">
-                      {school.wcScore} / 100
-                    </p>
-                  </div>
-                )}
-                {school.fleetSize !== null && (
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <p className="text-white/40 text-xs mb-1">Fleet</p>
-                    <p className="text-white font-semibold text-sm">
-                      {school.fleetSize} aircraft
-                    </p>
-                  </div>
-                )}
-                {school.approxCostUSD !== null && (
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <p className="text-white/40 text-xs mb-1">{school.costRangeUSD ? "Est. Cost" : "Approx. Cost"}</p>
-                    <p className="text-white font-semibold text-sm">
-                      {school.costRangeUSD
-                        ? `$${school.costRangeUSD[0].toLocaleString()}-${school.costRangeUSD[1].toLocaleString()}`
-                        : `$${school.approxCostUSD.toLocaleString()}`}
-                    </p>
-                  </div>
-                )}
-                {school.durationMonths !== null && (
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <p className="text-white/40 text-xs mb-1">Duration</p>
-                    <p className="text-white font-semibold text-sm">
-                      {school.durationMonths} months
-                    </p>
-                  </div>
-                )}
-                {school.rating !== null && (
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <p className="text-white/40 text-xs mb-1">Google Rating</p>
-                    <p className="text-white font-semibold text-sm">
-                      {school.rating} / 5{school.googleReviewCount ? ` (${school.googleReviewCount})` : ""}
-                    </p>
-                  </div>
-                )}
+              {/* Score ring + key stats */}
+              <div className="flex items-center gap-4 mb-5">
+                <ScoreRing
+                  rating={school.googleRating ?? school.rating}
+                  reviewCount={school.googleReviewCount}
+                />
+                <div className="flex-1 grid grid-cols-2 gap-3">
+                  {school.googleRating !== null && (
+                    <div className="bg-white/5 rounded-lg p-3">
+                      <p className="text-white/40 text-xs mb-1">Google rating</p>
+                      <p className="text-white font-semibold text-sm">
+                        {school.googleRating} / 5
+                        {school.googleReviewCount ? (
+                          <span className="text-white/40 font-normal"> ({school.googleReviewCount.toLocaleString()})</span>
+                        ) : null}
+                      </p>
+                    </div>
+                  )}
+                  {school.durationMonths !== null && (
+                    <div className="bg-white/5 rounded-lg p-3">
+                      <p className="text-white/40 text-xs mb-1">Duration</p>
+                      <p className="text-white font-semibold text-sm">
+                        {school.durationMonths} months
+                      </p>
+                    </div>
+                  )}
+                  {school.fleetSize !== null && (
+                    <div className="bg-white/5 rounded-lg p-3">
+                      <p className="text-white/40 text-xs mb-1">Fleet</p>
+                      <p className="text-white font-semibold text-sm">
+                        {school.fleetSize} aircraft
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {school.phone && (
@@ -269,19 +301,6 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                   <Phone className="w-4 h-4" />
                   {school.phone}
                 </a>
-              )}
-
-              {school.wcScoreReasons && school.wcScoreReasons.length > 0 && (
-                <div className="bg-white/5 border border-white/10 rounded-lg p-3 mb-5">
-                  <p className="text-white/40 text-xs mb-2">Why this score</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {school.wcScoreReasons.slice(0, 4).map((reason) => (
-                      <span key={reason} className="text-[11px] text-white/55 bg-black/20 rounded px-2 py-1">
-                        {reason}
-                      </span>
-                    ))}
-                  </div>
-                </div>
               )}
 
               {/* Notes */}
