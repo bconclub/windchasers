@@ -304,8 +304,21 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
           />
           {searchQuery && (
             <button
-              onClick={() => { setSearchQuery(""); setSearchOpen(false); }}
+              onClick={() => {
+                setSearchQuery("");
+                setSearchOpen(false);
+                // Drop the country filter and pull the map back to the
+                // worldwide default so the user sees every school again.
+                setFilters((f) => ({ ...f, country: "" }));
+                if (viewMode === "map") {
+                  setFitBoundsTarget({
+                    points: publicSchools.map((s) => [s.lat, s.lng] as [number, number]),
+                    key: Date.now(),
+                  });
+                }
+              }}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition-colors"
+              aria-label="Clear search and show all"
             >
               <XIcon className="w-3.5 h-3.5" />
             </button>
