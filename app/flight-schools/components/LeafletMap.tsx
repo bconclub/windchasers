@@ -36,6 +36,29 @@ function FlyToCenter({ lat, lng, zoom }: { lat: number; lng: number; zoom: numbe
   return null;
 }
 
+// Fits the map to a list of points (e.g. all schools in a country) so wide
+// countries don't get cropped to one corner. `key` ensures the effect re-runs
+// when the user picks a new country.
+function FitBoundsTo({ target }: { target: { points: Array<[number, number]>; key: number } | undefined }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!target || !target.points || target.points.length === 0) return;
+    // Make sure the map knows its current size (drawer / panel changes can
+    // leave it stale) before computing the zoom level for the new bounds.
+    map.invalidateSize();
+    if (target.points.length === 1) {
+      map.setView(target.points[0], 9, { animate: false });
+      return;
+    }
+    map.fitBounds(target.points, {
+      padding: [60, 60],
+      maxZoom: 10,
+      animate: false,
+    });
+  }, [target?.key, map]);
+  return null;
+}
+
 // Zooming all the way out returns to globe.
 // minZoom on the MapContainer is 1 so users actually CAN scroll out beyond
 // the world-view default of zoom 2. Threshold fires at zoom <= 1.
@@ -60,6 +83,7 @@ interface Props {
   currentLng: number;
   currentZoom: number;
   mapStyle: MapStyleKey;
+  fitBoundsTarget?: { points: Array<[number, number]>; key: number };
 }
 
 export default function LeafletMap({
@@ -74,6 +98,7 @@ export default function LeafletMap({
   currentLng,
   currentZoom,
   mapStyle,
+  fitBoundsTarget,
 }: Props) {
   const style = MAP_STYLES.find((s) => s.key === mapStyle) ?? MAP_STYLES[0];
 
@@ -107,6 +132,7 @@ export default function LeafletMap({
       <ZoomControl position="bottomright" />
       <SizeInvalidator visible={visible} />
       <FlyToCenter lat={currentLat} lng={currentLng} zoom={currentZoom} />
+      <FitBoundsTo target={fitBoundsTarget} />
       <ZoomWatcher onZoomOut={onZoomOut} />
 
       {schools.map((school) => (

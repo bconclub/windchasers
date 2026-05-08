@@ -66,6 +66,7 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
   const [searchOpen, setSearchOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const [zoomTarget, setZoomTarget] = useState<{ lat: number; lng: number; key: number } | undefined>();
+  const [fitBoundsTarget, setFitBoundsTarget] = useState<{ points: Array<[number, number]>; key: number } | undefined>();
 
   // Country → lat/lng from schools data
   const countryCenters = useMemo(() => {
@@ -104,18 +105,29 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
   }, []);
 
   function handleCountrySearch(country: string) {
-    const center = countryCenters[country];
-    if (!center) return;
+    const matchingSchools = publicSchools.filter((s) => s.country === country);
+    if (matchingSchools.length === 0) return;
     setSearchQuery(country);
     setSearchOpen(false);
     // Apply the country filter so only that country's schools remain
     setFilters((f) => ({ ...f, country }));
     if (viewMode === "map") {
-      // Recenter the flat map on the country at a regional zoom
-      setMapSeed({ lat: center.lat, lng: center.lng, zoom: 6 });
+      // Fit the flat map to the bounding box of every school in the country
+      // so wide countries (US, Canada, Australia) show end to end instead of
+      // cropping to one corner.
+      setFitBoundsTarget({
+        points: matchingSchools.map((s) => [s.lat, s.lng] as [number, number]),
+        key: Date.now(),
+      });
     } else {
-      // Globe: trigger fly-to; altitude handler will hand off to flat map
+      // Globe path: fly to the country's first school as a heading; the
+      // altitude handler hands off to the flat map which will then fit bounds.
+      const center = matchingSchools[0];
       setZoomTarget({ lat: center.lat, lng: center.lng, key: Date.now() });
+      setFitBoundsTarget({
+        points: matchingSchools.map((s) => [s.lat, s.lng] as [number, number]),
+        key: Date.now(),
+      });
     }
   }
 
@@ -260,6 +272,7 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
             currentLng={mapSeed.lng}
             currentZoom={mapSeed.zoom}
             mapStyle={mapStyle}
+            fitBoundsTarget={fitBoundsTarget}
           />
         )}
       </div>
