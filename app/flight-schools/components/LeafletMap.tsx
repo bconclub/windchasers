@@ -37,11 +37,12 @@ function FlyToCenter({ lat, lng, zoom }: { lat: number; lng: number; zoom: numbe
 }
 
 // Zooming all the way out returns to globe.
-// Threshold is < 2 so the world-view default at zoom 2 isn't bounced.
+// minZoom on the MapContainer is 1 so users actually CAN scroll out beyond
+// the world-view default of zoom 2. Threshold fires at zoom <= 1.
 function ZoomWatcher({ onZoomOut }: { onZoomOut: () => void }) {
   useMapEvents({
     zoomend: (e) => {
-      if (e.target.getZoom() < 2) onZoomOut();
+      if (e.target.getZoom() <= 1) onZoomOut();
     },
   });
   return null;
@@ -80,7 +81,7 @@ export default function LeafletMap({
     <MapContainer
       center={[initialLat, initialLng]}
       zoom={initialZoom}
-      minZoom={2}
+      minZoom={1}
       maxZoom={18}
       style={{ width: "100%", height: "100%" }}
       zoomControl={false}
