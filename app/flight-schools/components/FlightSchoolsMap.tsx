@@ -55,7 +55,7 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
   useEffect(() => { viewModeRef.current = viewMode; }, [viewMode]);
   const transitionLockRef = useRef(false);
 
-  const [mapSeed, setMapSeed] = useState({ lat: 20, lng: 30, zoom: 2 });
+  const [mapSeed, setMapSeed] = useState({ lat: 20, lng: 20, zoom: 3 });
   const [mapStyle, setMapStyle] = useState<MapStyleKey>("satellite");
   const [globeResetKey, setGlobeResetKey] = useState(0);
   const [globeStyle, setGlobeStyle] = useState<GlobeStyleKey>("blue-marble");

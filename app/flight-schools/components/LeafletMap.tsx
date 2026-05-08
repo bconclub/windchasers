@@ -110,6 +110,12 @@ export default function LeafletMap({
       maxZoom={18}
       style={{ width: "100%", height: "100%" }}
       zoomControl={false}
+      worldCopyJump={false}
+      maxBounds={[
+        [-85, -180],
+        [85, 180],
+      ]}
+      maxBoundsViscosity={1}
     >
       <TileLayer
         key={style.url}
@@ -117,6 +123,7 @@ export default function LeafletMap({
         attribution={style.attribution}
         {...(style.subdomains && { subdomains: "abcd" })}
         maxZoom={19}
+        noWrap
       />
       {/* Country / city name overlay for tile sources that ship without labels */}
       {style.labelsUrl && (
@@ -126,6 +133,7 @@ export default function LeafletMap({
           {...(style.subdomains && { subdomains: "abcd" })}
           maxZoom={19}
           pane="overlayPane"
+          noWrap
         />
       )}
       {/* Zoom controls — bottom-right so they don't overlap the left drawer */}
