@@ -27,6 +27,12 @@ export default function Navbar() {
   const isStudents = pathname === "/students";
   const isParents = pathname === "/parents";
   const isFlightSchools = pathname === "/flight-schools";
+  const isAdmin = pathname?.startsWith("/admin") ?? false;
+
+  if (isAdmin) {
+    return null;
+  }
+
   const showCompact =
     isSummerCamp ||
     isOpenHouse ||

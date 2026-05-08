@@ -8,12 +8,11 @@ import { GLOBE_STYLES, GlobeStyleKey, MAP_STYLES, MapStyleKey } from "../lib/glo
 
 export { GLOBE_STYLES, type GlobeStyleKey };
 
-const CERTS = ["FAA", "EASA", "ICAO", "CAA"];
-
 interface Props {
   filters: SchoolFilters;
   onFiltersChange: (f: SchoolFilters) => void;
   countries: string[];
+  certifications: string[];
   viewMode: "globe" | "map";
   onViewModeToggle: () => void;
   globeStyle: GlobeStyleKey;
@@ -26,6 +25,7 @@ export default function FilterBar({
   filters,
   onFiltersChange,
   countries,
+  certifications,
   viewMode,
   onViewModeToggle,
   globeStyle,
@@ -129,7 +129,7 @@ export default function FilterBar({
         </button>
         {certOpen && (
           <div className="absolute top-full left-0 right-0 mt-1 bg-[#1a1a1a] border border-white/20 rounded-lg shadow-2xl z-10 overflow-hidden">
-            {CERTS.map((cert) => (
+            {certifications.map((cert) => (
               <label key={cert} className="flex items-center gap-3 px-3 py-2.5 hover:bg-white/5 cursor-pointer">
                 <input
                   type="checkbox"

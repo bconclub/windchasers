@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
+import { getPublicFlightSchools } from "@/lib/flight-schools/queries";
+import FlightSchoolsClient from "./components/FlightSchoolsClient";
 
 export const metadata: Metadata = {
   title: "International Flight Schools | WindChasers",
@@ -8,28 +9,17 @@ export const metadata: Metadata = {
     "Explore certified flight academies worldwide. Compare costs, certifications, fleet size, and duration. Connect with schools that match your goals.",
 };
 
-const FlightSchoolsMap = dynamic(
-  () => import("./components/FlightSchoolsMap"),
-  {
-    ssr: false,
-    loading: () => (
-      <div
-        className="w-full flex items-center justify-center bg-[#060b14]"
-        style={{ height: "calc(100vh - 80px)" }}
-      >
-        <p className="text-white/30 text-sm tracking-wide">Loading globe...</p>
-      </div>
-    ),
-  }
-);
+// Cache the public directory for 5 minutes; admin curation revalidates on demand.
+export const revalidate = 300;
 
-export default function FlightSchoolsPage() {
+export default async function FlightSchoolsPage() {
+  const schools = await getPublicFlightSchools();
+
   return (
     <main className="h-screen overflow-hidden bg-[#060b14]">
       <Navbar />
-      {/* Map fills exactly the remaining viewport — no scroll, no footer */}
       <div className="pt-[80px] h-full">
-        <FlightSchoolsMap />
+        <FlightSchoolsClient schools={schools} />
       </div>
     </main>
   );

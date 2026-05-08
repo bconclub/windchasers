@@ -101,16 +101,20 @@ export default function LeafletMap({
         <CircleMarker
           key={school.id}
           center={[school.lat, school.lng]}
-          radius={school.isPartner ? 10 : 7}
+          radius={school.isPartner ? 10 : (school.wcClassification === "likely_school" ? 7 : 5)}
           pathOptions={{
-            fillColor: school.isPartner ? "#C5A572" : "#555555",
-            fillOpacity: 0.95,
-            color: school.isPartner ? "#8B7340" : "#222",
+            fillColor: school.isPartner
+              ? "#C5A572"
+              : school.wcClassification === "likely_school"
+                ? "#8FA8FF"
+                : "#555555",
+            fillOpacity: school.wcClassification === "possible_school" ? 0.7 : 0.95,
+            color: school.isPartner ? "#8B7340" : "#1f2937",
             weight: 2,
           }}
           eventHandlers={{ click: () => onSelectSchool(school) }}
         >
-          <Tooltip permanent direction="top" offset={[0, -10]} opacity={1}>
+          <Tooltip permanent={schools.length <= 80 || school.isPartner} direction="top" offset={[0, -10]} opacity={1}>
             <div style={{
               background: "#1a1a1a", color: "#fff",
               padding: "4px 8px", borderRadius: 6, fontSize: 11,

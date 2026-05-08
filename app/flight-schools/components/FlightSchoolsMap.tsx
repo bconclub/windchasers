@@ -9,9 +9,6 @@ import FilterBar, { GLOBE_STYLES, GlobeStyleKey } from "./FilterBar";
 import { MapStyleKey } from "../lib/globe-config";
 import SchoolDrawer from "./SchoolDrawer";
 import LeadFormModal from "./LeadFormModal";
-import schoolsJson from "@/data/flight-schools.json";
-
-const schools = schoolsJson as FlightSchool[];
 
 const GlobeLoader = dynamic(() => import("./GlobeLoader"), {
   ssr: false,
@@ -39,7 +36,7 @@ function pointLabel(d: object): string {
 // Trigger flat-map switch after ~2-3 scroll clicks from default altitude 2.5
 const ZOOM_IN_THRESHOLD = 1.5;
 
-export default function FlightSchoolsMap() {
+export default function FlightSchoolsMap({ schools: publicSchools }: { schools: FlightSchool[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -71,14 +68,18 @@ export default function FlightSchoolsMap() {
   // Country → lat/lng from schools data
   const countryCenters = useMemo(() => {
     const map: Record<string, { lat: number; lng: number }> = {};
-    schools.forEach((s) => {
+    publicSchools.forEach((s) => {
       if (!map[s.country]) map[s.country] = { lat: s.lat, lng: s.lng };
     });
     return map;
   }, []);
 
   const countries = useMemo(
-    () => Array.from(new Set(schools.map((s) => s.country))).sort(),
+    () => Array.from(new Set(publicSchools.map((s) => s.country))).sort(),
+    []
+  );
+  const certifications = useMemo(
+    () => Array.from(new Set(publicSchools.flatMap((s) => s.certifications))).sort(),
     []
   );
 
@@ -131,7 +132,7 @@ export default function FlightSchoolsMap() {
   }, []);
 
   const filteredSchools = useMemo(() => {
-    return schools.filter((s) => {
+    return publicSchools.filter((s) => {
       if (filters.country && s.country !== filters.country) return false;
       if (filters.partnerOnly && !s.isPartner) return false;
       if (filters.certifications.length > 0) {
@@ -291,7 +292,7 @@ export default function FlightSchoolsMap() {
               >
                 <span>{country}</span>
                 <span className="text-[10px] text-white/20 group-hover:text-[#C5A572]/60 transition-colors">
-                  {schools.filter(s => s.country === country).length} school{schools.filter(s => s.country === country).length !== 1 ? "s" : ""}
+                  {publicSchools.filter(s => s.country === country).length} school{publicSchools.filter(s => s.country === country).length !== 1 ? "s" : ""}
                 </span>
               </button>
             ))}
@@ -315,6 +316,7 @@ export default function FlightSchoolsMap() {
           filters={filters}
           onFiltersChange={setFilters}
           countries={countries}
+          certifications={certifications}
           viewMode={viewMode}
           onViewModeToggle={handleViewModeToggle}
           globeStyle={globeStyle}

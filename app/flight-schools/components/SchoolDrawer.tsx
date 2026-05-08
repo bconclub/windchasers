@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowUpRight } from "lucide-react";
+import { X, ArrowUpRight, MapPin, Phone } from "lucide-react";
 import { FlightSchool } from "@/types/flight-school";
 
 interface Props {
@@ -112,6 +112,11 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                         DGCA Convertible
                       </span>
                     )}
+                    {school.wcClassification && school.wcClassification !== "verified_school" && (
+                      <span className="px-2 py-0.5 bg-blue-400/10 text-blue-200 text-xs rounded border border-blue-300/20">
+                        {school.wcClassification.replace(/_/g, " ")}
+                      </span>
+                    )}
                   </div>
                     <div className="flex items-center gap-2">
                     <h2 className="text-xl font-bold text-white leading-tight">
@@ -128,9 +133,20 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                         <ArrowUpRight className="w-3.5 h-3.5" />
                       </a>
                     )}
+                    {school.googleMapsUrl && (
+                      <a
+                        href={school.googleMapsUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Open in Google Maps"
+                        className="flex-shrink-0 w-6 h-6 flex items-center justify-center rounded-full border border-white/20 text-white/40 hover:text-[#C5A572] hover:border-[#C5A572]/50 transition-colors"
+                      >
+                        <MapPin className="w-3.5 h-3.5" />
+                      </a>
+                    )}
                   </div>
-                  <p className="text-white/50 text-sm mt-0.5">
-                    {school.city}, {school.country}
+                  <p className="text-white/50 text-sm mt-0.5 leading-snug">
+                    {school.formattedAddress || `${school.city}, ${school.country}`}
                   </p>
                 </div>
                 <button
@@ -183,8 +199,32 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                 </div>
               )}
 
+              {school.trainingFocus && school.trainingFocus.length > 0 && (
+                <div className="mb-5">
+                  <p className="text-white/40 text-xs mb-2">Training focus</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {school.trainingFocus.map((item) => (
+                      <span
+                        key={item}
+                        className="px-2.5 py-1 bg-blue-400/10 text-blue-100 text-xs rounded border border-blue-300/15"
+                      >
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Stats grid */}
               <div className="grid grid-cols-2 gap-3 mb-5">
+                {typeof school.wcScore === "number" && (
+                  <div className="bg-white/5 rounded-lg p-3">
+                    <p className="text-white/40 text-xs mb-1">WC Score</p>
+                    <p className="text-white font-semibold text-sm">
+                      {school.wcScore} / 100
+                    </p>
+                  </div>
+                )}
                 {school.fleetSize !== null && (
                   <div className="bg-white/5 rounded-lg p-3">
                     <p className="text-white/40 text-xs mb-1">Fleet</p>
@@ -195,9 +235,11 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                 )}
                 {school.approxCostUSD !== null && (
                   <div className="bg-white/5 rounded-lg p-3">
-                    <p className="text-white/40 text-xs mb-1">Approx. Cost</p>
+                    <p className="text-white/40 text-xs mb-1">{school.costRangeUSD ? "Est. Cost" : "Approx. Cost"}</p>
                     <p className="text-white font-semibold text-sm">
-                      ${school.approxCostUSD.toLocaleString()}
+                      {school.costRangeUSD
+                        ? `$${school.costRangeUSD[0].toLocaleString()}-${school.costRangeUSD[1].toLocaleString()}`
+                        : `$${school.approxCostUSD.toLocaleString()}`}
                     </p>
                   </div>
                 )}
@@ -211,13 +253,36 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                 )}
                 {school.rating !== null && (
                   <div className="bg-white/5 rounded-lg p-3">
-                    <p className="text-white/40 text-xs mb-1">Rating</p>
+                    <p className="text-white/40 text-xs mb-1">Google Rating</p>
                     <p className="text-white font-semibold text-sm">
-                      {school.rating} / 5
+                      {school.rating} / 5{school.googleReviewCount ? ` (${school.googleReviewCount})` : ""}
                     </p>
                   </div>
                 )}
               </div>
+
+              {school.phone && (
+                <a
+                  href={`tel:${school.phone}`}
+                  className="flex items-center gap-2 text-sm text-white/60 hover:text-[#C5A572] transition-colors mb-4"
+                >
+                  <Phone className="w-4 h-4" />
+                  {school.phone}
+                </a>
+              )}
+
+              {school.wcScoreReasons && school.wcScoreReasons.length > 0 && (
+                <div className="bg-white/5 border border-white/10 rounded-lg p-3 mb-5">
+                  <p className="text-white/40 text-xs mb-2">Why this score</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {school.wcScoreReasons.slice(0, 4).map((reason) => (
+                      <span key={reason} className="text-[11px] text-white/55 bg-black/20 rounded px-2 py-1">
+                        {reason}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Notes */}
               {school.notes && (

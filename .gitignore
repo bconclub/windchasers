@@ -27,6 +27,13 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# dev server logs
+dev-server*.log
+
+# flight-schools data pipeline artifacts (re-generated locally; Supabase is source of truth)
+/data/flight-schools.generated.json
+/data/imports/
+
 # IDE / editor MCP configs (may contain plaintext API keys, never commit)
 .claude/
 .cursor/
