@@ -9,8 +9,10 @@ export const metadata: Metadata = {
     "Explore certified flight academies worldwide. Compare costs, certifications, fleet size, and duration. Connect with schools that match your goals.",
 };
 
-// Cache the public directory for 5 minutes; admin curation revalidates on demand.
-export const revalidate = 300;
+// Render on every request so admin curation (verification flips, new
+// imports) shows up immediately. Switch back to ISR (revalidate = 300)
+// + on-demand revalidation once the curation workflow stabilizes.
+export const dynamic = "force-dynamic";
 
 export default async function FlightSchoolsPage() {
   // Don't fail the route if Supabase is briefly unreachable — render with

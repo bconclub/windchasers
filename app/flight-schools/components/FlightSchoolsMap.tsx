@@ -41,19 +41,21 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   const [filters, setFilters] = useState<SchoolFilters>({
-    country: "",
+    country: "India",
     certifications: [],
     partnerOnly: false,
   });
   const [selectedSchool, setSelectedSchool] = useState<FlightSchool | null>(null);
   const [showLeadModal, setShowLeadModal] = useState(false);
 
-  const [viewMode, setViewMode] = useState<"globe" | "map">("globe");
-  const viewModeRef = useRef<"globe" | "map">("globe");
+  // Default to flat map centered on India — gets users to local schools
+  // immediately. Globe view remains togglable for the worldwide browse.
+  const [viewMode, setViewMode] = useState<"globe" | "map">("map");
+  const viewModeRef = useRef<"globe" | "map">("map");
   useEffect(() => { viewModeRef.current = viewMode; }, [viewMode]);
   const transitionLockRef = useRef(false);
 
-  const [mapSeed, setMapSeed] = useState({ lat: 20, lng: 0, zoom: 5 });
+  const [mapSeed, setMapSeed] = useState({ lat: 22.5, lng: 78.9, zoom: 5 });
   const [mapStyle, setMapStyle] = useState<MapStyleKey>("satellite");
   const [globeResetKey, setGlobeResetKey] = useState(0);
   const [globeStyle, setGlobeStyle] = useState<GlobeStyleKey>("blue-marble");
