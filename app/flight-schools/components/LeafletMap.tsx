@@ -114,7 +114,12 @@ export default function LeafletMap({
           }}
           eventHandlers={{ click: () => onSelectSchool(school) }}
         >
-          <Tooltip permanent={schools.length <= 80 || school.isPartner} direction="top" offset={[0, -10]} opacity={1}>
+          <Tooltip
+            sticky
+            direction="top"
+            offset={[0, -10]}
+            opacity={1}
+          >
             <div style={{
               background: "#1a1a1a", color: "#fff",
               padding: "4px 8px", borderRadius: 6, fontSize: 11,
