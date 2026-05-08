@@ -19,7 +19,12 @@ export function getServerClient(): SupabaseClient {
   if (!anonKey) throw new Error("NEXT_PUBLIC_SUPABASE_ANON_KEY is not set");
   cachedAnon = createClient(url, anonKey, {
     auth: { persistSession: false, autoRefreshToken: false },
-    global: { headers: { "x-application": "windchasers-website" } },
+    global: {
+      headers: { "x-application": "windchasers-website" },
+      // Bypass Next.js's automatic fetch cache so admin curation /
+      // re-imports show up on the next request without a manual revalidate.
+      fetch: (input, init) => fetch(input, { ...init, cache: "no-store" }),
+    },
   });
   return cachedAnon;
 }
