@@ -8,7 +8,6 @@ import {
   Tooltip,
   ZoomControl,
   useMap,
-  useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { FlightSchool } from "@/types/flight-school";
@@ -59,15 +58,29 @@ function FitBoundsTo({ target }: { target: { points: Array<[number, number]>; ke
   return null;
 }
 
-// Zooming all the way out returns to globe.
-// minZoom on the MapContainer is 1 so users actually CAN scroll out beyond
-// the world-view default of zoom 2. Threshold fires at zoom <= 1.
+// Returns to globe when the user tries to zoom out beyond the world view.
+// Strategy: minZoom on the MapContainer is 2 so the flat map never shows
+// the empty-tile void around the edges. We then attach a native wheel
+// listener to the map's container — when the user scrolls "out" (deltaY > 0)
+// AND we're already at minZoom, that's the "I want to zoom out further"
+// intent, so hand off to the globe.
 function ZoomWatcher({ onZoomOut }: { onZoomOut: () => void }) {
-  useMapEvents({
-    zoomend: (e) => {
-      if (e.target.getZoom() <= 1) onZoomOut();
-    },
-  });
+  const map = useMap();
+  useEffect(() => {
+    const container = map.getContainer();
+    let cooling = false;
+    const handler = (e: WheelEvent) => {
+      if (e.deltaY <= 0) return; // zoom-in, ignore
+      const minZoom = map.getMinZoom();
+      if (map.getZoom() > minZoom) return; // still has zoom-out headroom
+      if (cooling) return;
+      cooling = true;
+      setTimeout(() => { cooling = false; }, 1500);
+      onZoomOut();
+    };
+    container.addEventListener("wheel", handler, { passive: true });
+    return () => container.removeEventListener("wheel", handler);
+  }, [map, onZoomOut]);
   return null;
 }
 
@@ -106,7 +119,7 @@ export default function LeafletMap({
     <MapContainer
       center={[initialLat, initialLng]}
       zoom={initialZoom}
-      minZoom={1}
+      minZoom={2}
       maxZoom={18}
       style={{ width: "100%", height: "100%" }}
       zoomControl={false}
