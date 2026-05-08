@@ -77,10 +77,19 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
     return map;
   }, []);
 
-  const countries = useMemo(
-    () => Array.from(new Set(publicSchools.map((s) => s.country))).sort(),
-    []
-  );
+  // Countries ordered by school count descending so the most populated
+  // appear at the top of the search suggestions and the country dropdown.
+  // Ties broken alphabetically.
+  const countries = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const s of publicSchools) {
+      counts[s.country] = (counts[s.country] ?? 0) + 1;
+    }
+    return Object.keys(counts).sort((a, b) => {
+      const delta = counts[b] - counts[a];
+      return delta !== 0 ? delta : a.localeCompare(b);
+    });
+  }, []);
   const certifications = useMemo(
     () => Array.from(new Set(publicSchools.flatMap((s) => s.certifications))).sort(),
     []
