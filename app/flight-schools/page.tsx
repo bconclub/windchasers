@@ -13,7 +13,14 @@ export const metadata: Metadata = {
 export const revalidate = 300;
 
 export default async function FlightSchoolsPage() {
-  const schools = await getPublicFlightSchools();
+  // Don't fail the route if Supabase is briefly unreachable — render with
+  // an empty list and let the next revalidation backfill.
+  let schools: Awaited<ReturnType<typeof getPublicFlightSchools>> = [];
+  try {
+    schools = await getPublicFlightSchools();
+  } catch (err) {
+    console.error("[/flight-schools] Supabase fetch failed:", err);
+  }
 
   return (
     <main className="h-screen overflow-hidden bg-[#060b14]">
