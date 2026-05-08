@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowUpRight, MapPin, Phone } from "lucide-react";
+import { X, ArrowUpRight, MapPin } from "lucide-react";
 import { FlightSchool } from "@/types/flight-school";
 
 interface Props {
@@ -241,16 +241,6 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                   </div>
                 )}
               </div>
-
-              {school.phone && (
-                <a
-                  href={`tel:${school.phone}`}
-                  className="flex items-center gap-2 text-sm text-white/60 hover:text-[#C5A572] transition-colors mb-4"
-                >
-                  <Phone className="w-4 h-4" />
-                  {school.phone}
-                </a>
-              )}
 
               {/* Notes — only show when curated, not the auto-import boilerplate */}
               {school.notes && !/^Imported from Google Places/i.test(school.notes) && (
