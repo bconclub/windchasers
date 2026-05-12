@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: Navaneeth card — initials placeholder for broken image
+
+- Navaneeth's image set to null (Navneeth.webp is corrupt); card now shows "NN" initials placeholder.
+- Card rendering updated to conditionally show Image or initials fallback.
+- User-facing: no broken image — clean placeholder until real photo is supplied.
+
 ## 2026-05-12 · /pilot-training: captains carousel — restore staggered offset
 
 - Alternate cards offset down (mt-12) inside the carousel, restoring the up/down stagger look.

@@ -191,7 +191,8 @@ const team = [
     name: "Navaneeth Nagendra",
     role: "Senior Ground Instructor",
     bio: "Eight years in aviation training across Aeronautical, Maintenance, and Industrial Engineering. Builds robust academic foundations aligned with the DGCA syllabus.",
-    image: "/team/Navneeth.webp",
+    image: null,
+    initials: "NN",
     offset: false,
   },
 ];
@@ -530,14 +531,22 @@ export default function PilotTraining() {
                   transition={{ duration: 0.5, delay: i * 0.08 }}
                   className={`group relative bg-surface-container-low rounded-3xl border border-outline-variant/10 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-2 cursor-pointer ${t.offset ? "mt-12" : ""}`}
                 >
-                  <div className="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 relative">
-                    <Image
-                      src={t.image}
-                      alt={t.name}
-                      fill
-                      sizes="(min-width: 1024px) 23vw, (min-width: 768px) 48vw, 80vw"
-                      className="object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
+                  <div className="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 relative bg-surface-container">
+                    {t.image ? (
+                      <Image
+                        src={t.image}
+                        alt={t.name}
+                        fill
+                        sizes="(min-width: 1024px) 23vw, (min-width: 768px) 48vw, 80vw"
+                        className="object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-4xl font-black text-primary/30 font-[family-name:var(--font-headline)]">
+                          {"initials" in t ? t.initials : ""}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <div className="p-6 md:p-8 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/90 to-transparent">
                     <h3 className="text-xl md:text-2xl font-bold text-primary mb-1">
