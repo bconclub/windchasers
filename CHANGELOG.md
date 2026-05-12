@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: reorder page sections
+
+- New section order: Hero → Path Selection → Honest Part → In the Cockpit (gallery) → From here to your CPL → Captains → Why WindChasers → Testimonials → Campus → PAT → CTA
+- Previously: Captains and Why WindChasers appeared before the gallery and CPL steps.
+- User-facing: social proof (gallery) and the CPL roadmap now appear much earlier in the funnel.
+
 ## 2026-05-12 · /pilot-training: replace Kothanur with Bengaluru in campus section
 
 - Campus image carousel title changed from "Inside the Kothanur campus." → "Inside the Bengaluru campus."

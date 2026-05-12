@@ -362,7 +362,7 @@ export default function PilotTraining() {
         onClose={() => setShowAirplaneModal(false)}
       />
 
-      {/* Chapter 2a: The Honest Part */}
+      {/* Chapter 3: The Honest Part */}
       <section className="py-24 md:py-32 bg-background relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16">
           <motion.div
@@ -410,132 +410,6 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* Chapter 2b: The Captains of Your Career */}
-      <section className="py-24 md:py-32 bg-background relative overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-16 md:mb-20"
-          >
-            <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase block mb-4">
-              Elite Mentorship
-            </span>
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-7xl font-extrabold text-white tracking-tighter leading-none mb-6">
-              The Captains of Your Career.
-            </h2>
-            <p className="text-on-surface-variant text-lg md:text-xl lg:text-2xl max-w-3xl font-light">
-              Mentorship from pilots who have spent thousands of hours in the
-              cockpit and decades in the industry.
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-            {team.map((t, i) => (
-              <motion.div
-                key={t.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className={`group relative bg-surface-container-low rounded-3xl border border-outline-variant/10 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-2 ${
-                  t.offset ? "lg:mt-12" : ""
-                }`}
-              >
-                <div className="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 relative">
-                  <Image
-                    src={t.image}
-                    alt={t.name}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
-                    className="object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                </div>
-                <div className="p-6 md:p-8 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/90 to-transparent">
-                  <h3 className="text-xl md:text-2xl font-bold text-primary mb-1">
-                    {t.name}
-                  </h3>
-                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/60 mb-4">
-                    {t.role}
-                  </p>
-                  <p className="text-on-surface-variant text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    {t.bio}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Chapter 3: Why WindChasers */}
-      <section className="py-24 md:py-32 bg-surface-container-lowest">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16 md:mb-24"
-          >
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-7xl font-extrabold text-white tracking-tighter mb-6">
-              What you actually get <br className="hidden md:block" />
-              with us.
-            </h2>
-            <div className="w-24 h-1 bg-primary mx-auto" />
-          </motion.div>
-
-          <CardCarousel cardWidthClass="w-[80%] sm:w-[60%] md:w-[42%] lg:w-[32%]">
-            {whyCards.map((c, i) => {
-              const Icon = c.icon;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.06 }}
-                  className="group relative h-full bg-surface-container-low border border-outline-variant/20 rounded-3xl overflow-hidden hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30"
-                >
-                  <div className="relative h-44 md:h-48 w-full overflow-hidden">
-                    <Image
-                      src={c.image}
-                      alt={c.title}
-                      fill
-                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                      className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
-                        "tint" in c && c.tint ? "saturate-150 contrast-110" : ""
-                      }`}
-                    />
-                    {"tint" in c && c.tint && (
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent mix-blend-overlay" />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/40 to-transparent" />
-                    <span className="absolute top-4 left-4 bg-primary text-on-primary text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
-                      {c.label}
-                    </span>
-                  </div>
-
-                  <div className="p-7 pt-6">
-                    <div className="w-12 h-12 mb-5 flex items-center justify-center rounded-xl bg-primary/10 border border-primary/20 group-hover:bg-primary/20 transition-colors">
-                      <Icon className="w-6 h-6 text-primary" strokeWidth={1.5} />
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">
-                      {c.title}
-                    </h3>
-                    <p className="text-on-surface-variant text-sm leading-relaxed">
-                      {c.body}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </CardCarousel>
-        </div>
-      </section>
-
       {/* Chapter 4: Students Flying Gallery (images + Vimeo) */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-surface-container-lowest border-y border-outline-variant/10">
         <StudentsFlyingGallery
@@ -543,17 +417,6 @@ export default function PilotTraining() {
           eyebrow="In the Cockpit"
           title="They started exactly where you are."
           subtitle="Photos and clips from students in active training."
-          variant="stitch"
-        />
-      </section>
-
-      {/* Chapter 4b: Real Journeys testimonials */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-background border-y border-outline-variant/10">
-        <StudentsFlyingGallery
-          items={testimonialGallery}
-          eyebrow="Proof in Flight"
-          title="They were where you are. Now they fly."
-          subtitle="Real students. Their own words."
           variant="stitch"
         />
       </section>
@@ -628,7 +491,144 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* Chapter 5b: Train at our Campus (Simulator + Facility) */}
+      {/* Chapter 6: The Captains of Your Career */}
+      <section className="py-24 md:py-32 bg-background relative overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-16 md:mb-20"
+          >
+            <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase block mb-4">
+              Elite Mentorship
+            </span>
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-7xl font-extrabold text-white tracking-tighter leading-none mb-6">
+              The Captains of Your Career.
+            </h2>
+            <p className="text-on-surface-variant text-lg md:text-xl lg:text-2xl max-w-3xl font-light">
+              Mentorship from pilots who have spent thousands of hours in the
+              cockpit and decades in the industry.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+            {team.map((t, i) => (
+              <motion.div
+                key={t.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className={`group relative bg-surface-container-low rounded-3xl border border-outline-variant/10 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-2 ${
+                  t.offset ? "lg:mt-12" : ""
+                }`}
+              >
+                <div className="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 relative">
+                  <Image
+                    src={t.image}
+                    alt={t.name}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                </div>
+                <div className="p-6 md:p-8 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/90 to-transparent">
+                  <h3 className="text-xl md:text-2xl font-bold text-primary mb-1">
+                    {t.name}
+                  </h3>
+                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/60 mb-4">
+                    {t.role}
+                  </p>
+                  <p className="text-on-surface-variant text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    {t.bio}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Chapter 7: Why WindChasers */}
+      <section className="py-24 md:py-32 bg-surface-container-lowest">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16 md:mb-24"
+          >
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-7xl font-extrabold text-white tracking-tighter mb-6">
+              What you actually get <br className="hidden md:block" />
+              with us.
+            </h2>
+            <div className="w-24 h-1 bg-primary mx-auto" />
+          </motion.div>
+
+          <CardCarousel cardWidthClass="w-[80%] sm:w-[60%] md:w-[42%] lg:w-[32%]">
+            {whyCards.map((c, i) => {
+              const Icon = c.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.06 }}
+                  className="group relative h-full bg-surface-container-low border border-outline-variant/20 rounded-3xl overflow-hidden hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30"
+                >
+                  <div className="relative h-44 md:h-48 w-full overflow-hidden">
+                    <Image
+                      src={c.image}
+                      alt={c.title}
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                      className={`object-cover transition-transform duration-500 group-hover:scale-105 ${
+                        "tint" in c && c.tint ? "saturate-150 contrast-110" : ""
+                      }`}
+                    />
+                    {"tint" in c && c.tint && (
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent mix-blend-overlay" />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-surface-container-low via-surface-container-low/40 to-transparent" />
+                    <span className="absolute top-4 left-4 bg-primary text-on-primary text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full">
+                      {c.label}
+                    </span>
+                  </div>
+
+                  <div className="p-7 pt-6">
+                    <div className="w-12 h-12 mb-5 flex items-center justify-center rounded-xl bg-primary/10 border border-primary/20 group-hover:bg-primary/20 transition-colors">
+                      <Icon className="w-6 h-6 text-primary" strokeWidth={1.5} />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">
+                      {c.title}
+                    </h3>
+                    <p className="text-on-surface-variant text-sm leading-relaxed">
+                      {c.body}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </CardCarousel>
+        </div>
+      </section>
+
+      {/* Chapter 7b: Real Journeys testimonials */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-background border-y border-outline-variant/10">
+        <StudentsFlyingGallery
+          items={testimonialGallery}
+          eyebrow="Proof in Flight"
+          title="They were where you are. Now they fly."
+          subtitle="Real students. Their own words."
+          variant="stitch"
+        />
+      </section>
+
+      {/* Chapter 8: Train at our Campus (Simulator + Facility) */}
       <section className="py-24 md:py-32 bg-surface-container-lowest border-y border-outline-variant/10">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <motion.div
