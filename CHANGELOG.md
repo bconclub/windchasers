@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /demo: Vimeo hero background
+
+- Hero section replaced with full-bleed Vimeo embed (1191576047) using background=1 mode, scaled 1.15× to fill frame.
+- Dark gradient overlay (from-[#131313]/60 → to-[#131313]) preserves legibility of headline copy.
+- User-facing: demo page hero now shows looping aerial footage instead of a flat dark background.
+
 ## 2026-05-12 · /demo + BookingForm: design system refresh
 
 - Demo page: Manrope display headline, italic gold accent, WindChasers card pattern (border-t-2 gold, floating pill badge, icon cell) for Online Demo + Campus Visit cards, framer-motion reveals, #131313/#0e0e0e section rhythm.

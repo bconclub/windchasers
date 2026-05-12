@@ -48,8 +48,20 @@ function DemoPageContent() {
       style={{ backgroundColor: "#131313" }}
     >
       {/* Hero */}
-      <section className="pt-32 pb-16 px-6 md:px-12">
-        <div className="max-w-[1400px] mx-auto text-center">
+      <section className="relative min-h-[600px] flex items-center justify-center pt-24 pb-16 overflow-hidden">
+        {/* Vimeo background */}
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <iframe
+            src="https://player.vimeo.com/video/1191576047?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1"
+            className="absolute w-full h-full scale-[1.15]"
+            style={{ border: 0, top: 0, left: 0 }}
+            allow="autoplay; fullscreen"
+            title="Demo hero background"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#131313]/60 via-[#131313]/50 to-[#131313]" />
+        </div>
+
+        <div className="relative z-10 max-w-[1400px] mx-auto text-center px-6 md:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -64,7 +76,7 @@ function DemoPageContent() {
               See our training{" "}
               <span className="text-[#C5A572] italic">first-hand.</span>
             </h1>
-            <p className="text-white/50 text-lg md:text-xl max-w-xl mx-auto">
+            <p className="text-white/60 text-lg md:text-xl max-w-xl mx-auto">
               Visit the campus or join an online session — no commitment, no pressure.
             </p>
           </motion.div>
