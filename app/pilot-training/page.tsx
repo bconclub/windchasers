@@ -424,7 +424,7 @@ export default function PilotTraining() {
           items={flyingGallery}
           eyebrow="In the Cockpit"
           title="They started exactly where you are."
-          subtitle="Photos and clips from students in active training."
+          subtitle="Moments from our students."
           variant="stitch"
         />
       </section>
