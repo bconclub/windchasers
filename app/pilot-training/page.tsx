@@ -158,31 +158,31 @@ const whyCards = [
 
 const team = [
   {
-    name: "Capt. Aradhya Sharma",
-    role: "Senior Flight Instructor · Ex-Air India",
-    bio: "Commanded Airbus A320 fleets for over 15 years with 12,000+ flight hours.",
-    image: "/facility/WC1.webp",
+    name: "Sumaiya Ali",
+    role: "Founder & CEO",
+    bio: "Founded WindChasers in 2024 to give parents and aspiring pilots an honest path to the cockpit.",
+    image: "/team/Sumaiya Ali.webp",
     offset: false,
   },
   {
-    name: "Capt. Vikram Malhotra",
-    role: "Chief Ground Instructor",
-    bio: "DGCA certified examiner who has successfully mentored 500+ cadets to CPL.",
-    image: "/facility/WC2.webp",
+    name: "Rida Maryam Ali",
+    role: "Managing Director",
+    bio: "Trained commercial pilot. Brings aviation discipline and strategic leadership to every cohort.",
+    image: "/team/Rida Ali.webp",
     offset: true,
   },
   {
-    name: "Capt. Sameer Reddy",
-    role: "Head of Flight Training · Ex-Indigo",
-    bio: "Specialist in advanced instrument rating and multi-engine transitions.",
-    image: "/facility/WC3.webp",
+    name: "Hemanth Kumar R",
+    role: "Chief Ground Instructor · B737NG Type-Rated",
+    bio: "CPL holder, ATPL-cleared aeronautical engineer. Five years guiding students through DGCA exams.",
+    image: "/team/Hemanth.webp",
     offset: false,
   },
   {
-    name: "Capt. Priya Iyer",
-    role: "Lead Mentor · Fleet Standards",
-    bio: "A pioneer for women in Indian aviation with decades of international flying experience.",
-    image: "/facility/WC4.webp",
+    name: "Rohan Hibare",
+    role: "Ground Instructor · CPL",
+    bio: "Makes complex aviation concepts exam-ready through clear, methodical instruction.",
+    image: "/team/Rohan.webp",
     offset: true,
   },
 ];
@@ -357,7 +357,7 @@ export default function PilotTraining() {
         onClose={() => setShowAirplaneModal(false)}
       />
 
-      {/* Section 3: The Honest Part */}
+      {/* Chapter 2a: The Honest Part */}
       <section className="py-24 md:py-32 bg-background relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16">
           <motion.div
@@ -398,7 +398,6 @@ export default function PilotTraining() {
               vimeoId="1191491477"
               title="Recent WindChasers event"
               aspect="portrait"
-              cover
               zoom={1.5}
               className="w-full"
             />
@@ -406,200 +405,67 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* Section 4: Students Flying Gallery (images + Vimeo) */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-surface-container-lowest border-y border-outline-variant/10">
-        <StudentsFlyingGallery
-          items={flyingGallery}
-          eyebrow="In the Cockpit"
-          title="They started exactly where you are."
-          subtitle="Photos and clips from students in active training."
-          variant="stitch"
-        />
-      </section>
-
-      {/* Section 5: The Journey */}
-      <section className="py-24 md:py-32 bg-surface-container-lowest border-y border-outline-variant/10">
+      {/* Chapter 2b: The Captains of Your Career */}
+      <section className="py-24 md:py-32 bg-background relative overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16 md:mb-24"
+            className="mb-16 md:mb-20"
           >
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-7xl font-extrabold text-white tracking-tighter mb-6">
-              From here to your CPL. <br className="hidden md:block" />
-              Step by step.
+            <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase block mb-4">
+              Elite Mentorship
+            </span>
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-7xl font-extrabold text-white tracking-tighter leading-none mb-6">
+              The Captains of Your Career.
             </h2>
-            <div className="w-24 h-1 bg-primary mx-auto" />
+            <p className="text-on-surface-variant text-lg md:text-xl lg:text-2xl max-w-3xl font-light">
+              Mentorship from pilots who have spent thousands of hours in the
+              cockpit and decades in the industry.
+            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
-            {steps.map((s, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            {team.map((t, i) => (
               <motion.div
-                key={s.n}
+                key={t.name}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.06 }}
-                className="group p-8 md:p-10 bg-surface-container-low rounded-3xl border border-outline-variant/10 hover:border-primary/30 transition-colors duration-500"
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className={`group relative bg-surface-container-low rounded-3xl border border-outline-variant/10 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-2 ${
+                  t.offset ? "lg:mt-12" : ""
+                }`}
               >
-                <div className="text-primary font-[family-name:var(--font-headline)] font-black text-5xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">
-                  {s.n}
+                <div className="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 relative">
+                  <Image
+                    src={t.image}
+                    alt={t.name}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-4">{s.title}</h3>
-                <p className="text-on-surface-variant leading-relaxed">{s.body}</p>
+                <div className="p-6 md:p-8 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/90 to-transparent">
+                  <h3 className="text-xl md:text-2xl font-bold text-primary mb-1">
+                    {t.name}
+                  </h3>
+                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/60 mb-4">
+                    {t.role}
+                  </p>
+                  <p className="text-on-surface-variant text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    {t.bio}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section 5b: Inside the Simulator */}
-      <section className="py-24 md:py-32 bg-surface-container-lowest border-y border-outline-variant/10">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase block mb-5">
-              The Simulator
-            </span>
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tighter leading-tight mb-6">
-              Try the cockpit <span className="text-primary italic">before you commit.</span>
-            </h2>
-            <p className="text-on-surface-variant text-lg leading-relaxed mb-8 font-light">
-              Visit our Bengaluru campus, sit in the simulator, fly a session
-              with one of our instructors. The fastest way to know if pilot
-              training is right for you.
-            </p>
-            <Link
-              href="/demo"
-              className="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-on-primary px-7 py-3.5 rounded-lg font-bold text-base md:text-lg transition-all"
-              style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}
-            >
-              Book a Demo Session
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.15 }}
-            className="grid grid-cols-3 gap-3 md:gap-4"
-          >
-            {SIMULATOR_VIMEO_IDS.map((id, i) => (
-              <div
-                key={id}
-                className="relative aspect-[9/16] rounded-xl md:rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-container-low"
-              >
-                <iframe
-                  src={`https://player.vimeo.com/video/${id}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1`}
-                  className="absolute inset-0 w-full h-full pointer-events-none"
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  allowFullScreen
-                  title={`Simulator footage ${i + 1}`}
-                />
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Section 4: The Aptitude Test */}
-      <section className="py-24 md:py-32 bg-primary-container text-on-primary-container">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="space-y-8"
-          >
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tighter leading-none">
-              Are you actually a fit for pilot training?
-            </h2>
-            <p className="text-lg md:text-xl lg:text-2xl opacity-90 leading-relaxed font-medium">
-              Twenty questions. Three minutes. You&apos;ll know where you stand
-              on qualification, aptitude, and readiness. No fluff. No false
-              rating. If you score well, we&apos;ll line up a counsellor call.
-              If you don&apos;t, we&apos;ll tell you that too.
-            </p>
-            <Link
-              href="/assessment"
-              className="inline-flex items-center bg-black text-white px-10 md:px-12 py-5 md:py-6 rounded-xl font-bold text-lg md:text-xl hover:bg-stone-900 transition-all group"
-            >
-              Take the Pilot Assessment Test
-              <HelpCircle className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="relative group"
-          >
-            <div className="absolute inset-0 bg-black/10 rounded-3xl blur-2xl group-hover:blur-3xl transition-all" />
-            <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 p-8 md:p-12 rounded-3xl">
-              <div className="space-y-6">
-                <div className="w-full h-2 bg-black/20 rounded-full overflow-hidden">
-                  <div className="w-3/4 h-full bg-black" />
-                </div>
-                <div className="text-sm font-bold uppercase tracking-widest text-black/60">
-                  Question 15 of 20
-                </div>
-                <h4 className="text-2xl md:text-3xl font-[family-name:var(--font-headline)] font-bold">
-                  Quickly calculate fuel burn at 12 GPH for 3 hours 15 minutes.
-                </h4>
-                <div className="grid grid-cols-1 gap-3 md:gap-4">
-                  <div className="p-4 bg-black/5 border border-black/10 rounded-xl font-bold">
-                    36 Gallons
-                  </div>
-                  <div className="p-4 bg-black text-white rounded-xl font-bold">
-                    39 Gallons
-                  </div>
-                  <div className="p-4 bg-black/5 border border-black/10 rounded-xl font-bold">
-                    42 Gallons
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Section 5: Real Journeys — reused VideoCarousel */}
-      <section className="py-16 md:py-24 bg-background overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
-          >
-            <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase block mb-4">
-              Proof in Flight
-            </span>
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tighter">
-              They were where you are. <br />
-              Now they fly.
-            </h2>
-            <p className="text-on-surface-variant text-lg md:text-xl mt-4">
-              Real students. Their own words.
-            </p>
-          </motion.div>
-        </div>
-        <VideoCarousel videos={videos} />
-      </section>
-
-      {/* Section 6: Why WindChasers */}
+      {/* Chapter 3: Why WindChasers */}
       <section className="py-24 md:py-32 bg-surface-container-lowest">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <motion.div
@@ -665,90 +531,221 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* Section 7: Meet the Team */}
-      <section className="py-24 md:py-32 bg-background relative overflow-hidden">
+      {/* Chapter 4: Students Flying Gallery (images + Vimeo) */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-surface-container-lowest border-y border-outline-variant/10">
+        <StudentsFlyingGallery
+          items={flyingGallery}
+          eyebrow="In the Cockpit"
+          title="They started exactly where you are."
+          subtitle="Photos and clips from students in active training."
+          variant="stitch"
+        />
+      </section>
+
+      {/* Chapter 4b: Real Journeys testimonials */}
+      <section className="py-16 md:py-24 bg-background overflow-hidden">
         <div className="max-w-[1400px] mx-auto px-6 md:px-12">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="mb-16 md:mb-20"
+            className="mb-12"
           >
             <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase block mb-4">
-              Elite Mentorship
+              Proof in Flight
             </span>
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-7xl font-extrabold text-white tracking-tighter leading-none mb-6">
-              The Captains of Your Career.
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tighter">
+              They were where you are. <br />
+              Now they fly.
             </h2>
-            <p className="text-on-surface-variant text-lg md:text-xl lg:text-2xl max-w-3xl font-light">
-              Mentorship from pilots who have spent thousands of hours in the
-              cockpit and decades in the industry.
+            <p className="text-on-surface-variant text-lg md:text-xl mt-4">
+              Real students. Their own words.
             </p>
           </motion.div>
+        </div>
+        <VideoCarousel videos={videos} />
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {team.map((t, i) => (
+      {/* Chapter 5: The Journey */}
+      <section className="py-24 md:py-32 bg-surface-container-lowest border-y border-outline-variant/10">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16 md:mb-24"
+          >
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-7xl font-extrabold text-white tracking-tighter mb-6">
+              From here to your CPL. <br className="hidden md:block" />
+              Step by step.
+            </h2>
+            <div className="w-24 h-1 bg-primary mx-auto" />
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
+            {steps.map((s, i) => (
               <motion.div
-                key={t.name}
+                key={s.n}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className={`group relative bg-surface-container-low rounded-3xl border border-outline-variant/10 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-2 ${
-                  t.offset ? "lg:mt-12" : ""
-                }`}
+                transition={{ duration: 0.5, delay: i * 0.06 }}
+                className="group p-8 md:p-10 bg-surface-container-low rounded-3xl border border-outline-variant/10 hover:border-primary/30 transition-colors duration-500"
               >
-                <div className="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 relative">
-                  <Image
-                    src={t.image}
-                    alt={t.name}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
-                    className="object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
+                <div className="text-primary font-[family-name:var(--font-headline)] font-black text-5xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">
+                  {s.n}
                 </div>
-                <div className="p-6 md:p-8 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/90 to-transparent">
-                  <h3 className="text-xl md:text-2xl font-bold text-primary mb-1">
-                    {t.name}
-                  </h3>
-                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/60 mb-4">
-                    {t.role}
-                  </p>
-                  <p className="text-on-surface-variant text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    {t.bio}
-                  </p>
-                </div>
+                <h3 className="text-2xl font-bold text-white mb-4">{s.title}</h3>
+                <p className="text-on-surface-variant leading-relaxed">{s.body}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section 8: The Campus — reused ImageCarousel */}
-      <section className="bg-surface-container-lowest">
-        <ImageCarousel
-          images={[
-            "/facility/WC1.webp",
-            "/facility/WC2.webp",
-            "/facility/WC3.webp",
-            "/facility/WC4.webp",
-            "/facility/WC5.webp",
-            "/facility/WC6.webp",
-            "/facility/WC7.webp",
-          ]}
-          title="Come see it."
-          subtitle="The Kothanur campus. Visit any Saturday or Sunday between 11 AM and 4 PM. Bring your parents."
-        />
-        <div className="text-center pb-20 px-6">
-          <Link
-            href="/demo"
-            className="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-on-primary px-8 py-4 rounded-lg font-bold text-lg transition-colors"
-            style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}
+      {/* Chapter 5b: Train at our Campus (Simulator + Facility) */}
+      <section className="py-24 md:py-32 bg-surface-container-lowest border-y border-outline-variant/10">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
           >
-            <Calendar className="w-5 h-5" />
-            Book a campus visit
-          </Link>
+            <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase block mb-5">
+              Train at our Campus
+            </span>
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tighter leading-tight mb-6">
+              Try the cockpit <span className="text-primary italic">before you commit.</span>
+            </h2>
+            <p className="text-on-surface-variant text-lg leading-relaxed mb-8 font-light">
+              Visit our Bengaluru campus, sit in the simulator, fly a session
+              with one of our instructors. The fastest way to know if pilot
+              training is right for you.
+            </p>
+            <Link
+              href="/demo"
+              className="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-on-primary px-7 py-3.5 rounded-lg font-bold text-base md:text-lg transition-all"
+              style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}
+            >
+              Book a Demo Session
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.15 }}
+            className="grid grid-cols-3 gap-3 md:gap-4"
+          >
+            {SIMULATOR_VIMEO_IDS.map((id, i) => (
+              <div
+                key={id}
+                className="relative aspect-[9/16] rounded-xl md:rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-container-low"
+              >
+                <iframe
+                  src={`https://player.vimeo.com/video/${id}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1`}
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  title={`Simulator footage ${i + 1}`}
+                />
+              </div>
+            ))}
+          </motion.div>
+        </div>
+
+        <div className="mt-16 md:mt-24">
+          <ImageCarousel
+            images={[
+              "/facility/WC1.webp",
+              "/facility/WC2.webp",
+              "/facility/WC3.webp",
+              "/facility/WC4.webp",
+              "/facility/WC5.webp",
+              "/facility/WC6.webp",
+              "/facility/WC7.webp",
+            ]}
+            title="Inside the Kothanur campus."
+            subtitle="Saturdays and Sundays between 11 AM and 4 PM. Bring your parents."
+          />
+          <div className="text-center pt-4 pb-4 px-6">
+            <Link
+              href="/demo"
+              className="inline-flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-on-primary px-7 py-3.5 rounded-lg font-bold text-base md:text-lg transition-colors"
+            >
+              <Calendar className="w-5 h-5" />
+              Book a campus visit
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 4: The Aptitude Test */}
+      <section className="py-24 md:py-32 bg-primary-container text-on-primary-container">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="space-y-8"
+          >
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-7xl font-extrabold tracking-tighter leading-none">
+              Are you actually a fit for pilot training?
+            </h2>
+            <p className="text-lg md:text-xl lg:text-2xl opacity-90 leading-relaxed font-medium">
+              Twenty questions. Three minutes. You&apos;ll know where you stand
+              on qualification, aptitude, and readiness. No fluff. No false
+              rating. If you score well, we&apos;ll line up a counsellor call.
+              If you don&apos;t, we&apos;ll tell you that too.
+            </p>
+            <Link
+              href="/assessment"
+              className="inline-flex items-center bg-black text-white px-10 md:px-12 py-5 md:py-6 rounded-xl font-bold text-lg md:text-xl hover:bg-stone-900 transition-all group"
+            >
+              Take the Pilot Assessment Test
+              <HelpCircle className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.97 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="relative group"
+          >
+            <div className="absolute inset-0 bg-black/10 rounded-3xl blur-2xl group-hover:blur-3xl transition-all" />
+            <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 p-8 md:p-12 rounded-3xl">
+              <div className="space-y-6">
+                <div className="w-full h-2 bg-black/20 rounded-full overflow-hidden">
+                  <div className="w-3/4 h-full bg-black" />
+                </div>
+                <div className="text-sm font-bold uppercase tracking-widest text-black/60">
+                  Question 15 of 20
+                </div>
+                <h4 className="text-2xl md:text-3xl font-[family-name:var(--font-headline)] font-bold">
+                  Quickly calculate fuel burn at 12 GPH for 3 hours 15 minutes.
+                </h4>
+                <div className="grid grid-cols-1 gap-3 md:gap-4">
+                  <div className="p-4 bg-black/5 border border-black/10 rounded-xl font-bold">
+                    36 Gallons
+                  </div>
+                  <div className="p-4 bg-black text-white rounded-xl font-bold">
+                    39 Gallons
+                  </div>
+                  <div className="p-4 bg-black/5 border border-black/10 rounded-xl font-bold">
+                    42 Gallons
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
