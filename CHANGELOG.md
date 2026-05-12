@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · VimeoReel: auto-unmute on scroll into view
+
+- Added `autoUnmuteOnView` prop to VimeoReel — uses IntersectionObserver (50% threshold) to unmute on entry, mute on exit.
+- Applied to the "Building India's next generation" portrait reel on `/pilot-training`.
+- User-facing: audio plays automatically when the video scrolls into view, stops when scrolled past.
+
 ## 2026-05-12 · /pilot-training: campus section — carousel first, CTA below
 
 - ImageCarousel ("Inside the Bengaluru campus.") now appears above the "Try the cockpit" CTA + simulator reels.

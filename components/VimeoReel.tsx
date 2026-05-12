@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
 interface VimeoReelProps {
@@ -11,6 +11,8 @@ interface VimeoReelProps {
   cover?: boolean;
   /** CSS scale applied to the iframe to crop letterboxing. 1 = no zoom. */
   zoom?: number;
+  /** Auto-unmute when scrolled into view, mute when scrolled out. */
+  autoUnmuteOnView?: boolean;
 }
 
 export default function VimeoReel({
@@ -20,23 +22,45 @@ export default function VimeoReel({
   aspect = "story",
   cover = false,
   zoom = 1,
+  autoUnmuteOnView = false,
 }: VimeoReelProps) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [muted, setMuted] = useState(true);
 
-  const toggleMute = () => {
-    const next = !muted;
-    setMuted(next);
+  const sendMute = (val: boolean) => {
     iframeRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ method: "setMuted", value: next }),
+      JSON.stringify({ method: "setMuted", value: val }),
       "*"
     );
-    if (!next) {
+    if (!val) {
       iframeRef.current?.contentWindow?.postMessage(
         JSON.stringify({ method: "setVolume", value: 1 }),
         "*"
       );
     }
+  };
+
+  useEffect(() => {
+    if (!autoUnmuteOnView || cover) return;
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const inView = entry.isIntersecting;
+        setMuted(!inView);
+        sendMute(!inView);
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [autoUnmuteOnView, cover]);
+
+  const toggleMute = () => {
+    const next = !muted;
+    setMuted(next);
+    sendMute(next);
   };
 
   const aspectClass =
@@ -50,6 +74,7 @@ export default function VimeoReel({
 
   return (
     <div
+      ref={containerRef}
       className={`relative ${aspectClass} rounded-2xl md:rounded-3xl overflow-hidden ${className}`}
     >
       <iframe

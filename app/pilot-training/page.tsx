@@ -412,6 +412,7 @@ export default function PilotTraining() {
               aspect="portrait"
               zoom={1.5}
               className="w-full"
+              autoUnmuteOnView
             />
           </motion.div>
         </div>
