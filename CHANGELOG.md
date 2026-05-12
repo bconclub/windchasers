@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · Navbar: call + WhatsApp on /pilot-training pages
+
+- Added isPilotTraining flag (matches /pilot-training/*) to Navbar.
+- /pilot-training routes now show compact navbar: logo + Admissions Open badge + Call + WhatsApp buttons.
+- User-facing: phone and WhatsApp icons visible in navbar on all pilot-training pages.
+
 ## 2026-05-12 · /pilot-training: Simulator card — DSC_0481 image
 
 - "Industry-grade simulators" Why card now uses /facility/DSC_0481.JPG.webp.
