@@ -2,6 +2,10 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · Add Navaneeth team photo asset
+
+- Added public/team/Navneeth.webp to the repository.
+
 ## 2026-05-12 · /pilot-training: Navaneeth real photo restored
 
 - Navaneeth's card now uses the real /team/Navneeth.webp (file confirmed valid).
