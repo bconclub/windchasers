@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: add Navaneeth as 5th captain, link all to /team
+
+- Added Navaneeth Nagendra (Senior Ground Instructor) to the Captains grid on `/pilot-training`.
+- Grid updated from 4 to 5 columns (lg:grid-cols-5) to accommodate the new member.
+- All captain cards now link to `/team`.
+- User-facing: visitors can now see all 5 instructors and click any card to reach the full team page.
+
 ## 2026-05-12 · /pilot-training: reorder page sections
 
 - New section order: Hero → Path Selection → Honest Part → In the Cockpit (gallery) → From here to your CPL → Captains → Why WindChasers → Testimonials → Campus → PAT → CTA

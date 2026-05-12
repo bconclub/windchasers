@@ -187,6 +187,13 @@ const team = [
     image: "/team/Rohan.webp",
     offset: true,
   },
+  {
+    name: "Navaneeth Nagendra",
+    role: "Senior Ground Instructor",
+    bio: "Eight years in aviation training across Aeronautical, Maintenance, and Industrial Engineering. Builds robust academic foundations aligned with the DGCA syllabus.",
+    image: "/team/Navneeth.webp",
+    offset: false,
+  },
 ];
 
 export default function PilotTraining() {
@@ -513,39 +520,40 @@ export default function PilotTraining() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
             {team.map((t, i) => (
-              <motion.div
-                key={t.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className={`group relative bg-surface-container-low rounded-3xl border border-outline-variant/10 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-2 ${
-                  t.offset ? "lg:mt-12" : ""
-                }`}
-              >
-                <div className="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 relative">
-                  <Image
-                    src={t.image}
-                    alt={t.name}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
-                    className="object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                </div>
-                <div className="p-6 md:p-8 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/90 to-transparent">
-                  <h3 className="text-xl md:text-2xl font-bold text-primary mb-1">
-                    {t.name}
-                  </h3>
-                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/60 mb-4">
-                    {t.role}
-                  </p>
-                  <p className="text-on-surface-variant text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    {t.bio}
-                  </p>
-                </div>
-              </motion.div>
+              <Link key={t.name} href="/team">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.08 }}
+                  className={`group relative bg-surface-container-low rounded-3xl border border-outline-variant/10 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-2 cursor-pointer ${
+                    t.offset ? "lg:mt-12" : ""
+                  }`}
+                >
+                  <div className="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 relative">
+                    <Image
+                      src={t.image}
+                      alt={t.name}
+                      fill
+                      sizes="(min-width: 1024px) 20vw, (min-width: 768px) 50vw, 100vw"
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                  </div>
+                  <div className="p-6 md:p-8 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/90 to-transparent">
+                    <h3 className="text-xl md:text-2xl font-bold text-primary mb-1">
+                      {t.name}
+                    </h3>
+                    <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/60 mb-4">
+                      {t.role}
+                    </p>
+                    <p className="text-on-surface-variant text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                      {t.bio}
+                    </p>
+                  </div>
+                </motion.div>
+              </Link>
             ))}
           </div>
         </div>
