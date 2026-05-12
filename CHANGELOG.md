@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: fix hero iframe cover sizing
+
+- Replaced 16:9 viewport-math sizing with min-w/min-h cover approach (w-[177.78vh] h-[100vh] min-w-full min-h-full scale-[1.15]) that handles portrait and landscape source videos.
+- Added dark solid overlay inside the container so content remains legible regardless of video brightness.
+- Fixes: video was escaping overflow and covering the navbar/heading.
+
 ## 2026-05-12 · /pilot-training: hero background swapped to Vimeo 1191576047
 
 - Replaced hero iframe video (1160946921 → 1191576047); opacity raised from 40% to 60%.
