@@ -2,6 +2,10 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: Simulator card — DSC_0481 image
+
+- "Industry-grade simulators" Why card now uses /facility/DSC_0481.JPG.webp.
+
 ## 2026-05-12 · /pilot-training: Why card 3 — dedicated asset
 
 - "Built around your goal" card image swapped to /why-windchasers/Build Around your goals.webp.

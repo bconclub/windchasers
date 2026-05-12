@@ -144,7 +144,7 @@ const whyCards = [
     label: "Simulator",
     title: "Industry-grade simulators",
     body: "Train on the equipment you'll see in real airline cockpits, not toy software.",
-    image: "/facility/5U2A0673.JPG.webp",
+    image: "/facility/DSC_0481.JPG.webp",
     tint: true,
   },
   {
