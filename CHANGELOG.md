@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training + BookingForm: button polish, masonry gallery, form tweaks
+
+- Sticky "Book a Demo Class" button: removed Calendar icon, text reduced to text-xs.
+- Campus gallery (CampusGallery): switched from uniform grid to CSS columns masonry (columns-2 md:columns-4); image order shuffled (people/vibe shots interleaved with facility shots).
+- BookingForm time slots: narrowed from 10 AM–5 PM to 11 AM–4 PM (6 slots).
+- BookingForm education dropdown: added "Working Professional" as a 4th option.
+
 ## 2026-05-12 · /demo: Vimeo hero background
 
 - Hero section replaced with full-bleed Vimeo embed (1191576047) using background=1 mode, scaled 1.15× to fill frame.

@@ -9,7 +9,7 @@ import { getUserSessionData, saveUserSessionData, markBookingCompleted } from "@
 import { trackPilotLead } from "@/lib/analytics";
 
 type DemoType = "online" | "offline";
-type EducationLevel = "pursuing_10_2" | "completed_10_2" | "graduate";
+type EducationLevel = "pursuing_10_2" | "completed_10_2" | "graduate" | "working_professional";
 type InterestSource = "dgca_ground" | "pilot_training_abroad" | "helicopter_license" | "other";
 
 const interestOptions = [
@@ -19,9 +19,9 @@ const interestOptions = [
   { value: "other", label: "Other" },
 ];
 
-// Generate hourly time slots from 10 AM to 5 PM
-const timeSlots = Array.from({ length: 8 }, (_, i) => {
-  const hour = 10 + i; // 10 AM to 5 PM (10, 11, 12, 13, 14, 15, 16, 17)
+// Generate hourly time slots from 11 AM to 4 PM
+const timeSlots = Array.from({ length: 6 }, (_, i) => {
+  const hour = 11 + i; // 11 AM to 4 PM (11, 12, 13, 14, 15, 16)
   const period = hour >= 12 ? "PM" : "AM";
   const displayHour = hour === 12 ? 12 : hour > 12 ? hour - 12 : hour;
   return {
@@ -473,6 +473,7 @@ export default function BookingForm() {
                 <option value="pursuing_10_2">Pursuing 10+2</option>
                 <option value="completed_10_2">10+2 Completed</option>
                 <option value="graduate">Graduate</option>
+                <option value="working_professional">Working Professional</option>
               </select>
             </div>
 

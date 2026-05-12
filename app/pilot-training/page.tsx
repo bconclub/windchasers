@@ -17,7 +17,6 @@ import {
   Plane,
   Receipt,
   Phone,
-  Calendar,
   Sparkles,
   FileText,
   Download,
@@ -196,21 +195,21 @@ const team = [
 ];
 
 const CAMPUS_IMAGES = [
-  "/facility/WC1.webp",
-  "/facility/WC2.webp",
-  "/facility/WC3.webp",
-  "/facility/WC4.webp",
-  "/facility/WC5.webp",
-  "/facility/WC6.webp",
-  "/facility/WC7.webp",
-  "/facility/5U2A0673.JPG.webp",
-  "/facility/5U2A0674.JPG.avif",
-  "/facility/5U2A0679.JPG.webp",
-  "/facility/DSC05362.JPG.webp",
-  "/facility/DSC_0481.JPG.webp",
-  "/facility/DSC_0492.JPG.webp",
   "/facility/DSC_0549.JPG.webp",
+  "/facility/WC2.webp",
+  "/facility/5U2A0673.JPG.webp",
   "/facility/Sumaiya Ali.webp",
+  "/facility/WC5.webp",
+  "/facility/DSC_0481.JPG.webp",
+  "/facility/WC1.webp",
+  "/facility/5U2A0679.JPG.webp",
+  "/facility/DSC_0492.JPG.webp",
+  "/facility/WC4.webp",
+  "/facility/5U2A0674.JPG.avif",
+  "/facility/WC7.webp",
+  "/facility/DSC05362.JPG.webp",
+  "/facility/WC3.webp",
+  "/facility/WC6.webp",
 ];
 
 function CampusGallery() {
@@ -235,7 +234,7 @@ function CampusGallery() {
           Walk in for a Demo session on Saturdays 11am to 4pm
         </p>
       </motion.div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="columns-2 md:columns-4 gap-3 space-y-3">
         {visible.map((src, i) => (
           <motion.div
             key={src}
@@ -243,7 +242,7 @@ function CampusGallery() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-40px" }}
             transition={{ delay: i * 0.03, duration: 0.5 }}
-            className="rounded-xl overflow-hidden aspect-square"
+            className="break-inside-avoid rounded-xl overflow-hidden aspect-square"
           >
             <Image
               src={src}
@@ -979,7 +978,7 @@ export default function PilotTraining() {
             const btn = document.querySelector<HTMLElement>('[id*="proxe"], [class*="proxe-launcher"], [class*="widget-launcher"]');
             if (btn) { btn.click(); } else { window.location.href = "/demo"; }
           }}
-          className="flex items-center gap-2 px-7 py-3 rounded-full text-[#C5A572] text-sm font-bold uppercase tracking-wider active:scale-95 transition-all"
+          className="flex items-center px-7 py-3 rounded-full text-[#C5A572] text-xs font-bold uppercase tracking-wider active:scale-95 transition-all"
           style={{
             background: "rgba(10,10,10,0.55)",
             backdropFilter: "blur(16px)",
@@ -988,7 +987,6 @@ export default function PilotTraining() {
             boxShadow: "0 0 18px rgba(197,165,114,0.2), inset 0 0 12px rgba(197,165,114,0.04)",
           }}
         >
-          <Calendar className="w-4 h-4" />
           Book a Demo Class
         </button>
       </div>
