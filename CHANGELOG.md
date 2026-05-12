@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: hero background swapped to Vimeo 1191576047
+
+- Replaced hero iframe video (1160946921 → 1191576047); opacity raised from 40% to 60%.
+- User-facing: hero now plays the new aerial reel at higher brightness.
+
 ## 2026-05-12 · /pilot-training + BookingForm: button polish, masonry gallery, form tweaks
 
 - Sticky "Book a Demo Class" button: removed Calendar icon, text reduced to text-xs.
