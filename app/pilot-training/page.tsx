@@ -642,8 +642,16 @@ export default function PilotTraining() {
             "/facility/WC5.webp",
             "/facility/WC6.webp",
             "/facility/WC7.webp",
+            "/facility/5U2A0673.JPG.webp",
+            "/facility/5U2A0674.JPG.avif",
+            "/facility/5U2A0679.JPG.webp",
+            "/facility/DSC05362.JPG.webp",
+            "/facility/DSC_0481.JPG.webp",
+            "/facility/DSC_0492.JPG.webp",
+            "/facility/DSC_0549.JPG.webp",
+            "/facility/Sumaiya Ali.webp",
           ]}
-          title="Inside the Bengaluru campus."
+          title="Bengaluru Campus Vibes."
           subtitle="Saturdays and Sundays between 11 AM and 4 PM. Bring your parents."
         />
 

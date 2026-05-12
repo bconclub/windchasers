@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: campus gallery — 8 new images + heading update
+
+- Added 8 new facility images to ImageCarousel: 5U2A0673, 5U2A0674 (avif), 5U2A0679, DSC05362, DSC_0481, DSC_0492, DSC_0549, Sumaiya Ali.
+- Gallery heading changed: "Inside the Bengaluru campus." → "Bengaluru Campus Vibes."
+- User-facing: gallery now shows people/vibe shots alongside facility photos.
+
 ## 2026-05-12 · /pilot-training: add 3rd simulator video (1191486085)
 
 - Added Vimeo 1191486085 to SIMULATOR_VIMEO_IDS; grid changed back to 3 columns.
