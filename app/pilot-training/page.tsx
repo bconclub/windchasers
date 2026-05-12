@@ -748,28 +748,42 @@ export default function PilotTraining() {
             className="relative group"
           >
             <div className="absolute inset-0 bg-black/10 rounded-3xl blur-2xl group-hover:blur-3xl transition-all" />
-            <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 p-8 md:p-12 rounded-3xl">
-              <div className="space-y-6">
+            <div className="relative bg-white/10 backdrop-blur-xl border border-white/20 p-8 md:p-10 rounded-3xl">
+              <div className="space-y-5">
+                {/* Score */}
+                <div className="flex items-end gap-2">
+                  <span className="text-7xl md:text-8xl font-black font-[family-name:var(--font-headline)] leading-none">84</span>
+                  <span className="text-2xl font-bold text-black/40 mb-2">/100</span>
+                </div>
+
+                {/* Stars */}
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((i) => (
+                    <Star
+                      key={i}
+                      className={`w-6 h-6 ${i <= 4 ? "fill-black text-black" : "text-black/20"}`}
+                    />
+                  ))}
+                </div>
+
+                {/* Tier + message */}
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-black/50">
+                    Assessment Result
+                  </span>
+                  <p className="text-xl font-bold mt-1">Strong Candidate</p>
+                  <p className="text-sm text-black/60 mt-2 leading-relaxed">
+                    You meet the qualification baseline. A counsellor call has been queued.
+                  </p>
+                </div>
+
+                {/* Progress */}
                 <div className="w-full h-2 bg-black/20 rounded-full overflow-hidden">
-                  <div className="w-3/4 h-full bg-black" />
+                  <div className="w-full h-full bg-black rounded-full" />
                 </div>
-                <div className="text-sm font-bold uppercase tracking-widest text-black/60">
-                  Question 15 of 20
-                </div>
-                <h4 className="text-2xl md:text-3xl font-[family-name:var(--font-headline)] font-bold">
-                  Quickly calculate fuel burn at 12 GPH for 3 hours 15 minutes.
-                </h4>
-                <div className="grid grid-cols-1 gap-3 md:gap-4">
-                  <div className="p-4 bg-black/5 border border-black/10 rounded-xl font-bold">
-                    36 Gallons
-                  </div>
-                  <div className="p-4 bg-black text-white rounded-xl font-bold">
-                    39 Gallons
-                  </div>
-                  <div className="p-4 bg-black/5 border border-black/10 rounded-xl font-bold">
-                    42 Gallons
-                  </div>
-                </div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-black/50">
+                  20 of 20 questions completed
+                </p>
               </div>
             </div>
           </motion.div>

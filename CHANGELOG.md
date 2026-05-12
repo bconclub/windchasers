@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: PAT section — replace mock question with score result card
+
+- Right-side mock replaced: "Question 15 of 20" → sample result card with score (84/100), 4/5 stars, "Strong Candidate" tier, counsellor-call note, completed progress bar.
+- User-facing: result card is more enticing — shows what a good score looks like rather than a mid-quiz question.
+
 ## 2026-05-12 · /pilot-training: swap Navaneeth and Rohan order in captains carousel
 
 - Navaneeth Nagendra moved to 4th position, Rohan Hibare to 5th.
