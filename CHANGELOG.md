@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: fix TypeScript build error
+
+- Removed dead initials-fallback code from captain cards (all members now have real photos).
+- Fixes: Type error "Type 'unknown' is not assignable to type 'ReactNode'" at page.tsx:546.
+
 ## 2026-05-12 · /team: Navaneeth photo restored
 
 - Set Navaneeth Nagendra's photo to /team/Navneeth.webp on the team page (was null).

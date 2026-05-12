@@ -532,21 +532,13 @@ export default function PilotTraining() {
                   className={`group relative bg-surface-container-low rounded-3xl border border-outline-variant/10 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-2 cursor-pointer ${t.offset ? "mt-12" : ""}`}
                 >
                   <div className="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 relative bg-surface-container">
-                    {t.image ? (
-                      <Image
-                        src={t.image}
-                        alt={t.name}
-                        fill
-                        sizes="(min-width: 1024px) 23vw, (min-width: 768px) 48vw, 80vw"
-                        className="object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-4xl font-black text-primary/30 font-[family-name:var(--font-headline)]">
-                          {"initials" in t ? t.initials : ""}
-                        </span>
-                      </div>
-                    )}
+                    <Image
+                      src={t.image}
+                      alt={t.name}
+                      fill
+                      sizes="(min-width: 1024px) 23vw, (min-width: 768px) 48vw, 80vw"
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
                   </div>
                   <div className="p-4 md:p-5 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/80 to-transparent">
                     <h3 className="text-base md:text-lg font-bold text-primary mb-0.5 truncate">
