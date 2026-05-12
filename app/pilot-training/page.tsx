@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -273,6 +273,18 @@ function CampusGallery() {
 export default function PilotTraining() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
+  const [showDemoBtn, setShowDemoBtn] = useState(false);
+  const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setShowDemoBtn(y > 300 && y < lastScrollY.current);
+      lastScrollY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   return (
     <div className={`${manrope.variable} bg-background text-on-surface`}>
@@ -955,16 +967,26 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* Sticky bottom-center CTA */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+      {/* Scroll-up demo CTA */}
+      <div
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-40 transition-all duration-300 ${
+          showDemoBtn ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
+        }`}
+      >
         <button
           type="button"
           onClick={() => {
             const btn = document.querySelector<HTMLElement>('[id*="proxe"], [class*="proxe-launcher"], [class*="widget-launcher"]');
             if (btn) { btn.click(); } else { window.location.href = "/demo"; }
           }}
-          className="flex items-center gap-2 bg-[#C5A572] text-[#1A1A1A] px-7 py-3.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-2xl hover:bg-[#C5A572]/90 active:scale-95 transition-all"
-          style={{ boxShadow: "0 4px 24px rgba(197,165,114,0.4)" }}
+          className="flex items-center gap-2 px-7 py-3 rounded-full text-[#C5A572] text-sm font-bold uppercase tracking-wider active:scale-95 transition-all"
+          style={{
+            background: "rgba(10,10,10,0.55)",
+            backdropFilter: "blur(16px)",
+            WebkitBackdropFilter: "blur(16px)",
+            border: "1px solid rgba(197,165,114,0.5)",
+            boxShadow: "0 0 18px rgba(197,165,114,0.2), inset 0 0 12px rgba(197,165,114,0.04)",
+          }}
         >
           <Calendar className="w-4 h-4" />
           Book a Demo Class

@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: Book a Demo Class — scroll-up reveal, glass style
+
+- Button only appears when scrolling up (and past 300px from top).
+- Style: frosted glass background (blur 16px), gold border glow, gold text — not solid fill.
+- Fades in/out with translate animation; hidden while scrolling down.
+
 ## 2026-05-12 · /pilot-training: consolidate CTAs — sticky "Book a Demo Class"
 
 - Removed campus button cluster (Book a Demo + See Location pair).
