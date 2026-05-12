@@ -712,21 +712,14 @@ export default function PilotTraining() {
         {/* Campus gallery */}
         <CampusGallery />
 
-        {/* Campus CTA */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 px-6">
-          <Link
-            href="/demo"
-            className="inline-flex items-center justify-center gap-2 bg-[#C5A572] text-[#1A1A1A] px-8 py-3.5 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-[#C5A572]/90 transition-colors"
-          >
-            <Calendar className="w-5 h-5" />
-            Book a Demo
-          </Link>
+        {/* See Location button only */}
+        <div className="flex justify-center mt-8 px-6">
           <button
             type="button"
             onClick={() => setShowMapModal(true)}
-            className="inline-flex items-center justify-center gap-2 border-2 border-[#C5A572] text-[#C5A572] px-8 py-3.5 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-[#C5A572] hover:text-[#1A1A1A] transition-colors"
+            className="inline-flex items-center justify-center gap-2 border border-[#C5A572]/40 text-[#C5A572] hover:border-[#C5A572] px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-wider transition-colors"
           >
-            <Globe className="w-5 h-5" />
+            <Globe className="w-4 h-4" />
             See Location
           </button>
         </div>
@@ -790,13 +783,6 @@ export default function PilotTraining() {
               >
                 Book a Demo Session
                 <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/demo"
-                className="inline-flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-on-primary px-7 py-3.5 rounded-lg font-bold text-base md:text-lg transition-colors"
-              >
-                <Calendar className="w-5 h-5" />
-                Book a campus visit
               </Link>
             </div>
           </motion.div>
@@ -968,6 +954,22 @@ export default function PilotTraining() {
           </div>
         </div>
       </section>
+
+      {/* Sticky bottom-center CTA */}
+      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40">
+        <button
+          type="button"
+          onClick={() => {
+            const btn = document.querySelector<HTMLElement>('[id*="proxe"], [class*="proxe-launcher"], [class*="widget-launcher"]');
+            if (btn) { btn.click(); } else { window.location.href = "/demo"; }
+          }}
+          className="flex items-center gap-2 bg-[#C5A572] text-[#1A1A1A] px-7 py-3.5 rounded-full font-bold text-sm uppercase tracking-wider shadow-2xl hover:bg-[#C5A572]/90 active:scale-95 transition-all"
+          style={{ boxShadow: "0 4px 24px rgba(197,165,114,0.4)" }}
+        >
+          <Calendar className="w-4 h-4" />
+          Book a Demo Class
+        </button>
+      </div>
 
       {/* PROXe chat widget */}
       <Script

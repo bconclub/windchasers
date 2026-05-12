@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: consolidate CTAs — sticky "Book a Demo Class"
+
+- Removed campus button cluster (Book a Demo + See Location pair).
+- Removed "Book a campus visit" duplicate from simulator section.
+- See Location demoted to a small pill button below the gallery.
+- Added fixed bottom-center "Book a Demo Class" button that opens PROXe chat widget (fallback → /demo).
+
 ## 2026-05-12 · /pilot-training: campus gallery — 2 rows default + expand
 
 - Campus gallery shows 8 images (2×4 grid) by default.
