@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: PROXe chat widget
+
+- Added proxe.windchasers.in/api/widget/embed.js (afterInteractive) to /pilot-training page.
+- Widget loads as floating chat bubble — same agent as /agent page.
+
 ## 2026-05-12 · /pilot-training: campus section — eyebrow, subtitle, CTA + map popup
 
 - ImageCarousel now supports eyebrow prop; "WindChasers" eyebrow added above title.

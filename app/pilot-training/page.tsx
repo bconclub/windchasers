@@ -23,6 +23,7 @@ import {
   Download,
   Star,
 } from "lucide-react";
+import Script from "next/script";
 import VideoCarousel from "@/components/VideoCarousel";
 import ImageCarousel from "@/components/ImageCarousel";
 import StudentsFlyingGallery, {
@@ -955,6 +956,12 @@ export default function PilotTraining() {
           </div>
         </div>
       </section>
+
+      {/* PROXe chat widget */}
+      <Script
+        src="https://proxe.windchasers.in/api/widget/embed.js"
+        strategy="afterInteractive"
+      />
     </div>
   );
 }
