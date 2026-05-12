@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: campus section — eyebrow, subtitle, CTA + map popup
+
+- ImageCarousel now supports eyebrow prop; "WindChasers" eyebrow added above title.
+- Subtitle updated: "Walk in for a Demo session on Saturdays 11am to 4pm".
+- Two CTA buttons added below carousel: "Book a Demo" (→/demo) + "See Location" (opens map modal).
+- Map modal shows Google Maps embed for WindChasers Kothanur campus; closes on backdrop click.
+
 ## 2026-05-12 · /pilot-training: In the Cockpit — masonry grid
 
 - Replaced StudentsFlyingGallery carousel with CSS columns masonry grid (2-col mobile, 4-col desktop).

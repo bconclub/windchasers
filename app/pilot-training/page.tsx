@@ -196,6 +196,7 @@ const team = [
 
 export default function PilotTraining() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
+  const [showMapModal, setShowMapModal] = useState(false);
 
   return (
     <div className={`${manrope.variable} bg-background text-on-surface`}>
@@ -693,9 +694,61 @@ export default function PilotTraining() {
             "/facility/DSC_0549.JPG.webp",
             "/facility/Sumaiya Ali.webp",
           ]}
+          eyebrow="WindChasers"
           title="Bengaluru Campus Vibes."
-          subtitle="Saturdays and Sundays between 11 AM and 4 PM. Bring your parents."
+          subtitle="Walk in for a Demo session on Saturdays 11am to 4pm"
         />
+
+        {/* Campus CTA */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 px-6">
+          <Link
+            href="/demo"
+            className="inline-flex items-center justify-center gap-2 bg-[#C5A572] text-[#1A1A1A] px-8 py-3.5 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-[#C5A572]/90 transition-colors"
+          >
+            <Calendar className="w-5 h-5" />
+            Book a Demo
+          </Link>
+          <button
+            type="button"
+            onClick={() => setShowMapModal(true)}
+            className="inline-flex items-center justify-center gap-2 border-2 border-[#C5A572] text-[#C5A572] px-8 py-3.5 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-[#C5A572] hover:text-[#1A1A1A] transition-colors"
+          >
+            <Globe className="w-5 h-5" />
+            See Location
+          </button>
+        </div>
+
+        {/* Map Modal */}
+        {showMapModal && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            onClick={() => setShowMapModal(false)}
+          >
+            <div
+              className="relative w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setShowMapModal(false)}
+                className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center hover:bg-black/80 transition-colors"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+              <iframe
+                src="https://maps.google.com/maps?q=WindChasers+Aviation+Academy+Kothanur+Bengaluru&output=embed&z=15"
+                width="100%"
+                height="450"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="WindChasers Campus Location"
+              />
+            </div>
+          </div>
+        )}
 
         {/* Try the cockpit CTA + simulator reels below */}
         <div className="max-w-[1400px] mx-auto px-6 md:px-12 mt-16 md:mt-24 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">

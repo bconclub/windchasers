@@ -6,11 +6,12 @@ import Image from "next/image";
 
 interface ImageCarouselProps {
   images: string[];
+  eyebrow?: string;
   title?: string;
   subtitle?: string;
 }
 
-export default function ImageCarousel({ images, title, subtitle }: ImageCarouselProps) {
+export default function ImageCarousel({ images, eyebrow, title, subtitle }: ImageCarouselProps) {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleCount, setVisibleCount] = useState(3);
@@ -105,6 +106,11 @@ export default function ImageCarousel({ images, title, subtitle }: ImageCarousel
     <>
       <section className="py-20 px-6 lg:px-8 bg-dark">
         <div className="max-w-7xl mx-auto">
+          {eyebrow && (
+            <p className="text-gold font-bold tracking-[0.2em] uppercase text-sm text-center mb-3">
+              {eyebrow}
+            </p>
+          )}
           {title && (
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-4 text-gold">
               {title}
