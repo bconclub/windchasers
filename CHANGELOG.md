@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /demo + BookingForm: design system refresh
+
+- Demo page: Manrope display headline, italic gold accent, WindChasers card pattern (border-t-2 gold, floating pill badge, icon cell) for Online Demo + Campus Visit cards, framer-motion reveals, #131313/#0e0e0e section rhythm.
+- BookingForm: glass card (backdrop-blur-20, surface-container bg, outline-variant border), inputs → #1A1A1A/border-[#444]/focus:border-[#C5A572], buttons → gold pill uppercase with hover lift, Back → ghost gold border.
+
 ## 2026-05-12 · VimeoReel: gradual audio fade on scroll out
 
 - autoUnmuteOnView: volume now fades out over ~600ms (steps of 0.05 every 60ms) instead of cutting instantly.

@@ -2,7 +2,28 @@
 
 import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { motion } from "framer-motion";
+import { Manrope } from "next/font/google";
+import { Monitor, Building2, CheckCircle } from "lucide-react";
 import BookingForm from "@/components/BookingForm";
+
+const manrope = Manrope({ subsets: ["latin"], weight: ["700", "800"], variable: "--font-headline" });
+
+const onlineFeatures = [
+  "15–30 minute video consultation",
+  "Career path discussion",
+  "Complete cost breakdown",
+  "Course structure overview",
+  "Q&A with instructors",
+];
+
+const campusFeatures = [
+  "30–60 minute campus tour",
+  "Simulator experience session",
+  "Meet instructors in person",
+  "See training facilities",
+  "Detailed course roadmap",
+];
 
 function DemoPageContent() {
   const router = useRouter();
@@ -13,136 +34,131 @@ function DemoPageContent() {
   }, []);
 
   const handleCardClick = (demoType: "online" | "offline") => {
-    // Update URL with demoType parameter
     const params = new URLSearchParams(searchParams?.toString() || "");
     params.set("demoType", demoType);
     router.push(`/demo?${params.toString()}`, { scroll: false });
-    
-    // Scroll to form after a brief delay
     setTimeout(() => {
-      const formElement = document.querySelector('form');
-      if (formElement) {
-        formElement.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      document.querySelector("form")?.scrollIntoView({ behavior: "smooth", block: "start" });
     }, 150);
   };
 
   return (
-    <div className="pt-32 pb-20 px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h1 className="text-[2.5rem] md:text-6xl font-bold mb-6 text-white">
-            See Our Training <span className="text-gold">First-Hand</span>
-          </h1>
-          <p className="text-xl text-white/70 max-w-3xl mx-auto">
-            Visit campus or join online demo
-          </p>
+    <div
+      className={`${manrope.variable} min-h-screen`}
+      style={{ backgroundColor: "#131313" }}
+    >
+      {/* Hero */}
+      <section className="pt-32 pb-16 px-6 md:px-12">
+        <div className="max-w-[1400px] mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-xs mb-5 block">
+              WindChasers · Free Session
+            </span>
+            <h1
+              className="font-[family-name:var(--font-headline)] text-5xl md:text-7xl font-extrabold tracking-tighter text-white leading-tight mb-5"
+            >
+              See our training{" "}
+              <span className="text-[#C5A572] italic">first-hand.</span>
+            </h1>
+            <p className="text-white/50 text-lg md:text-xl max-w-xl mx-auto">
+              Visit the campus or join an online session — no commitment, no pressure.
+            </p>
+          </motion.div>
         </div>
+      </section>
 
-        <div className="flex gap-4 mb-16 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide lg:grid lg:grid-cols-2 lg:overflow-visible lg:pb-0">
-          <button
+      {/* Demo type cards */}
+      <section className="pb-20 px-6 md:px-12">
+        <div className="max-w-[1400px] mx-auto grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+
+          {/* Online Demo card — WindChasers card pattern */}
+          <motion.button
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
             onClick={() => handleCardClick("online")}
-            className="bg-gradient-to-br from-accent-dark to-dark p-6 md:p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group flex-shrink-0 w-[78vw] md:w-auto snap-center"
+            className="group relative bg-[#1A1A1A] border-t-2 border-[#C5A572] rounded-xl p-8 text-left hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30 transition-all duration-300 w-full"
           >
-            <div className="flex items-center mb-6">
-              <div className="w-14 h-14 rounded-lg bg-gold/10 flex items-center justify-center mr-4">
-                <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold text-gold">Online Demo</h3>
+            <span className="absolute -top-3 left-6 bg-[#C5A572] text-[#1A1A1A] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+              Online
+            </span>
+            <div className="w-12 h-12 rounded-xl bg-[#C5A572]/10 border border-[#C5A572]/20 flex items-center justify-center mb-6 mt-2">
+              <Monitor className="w-6 h-6 text-[#C5A572]" strokeWidth={1.5} />
             </div>
-            <ul className="space-y-3 text-white/70">
-              <li className="flex items-start">
-                <svg className="w-5 h-5 text-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>15-30 minute video consultation</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-5 h-5 text-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Career path discussion</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-5 h-5 text-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Complete cost breakdown</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-5 h-5 text-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Course structure overview</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-5 h-5 text-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Q&A with instructors</span>
-              </li>
+            <h3 className="text-xl font-bold text-white mb-4">Online Demo</h3>
+            <ul className="space-y-2.5">
+              {onlineFeatures.map((f) => (
+                <li key={f} className="flex items-start gap-2.5 text-white/60 text-sm">
+                  <CheckCircle className="w-4 h-4 text-[#C5A572] mt-0.5 shrink-0" strokeWidth={2} />
+                  {f}
+                </li>
+              ))}
             </ul>
-          </button>
+          </motion.button>
 
-          <button
+          {/* Campus Visit card */}
+          <motion.button
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
             onClick={() => handleCardClick("offline")}
-            className="bg-gradient-to-br from-accent-dark to-dark p-6 md:p-8 rounded-xl border-2 border-gold/30 hover:border-gold/60 transition-all shadow-lg hover:shadow-gold/20 text-left cursor-pointer group flex-shrink-0 w-[78vw] md:w-auto snap-center"
+            className="group relative bg-[#1A1A1A] border-t-2 border-[#C5A572] rounded-xl p-8 text-left hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30 transition-all duration-300 w-full"
           >
-            <div className="flex items-center mb-6">
-              <div className="w-14 h-14 rounded-lg bg-gold/10 flex items-center justify-center mr-4">
-                <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                </svg>
-              </div>
-              <h3 className="text-2xl font-bold text-gold">Campus Visit</h3>
+            <span className="absolute -top-3 left-6 bg-[#C5A572] text-[#1A1A1A] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+              In-Person
+            </span>
+            <div className="w-12 h-12 rounded-xl bg-[#C5A572]/10 border border-[#C5A572]/20 flex items-center justify-center mb-6 mt-2">
+              <Building2 className="w-6 h-6 text-[#C5A572]" strokeWidth={1.5} />
             </div>
-            <ul className="space-y-3 text-white/70">
-              <li className="flex items-start">
-                <svg className="w-5 h-5 text-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>30-60 minute campus tour</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-5 h-5 text-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Simulator experience session</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-5 h-5 text-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Meet instructors in person</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-5 h-5 text-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>See training facilities</span>
-              </li>
-              <li className="flex items-start">
-                <svg className="w-5 h-5 text-gold mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
-                <span>Detailed course roadmap</span>
-              </li>
+            <h3 className="text-xl font-bold text-white mb-4">Campus Visit</h3>
+            <ul className="space-y-2.5">
+              {campusFeatures.map((f) => (
+                <li key={f} className="flex items-start gap-2.5 text-white/60 text-sm">
+                  <CheckCircle className="w-4 h-4 text-[#C5A572] mt-0.5 shrink-0" strokeWidth={2} />
+                  {f}
+                </li>
+              ))}
             </ul>
-          </button>
-        </div>
+          </motion.button>
 
-        {/* Navigation dots - mobile only */}
-        <div className="flex justify-center gap-2 -mt-3 mb-16 lg:hidden">
-          <div className="w-2 h-2 rounded-full bg-gold"></div>
-          <div className="w-2 h-2 rounded-full bg-white/30"></div>
         </div>
+      </section>
 
-        <Suspense fallback={<div className="text-center py-8">Loading form...</div>}>
-          <BookingForm />
-        </Suspense>
-      </div>
+      {/* Booking Form */}
+      <section
+        className="pb-28 px-6 md:px-12"
+        style={{ backgroundColor: "#0e0e0e" }}
+      >
+        <div className="max-w-[1400px] mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center pt-20 mb-12"
+          >
+            <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-xs mb-4 block">
+              Book your slot
+            </span>
+            <h2
+              className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-extrabold tracking-tighter text-white"
+            >
+              Reserve a Demo Session
+            </h2>
+          </motion.div>
+          <Suspense fallback={
+            <div className="max-w-2xl mx-auto">
+              <div className="h-96 rounded-2xl bg-white/5 animate-pulse" />
+            </div>
+          }>
+            <BookingForm />
+          </Suspense>
+        </div>
+      </section>
     </div>
   );
 }
@@ -150,13 +166,11 @@ function DemoPageContent() {
 export default function DemoPage() {
   return (
     <Suspense fallback={
-      <div className="pt-32 pb-20 px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <div className="animate-pulse">
-              <div className="h-12 bg-gold/20 rounded w-1/2 mx-auto mb-4"></div>
-              <div className="h-6 bg-white/10 rounded w-1/3 mx-auto"></div>
-            </div>
+      <div className="pt-32 pb-20 px-6" style={{ backgroundColor: "#131313" }}>
+        <div className="max-w-[1400px] mx-auto text-center">
+          <div className="animate-pulse">
+            <div className="h-14 bg-white/5 rounded w-1/2 mx-auto mb-4" />
+            <div className="h-6 bg-white/5 rounded w-1/3 mx-auto" />
           </div>
         </div>
       </div>

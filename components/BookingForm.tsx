@@ -318,26 +318,27 @@ export default function BookingForm() {
   return (
     <div className="max-w-2xl mx-auto px-2 sm:px-6">
       {/* Heading */}
-      <h2 className="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center text-gold">Book a Demo Session</h2>
-      
       {/* Step Indicator */}
-      <div className="flex items-center justify-center mb-6 sm:mb-8">
-        <div className="flex items-center">
-          <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-semibold text-sm sm:text-base ${
-            currentStep >= 1 ? "bg-gold text-dark" : "bg-white/20 text-white/60"
-          }`}>
-            1
-          </div>
-          <div className={`w-12 sm:w-16 h-1 mx-2 ${currentStep >= 2 ? "bg-gold" : "bg-white/20"}`} />
-          <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-semibold text-sm sm:text-base ${
-            currentStep >= 2 ? "bg-gold text-dark" : "bg-white/20 text-white/60"
-          }`}>
-            2
-          </div>
+      <div className="flex items-center justify-center mb-8">
+        <div className="flex items-center gap-2">
+          <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
+            currentStep >= 1 ? "bg-[#C5A572] text-[#1A1A1A]" : "bg-white/10 text-white/40"
+          }`}>1</div>
+          <div className={`w-16 h-0.5 transition-colors ${currentStep >= 2 ? "bg-[#C5A572]" : "bg-white/10"}`} />
+          <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm transition-all ${
+            currentStep >= 2 ? "bg-[#C5A572] text-[#1A1A1A]" : "bg-white/10 text-white/40"
+          }`}>2</div>
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6 p-2 sm:p-6 md:p-8 border-2 border-white/20 rounded-lg bg-accent-dark/50 relative">
+      <form onSubmit={handleSubmit} className="space-y-5 p-6 md:p-8 rounded-2xl relative"
+        style={{
+          background: "rgba(32,32,31,0.7)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          border: "1px solid rgba(77,70,59,0.4)",
+        }}
+      >
         {/* Toggle Switch - Top Right */}
         <div className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 flex flex-row items-center gap-1.5 sm:gap-2">
           <button
@@ -386,7 +387,7 @@ export default function BookingForm() {
                   setFormData({ ...formData, interest: newValue });
                   saveUserSessionData({ interest: newValue });
                 }}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-sm sm:text-base cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23C5A572%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22%3E%3C/polyline%3E%3C/svg%3E')] bg-[length:1.5em_1.5em] bg-[right_0.75rem_center] bg-no-repeat pr-10 sm:pr-12 hover:border-gold/50"
+                className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#444] rounded-lg focus:border-[#C5A572] focus:outline-none transition-colors text-sm cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23C5A572%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22%3E%3C/polyline%3E%3C/svg%3E')] bg-[length:1.5em_1.5em] bg-[right_0.75rem_center] bg-no-repeat pr-10 hover:border-[#C5A572]/50"
                 style={{
                   colorScheme: 'dark',
                 }}
@@ -426,8 +427,8 @@ export default function BookingForm() {
                   }}
                   className={`p-3 sm:p-4 rounded-lg border-2 transition-all text-left ${
                     formData.demoType === "online"
-                      ? "border-gold bg-gold/10"
-                      : "border-white/20 hover:border-white/40"
+                      ? "border-[#C5A572] bg-[#C5A572]/10 text-white"
+                      : "border-[#444] hover:border-[#C5A572]/50 text-white/60"
                   }`}
                 >
                   <div className="font-semibold mb-1 text-sm sm:text-base">Online</div>
@@ -442,8 +443,8 @@ export default function BookingForm() {
                   }}
                   className={`p-3 sm:p-4 rounded-lg border-2 transition-all text-left ${
                     formData.demoType === "offline"
-                      ? "border-gold bg-gold/10"
-                      : "border-white/20 hover:border-white/40"
+                      ? "border-[#C5A572] bg-[#C5A572]/10 text-white"
+                      : "border-[#444] hover:border-[#C5A572]/50 text-white/60"
                   }`}
                 >
                   <div className="font-semibold mb-1 text-sm sm:text-base">Campus Visit</div>
@@ -464,7 +465,7 @@ export default function BookingForm() {
                     setFormData({ ...formData, education: newValue });
                     saveUserSessionData({ education: newValue });
                   }}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors text-sm sm:text-base cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23C5A572%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22%3E%3C/polyline%3E%3C/svg%3E')] bg-[length:1.5em_1.5em] bg-[right_0.75rem_center] bg-no-repeat pr-10 sm:pr-12 hover:border-gold/50"
+                className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#444] rounded-lg focus:border-[#C5A572] focus:outline-none transition-colors text-sm cursor-pointer appearance-none bg-[url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23C5A572%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpolyline points=%226 9 12 15 18 9%22%3E%3C/polyline%3E%3C/svg%3E')] bg-[length:1.5em_1.5em] bg-[right_0.75rem_center] bg-no-repeat pr-10 hover:border-[#C5A572]/50"
                 style={{
                   colorScheme: 'dark',
                 }}
@@ -511,8 +512,8 @@ export default function BookingForm() {
                       setFormData({ ...formData, preferredDate: "", preferredTime: "" });
                     }
                   }}
-                  className={`w-full px-4 py-3 pr-12 bg-accent-dark border rounded-lg focus:outline-none transition-colors cursor-pointer ${
-                    dateError ? "border-red-500" : "border-white/20 focus:border-gold"
+                  className={`w-full px-4 py-3 pr-12 bg-[#1A1A1A] border rounded-lg focus:outline-none transition-colors cursor-pointer text-sm ${
+                    dateError ? "border-red-500" : "border-[#444] focus:border-[#C5A572]"
                   }`}
                   style={{
                     colorScheme: 'dark',
@@ -563,8 +564,8 @@ export default function BookingForm() {
                       }}
                       className={`p-3 rounded-lg border-2 transition-all ${
                         formData.preferredTime === slot.value
-                          ? "border-gold bg-gold/10 text-gold"
-                          : "border-white/20 hover:border-white/40 text-white/70"
+                          ? "border-[#C5A572] bg-[#C5A572]/10 text-[#C5A572]"
+                          : "border-[#444] hover:border-[#C5A572]/50 text-white/60"
                       }`}
                     >
                       {slot.label}
@@ -577,7 +578,7 @@ export default function BookingForm() {
             <button
               type="button"
               onClick={handleStep1Next}
-              className="w-full bg-gold text-dark py-3 sm:py-4 rounded-lg font-semibold text-sm sm:text-base hover:bg-gold/90 transition-colors"
+              className="w-full bg-[#C5A572] text-[#1A1A1A] py-3.5 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-[#C5A572]/90 transition-all hover:-translate-y-0.5 active:scale-95"
             >
               Continue
             </button>
@@ -615,7 +616,7 @@ export default function BookingForm() {
                     saveUserSessionData({ firstName: nameParts[0], lastName: "" });
                   }
                 }}
-                className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors"
+                className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#444] rounded-lg focus:border-[#C5A572] focus:outline-none transition-colors text-sm"
               />
             </div>
 
@@ -632,7 +633,7 @@ export default function BookingForm() {
                   onChange={(e) => {
                     setFormData({ ...formData, parentGuardianName: e.target.value });
                   }}
-                  className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#444] rounded-lg focus:border-[#C5A572] focus:outline-none transition-colors text-sm"
                 />
               </div>
             )}
@@ -651,7 +652,7 @@ export default function BookingForm() {
                     setFormData({ ...formData, email: newValue });
                     saveUserSessionData({ email: newValue });
                   }}
-                  className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#444] rounded-lg focus:border-[#C5A572] focus:outline-none transition-colors text-sm"
                 />
               </div>
 
@@ -669,7 +670,7 @@ export default function BookingForm() {
                     setFormData({ ...formData, phone: newValue });
                     saveUserSessionData({ phone: newValue });
                   }}
-                  className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#444] rounded-lg focus:border-[#C5A572] focus:outline-none transition-colors text-sm"
                 />
               </div>
             </div>
@@ -687,7 +688,7 @@ export default function BookingForm() {
                   setFormData({ ...formData, city: newValue });
                   saveUserSessionData({ city: newValue });
                 }}
-                className="w-full px-4 py-3 bg-accent-dark border border-white/20 rounded-lg focus:border-gold focus:outline-none transition-colors"
+                className="w-full px-4 py-3 bg-[#1A1A1A] border border-[#444] rounded-lg focus:border-[#C5A572] focus:outline-none transition-colors text-sm"
                 placeholder="Enter your city"
               />
             </div>
@@ -696,14 +697,14 @@ export default function BookingForm() {
               <button
                 type="button"
                 onClick={() => setCurrentStep(1)}
-                className="flex-1 bg-dark border-2 border-gold text-white py-3 sm:py-4 rounded-lg font-semibold text-sm sm:text-base hover:bg-accent-dark transition-colors"
+                className="flex-1 bg-transparent border border-[#C5A572]/40 text-[#C5A572] py-3.5 rounded-lg font-bold text-sm uppercase tracking-wider hover:border-[#C5A572] transition-colors"
               >
                 Back
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 bg-gold text-dark py-3 sm:py-4 rounded-lg font-semibold text-sm sm:text-base hover:bg-gold/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 bg-[#C5A572] text-[#1A1A1A] py-3.5 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-[#C5A572]/90 transition-all hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? "Submitting..." : "Book Demo Session"}
               </button>
