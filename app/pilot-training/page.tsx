@@ -693,7 +693,7 @@ export default function PilotTraining() {
               "/facility/WC6.webp",
               "/facility/WC7.webp",
             ]}
-            title="Inside the Kothanur campus."
+            title="Inside the Bengaluru campus."
             subtitle="Saturdays and Sundays between 11 AM and 4 PM. Bring your parents."
           />
           <div className="text-center pt-4 pb-4 px-6">

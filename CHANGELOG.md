@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: replace Kothanur with Bengaluru in campus section
+
+- Campus image carousel title changed from "Inside the Kothanur campus." → "Inside the Bengaluru campus."
+- User-facing: campus section now correctly names the city instead of the neighbourhood.
+
 ## 2026-05-12 · windchasers.md refresh + CHANGELOG bootstrap
 
 - Update `windchasers.md` to reflect the new `/pilot-training`, `/pilot-training-parents`, `/pilot-training-students` and `/team` routes.
