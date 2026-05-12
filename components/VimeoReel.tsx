@@ -35,7 +35,7 @@ export default function VimeoReel({
     );
     if (!val) {
       iframeRef.current?.contentWindow?.postMessage(
-        JSON.stringify({ method: "setVolume", value: 1 }),
+        JSON.stringify({ method: "setVolume", value: 0.5 }),
         "*"
       );
     }

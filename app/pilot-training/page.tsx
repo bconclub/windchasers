@@ -227,8 +227,8 @@ export default function PilotTraining() {
             transition={{ duration: 0.7 }}
             className="font-[family-name:var(--font-headline)] text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-white leading-[1.1]"
           >
-            You. In the cockpit. <br />
-            <span className="text-primary italic">Inside two years.</span>
+            Your Pilot Career <br />
+            <span className="text-primary italic">Starts Here.</span>
           </motion.h1>
 
           <motion.p

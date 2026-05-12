@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training hero heading + VimeoReel volume at 50%
+
+- Hero heading changed: "You. In the cockpit. Inside two years." → "Your Pilot Career Starts Here."
+- VimeoReel auto-unmute volume reduced from 100% → 50%.
+- User-facing: softer audio on scroll-in; cleaner hero copy.
+
 ## 2026-05-12 · VimeoReel: auto-unmute on scroll into view
 
 - Added `autoUnmuteOnView` prop to VimeoReel — uses IntersectionObserver (50% threshold) to unmute on entry, mute on exit.
