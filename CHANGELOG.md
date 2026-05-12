@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: captains section converted to carousel (4-up + arrows)
+
+- Replaced 5-column grid with CardCarousel — shows 4 cards at a time, arrow to reveal Navaneeth (5th).
+- All cards remain linked to /team.
+- User-facing: layout no longer crowded; arrows navigate to the 5th instructor.
+
 ## 2026-05-12 · /pilot-training: add Navaneeth as 5th captain, link all to /team
 
 - Added Navaneeth Nagendra (Senior Ground Instructor) to the Captains grid on `/pilot-training`.

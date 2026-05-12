@@ -520,24 +520,22 @@ export default function PilotTraining() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-6 lg:gap-8">
+          <CardCarousel cardWidthClass="w-[80%] sm:w-[48%] md:w-[31%] lg:w-[23%]">
             {team.map((t, i) => (
-              <Link key={t.name} href="/team">
+              <Link key={t.name} href="/team" className="block h-full">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.08 }}
-                  className={`group relative bg-surface-container-low rounded-3xl border border-outline-variant/10 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-2 cursor-pointer ${
-                    t.offset ? "lg:mt-12" : ""
-                  }`}
+                  className="group relative bg-surface-container-low rounded-3xl border border-outline-variant/10 overflow-hidden transition-all duration-500 hover:border-primary/40 hover:-translate-y-2 cursor-pointer"
                 >
                   <div className="aspect-[4/5] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-700 relative">
                     <Image
                       src={t.image}
                       alt={t.name}
                       fill
-                      sizes="(min-width: 1024px) 20vw, (min-width: 768px) 50vw, 100vw"
+                      sizes="(min-width: 1024px) 23vw, (min-width: 768px) 48vw, 80vw"
                       className="object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                   </div>
@@ -555,7 +553,7 @@ export default function PilotTraining() {
                 </motion.div>
               </Link>
             ))}
-          </div>
+          </CardCarousel>
         </div>
       </section>
 
