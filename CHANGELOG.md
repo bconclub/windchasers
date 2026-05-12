@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: captains carousel — restore staggered offset
+
+- Alternate cards offset down (mt-12) inside the carousel, restoring the up/down stagger look.
+- User-facing: 4 cards visible with staggered heights + arrow to Navaneeth.
+
 ## 2026-05-12 · /pilot-training: captains section converted to carousel (4-up + arrows)
 
 - Replaced 5-column grid with CardCarousel — shows 4 cards at a time, arrow to reveal Navaneeth (5th).
