@@ -16,8 +16,8 @@
 
 ## Documentation freshness
 
-- **This file last updated:** 2026-04-16 (aligned with the workspace snapshot and `git` history below).
-- **Repository HEAD (latest commit):** `0b621e3` - 2026-04-13 23:55 +0530 - *fix: rename ATC sheet tab from 'ATC Web Lead' to 'ATC'*
+- **This file last updated:** 2026-05-12 (after the pilot-training and team rebuild).
+- **Repository HEAD (latest commit):** `6f60727` - 2026-05-12 - */pilot-training: regroup sections, real team, unmute on about video*.
 - **“Last changed” in the tables:** `git log -1` on that path (author commit date; timezone as stored by Git, typically `+0530`).
 
 ---
@@ -130,6 +130,10 @@ windchasers/
 | `/summercamp` | `app/summercamp/page.tsx` | 2026-04-09 | `333fdd9` | Remove duplicate landing footer |
 | `/summercamp` (metadata) | `app/summercamp/layout.tsx` | 2026-04-04 | `71bf39d` | Open House gallery / meta / summer camp images |
 | `/stitch` | `app/stitch/page.tsx` | 2026-04-20 | *new* | Stitch Design Studio — browse & generate UI designs |
+| `/pilot-training` | `app/pilot-training/page.tsx` | 2026-05-12 | `6f60727` | New Stitch-style flagship student funnel page — Promise → Captains → Story → Proof → Path → CTA |
+| `/pilot-training-parents` | `app/pilot-training-parents/page.tsx` | 2026-05-12 | `fecdbb2` | Parent-focused: founder's note, real numbers grid, financing, support services |
+| `/pilot-training-students` | `app/pilot-training-students/page.tsx` | 2026-05-12 | `fecdbb2` | Full rebuild — dynamic batch date, StudentLeadForm + /api/leads, facility lightbox, voices, 7 programs |
+| `/team` | `app/team/page.tsx` | 2026-05-12 | `fecdbb2` | Dedicated team page — Sumaiya (Founder), Rida (MD), Hemanth, Namrata, Rohan, Richard, Haseeb |
 | Root shell | `app/layout.tsx` | 2026-04-04 | `c0d4211` | Summer camp–related layout pass |
 | Global error UI | `app/error.tsx` | 2026-01-02 | `13b74a6` | Same H1 / booking UX wave |
 | Not found | `app/not-found.tsx` | 2026-01-07 | `dfba7f7` | Redirect unknown URLs to `/` |
@@ -254,13 +258,97 @@ windchasers/
 - Client-side React with Framer Motion animations
 - Dark theme matching site design system (gold `#C5A572` accents)
 
-### 13. Error & Not Found
+### 13. Pilot Training (`/pilot-training`)
+**File:** `app/pilot-training/page.tsx` - **Layout:** `app/pilot-training/layout.tsx` - **Last changed:** 2026-05-12 (`6f60727`)
+
+- **Design system:** Stitch / Material 3 tokens (`primary`, `surface-container-*`, `on-surface`); Manrope display font for headings; `max-w-[1400px]` container; gold (`#C5A572`) accent.
+- **Section order (5 narrative chapters):**
+  1. **Hero** — Vimeo bg (`1160946921`), "You. In the cockpit. Inside two years.", trust strip pinned to bottom (mobile horizontal-scrolls)
+  2. **Path Selection** — Airplane / Helicopter split-screen; Airplane opens `AirplanePathModal` with sky-blue + gold 2-tone path variants
+  3. **The Honest Part** — "Building India's next generation of pilots." + portrait Vimeo reel (`1191491477`) with unmute toggle (Chapter 2)
+  4. **The Captains of Your Career** — Real team grid: Sumaiya, Rida, Hemanth, Rohan (2 col mobile / 4 col lg) (Chapter 2)
+  5. **Why WindChasers** — 6 cards in horizontal `CardCarousel` (Faculty / Global / Flexible / Support / Simulator / Pricing) (Chapter 3)
+  6. **Students Flying Gallery** — `StudentsFlyingGallery` with 10 student photos + multiple Vimeo IDs from `/students-flying/` (Chapter 4)
+  7. **Real Journeys testimonials** — `StudentsFlyingGallery` with 11 Vimeo testimonials (Chapter 4)
+  8. **The Journey** — 6-step grid to CPL with progressive star badges (1→5 stars); final card "Your CPL" highlighted with gold gradient + "Captain Rank" tag (Chapter 5)
+  9. **Train at our Campus** — Merged simulator videos (`SIMULATOR_VIMEO_IDS`) + facility `ImageCarousel` (WC1-WC7); "Book a Demo Session" CTA (Chapter 5)
+  10. **The Aptitude Test** — Gold `primary-container` section with glass quiz-preview card linking to `/assessment` (Chapter 5)
+  11. **Final CTA** — Two-card pair: Take the PAT + Talk to a counsellor (Chapter 5)
+- **Reusable component split:** `StudentsFlyingGallery`, `CardCarousel`, `VimeoReel`, `AirplanePathModal`.
+
+### 14. Pilot Training Students (`/pilot-training-students`)
+**File:** `app/pilot-training-students/page.tsx` - **Layout:** `app/pilot-training-students/layout.tsx` - **Last changed:** 2026-05-12 (`fecdbb2`)
+
+- **Full rebuild.** Previously stitch-aware single-page promo; now a 13-section funnel page with lead capture, dynamic next batch date, and removal of all flagged phrases.
+- **Section order:**
+  1. Hero — sticky `StudentLeadForm` on desktop (right column), inline form on mobile
+  2. About — founder narrative
+  3. Mobile-only inline form
+  4. Eligibility check — 2-card layout, PAT CTA
+  5. The Path — 5-step numbered timeline
+  6. Comprehensive Curriculum — 6 DGCA subjects with `lucide-react` icons (Compass, CloudRain, Scale, Wrench, Plane, Radio)
+  7. What's Included — 6 cards (Food/Accommodation, Loan support, Mock tests, Oxford ATPL Books, Uniform, Continuous Guidance)
+  8. Voices of WindChasers — 4 testimonial MP4s from windchasers.in CDN
+  9. Students Flying — Vimeo reels (1191450781–1191483930, 7 IDs)
+  10. Who Teaches You — single block with counsellor CTA
+  11. Our Programs — 7 cards (PPL, CPL, CFI, Night Rating, MEIR, Helicopter, Diploma) — no ATPL, no Cabin Crew, no Drone, no Airport Ops
+  12. Inside WindChasers — `FacilityLightbox` with WC1–WC7 + campus visit CTA
+  13. Next Batch Starting — dynamic date from `lib/batch-date.ts` (auto-flips on 7th of each month); WhatsApp community link
+  14. Take the next step — final dual-card CTA + inline lead form
+- **Lead form:** `StudentLeadForm` posts to `/api/leads` with `type: 'page'`, `audience: 'student'`, first-touch UTM from `lib/tracking.ts`. Redirects to `/thank-you?type=lead` (or `/assessment/early` if Class 12 = No).
+- **Removed copy:** "Elite Flight", "AI-driven", "100% Exam Pass", "ex-Air Force", "CAA certified", "premier", "drone training", "cabin crew", ATPL-as-program.
+- **Footer:** Re-enabled via removal from `ConditionalFooter` hide list.
+
+### 15. Pilot Training Parents (`/pilot-training-parents`)
+**File:** `app/pilot-training-parents/page.tsx` - **Layout:** `app/pilot-training-parents/layout.tsx` - **Last changed:** 2026-05-12 (`fecdbb2`)
+
+- Parent-focused mirror of `/pilot-training-students` with founder's note, real numbers grid, financing partners (HDFC Credila / Avanse / Auxilo), 6 support services, parent testimonial framing.
+
+### 16. Team (`/team`)
+**File:** `app/team/page.tsx` - **Last changed:** 2026-05-12 (`fecdbb2`)
+
+- Dedicated team page with 7 members in cards: Sumaiya Ali (Founder & CEO), Rida Maryam Ali (Managing Director), Hemanth Kumar R (Chief Ground Instructor), Navaneeth Nagendra (no photo, initials fallback), Namrata Baraik (uses `Narmatha.webp`), Rohan Hibare, Richard B Gomes, Z. Mohammed Haseeb.
+- Each card: grayscale-by-default photo (`object-position: center 30%`), hover → color + scale-105, bio overlay reveal.
+
+### 17. Error & Not Found
 - **`app/error.tsx`** - **Last changed:** 2026-01-02 (`13b74a6`) - global error UI with retry and home actions
 - **`app/not-found.tsx`** - **Last changed:** 2026-01-07 (`dfba7f7`) - client redirect to `/` for unknown routes
 
 ---
 
 ## Components
+
+### StudentsFlyingGallery (`components/StudentsFlyingGallery.tsx`)
+- **Added:** 2026-05-12 (`fecdbb2`)
+- Horizontal scroll carousel for mixed `{kind: "image"}` and `{kind: "video"}` items. Used on `/pilot-training` for the "In the Cockpit" student gallery and the "Now they fly" testimonials.
+- Mobile: ~78% card width with `touch-pan-x`; desktop: 4-5 cards visible with prev/next arrows above (right-aligned, `ring-2 ring-primary/30` styling, gold solid background).
+- Video cards: Vimeo iframe with `api=1` so a custom unmute toggle button posts `setMuted: false` via postMessage. Only one card audible at a time.
+- Image cards: plain `next/image` with `pointer-events-none` + `draggable={false}` so swipes pass through to the scroller.
+- Variants: `stitch` (default, M3 tokens) and `legacy` (gold/dark).
+
+### CardCarousel (`components/CardCarousel.tsx`)
+- **Added:** 2026-05-12 (`fecdbb2`)
+- Generic horizontal scroll carousel that wraps arbitrary children. Used for the Why WindChasers section on `/pilot-training`.
+
+### VimeoReel (`components/VimeoReel.tsx`)
+- **Added:** 2026-05-12 (`fecdbb2`)
+- Single Vimeo embed with `aspect = "story" | "square" | "video" | "portrait"`, optional `cover` (`background=1` for object-cover behavior, hides mute control), optional `zoom` (CSS scale to crop letterboxing). Manual mute toggle when `cover` is false.
+
+### StudentLeadForm (`components/StudentLeadForm.tsx`)
+- **Added:** 2026-05-12 (`fecdbb2`)
+- Reusable lead form for `/pilot-training-students`. Fields: name, email, phone (+91 prefix), city, Class-12 radio, fly-preference radio, optional why-textarea. Submits to `/api/leads` with `type: 'page'`, `audience: 'student'`, first-touch UTM, page_url, `data.form_name`. Success: redirect to `/thank-you?type=lead&name=<first>` (or `/assessment/early` if Class 12 = No).
+
+### FacilityLightbox (`components/FacilityLightbox.tsx`)
+- **Added:** 2026-05-12 (`fecdbb2`)
+- Image grid + click-to-open modal lightbox with keyboard arrow/ESC support. Used on `/pilot-training-students`.
+
+### AirplanePathModal (`components/AirplanePathModal.tsx`)
+- **Updated:** 2026-05-12 (this turn)
+- Mobile uses `h-[100dvh]` with internal scroll so the modal fits in one viewport. 2-tone color variation: Starting Fresh = gold, DGCA Completed = sky-blue.
+
+### lib/batch-date.ts
+- **Added:** 2026-05-12 (`fecdbb2`)
+- `getNextBatchDate()` returns the next 7th-of-month label (auto-flips on the 7th).
 
 ### Navbar (`components/Navbar.tsx`)
 - **Last changed:** 2026-04-13 (`2110ece`)
@@ -272,8 +360,9 @@ windchasers/
 - **ATC / summer camp / open house:** WhatsApp deep links use context-specific default messages
 
 ### ConditionalFooter (`components/ConditionalFooter.tsx`)
-- **Last changed:** 2026-04-13 (`2110ece`)
-- Omits `Footer` on: `/demo`, `/assessment`, `/pricing`, `/open-house`, `/summercamp`, `/atc`
+- **Last changed:** 2026-05-12 (`fecdbb2`)
+- Omits `Footer` on: `/demo`, `/assessment`, `/assessment/early`, `/pricing`, `/open-house`, `/summercamp`, `/atc`, `/cabin-crew`, `/students`, `/parents`, `/gtm`, `/admin/*`, `/webinar/*`, `/flight-schools`.
+- **NOT in hide list anymore (footer shows):** `/pilot-training-students` was removed in `fecdbb2` so the global footer renders there.
 
 ### FloatingActionButtons (`components/FloatingActionButtons.tsx`)
 - File exists but **not mounted in layout**
@@ -459,6 +548,18 @@ Client components send UTM/session fields where implemented (`BookingForm`, `Ass
 
 ### ATC (`/public/atc/`)
 - `ATC_Brochure_Final.pdf` (Downloadable brochure)
+
+### Students Flying (`/public/students-flying/`)
+- 8 student photos: `001.webp`, `Shreyas.webp`, `Shreyas 1.webp`, `Sudeep.webp`, `Sudeep1.webp`, `Madhu.webp`, `Madhu 1.webp`, `Vinay.webp`, `Vinaly Flt=ying.webp` (note: typo in filename, kept), `MOhithan Graduation.jpg`, `Mohithan Graduation 1.webp`. Used on `/pilot-training` and `/pilot-training-students` student galleries.
+
+### Team (`/public/team/`)
+- `Sumaiya Ali.webp`, `Rida Ali.webp`, `Hemanth.webp`, `Narmatha.webp` (used for Namrata Baraik card — display name vs filename mismatch), `Rohan.webp`, `Richard Gomez.webp`, `Haseeb.webp`. All cropped for `object-position: center 30%` framing.
+
+### Brand (`/public/brand/`)
+- `image.webp` (used for "Simulator" Why WindChasers card with primary tint overlay), `Team outing.webp`.
+
+### Why WindChasers (`/public/why-windchasers/`)
+- `instructors.webp` (used for "Faculty" Why WindChasers card on `/pilot-training`).
 
 ---
 

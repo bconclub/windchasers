@@ -21,6 +21,7 @@ import {
   Sparkles,
   FileText,
   Download,
+  Star,
 } from "lucide-react";
 import VideoCarousel from "@/components/VideoCarousel";
 import ImageCarousel from "@/components/ImageCarousel";
@@ -64,17 +65,18 @@ const SIMULATOR_VIMEO_IDS = ["1191485284", "1191485533"];
 
 // Unused for now: 1191486085 (student in classroom footage, reserve for a future section)
 
-const videos = [
-  { id: "1", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150072244" },
-  { id: "2", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150072000" },
-  { id: "3", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150070765" },
-  { id: "4", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150070605" },
-  { id: "5", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150070400" },
-  { id: "6", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150071458" },
-  { id: "7", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150071201" },
-  { id: "8", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150072494" },
-  { id: "9", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150070211" },
-  { id: "10", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150069889" },
+const testimonialGallery: GalleryItem[] = [
+  { kind: "video", vimeoId: "1191521721" },
+  { kind: "video", vimeoId: "1150072244" },
+  { kind: "video", vimeoId: "1150072000" },
+  { kind: "video", vimeoId: "1150070765" },
+  { kind: "video", vimeoId: "1150070605" },
+  { kind: "video", vimeoId: "1150070400" },
+  { kind: "video", vimeoId: "1150071458" },
+  { kind: "video", vimeoId: "1150071201" },
+  { kind: "video", vimeoId: "1150072494" },
+  { kind: "video", vimeoId: "1150070211" },
+  { kind: "video", vimeoId: "1150069889" },
 ];
 
 const steps = [
@@ -298,6 +300,9 @@ export default function PilotTraining() {
                 <span className="bg-white/10 backdrop-blur-sm border border-primary/40 rounded-full px-4 py-1.5 text-sm font-bold text-primary tracking-wider">
                   CPL
                 </span>
+                <span className="bg-white/10 backdrop-blur-sm border border-primary/40 rounded-full px-4 py-1.5 text-sm font-bold text-primary tracking-wider">
+                  ATPL
+                </span>
               </div>
               <span className="inline-block bg-primary text-on-primary px-6 py-3 rounded-lg font-semibold hover:bg-primary-container transition-colors">
                 Explore Path
@@ -427,7 +432,7 @@ export default function PilotTraining() {
             </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
             {team.map((t, i) => (
               <motion.div
                 key={t.name}
@@ -543,28 +548,14 @@ export default function PilotTraining() {
       </section>
 
       {/* Chapter 4b: Real Journeys testimonials */}
-      <section className="py-16 md:py-24 bg-background overflow-hidden">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="mb-12"
-          >
-            <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase block mb-4">
-              Proof in Flight
-            </span>
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-6xl font-bold text-white tracking-tighter">
-              They were where you are. <br />
-              Now they fly.
-            </h2>
-            <p className="text-on-surface-variant text-lg md:text-xl mt-4">
-              Real students. Their own words.
-            </p>
-          </motion.div>
-        </div>
-        <VideoCarousel videos={videos} />
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-background border-y border-outline-variant/10">
+        <StudentsFlyingGallery
+          items={testimonialGallery}
+          eyebrow="Proof in Flight"
+          title="They were where you are. Now they fly."
+          subtitle="Real students. Their own words."
+          variant="stitch"
+        />
       </section>
 
       {/* Chapter 5: The Journey */}
@@ -585,22 +576,54 @@ export default function PilotTraining() {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12">
-            {steps.map((s, i) => (
-              <motion.div
-                key={s.n}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.06 }}
-                className="group p-8 md:p-10 bg-surface-container-low rounded-3xl border border-outline-variant/10 hover:border-primary/30 transition-colors duration-500"
-              >
-                <div className="text-primary font-[family-name:var(--font-headline)] font-black text-5xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">
-                  {s.n}
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-4">{s.title}</h3>
-                <p className="text-on-surface-variant leading-relaxed">{s.body}</p>
-              </motion.div>
-            ))}
+            {steps.map((s, i) => {
+              const starCount = Math.min(i + 1, 5);
+              const isFinal = i === steps.length - 1;
+              return (
+                <motion.div
+                  key={s.n}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.06 }}
+                  className={`group relative p-8 md:p-10 rounded-3xl border transition-colors duration-500 ${
+                    isFinal
+                      ? "bg-gradient-to-br from-primary/15 to-primary/5 border-primary/50 hover:border-primary"
+                      : "bg-surface-container-low border-outline-variant/10 hover:border-primary/30"
+                  }`}
+                >
+                  <div
+                    className={`absolute top-5 right-5 flex items-center gap-0.5 px-2.5 py-1 rounded-full border ${
+                      isFinal
+                        ? "bg-primary/20 border-primary/60"
+                        : "bg-surface-container border-outline-variant/30"
+                    }`}
+                    aria-label={`${starCount} star${starCount > 1 ? "s" : ""}`}
+                  >
+                    {Array.from({ length: 5 }).map((_, idx) => (
+                      <Star
+                        key={idx}
+                        className={`w-3 h-3 md:w-3.5 md:h-3.5 ${
+                          idx < starCount
+                            ? "text-primary fill-primary"
+                            : "text-outline-variant/40"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <div className="text-primary font-[family-name:var(--font-headline)] font-black text-5xl mb-6 opacity-20 group-hover:opacity-100 transition-opacity">
+                    {s.n}
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-4">{s.title}</h3>
+                  <p className="text-on-surface-variant leading-relaxed">{s.body}</p>
+                  {isFinal && (
+                    <p className="mt-4 text-primary text-xs font-bold uppercase tracking-[0.2em]">
+                      Captain rank
+                    </p>
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>

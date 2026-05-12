@@ -24,95 +24,107 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
 
           {/* Modal */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
             onClick={(e) => e.stopPropagation()}
             className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-6"
           >
-            <div className="relative max-w-4xl w-full h-full md:h-auto" onClick={(e) => e.stopPropagation()}>
-              <div className="bg-accent-dark border-0 md:border-2 border-gold/50 rounded-none md:rounded-lg h-full md:max-h-[90vh] overflow-y-auto relative" onClick={(e) => e.stopPropagation()}>
-                {/* Close Button */}
-                <button
-                  onClick={onClose}
-                  className="absolute top-4 right-4 md:top-6 md:right-6 text-white hover:text-gold transition-colors text-3xl z-10 bg-dark/80 md:bg-transparent rounded-full w-10 h-10 flex items-center justify-center"
-                >
-                  ×
-                </button>
-                <div className="p-6 md:p-12">
-                  <h2 className="text-3xl md:text-4xl font-bold text-gold text-center mb-6 md:mb-12 pt-[30px] md:pt-0">
-                    Choose Your Pilot Training Path
-                  </h2>
+            <div
+              className="relative max-w-4xl w-full h-[100dvh] md:h-auto md:max-h-[90vh] flex flex-col md:block bg-accent-dark border-0 md:border-2 border-gold/50 rounded-none md:rounded-lg overflow-hidden md:overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={onClose}
+                className="absolute top-3 right-3 md:top-6 md:right-6 text-white hover:text-gold transition-colors text-2xl z-20 bg-dark/80 md:bg-transparent rounded-full w-9 h-9 md:w-10 md:h-10 flex items-center justify-center"
+                aria-label="Close"
+              >
+                ×
+              </button>
 
-                  <div className="grid md:grid-cols-2 gap-4 md:gap-8">
-                    {/* Starting Fresh */}
-                    <Link
-                      href="/dgca"
-                      onClick={onClose}
-                      className="group bg-dark border-2 border-gold/50 hover:border-gold transition-all p-6 md:p-8 rounded-lg block"
-                    >
-                    <h3 className="text-2xl font-bold mb-4 text-gold">Starting Fresh</h3>
-                    <p className="text-white/70 mb-6">
-                      Begin with DGCA ground classes. Complete all 6 CPL theory exams before flying.
+              <div className="flex flex-col h-full md:block p-4 md:p-12 pt-12 md:pt-12 overflow-y-auto md:overflow-visible">
+                <h2 className="text-2xl md:text-4xl font-bold text-gold text-center mb-4 md:mb-12 leading-tight">
+                  Choose Your Pilot Training Path
+                </h2>
+
+                <div className="grid md:grid-cols-2 gap-3 md:gap-8 flex-1">
+                  {/* Starting Fresh — gold accent */}
+                  <Link
+                    href="/dgca"
+                    onClick={onClose}
+                    className="group bg-gold/5 border-2 border-gold/50 hover:border-gold transition-all p-4 md:p-8 rounded-lg block"
+                  >
+                    <h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 text-gold">
+                      Starting Fresh
+                    </h3>
+                    <p className="text-white/70 text-sm md:text-base mb-3 md:mb-6 leading-snug">
+                      Begin with DGCA ground classes. Complete all 6 CPL theory
+                      exams before flying.
                     </p>
 
-                    <div className="space-y-3 mb-6 text-sm">
-                      <div className="flex items-start">
-                        <span className="text-gold mr-3">•</span>
-                        <span className="text-white/60">6 DGCA theory subjects</span>
-                      </div>
-                      <div className="flex items-start">
-                        <span className="text-gold mr-3">•</span>
-                        <span className="text-white/60">Comprehensive ground school</span>
-                      </div>
-                      <div className="flex items-start">
-                        <span className="text-gold mr-3">•</span>
-                        <span className="text-white/60">400+ hours of training</span>
-                      </div>
+                    <div className="space-y-1.5 md:space-y-3 mb-4 md:mb-6 text-xs md:text-sm">
+                      {[
+                        "6 DGCA theory subjects",
+                        "Comprehensive ground school",
+                        "400+ hours of training",
+                      ].map((item) => (
+                        <div key={item} className="flex items-start">
+                          <span className="text-gold mr-2 md:mr-3">•</span>
+                          <span className="text-white/60">{item}</span>
+                        </div>
+                      ))}
                     </div>
 
-                      <div className="inline-block bg-gold text-dark px-6 py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors">
-                        View DGCA Program
-                      </div>
-                    </Link>
+                    <span className="inline-block bg-gold text-dark px-5 md:px-6 py-2 md:py-3 rounded-lg font-semibold text-sm md:text-base hover:bg-gold/90 transition-colors">
+                      View DGCA Program
+                    </span>
+                  </Link>
 
-                    {/* DGCA Completed */}
-                    <Link
-                      href="/international"
-                      onClick={onClose}
-                      className="group bg-dark border-2 border-gold/50 hover:border-gold transition-all p-6 md:p-8 rounded-lg block"
-                    >
-                    <h3 className="text-2xl font-bold mb-4 text-gold">DGCA Completed</h3>
-                    <p className="text-white/70 mb-6">
-                      Already cleared DGCA exams? Get pilot training abroad to complete your CPL hours.
+                  {/* DGCA Completed — sky/blue accent */}
+                  <Link
+                    href="/international"
+                    onClick={onClose}
+                    className="group bg-sky-500/5 border-2 border-sky-400/50 hover:border-sky-400 transition-all p-4 md:p-8 rounded-lg block"
+                  >
+                    <h3 className="text-lg md:text-2xl font-bold mb-2 md:mb-4 text-sky-300">
+                      DGCA Completed
+                    </h3>
+                    <p className="text-white/70 text-sm md:text-base mb-3 md:mb-6 leading-snug">
+                      Already cleared DGCA exams? Get pilot training abroad to
+                      complete your CPL hours.
                     </p>
 
-                    <div className="space-y-3 mb-6 text-sm">
-                      <div className="flex items-start">
-                        <span className="text-gold mr-3">•</span>
-                        <span className="text-white/60">USA, Canada, Hungary, NZ, Australia</span>
-                      </div>
-                      <div className="flex items-start">
-                        <span className="text-gold mr-3">•</span>
-                        <span className="text-white/60">6-8 months training</span>
-                      </div>
-                      <div className="flex items-start">
-                        <span className="text-gold mr-3">•</span>
-                        <span className="text-white/60">Complete visa support</span>
-                      </div>
+                    <div className="space-y-1.5 md:space-y-3 mb-4 md:mb-6 text-xs md:text-sm">
+                      {[
+                        "USA, Canada, Hungary, NZ, Australia",
+                        "6-8 months training",
+                        "Complete visa support",
+                      ].map((item) => (
+                        <div key={item} className="flex items-start">
+                          <span className="text-sky-300 mr-2 md:mr-3">•</span>
+                          <span className="text-white/60">{item}</span>
+                        </div>
+                      ))}
                     </div>
 
-                      <div className="inline-block bg-gold text-dark px-6 py-3 rounded-lg font-semibold hover:bg-gold/90 transition-colors">
-                        Choose Country
-                      </div>
-                    </Link>
-                  </div>
+                    <span className="inline-block bg-sky-400 text-dark px-5 md:px-6 py-2 md:py-3 rounded-lg font-semibold text-sm md:text-base hover:bg-sky-300 transition-colors">
+                      Choose Country
+                    </span>
+                  </Link>
+                </div>
 
-                  <div className="mt-8 pt-8 border-t border-white/10 text-center">
-                    <p className="text-white/50 text-sm">
-                      Not sure which path? <Link href="/assessment" onClick={onClose} className="text-gold hover:underline">Take Assessment</Link>
-                    </p>
-                  </div>
+                <div className="mt-4 md:mt-8 pt-3 md:pt-8 border-t border-white/10 text-center">
+                  <p className="text-white/50 text-xs md:text-sm">
+                    Not sure which path?{" "}
+                    <Link
+                      href="/assessment"
+                      onClick={onClose}
+                      className="text-gold hover:underline font-semibold"
+                    >
+                      Take Assessment
+                    </Link>
+                  </p>
                 </div>
               </div>
             </div>
