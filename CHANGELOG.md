@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /dgca: WhyChooseUsCarousel right arrow always visible
+
+- Both nav arrows now always render with justify-between; hidden via `invisible` instead of conditional render.
+- Fixes: right arrow missing on first card because justify-between had only one element.
+
 ## 2026-05-12 · Navbar: call + WhatsApp on /pilot-training pages
 
 - Added isPilotTraining flag (matches /pilot-training/*) to Navbar.

@@ -266,29 +266,27 @@ export default function WhyChooseUsCarousel() {
 
         {/* Navigation Arrows - Desktop Only */}
         <div className="hidden md:flex absolute inset-0 items-center justify-between pointer-events-none px-8">
-          {canGoPrev && (
-            <button
-              onClick={prevSlide}
-              className="pointer-events-auto w-14 h-14 rounded-full bg-gold/20 hover:bg-gold/40 backdrop-blur-sm flex items-center justify-center transition-all hover:scale-110"
-              aria-label="Previous"
-            >
-              <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-          )}
-          
-          {canGoNext && (
-            <button
-              onClick={nextSlide}
-              className="pointer-events-auto w-14 h-14 rounded-full bg-gold/20 hover:bg-gold/40 backdrop-blur-sm flex items-center justify-center transition-all hover:scale-110"
-              aria-label="Next"
-            >
-              <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
-          )}
+          <button
+            onClick={prevSlide}
+            disabled={!canGoPrev}
+            className={`pointer-events-auto w-14 h-14 rounded-full bg-gold/20 hover:bg-gold/40 backdrop-blur-sm flex items-center justify-center transition-all hover:scale-110 ${!canGoPrev ? "invisible" : ""}`}
+            aria-label="Previous"
+          >
+            <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+
+          <button
+            onClick={nextSlide}
+            disabled={!canGoNext}
+            className={`pointer-events-auto w-14 h-14 rounded-full bg-gold/20 hover:bg-gold/40 backdrop-blur-sm flex items-center justify-center transition-all hover:scale-110 ${!canGoNext ? "invisible" : ""}`}
+            aria-label="Next"
+          >
+            <svg className="w-7 h-7 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </div>
 
         {/* Mobile Swipe Indicator */}
