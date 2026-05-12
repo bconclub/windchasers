@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: campus gallery — 2 rows default + expand
+
+- Campus gallery shows 8 images (2×4 grid) by default.
+- "View all 15 photos ↓" button expands to all images; "Show less" collapses back.
+
 ## 2026-05-12 · /pilot-training: swap gallery styles
 
 - In the Cockpit (Ch4): restored StudentsFlyingGallery carousel (images + Vimeo mix).

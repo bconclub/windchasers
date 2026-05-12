@@ -195,6 +195,81 @@ const team = [
   },
 ];
 
+const CAMPUS_IMAGES = [
+  "/facility/WC1.webp",
+  "/facility/WC2.webp",
+  "/facility/WC3.webp",
+  "/facility/WC4.webp",
+  "/facility/WC5.webp",
+  "/facility/WC6.webp",
+  "/facility/WC7.webp",
+  "/facility/5U2A0673.JPG.webp",
+  "/facility/5U2A0674.JPG.avif",
+  "/facility/5U2A0679.JPG.webp",
+  "/facility/DSC05362.JPG.webp",
+  "/facility/DSC_0481.JPG.webp",
+  "/facility/DSC_0492.JPG.webp",
+  "/facility/DSC_0549.JPG.webp",
+  "/facility/Sumaiya Ali.webp",
+];
+
+function CampusGallery() {
+  const [expanded, setExpanded] = useState(false);
+  const visible = expanded ? CAMPUS_IMAGES : CAMPUS_IMAGES.slice(0, 8);
+  return (
+    <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-10"
+      >
+        <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-sm mb-3 block">
+          WindChasers
+        </span>
+        <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-bold text-[#C5A572] tracking-tighter mb-3">
+          Bengaluru Campus Vibes.
+        </h2>
+        <p className="text-white/60 text-lg">
+          Walk in for a Demo session on Saturdays 11am to 4pm
+        </p>
+      </motion.div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {visible.map((src, i) => (
+          <motion.div
+            key={src}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-40px" }}
+            transition={{ delay: i * 0.03, duration: 0.5 }}
+            className="rounded-xl overflow-hidden aspect-square"
+          >
+            <Image
+              src={src}
+              alt={`WindChasers campus ${i + 1}`}
+              width={400}
+              height={400}
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 768px) 50vw, 25vw"
+            />
+          </motion.div>
+        ))}
+      </div>
+      <div className="flex justify-center mt-8">
+        <button
+          type="button"
+          onClick={() => setExpanded((v) => !v)}
+          className="flex items-center gap-2 text-[#C5A572] border border-[#C5A572]/40 hover:border-[#C5A572] px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-wider transition-colors"
+        >
+          {expanded ? "Show less" : `View all ${CAMPUS_IMAGES.length} photos`}
+          <span className={`transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}>↓</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function PilotTraining() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
@@ -634,63 +709,8 @@ export default function PilotTraining() {
 
       {/* Chapter 8: Train at our Campus (Simulator + Facility) */}
       <section className="py-24 md:py-32 bg-surface-container-lowest border-y border-outline-variant/10">
-        {/* Campus masonry gallery */}
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-10"
-          >
-            <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-sm mb-3 block">
-              WindChasers
-            </span>
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-bold text-[#C5A572] tracking-tighter mb-3">
-              Bengaluru Campus Vibes.
-            </h2>
-            <p className="text-white/60 text-lg">
-              Walk in for a Demo session on Saturdays 11am to 4pm
-            </p>
-          </motion.div>
-          <div className="columns-2 md:columns-4 gap-3 space-y-3">
-            {[
-              "/facility/WC1.webp",
-              "/facility/WC2.webp",
-              "/facility/WC3.webp",
-              "/facility/WC4.webp",
-              "/facility/WC5.webp",
-              "/facility/WC6.webp",
-              "/facility/WC7.webp",
-              "/facility/5U2A0673.JPG.webp",
-              "/facility/5U2A0674.JPG.avif",
-              "/facility/5U2A0679.JPG.webp",
-              "/facility/DSC05362.JPG.webp",
-              "/facility/DSC_0481.JPG.webp",
-              "/facility/DSC_0492.JPG.webp",
-              "/facility/DSC_0549.JPG.webp",
-              "/facility/Sumaiya Ali.webp",
-            ].map((src, i) => (
-              <motion.div
-                key={src}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: i * 0.03, duration: 0.5 }}
-                className="break-inside-avoid rounded-xl overflow-hidden"
-              >
-                <Image
-                  src={src}
-                  alt={`WindChasers campus ${i + 1}`}
-                  width={600}
-                  height={800}
-                  className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                />
-              </motion.div>
-            ))}
-          </div>
-        </div>
+        {/* Campus gallery */}
+        <CampusGallery />
 
         {/* Campus CTA */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 px-6">
