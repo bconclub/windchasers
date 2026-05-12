@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: captains cards — 2-line text overlay
+
+- Name truncated to 1 line (text-base), role truncated to 1 line — 2 lines total.
+- Reduced overlay padding so text sits lower on the face.
+- Bio hover text removed from pilot-training cards (kept clean).
+- User-facing: text no longer obscures faces.
+
 ## 2026-05-12 · Add Navaneeth team photo asset
 
 - Added public/team/Navneeth.webp to the repository.

@@ -547,15 +547,12 @@ export default function PilotTraining() {
                       </div>
                     )}
                   </div>
-                  <div className="p-6 md:p-8 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/90 to-transparent">
-                    <h3 className="text-xl md:text-2xl font-bold text-primary mb-1">
+                  <div className="p-4 md:p-5 absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background/80 to-transparent">
+                    <h3 className="text-base md:text-lg font-bold text-primary mb-0.5 truncate">
                       {t.name}
                     </h3>
-                    <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-white/60 mb-4">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-white/60 truncate">
                       {t.role}
-                    </p>
-                    <p className="text-on-surface-variant text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                      {t.bio}
                     </p>
                   </div>
                 </motion.div>
