@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: swap gallery styles
+
+- In the Cockpit (Ch4): restored StudentsFlyingGallery carousel (images + Vimeo mix).
+- Bengaluru Campus Vibes (Ch8): replaced ImageCarousel with 4-col masonry grid of all 15 facility images.
+
 ## 2026-05-12 · /pilot-training: PROXe chat widget
 
 - Added proxe.windchasers.in/api/widget/embed.js (afterInteractive) to /pilot-training page.

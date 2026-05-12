@@ -418,57 +418,15 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* Chapter 4: Students Flying Gallery — masonry grid */}
+      {/* Chapter 4: Students Flying Gallery (carousel — images + Vimeo) */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-surface-container-lowest border-y border-outline-variant/10">
-        <div className="max-w-[1400px] mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12"
-          >
-            <span className="text-primary font-bold tracking-[0.2em] uppercase text-sm mb-4 block" style={{ fontFamily: "var(--font-manrope, sans-serif)" }}>
-              In the Cockpit
-            </span>
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-extrabold text-white tracking-tighter">
-              They started exactly where you are.
-            </h2>
-          </motion.div>
-          <div className="columns-2 md:columns-4 gap-3 space-y-3">
-            {[
-              { src: "/students-flying/001.webp", alt: "WindChasers student" },
-              { src: "/students-flying/Shreyas.webp", alt: "Shreyas" },
-              { src: "/students-flying/Sudeep.webp", alt: "Sudeep" },
-              { src: "/students-flying/Madhu.webp", alt: "Madhu" },
-              { src: "/students-flying/Shreyas 1.webp", alt: "Shreyas in cockpit" },
-              { src: "/students-flying/Sudeep1.webp", alt: "Sudeep flying" },
-              { src: "/students-flying/Madhu 1.webp", alt: "Madhu flying" },
-              { src: "/students-flying/Vinay.webp", alt: "Vinay" },
-              { src: "/students-flying/Vinaly Flt=ying.webp", alt: "Vinay flying" },
-              { src: "/students-flying/MOhithan Graduation.jpg", alt: "Mohithan graduation" },
-              { src: "/students-flying/Mohithan Graduation 1.webp", alt: "Mohithan graduation" },
-            ].map((img, i) => (
-              <motion.div
-                key={img.src}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ delay: i * 0.04, duration: 0.5 }}
-                className="break-inside-avoid rounded-xl overflow-hidden"
-              >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  width={600}
-                  height={800}
-                  className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                />
-              </motion.div>
-            ))}
-          </div>
-        </div>
+        <StudentsFlyingGallery
+          items={flyingGallery}
+          eyebrow="In the Cockpit"
+          title="They started exactly where you are."
+          subtitle="Photos and clips from students in active training."
+          variant="stitch"
+        />
       </section>
 
       {/* Chapter 5: The Journey */}
@@ -676,29 +634,63 @@ export default function PilotTraining() {
 
       {/* Chapter 8: Train at our Campus (Simulator + Facility) */}
       <section className="py-24 md:py-32 bg-surface-container-lowest border-y border-outline-variant/10">
-        {/* Campus image carousel first */}
-        <ImageCarousel
-          images={[
-            "/facility/WC1.webp",
-            "/facility/WC2.webp",
-            "/facility/WC3.webp",
-            "/facility/WC4.webp",
-            "/facility/WC5.webp",
-            "/facility/WC6.webp",
-            "/facility/WC7.webp",
-            "/facility/5U2A0673.JPG.webp",
-            "/facility/5U2A0674.JPG.avif",
-            "/facility/5U2A0679.JPG.webp",
-            "/facility/DSC05362.JPG.webp",
-            "/facility/DSC_0481.JPG.webp",
-            "/facility/DSC_0492.JPG.webp",
-            "/facility/DSC_0549.JPG.webp",
-            "/facility/Sumaiya Ali.webp",
-          ]}
-          eyebrow="WindChasers"
-          title="Bengaluru Campus Vibes."
-          subtitle="Walk in for a Demo session on Saturdays 11am to 4pm"
-        />
+        {/* Campus masonry gallery */}
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-10"
+          >
+            <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-sm mb-3 block">
+              WindChasers
+            </span>
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-bold text-[#C5A572] tracking-tighter mb-3">
+              Bengaluru Campus Vibes.
+            </h2>
+            <p className="text-white/60 text-lg">
+              Walk in for a Demo session on Saturdays 11am to 4pm
+            </p>
+          </motion.div>
+          <div className="columns-2 md:columns-4 gap-3 space-y-3">
+            {[
+              "/facility/WC1.webp",
+              "/facility/WC2.webp",
+              "/facility/WC3.webp",
+              "/facility/WC4.webp",
+              "/facility/WC5.webp",
+              "/facility/WC6.webp",
+              "/facility/WC7.webp",
+              "/facility/5U2A0673.JPG.webp",
+              "/facility/5U2A0674.JPG.avif",
+              "/facility/5U2A0679.JPG.webp",
+              "/facility/DSC05362.JPG.webp",
+              "/facility/DSC_0481.JPG.webp",
+              "/facility/DSC_0492.JPG.webp",
+              "/facility/DSC_0549.JPG.webp",
+              "/facility/Sumaiya Ali.webp",
+            ].map((src, i) => (
+              <motion.div
+                key={src}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ delay: i * 0.03, duration: 0.5 }}
+                className="break-inside-avoid rounded-xl overflow-hidden"
+              >
+                <Image
+                  src={src}
+                  alt={`WindChasers campus ${i + 1}`}
+                  width={600}
+                  height={800}
+                  className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
 
         {/* Campus CTA */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8 px-6">
