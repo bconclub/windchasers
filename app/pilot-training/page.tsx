@@ -130,7 +130,7 @@ const whyCards = [
     label: "Flexible",
     title: "Built around your goal",
     body: "Your path. Your budget. India, abroad, or a mix. We do not over-promise.",
-    image: "/facility/DSC_0549.JPG.webp",
+    image: "/why-windchasers/Build Around your goals.webp",
   },
   {
     icon: Headphones,

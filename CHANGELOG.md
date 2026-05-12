@@ -2,6 +2,10 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: Why card 3 — dedicated asset
+
+- "Built around your goal" card image swapped to /why-windchasers/Build Around your goals.webp.
+
 ## 2026-05-12 · /pilot-training: Why WindChasers cards — jumbled images
 
 - DGCA-approved partners card now uses /why-windchasers/DGCA Approved.webp (was WC2.webp).
