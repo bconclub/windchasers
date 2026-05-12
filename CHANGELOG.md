@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /team: Navaneeth photo restored
+
+- Set Navaneeth Nagendra's photo to /team/Navneeth.webp on the team page (was null).
+- User-facing: "NN" placeholder replaced with real headshot on /team.
+
 ## 2026-05-12 · /pilot-training hero heading + VimeoReel volume at 50%
 
 - Hero heading changed: "You. In the cockpit. Inside two years." → "Your Pilot Career Starts Here."

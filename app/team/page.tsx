@@ -33,7 +33,7 @@ const team = [
   {
     name: "Navaneeth Nagendra",
     initials: "NN",
-    photo: null,
+    photo: "/team/Navneeth.webp",
     title: "Senior Ground Instructor",
     bio: "Eight years in aviation training with a multidisciplinary background spanning Aeronautical, Maintenance, and Industrial Engineering. Delivers structured theory that builds robust academic foundations aligned with the DGCA syllabus.",
     expertise: ["Meteorology", "Air Navigation", "Air Regulations", "Technical General", "DGCA Syllabus Development"],
