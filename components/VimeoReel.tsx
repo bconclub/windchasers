@@ -28,17 +28,56 @@ export default function VimeoReel({
   const containerRef = useRef<HTMLDivElement>(null);
   const [muted, setMuted] = useState(true);
 
+  const fadeIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const currentVolRef = useRef(0);
+
+  const setVolume = (vol: number) => {
+    iframeRef.current?.contentWindow?.postMessage(
+      JSON.stringify({ method: "setVolume", value: vol }),
+      "*"
+    );
+  };
+
   const sendMute = (val: boolean) => {
     iframeRef.current?.contentWindow?.postMessage(
       JSON.stringify({ method: "setMuted", value: val }),
       "*"
     );
-    if (!val) {
-      iframeRef.current?.contentWindow?.postMessage(
-        JSON.stringify({ method: "setVolume", value: 0.5 }),
-        "*"
-      );
-    }
+    if (!val) setVolume(0.5);
+  };
+
+  const fadeOut = () => {
+    if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+    let vol = currentVolRef.current;
+    fadeIntervalRef.current = setInterval(() => {
+      vol = Math.max(0, vol - 0.05);
+      currentVolRef.current = vol;
+      setVolume(vol);
+      if (vol <= 0) {
+        clearInterval(fadeIntervalRef.current!);
+        iframeRef.current?.contentWindow?.postMessage(
+          JSON.stringify({ method: "setMuted", value: true }),
+          "*"
+        );
+        setMuted(true);
+      }
+    }, 60);
+  };
+
+  const fadeIn = () => {
+    if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+    iframeRef.current?.contentWindow?.postMessage(
+      JSON.stringify({ method: "setMuted", value: false }),
+      "*"
+    );
+    setMuted(false);
+    let vol = currentVolRef.current;
+    fadeIntervalRef.current = setInterval(() => {
+      vol = Math.min(0.5, vol + 0.05);
+      currentVolRef.current = vol;
+      setVolume(vol);
+      if (vol >= 0.5) clearInterval(fadeIntervalRef.current!);
+    }, 60);
   };
 
   useEffect(() => {
@@ -47,14 +86,19 @@ export default function VimeoReel({
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const inView = entry.isIntersecting;
-        setMuted(!inView);
-        sendMute(!inView);
+        if (entry.isIntersecting) {
+          fadeIn();
+        } else {
+          fadeOut();
+        }
       },
       { threshold: 0.5 }
     );
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
+    };
   }, [autoUnmuteOnView, cover]);
 
   const toggleMute = () => {

@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · VimeoReel: gradual audio fade on scroll out
+
+- autoUnmuteOnView: volume now fades out over ~600ms (steps of 0.05 every 60ms) instead of cutting instantly.
+- Fade-in also eases up from 0 → 0.5 on scroll-in.
+- Fixes: abrupt audio cut when scrolling from section 2 to 3.
+
 ## 2026-05-12 · /pilot-training: Book a Demo Class — scroll-up reveal, glass style
 
 - Button only appears when scrolling up (and past 300px from top).
