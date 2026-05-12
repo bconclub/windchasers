@@ -17,7 +17,6 @@ export default function ConditionalFooter() {
     pathname === "/summercamp" ||
     pathname === "/atc" ||
     pathname === "/cabin-crew" ||
-    pathname === "/pilot-training-students" ||
     pathname === "/students" ||
     pathname === "/parents" ||
     pathname === "/gtm" ||

@@ -1,301 +1,881 @@
-import type { Metadata } from "next";
-import Script from "next/script";
-import { Manrope } from "next/font/google";
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
-  Globe,
-  BadgeCheck,
   GraduationCap,
-  PlaneTakeoff,
-  CheckCircle,
+  Compass,
+  CloudRain,
+  Scale,
+  Wrench,
+  Plane,
+  Radio,
+  BedDouble,
+  Banknote,
+  ClipboardList,
+  BookOpen,
+  Shirt,
+  HeartHandshake,
+  PlayCircle,
+  X,
+  Phone,
+  Calendar,
+  MessageCircle,
+  BadgeCheck,
+  Award,
+  Moon,
+  Helicopter,
+  ShieldCheck,
+  Stethoscope,
 } from "lucide-react";
+import StudentLeadForm, { type LeadFormName } from "@/components/StudentLeadForm";
+import FacilityLightbox from "@/components/FacilityLightbox";
+import { getNextBatchDate } from "@/lib/batch-date";
 
-const manrope = Manrope({
-  subsets: ["latin"],
-  variable: "--font-headline",
-  weight: ["400", "600", "700", "800"],
-});
+const TESTIMONIAL_VIDEOS = [
+  "https://windchasers.in/wp-content/uploads/2025/01/Testimonial_WCBhoomika.mp4#t=5",
+  "https://windchasers.in/wp-content/uploads/2025/11/Student-Flying.mp4",
+  "https://windchasers.in/wp-content/uploads/2025/01/Testimonial_WC-Shreyas-1.mp4#t=5",
+  "https://windchasers.in/wp-content/uploads/2025/11/Charan.mp4",
+];
 
-export const metadata: Metadata = {
-  title: "Pilot Training for Students | WindChasers Aviation Academy",
-  description:
-    "Why settle for grounded? Elite flight training with international exposure, AI-driven ground school, and Type Rating placement. From Bengaluru to the world.",
-};
+const FLYING_VIMEO_IDS = [
+  "1191450781",
+  "1191450782",
+  "1191450783",
+  "1191451296",
+  "1191451981",
+  "1191451984",
+  "1191451985",
+];
 
-const PATHS = [
+const FACILITY_PHOTOS = [
+  "/facility/WC1.webp",
+  "/facility/WC2.webp",
+  "/facility/WC3.webp",
+  "/facility/WC4.webp",
+  "/facility/WC5.webp",
+  "/facility/WC6.webp",
+  "/facility/WC7.webp",
+];
+
+const CURRICULUM = [
+  { icon: Compass, title: "Air Navigation" },
+  { icon: CloudRain, title: "Aviation Meteorology" },
+  { icon: Scale, title: "Air Regulations" },
+  { icon: Wrench, title: "Aircraft Technical" },
+  { icon: Plane, title: "Aircraft General" },
+  { icon: Radio, title: "Radio Telephony" },
+];
+
+const INCLUDED = [
+  { icon: BedDouble, title: "Food and Accommodation", body: "Verified housing near campus." },
+  { icon: Banknote, title: "Educational loan support", body: "HDFC Credila, Avanse, Auxilo. Up to ₹40 lakh." },
+  { icon: ClipboardList, title: "Comprehensive training", body: "5 DGCA papers, mock tests, counsellor check-ins." },
+  { icon: BookOpen, title: "Oxford ATPL Books", body: "Standard reference set provided." },
+  { icon: Shirt, title: "One Uniform Set", body: "Issued during enrolment." },
+  { icon: HeartHandshake, title: "Continuous Guidance", body: "Counsellor support through training and post-CPL." },
+];
+
+const PATH_STEPS = [
   {
-    code: "PPL",
-    label: "Private Pilot License",
-    blurb: "The foundation of your aviation journey. Fly for pleasure or start your career.",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuDHljZP3ypAootIGahDgWTRCIW41l0fL6IFv4bifNm-kZC0hR1PfPEicr4mNwyYOKVS4SxWDLFUa6-vinhJUoOqWOCfyYVzHKqNxApX2BR9aKpwkZj88rssyhyqdm0NEniuYM2tUp0l20uIQ7yzaiJS98grZlLTQ6ufg9SASBm0nu5NDfFyUG8-2485a358ONu2geEIW4TVc-UQe5Tj5ZBiiwuZqkksbQLxezzM4LEXmTWEwGKP1xkntaPLz5-iECmsANSxrvMCLtk0",
+    n: 1,
+    icon: BadgeCheck,
+    title: "Eligibility checks",
+    body: "12th pass with PCM. Class 1 medical. Computer Number from DGCA to register for theory exams.",
   },
   {
-    code: "CPL",
-    label: "Commercial Pilot License",
-    blurb: "Professional grade training for those ready to lead in the commercial skies.",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuBRNxzGpb1LRhPin8py-mDBNlgyJ_SnAL_J82qB-h_NU9Cp4OgMrxtZGCucuhF-6FcO0fqRwEW98XWmtqptAYQaKZCvQjit4AtTMwIBRwOjtWmqqrXWjx917WVZjYn2E9CePR__LuuuvoQBqE8oMvf7xFw6SObmVx7c9Be89P9V5IIm2QHO1Nfoo1j1DI_7MqBkP9qaCbJIfLoSIxPbGoLnHgCjwdfUzKkIn_ZAYIfrmR8iQdsIghTkbDLRUtbtYiVbenCh1VE3Cm-j",
+    n: 2,
+    icon: BookOpen,
+    title: "DGCA ground classes (in-house at Bengaluru)",
+    body: "Five theory papers: Air Navigation, Aviation Meteorology, Air Regulations, Aircraft Technical, Aircraft General, Radio Telephony. You clear these with us.",
   },
   {
-    code: "ATPL",
-    label: "Airline Transport License",
-    blurb: "The pinnacle of pilot certification. Commands of heavy transport aircraft.",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuD8DFWBP4BdZPHI7J_xHx1tVmpV3hyiT5gkk6IZmFCuliIpntApQ2R6rIvvrFcOqipWfFuSLz9bWZE7O62bk17aTfBMOPLLnX9W5tRO8vwTum7Q5Jt72FX0M0VcF_X9-6o3AvlDBkAfvNgy4Bb0ys3_Imn15wUiGiLJ_zXYxSTRwO-V0WwOS59QRdy9Y_5EgNt3NvBodC8N8fw7MT_NcnkgFfCyXvwGThW1rmNkOtMLHpw1pKwlwN0vLiz_pNdJkVAmTuBu4ed70xoT",
+    n: 3,
+    icon: Plane,
+    title: "Flight training (at partner FTOs)",
+    body: "200 hours minimum. Dual, solo, cross-country, instrument, night. Begins only after theory papers are cleared.",
   },
   {
-    code: "HPL",
-    label: "Helicopter Pilot License",
-    blurb: "Master vertical flight. Specialized training for rotary-wing excellence.",
-    image:
-      "https://lh3.googleusercontent.com/aida-public/AB6AXuD-DAkJJAJ7CwRKtxEHpSfbRCfNXZyS79QHt4c_c9zVDx7mebNbEgvtcH5wpVqgZbWQ4FHirymkm6h8E2aSf_DsXEJJnKcuaCrAN4M8ldlj5OZkwgSCYyGVZ-COmN7-z3Oq2gzRf3vbWun4KyMsbe0Ku6Omv-r8qbRl9Xb_TtJuVmn13OaJY_L4H7IcOmehCUXf6jlIoX7A4y4nyc-rHb9WawXVh9mNQWhAcn-qyBO8dVQ2ptFsg-PBzoDfQXMPJ35IxUAx9ycFvJYG",
+    n: 4,
+    icon: ClipboardList,
+    title: "Final certifications",
+    body: "RTR(A) license, English Language Proficiency, CPL flight test with a DGCA examiner.",
+  },
+  {
+    n: 5,
+    icon: Award,
+    title: "Your Commercial Pilot License",
+    body: "DGCA issues it. You are a Commercial Pilot.",
   },
 ];
 
-const STEPS = [
+const PROGRAMS = [
   {
-    n: "01",
+    icon: Plane,
+    title: "Private Pilot License (PPL)",
+    body: "Ground classes with us, flight training at partner FTOs. For aviation enthusiasts and those starting toward CPL.",
+  },
+  {
+    icon: BadgeCheck,
+    title: "Commercial Pilot License (CPL)",
+    body: "Our flagship program. Ground in Bengaluru, flying at partner FTOs. The full 18 to 24 month path to your CPL.",
+  },
+  {
+    icon: Award,
+    title: "Certified Flight Instructor (CFI)",
+    body: "For licensed pilots looking to teach. Build hours while you train others.",
+  },
+  {
+    icon: Moon,
+    title: "Night Rating",
+    body: "Add night flying authorisation to your CPL. Required for most airline jobs.",
+  },
+  {
+    icon: Compass,
+    title: "Multi-Engine Instrument Rating (MEIR)",
+    body: "Multi-engine certification with instrument flying. Essential for commercial flying.",
+  },
+  {
+    icon: Helicopter,
+    title: "Helicopter Pilot Training",
+    body: "Ground with us, flight with helicopter-specialised partner schools. Indian and international tracks available.",
+  },
+  {
     icon: GraduationCap,
-    title: "Ground School Mastery",
-    body: "Conquer the DGCA exams with our AI-driven mock tests and structured ground classes that translate complex theory into cockpit intuition.",
-  },
-  {
-    n: "02",
-    icon: PlaneTakeoff,
-    title: "Global Wings",
-    body: "Fast-track your 200+ flight hours at top-tier international bases. Experience diverse weather, terrains, and advanced ATC environments.",
-  },
-  {
-    n: "03",
-    icon: CheckCircle,
-    title: "Airline Ready",
-    body: "Finish with a Type Rating and dedicated placement assistance. We bridge the gap between having a license and having a career.",
+    title: "Diploma in Aviation",
+    body: "One-year aviation foundation course. Good for students still deciding on the pilot path.",
   },
 ];
 
 export default function PilotTrainingStudents() {
+  const [modalForm, setModalForm] = useState<LeadFormName | null>(null);
+  const [batchLabel, setBatchLabel] = useState<string>("");
+
+  useEffect(() => {
+    setBatchLabel(getNextBatchDate().label);
+  }, []);
+
+  useEffect(() => {
+    if (!modalForm) return;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [modalForm]);
+
+  const openModal = (which: LeadFormName) => () => setModalForm(which);
+
   return (
-    <div className={`${manrope.variable} bg-background text-on-surface font-sans`}>
-      {/* PROXe widget - scoped to this page only (test deployment) */}
-      <Script
-        src="https://proxe.windchasers.in/api/widget/embed.js"
-        strategy="afterInteractive"
-      />
-
-      {/* Hero */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <div className="bg-dark text-white">
+      {/* Section 1: Hero */}
+      <section className="relative min-h-[100vh] md:min-h-screen flex items-center pt-20">
         <div className="absolute inset-0 z-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className="w-full h-full object-cover opacity-60"
-            alt="modern jet cockpit at night with glowing amber instrumentation"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvW2yE49-Wr6aDmYoZahopYzURTgwbGMRibK5lVk2JmDfSDoqvWkyaCtg2KXzOi6dKKMPSTB4m7XeNV8BsviNCeG1TddFo-ZcWKIL_xK3REy1VkJcuTzfI6u_hgI95esEkJ0EbM0AjlnwDP3iQP37rFLMuPvbww24Ylhe9BPgubJt2IyOjfrAlkIWGFfG4nVb0SznbEv9C9llgEIVeJDr0teihuzjUIkPHSkt7w2dAyrecqLPkHc-VTbgInXb0qzm-yfEKoVpk7Qt0"
-          />
           <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(19,19,19,0) 0%, rgba(19,19,19,1) 100%)",
-            }}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: "url('/WC HEro.webp')" }}
           />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/75 to-black/60" />
         </div>
 
-        <div className="relative z-10 max-w-[1400px] w-full px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center pt-24">
-          <div className="lg:col-span-8 space-y-8">
-            <div className="inline-flex items-center space-x-3 px-4 py-2 bg-surface-container-highest rounded-full text-xs font-bold tracking-[0.2em] text-primary uppercase">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-              <span>Elite Flight Training</span>
-            </div>
-            <h1 className="font-[family-name:var(--font-headline)] text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-white leading-tight">
-              Start your <br />
-              <span className="text-primary italic">Pilot Career</span>
+        <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 grid lg:grid-cols-12 gap-10 lg:gap-12 items-center w-full py-12 lg:py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="lg:col-span-7 space-y-6"
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em]">
+              WindChasers
+            </span>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold leading-[1.05] text-white">
+              Your Pilot Journey <br />
+              <span className="text-gold">Starts Here</span>
             </h1>
-            <p className="text-on-surface-variant text-lg md:text-2xl max-w-2xl leading-relaxed font-light">
-              Most academies treat you like a roll number. At Wind Chasers, we
-              treat you like a Captain in training. Engineered for the future of
-              aviation.
+            <p className="text-lg md:text-xl text-white/75 max-w-2xl leading-relaxed">
+              Master DGCA ground classes in Bengaluru. Flight training with our
+              DGCA-approved partner schools in India or abroad. Up to ₹80 lakh
+              investment. 18 to 24 months.
             </p>
-            <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6 pt-6">
-              <a
-                href="/demo"
-                className="bg-primary hover:bg-primary-container text-on-primary px-8 md:px-10 py-4 md:py-5 rounded-lg font-bold text-lg transition-all flex items-center justify-center group"
-                style={{ boxShadow: "0 0 20px rgba(197,165,114,0.15)" }}
+            <div className="flex flex-col sm:flex-row gap-4 pt-2">
+              <Link
+                href="/assessment"
+                className="bg-gold hover:bg-gold/90 text-dark px-7 py-3.5 rounded-lg font-bold text-base md:text-lg inline-flex items-center justify-center gap-2 transition-colors"
+                style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}
               >
-                Start My Journey
-                <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </a>
-              <a
-                href="/dgca"
-                className="border border-outline-variant text-white px-8 md:px-10 py-4 md:py-5 rounded-lg font-bold text-lg hover:bg-white/5 transition-all text-center"
+                Take the Pilot Aptitude Test
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <button
+                type="button"
+                onClick={openModal("student_modal")}
+                className="border-2 border-gold text-gold hover:bg-gold hover:text-dark px-7 py-3.5 rounded-lg font-bold text-base md:text-lg transition-colors"
               >
-                Explore Programs
-              </a>
+                Talk to a counsellor
+              </button>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="lg:col-span-4 hidden lg:block">
-            <div className="bg-surface-container/60 backdrop-blur-xl border border-outline-variant/30 p-8 rounded-2xl space-y-6">
-              <div className="flex justify-between items-center border-b border-outline-variant/20 pb-4">
-                <span className="text-xs uppercase tracking-widest text-on-surface-variant">
-                  Next Batch Starts
-                </span>
-                <span className="text-primary font-bold">7 MAY 2026</span>
-              </div>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                    <Globe className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white">Global Access</h4>
-                    <p className="text-xs text-on-surface-variant">
-                      USA, Canada, NZ Training
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary">
-                    <BadgeCheck className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-white">DGCA Certified</h4>
-                    <p className="text-xs text-on-surface-variant">
-                      100% Exam Pass Rate
-                    </p>
-                  </div>
-                </div>
-              </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.15 }}
+            className="lg:col-span-5 hidden md:block"
+          >
+            <div className="lg:sticky lg:top-24">
+              <StudentLeadForm formName="student_hero" />
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Elite Flight Paths */}
-      <section className="py-24 md:py-32 bg-surface-container-lowest">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
-            <div className="max-w-2xl">
-              <span className="text-primary font-bold tracking-[0.3em] text-xs uppercase block mb-4">
-                Choose Your Journey
-              </span>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-[family-name:var(--font-headline)] font-bold text-white tracking-tighter">
-                Elite Flight Paths.
-              </h2>
-            </div>
-            <p className="text-on-surface-variant max-w-sm md:text-right leading-relaxed">
-              Select the certification that matches your aviation ambitions.
-              From private mastery to commercial command.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PATHS.map((p) => (
-              <div
-                key={p.code}
-                className="group relative overflow-hidden rounded-3xl h-[460px] md:h-[500px] flex flex-col justify-end p-8 border border-outline-variant/20 hover:border-primary/50 transition-colors duration-500"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70"
-                  alt={p.label}
-                  src={p.image}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                <div className="relative z-10 space-y-4">
-                  <h3 className="text-2xl font-[family-name:var(--font-headline)] font-bold text-white">
-                    <span className="block text-4xl md:text-5xl font-black mb-1">
-                      {p.code}
-                    </span>
-                    <span className="text-sm uppercase tracking-wider font-semibold opacity-90">
-                      {p.label}
-                    </span>
-                  </h3>
-                  <p className="text-on-surface-variant text-sm line-clamp-2">
-                    {p.blurb}
-                  </p>
-                  <a
-                    href="/demo"
-                    className="w-full py-3 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-xl font-bold text-sm hover:bg-primary hover:text-on-primary hover:border-primary transition-all duration-300 flex items-center justify-center gap-2 group/btn"
-                  >
-                    Explore Path
-                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 3 Steps to Your CPL */}
-      <section className="py-24 md:py-32 bg-background border-y border-outline-variant/10">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
-          <div className="text-center mb-16 md:mb-24">
-            <h2 className="text-4xl md:text-5xl lg:text-7xl font-[family-name:var(--font-headline)] font-extrabold text-white tracking-tighter mb-6">
-              3 Steps to Your CPL
+      {/* Section 2: About */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-dark">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-4">
+              WindChasers
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-8 leading-tight">
+              About Us
             </h2>
-            <div className="w-24 h-1 bg-primary mx-auto" />
+            <p className="text-lg md:text-xl text-white/75 leading-relaxed mb-8">
+              WindChasers is a Bengaluru-based pilot training academy founded by
+              Sumaiya Ali in 2024. We run DGCA-aligned ground classes for the
+              five CPL theory papers. Flight training is delivered through our
+              DGCA-approved partner Flying Training Organisations in India, and
+              recognised partner schools abroad. Our wedge is honest: real
+              costs, real timelines, no false promises.
+            </p>
+            <button
+              type="button"
+              onClick={openModal("student_modal")}
+              className="bg-gold hover:bg-gold/90 text-dark font-bold px-6 py-3 rounded-lg inline-flex items-center gap-2 transition-colors"
+            >
+              Join Now
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Mobile-only inline form (form is hidden in hero on mobile) */}
+      <section className="md:hidden py-12 px-6 bg-accent-dark">
+        <div className="max-w-md mx-auto">
+          <StudentLeadForm formName="student_hero" compact />
+        </div>
+      </section>
+
+      {/* Section 3: Eligibility gate */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-accent-dark">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-3">
+              Before You Start
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+              Quick eligibility check
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="bg-dark border-t-2 border-gold rounded-xl p-7"
+            >
+              <GraduationCap className="w-9 h-9 text-gold mb-5" />
+              <h3 className="text-xl font-bold text-white mb-4">
+                Academic requirements
+              </h3>
+              <ul className="space-y-3 text-white/75">
+                <li className="flex gap-3">
+                  <span className="text-gold mt-1.5 w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
+                  <span>12th pass with Physics and Mathematics.</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-gold mt-1.5 w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
+                  <span>If you did not take PCM in 12th, you can qualify through NIOS before applying.</span>
+                </li>
+              </ul>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-dark border-t-2 border-gold rounded-xl p-7"
+            >
+              <Stethoscope className="w-9 h-9 text-gold mb-5" />
+              <h3 className="text-xl font-bold text-white mb-4">
+                Age and medical
+              </h3>
+              <ul className="space-y-3 text-white/75">
+                <li className="flex gap-3">
+                  <span className="text-gold mt-1.5 w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
+                  <span>Start training at 17.</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-gold mt-1.5 w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
+                  <span>CPL is issued at 18.</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-gold mt-1.5 w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
+                  <span>Class 1 medical clearance from a DGCA-approved centre.</span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-gold mt-1.5 w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
+                  <span>ICAO Level 4 English.</span>
+                </li>
+              </ul>
+            </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16 relative">
-            {STEPS.map((s) => {
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mt-10"
+          >
+            <p className="text-white/70 mb-4">
+              Not sure if you qualify? Take the 3-minute PAT and we will tell
+              you straight.
+            </p>
+            <Link
+              href="/assessment"
+              className="inline-flex items-center gap-2 bg-gold hover:bg-gold/90 text-dark font-bold px-6 py-3 rounded-lg transition-colors"
+            >
+              Take the PAT
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section 4: The honest path */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-dark">
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-14 text-center"
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-3">
+              The Path
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+              From here to your CPL
+            </h2>
+          </motion.div>
+
+          <ol className="relative space-y-6 md:space-y-8">
+            <div
+              aria-hidden="true"
+              className="absolute left-6 md:left-7 top-2 bottom-2 w-px bg-gold/30"
+            />
+            {PATH_STEPS.map((s, i) => {
               const Icon = s.icon;
               return (
-                <div key={s.n} className="relative group">
-                  <div className="text-[8rem] md:text-[12rem] font-[family-name:var(--font-headline)] font-black text-white/5 absolute -top-20 md:-top-32 -left-4 md:-left-8 pointer-events-none">
+                <motion.li
+                  key={s.n}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.08 }}
+                  className="relative pl-16 md:pl-20"
+                >
+                  <div className="absolute left-0 top-0 w-12 h-12 md:w-14 md:h-14 rounded-full bg-gold text-dark flex items-center justify-center font-bold text-lg md:text-xl border-4 border-dark">
                     {s.n}
                   </div>
-                  <div className="space-y-6 relative z-10">
-                    <div className="w-16 h-16 bg-surface-container-highest rounded-2xl flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-on-primary transition-colors duration-500">
-                      <Icon className="w-8 h-8" />
+                  <div className="bg-accent-dark border border-white/10 rounded-xl p-6 md:p-7">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Icon className="w-6 h-6 text-gold" />
+                      <h3 className="text-lg md:text-xl font-bold text-white">
+                        {s.title}
+                      </h3>
                     </div>
-                    <h3 className="text-2xl font-bold text-white">{s.title}</h3>
-                    <p className="text-on-surface-variant leading-relaxed">
-                      {s.body}
-                    </p>
+                    <p className="text-white/70 leading-relaxed">{s.body}</p>
                   </div>
-                </div>
+                </motion.li>
+              );
+            })}
+          </ol>
+        </div>
+      </section>
+
+      {/* Section 5: Comprehensive Curriculum */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-accent-dark">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12 md:mb-16"
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-3">
+              WindChasers
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-4">
+              Comprehensive Curriculum
+            </h2>
+            <p className="text-lg text-white/70 max-w-2xl mx-auto">
+              Our DGCA ground program covers all six critical subjects.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            {CURRICULUM.map((c, i) => {
+              const Icon = c.icon;
+              return (
+                <motion.div
+                  key={c.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.06 }}
+                  className="group bg-dark border border-white/10 hover:border-gold/50 rounded-xl p-7 transition-all hover:-translate-y-1"
+                >
+                  <div className="w-14 h-14 rounded-xl bg-gold/10 border border-gold/30 flex items-center justify-center mb-5 group-hover:bg-gold/20 transition-colors">
+                    <Icon className="w-7 h-7 text-gold" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white">{c.title}</h3>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          <div className="text-center mt-12">
+            <button
+              type="button"
+              onClick={openModal("student_modal")}
+              className="bg-gold hover:bg-gold/90 text-dark font-bold px-7 py-3 rounded-lg inline-flex items-center gap-2 transition-colors"
+            >
+              Join Now
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 6: What's included */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-dark">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12 md:mb-16"
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-3">
+              Inside the DGCA Program
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+              What&apos;s included
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            {INCLUDED.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <motion.div
+                  key={item.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.06 }}
+                  className="group relative bg-accent-dark border-t-2 border-gold rounded-xl p-7 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30 transition-all duration-300"
+                >
+                  <Icon className="w-8 h-8 text-gold mb-5" />
+                  <h3 className="text-lg font-bold text-white mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-white/65 text-sm leading-relaxed">
+                    {item.body}
+                  </p>
+                </motion.div>
               );
             })}
           </div>
         </div>
       </section>
 
-      {/* Closing CTA */}
-      <section className="py-24 md:py-32 relative overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className="w-full h-full object-cover opacity-30"
-            alt="aerial view from a cockpit overlooking a sea of clouds at sunset"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCby0NpMGFsmbfC6aGDpD6rdcKF73_QmpM-TkiovfkjQC83CejR6ruqvIEObm1g_xobwvmnOXRfennGJ2Rv2pNuu03tw5iuzpDN8SMoNjX3OrJc9P1WyRVfOBXTMJJQB8DFaKSUdGNsZ0euNyzgUyPt53EzXFgfTRcJ10L5wWO6XuRWzM5rQTnkqcObB5zZp7HEh3wxCw4IP5K6buqm2uVMHUHyqIgTZxoKGn0t9dKVHS9cKpCtMtKh1I3IKhQL7rANcQtjKGVk7Nf6"
-          />
-          <div className="absolute inset-0 bg-stone-950/80" />
-        </div>
-        <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-12 text-center space-y-10">
-          <h2 className="text-4xl md:text-5xl lg:text-7xl font-[family-name:var(--font-headline)] font-extrabold text-white tracking-tighter">
-            Ready to Earn Your Wings?
-          </h2>
-          <p className="text-xl md:text-2xl text-on-surface-variant font-light max-w-2xl mx-auto">
-            Don&apos;t let your dream stay on standby. Join the next batch and
-            start your flight training today.
-          </p>
-          <div className="pt-10">
-            <a
-              href="/demo"
-              className="inline-flex items-center bg-primary hover:bg-primary-container text-on-primary px-12 md:px-16 py-5 md:py-6 rounded-full font-bold text-lg md:text-xl transition-all scale-110 hover:scale-105 active:scale-95 group"
-              style={{ boxShadow: "0 0 20px rgba(197,165,114,0.15)" }}
-            >
-              Start My Journey
-              <PlaneTakeoff className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
-            </a>
-            <p className="mt-8 text-on-surface-variant/60 text-sm uppercase tracking-[0.2em]">
-              Next intake: November 15th &bull; Limited seats available
-            </p>
+      {/* Section 7: Voices of WindChasers (mp4 testimonials) */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-accent-dark">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12 md:mb-16"
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-3">
+              Student Stories
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-3">
+              Voices of WindChasers
+            </h2>
+            <p className="text-lg text-white/70">Real students. Their own words.</p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 max-w-5xl mx-auto">
+            {TESTIMONIAL_VIDEOS.map((url, i) => (
+              <motion.div
+                key={url}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="relative aspect-video rounded-xl overflow-hidden bg-dark border border-white/10"
+              >
+                <video
+                  controls
+                  preload="metadata"
+                  playsInline
+                  className="w-full h-full object-cover"
+                >
+                  <source src={url} type="video/mp4" />
+                </video>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
+
+      {/* Section 8: Our students flying (Vimeo) */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-dark">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12 md:mb-16"
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-3">
+              In the Cockpit
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+              Our students. <span className="text-gold">Actually flying.</span>
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+            {FLYING_VIMEO_IDS.map((id, i) => (
+              <motion.div
+                key={id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="relative aspect-[9/16] rounded-xl overflow-hidden bg-accent-dark border border-white/10"
+              >
+                <iframe
+                  src={`https://player.vimeo.com/video/${id}?title=0&byline=0&portrait=0&dnt=1`}
+                  className="absolute inset-0 w-full h-full"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowFullScreen
+                  title={`Student flying ${i + 1}`}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 9: Instructors */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-accent-dark">
+        <div className="max-w-3xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-3">
+              Instructors
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight mb-6">
+              Who teaches you
+            </h2>
+            <p className="text-lg md:text-xl text-white/75 leading-relaxed mb-8">
+              DGCA-aligned training delivered by commercial pilot instructors.
+              Multi-engine, A320, B737, helicopter qualified. Faculty profiles
+              shared on the counsellor call.
+            </p>
+            <button
+              type="button"
+              onClick={openModal("student_modal")}
+              className="bg-gold hover:bg-gold/90 text-dark font-bold px-7 py-3.5 rounded-lg inline-flex items-center gap-2 transition-colors"
+            >
+              Book a counsellor call to meet the team
+              <ArrowRight className="w-5 h-5" />
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section 10: Our Programs */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-dark">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12 md:mb-16"
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-3">
+              WindChasers Programs
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+              Our Programs
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+            {PROGRAMS.map((p, i) => {
+              const Icon = p.icon;
+              return (
+                <motion.div
+                  key={p.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5, delay: i * 0.06 }}
+                  className="group bg-accent-dark border border-white/10 hover:border-gold/50 rounded-xl p-7 transition-all hover:-translate-y-1"
+                >
+                  <div className="w-12 h-12 rounded-lg bg-gold/10 border border-gold/20 flex items-center justify-center mb-5 group-hover:bg-gold/20 transition-colors">
+                    <Icon className="w-6 h-6 text-gold" />
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-2">{p.title}</h3>
+                  <p className="text-white/65 text-sm leading-relaxed">{p.body}</p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Section 11: Our Facility */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-accent-dark">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-12 text-center"
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-3">
+              Our Facility
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+              Inside WindChasers
+            </h2>
+          </motion.div>
+
+          <FacilityLightbox images={FACILITY_PHOTOS} alt="WindChasers facility" />
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mt-10 bg-dark border border-gold/30 rounded-2xl p-7 md:p-9 text-center"
+          >
+            <h3 className="text-2xl font-bold text-white mb-3">
+              Visit our Kothanur campus
+            </h3>
+            <p className="text-white/70 mb-6 max-w-xl mx-auto">
+              Saturdays and Sundays, 11 AM to 4 PM. Meet the team. See the
+              simulators. Ask hard questions.
+            </p>
+            <button
+              type="button"
+              onClick={openModal("student_visit")}
+              className="bg-gold hover:bg-gold/90 text-dark font-bold px-7 py-3 rounded-lg inline-flex items-center gap-2 transition-colors"
+            >
+              <Calendar className="w-5 h-5" />
+              Book campus visit
+            </button>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section 12: Next Batch */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-dark relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-gold/5 via-transparent to-transparent pointer-events-none" />
+        <div className="max-w-5xl mx-auto text-center relative">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-3">
+              DGCA Ground Classes
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
+              Next Batch Starting
+            </h2>
+            <p className="text-4xl md:text-6xl lg:text-7xl font-bold text-gold leading-none mb-8 min-h-[1.1em]">
+              {batchLabel || " "}
+            </p>
+            <p className="text-lg md:text-xl text-white/75 max-w-2xl mx-auto mb-10 leading-relaxed">
+              Join our comprehensive DGCA Ground Classes and take the first
+              step. Limited cohort sizes. Apply early.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                type="button"
+                onClick={openModal("student_apply")}
+                className="bg-gold hover:bg-gold/90 text-dark font-bold px-8 py-4 rounded-lg inline-flex items-center justify-center gap-2 transition-colors"
+                style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}
+              >
+                Apply for next batch
+                <ArrowRight className="w-5 h-5" />
+              </button>
+              <a
+                href="https://chat.whatsapp.com/B7nQhU9J5IFEWMmC6qLd8V"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="border-2 border-gold text-gold hover:bg-gold hover:text-dark font-bold px-8 py-4 rounded-lg inline-flex items-center justify-center gap-2 transition-colors"
+              >
+                <MessageCircle className="w-5 h-5" />
+                Join WhatsApp Community
+              </a>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Section 13: Final CTA + form */}
+      <section className="py-20 md:py-24 px-6 lg:px-8 bg-accent-dark">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <span className="text-gold text-xs font-bold uppercase tracking-[0.3em] block mb-3">
+              Ready?
+            </span>
+            <h2 className="text-3xl md:text-5xl font-bold text-white leading-tight">
+              Take the next step
+            </h2>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 gap-6 mb-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="bg-gradient-to-br from-gold/20 to-gold/5 border-2 border-gold/40 rounded-2xl p-8 md:p-10 hover:border-gold transition-all"
+            >
+              <ShieldCheck className="w-10 h-10 text-gold mb-5" />
+              <h3 className="text-2xl font-bold text-white mb-3">
+                Take the Pilot Aptitude Test
+              </h3>
+              <p className="text-white/75 mb-7 leading-relaxed">
+                20 questions. 3 minutes. Honest assessment of your fit.
+              </p>
+              <Link
+                href="/assessment"
+                className="inline-flex items-center gap-2 bg-gold hover:bg-gold/90 text-dark font-bold px-7 py-3 rounded-lg transition-colors"
+              >
+                Take the PAT
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="bg-dark border-2 border-white/15 hover:border-gold/40 rounded-2xl p-8 md:p-10 transition-all"
+            >
+              <Phone className="w-10 h-10 text-gold mb-5" />
+              <h3 className="text-2xl font-bold text-white mb-3">
+                Talk to a counsellor
+              </h3>
+              <p className="text-white/75 mb-7 leading-relaxed">
+                Real conversation, no sales pitch.
+              </p>
+              <button
+                type="button"
+                onClick={openModal("student_modal")}
+                className="inline-flex items-center gap-2 border-2 border-gold text-gold hover:bg-gold hover:text-dark font-bold px-7 py-3 rounded-lg transition-colors"
+              >
+                Book a 1-on-1 call
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </motion.div>
+          </div>
+
+          <div className="max-w-2xl mx-auto">
+            <StudentLeadForm formName="student_final" />
+          </div>
+        </div>
+      </section>
+
+      {/* Lead form modal */}
+      <AnimatePresence>
+        {modalForm && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-start md:items-center justify-center p-4 overflow-y-auto"
+            onClick={() => setModalForm(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-xl my-8"
+            >
+              <button
+                type="button"
+                onClick={() => setModalForm(null)}
+                className="absolute -top-12 right-0 md:-right-2 md:-top-2 md:z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur flex items-center justify-center text-white transition-colors"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              <StudentLeadForm formName={modalForm} compact />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
