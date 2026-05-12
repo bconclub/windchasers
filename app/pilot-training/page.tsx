@@ -416,15 +416,57 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* Chapter 4: Students Flying Gallery (images + Vimeo) */}
+      {/* Chapter 4: Students Flying Gallery — masonry grid */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-surface-container-lowest border-y border-outline-variant/10">
-        <StudentsFlyingGallery
-          items={flyingGallery}
-          eyebrow="In the Cockpit"
-          title="They started exactly where you are."
-          subtitle="Photos and clips from students in active training."
-          variant="stitch"
-        />
+        <div className="max-w-[1400px] mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <span className="text-primary font-bold tracking-[0.2em] uppercase text-sm mb-4 block" style={{ fontFamily: "var(--font-manrope, sans-serif)" }}>
+              In the Cockpit
+            </span>
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-extrabold text-white tracking-tighter">
+              They started exactly where you are.
+            </h2>
+          </motion.div>
+          <div className="columns-2 md:columns-4 gap-3 space-y-3">
+            {[
+              { src: "/students-flying/001.webp", alt: "WindChasers student" },
+              { src: "/students-flying/Shreyas.webp", alt: "Shreyas" },
+              { src: "/students-flying/Sudeep.webp", alt: "Sudeep" },
+              { src: "/students-flying/Madhu.webp", alt: "Madhu" },
+              { src: "/students-flying/Shreyas 1.webp", alt: "Shreyas in cockpit" },
+              { src: "/students-flying/Sudeep1.webp", alt: "Sudeep flying" },
+              { src: "/students-flying/Madhu 1.webp", alt: "Madhu flying" },
+              { src: "/students-flying/Vinay.webp", alt: "Vinay" },
+              { src: "/students-flying/Vinaly Flt=ying.webp", alt: "Vinay flying" },
+              { src: "/students-flying/MOhithan Graduation.jpg", alt: "Mohithan graduation" },
+              { src: "/students-flying/Mohithan Graduation 1.webp", alt: "Mohithan graduation" },
+            ].map((img, i) => (
+              <motion.div
+                key={img.src}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ delay: i * 0.04, duration: 0.5 }}
+                className="break-inside-avoid rounded-xl overflow-hidden"
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  width={600}
+                  height={800}
+                  className="w-full h-auto object-cover hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 768px) 50vw, 25vw"
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* Chapter 5: The Journey */}

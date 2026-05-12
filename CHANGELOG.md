@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: In the Cockpit — masonry grid
+
+- Replaced StudentsFlyingGallery carousel with CSS columns masonry grid (2-col mobile, 4-col desktop).
+- Shows all 11 student images; no carousel, no Vimeo clips in this section.
+- Images stagger in with framer-motion on scroll; hover scale-105.
+
 ## 2026-05-12 · /dgca: WhyChooseUsCarousel right arrow always visible
 
 - Both nav arrows now always render with justify-between; hidden via `invisible` instead of conditional render.
