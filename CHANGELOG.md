@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: add 3rd simulator video (1191486085)
+
+- Added Vimeo 1191486085 to SIMULATOR_VIMEO_IDS; grid changed back to 3 columns.
+- User-facing: campus section now shows 3 simulator reels side by side.
+
 ## 2026-05-12 · /pilot-training: PAT section — replace mock question with score result card
 
 - Right-side mock replaced: "Question 15 of 20" → sample result card with score (84/100), 4/5 stars, "Strong Candidate" tier, counsellor-call note, completed progress bar.

@@ -61,9 +61,7 @@ const flyingGallery: GalleryItem[] = [
   { kind: "video", vimeoId: "1191483930" },
 ];
 
-const SIMULATOR_VIMEO_IDS = ["1191485284", "1191485533"];
-
-// Unused for now: 1191486085 (student in classroom footage, reserve for a future section)
+const SIMULATOR_VIMEO_IDS = ["1191485284", "1191485533", "1191486085"];
 
 const testimonialGallery: GalleryItem[] = [
   { kind: "video", vimeoId: "1191521721" },
@@ -692,7 +690,7 @@ export default function PilotTraining() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="grid grid-cols-2 gap-3 md:gap-4"
+            className="grid grid-cols-3 gap-3 md:gap-4"
           >
             {SIMULATOR_VIMEO_IDS.map((id, i) => (
               <div
