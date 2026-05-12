@@ -181,17 +181,17 @@ const team = [
     offset: false,
   },
   {
-    name: "Rohan Hibare",
-    role: "Ground Instructor · CPL",
-    bio: "Makes complex aviation concepts exam-ready through clear, methodical instruction.",
-    image: "/team/Rohan.webp",
-    offset: true,
-  },
-  {
     name: "Navaneeth Nagendra",
     role: "Senior Ground Instructor",
     bio: "Eight years in aviation training across Aeronautical, Maintenance, and Industrial Engineering. Builds robust academic foundations aligned with the DGCA syllabus.",
     image: "/team/Navneeth.webp",
+    offset: true,
+  },
+  {
+    name: "Rohan Hibare",
+    role: "Ground Instructor · CPL",
+    bio: "Makes complex aviation concepts exam-ready through clear, methodical instruction.",
+    image: "/team/Rohan.webp",
     offset: false,
   },
 ];

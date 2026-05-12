@@ -2,6 +2,10 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: swap Navaneeth and Rohan order in captains carousel
+
+- Navaneeth Nagendra moved to 4th position, Rohan Hibare to 5th.
+
 ## 2026-05-12 · /pilot-training: fix TypeScript build error
 
 - Removed dead initials-fallback code from captain cards (all members now have real photos).
