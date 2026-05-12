@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: campus section — carousel first, CTA below
+
+- ImageCarousel ("Inside the Bengaluru campus.") now appears above the "Try the cockpit" CTA + simulator reels.
+- Simulator grid changed from 3-col to 2-col (matches 2 available clips, no empty gap).
+- Both CTA buttons ("Book a Demo Session" + "Book a campus visit") consolidated in one row below the copy.
+- User-facing: visitors see campus photos first, then the CTA to book.
+
 ## 2026-05-12 · /pilot-training: captains cards — 2-line text overlay
 
 - Name truncated to 1 line (text-base), role truncated to 1 line — 2 lines total.

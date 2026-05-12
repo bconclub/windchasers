@@ -641,7 +641,23 @@ export default function PilotTraining() {
 
       {/* Chapter 8: Train at our Campus (Simulator + Facility) */}
       <section className="py-24 md:py-32 bg-surface-container-lowest border-y border-outline-variant/10">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-12 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        {/* Campus image carousel first */}
+        <ImageCarousel
+          images={[
+            "/facility/WC1.webp",
+            "/facility/WC2.webp",
+            "/facility/WC3.webp",
+            "/facility/WC4.webp",
+            "/facility/WC5.webp",
+            "/facility/WC6.webp",
+            "/facility/WC7.webp",
+          ]}
+          title="Inside the Bengaluru campus."
+          subtitle="Saturdays and Sundays between 11 AM and 4 PM. Bring your parents."
+        />
+
+        {/* Try the cockpit CTA + simulator reels below */}
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12 mt-16 md:mt-24 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -659,14 +675,23 @@ export default function PilotTraining() {
               with one of our instructors. The fastest way to know if pilot
               training is right for you.
             </p>
-            <Link
-              href="/demo"
-              className="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-on-primary px-7 py-3.5 rounded-lg font-bold text-base md:text-lg transition-all"
-              style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}
-            >
-              Book a Demo Session
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+            <div className="flex flex-wrap gap-4">
+              <Link
+                href="/demo"
+                className="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-on-primary px-7 py-3.5 rounded-lg font-bold text-base md:text-lg transition-all"
+                style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}
+              >
+                Book a Demo Session
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link
+                href="/demo"
+                className="inline-flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-on-primary px-7 py-3.5 rounded-lg font-bold text-base md:text-lg transition-colors"
+              >
+                <Calendar className="w-5 h-5" />
+                Book a campus visit
+              </Link>
+            </div>
           </motion.div>
 
           <motion.div
@@ -674,7 +699,7 @@ export default function PilotTraining() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="grid grid-cols-3 gap-3 md:gap-4"
+            className="grid grid-cols-2 gap-3 md:gap-4"
           >
             {SIMULATOR_VIMEO_IDS.map((id, i) => (
               <div
@@ -691,31 +716,6 @@ export default function PilotTraining() {
               </div>
             ))}
           </motion.div>
-        </div>
-
-        <div className="mt-16 md:mt-24">
-          <ImageCarousel
-            images={[
-              "/facility/WC1.webp",
-              "/facility/WC2.webp",
-              "/facility/WC3.webp",
-              "/facility/WC4.webp",
-              "/facility/WC5.webp",
-              "/facility/WC6.webp",
-              "/facility/WC7.webp",
-            ]}
-            title="Inside the Bengaluru campus."
-            subtitle="Saturdays and Sundays between 11 AM and 4 PM. Bring your parents."
-          />
-          <div className="text-center pt-4 pb-4 px-6">
-            <Link
-              href="/demo"
-              className="inline-flex items-center gap-2 border-2 border-primary text-primary hover:bg-primary hover:text-on-primary px-7 py-3.5 rounded-lg font-bold text-base md:text-lg transition-colors"
-            >
-              <Calendar className="w-5 h-5" />
-              Book a campus visit
-            </Link>
-          </div>
         </div>
       </section>
 
