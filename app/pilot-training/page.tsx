@@ -123,28 +123,28 @@ const whyCards = [
     label: "Global",
     title: "DGCA-approved partners",
     body: "Flight training at approved FTOs in India or partner schools in USA, Canada, NZ, Australia.",
-    image: "/facility/WC2.webp",
+    image: "/why-windchasers/DGCA Approved.webp",
   },
   {
     icon: Wallet,
     label: "Flexible",
     title: "Built around your goal",
     body: "Your path. Your budget. India, abroad, or a mix. We do not over-promise.",
-    image: "/facility/WC3.webp",
+    image: "/facility/DSC_0549.JPG.webp",
   },
   {
     icon: Headphones,
     label: "Support",
     title: "End-to-end support",
     body: "Loan documentation, visa, accommodation, post-CPL placement. We do not drop you halfway.",
-    image: "/facility/WC4.webp",
+    image: "/facility/Sumaiya Ali.webp",
   },
   {
     icon: Plane,
     label: "Simulator",
     title: "Industry-grade simulators",
     body: "Train on the equipment you'll see in real airline cockpits, not toy software.",
-    image: "/brand/image.webp",
+    image: "/facility/5U2A0673.JPG.webp",
     tint: true,
   },
   {
@@ -152,7 +152,7 @@ const whyCards = [
     label: "Pricing",
     title: "Honest pricing",
     body: "Full cost breakdown upfront. No surprise add-ons. Real graduates flying today.",
-    image: "/facility/WC6.webp",
+    image: "/facility/DSC05362.JPG.webp",
   },
 ];
 

@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: Why WindChasers cards — jumbled images
+
+- DGCA-approved partners card now uses /why-windchasers/DGCA Approved.webp (was WC2.webp).
+- Built around your goal → DSC_0549.JPG.webp; End-to-end support → Sumaiya Ali.webp; Simulators → 5U2A0673.JPG.webp; Honest pricing → DSC05362.JPG.webp.
+- User-facing: each Why card now has a distinct, varied background photo instead of repetitive facility shots.
+
 ## 2026-05-12 · /pilot-training: campus gallery — 8 new images + heading update
 
 - Added 8 new facility images to ImageCarousel: 5U2A0673, 5U2A0674 (avif), 5U2A0679, DSC05362, DSC_0481, DSC_0492, DSC_0549, Sumaiya Ali.
