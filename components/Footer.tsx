@@ -114,7 +114,7 @@ export default function Footer() {
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3 w-full text-sm text-white/30 text-center sm:text-left">
             <p>&copy; {new Date().getFullYear()} WindChasers Aviation Academy. All rights reserved.</p>
             <p>
-              Built at{" "}
+              Built with <span className="text-gold/60">❤️</span> at{" "}
               <a
                 href="https://bconclub.com"
                 target="_blank"
