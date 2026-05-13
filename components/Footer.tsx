@@ -1,16 +1,7 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 
 export default function Footer() {
-  const openChatWidget = () => {
-    const btn = typeof window !== "undefined"
-      ? document.querySelector<HTMLElement>('[id*="proxe"], [class*="proxe-launcher"], [class*="widget-launcher"]')
-      : null;
-    if (btn) btn.click();
-    else if (typeof window !== "undefined") window.location.href = "/agent";
-  };
   return (
     <footer className="bg-accent-dark border-t border-white/10">
       {/* Main footer grid */}
@@ -52,11 +43,6 @@ export default function Footer() {
                 <li><Link href="/team" className="hover:text-white transition-colors">Our Team</Link></li>
                 <li><Link href="/demo" className="hover:text-white transition-colors">Book a Demo</Link></li>
                 <li><Link href="/assessment" className="hover:text-white transition-colors">Pilot Assessment</Link></li>
-                <li>
-                  <button type="button" onClick={openChatWidget} className="hover:text-white transition-colors text-left">
-                    AI Counsellor
-                  </button>
-                </li>
               </ul>
             </div>
 
