@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /pilot-training: hero video sound toggle
+
+- Added "Sound on / Sound off" pill button at top-right of hero (glass style, gold hover).
+- Click unmutes the hero Vimeo with a 60ms-step fade-in up to 25% volume.
+- Auto-fades out + re-mutes when the hero section scrolls out of view (IntersectionObserver, threshold 0.3).
+- iframe URL now includes api=1 for postMessage control.
+
 ## 2026-05-12 · VimeoReel: add background=1 to non-cover embed URL
 
 - Non-cover mode now uses background=1 alongside api=1 — forces Vimeo to autoplay regardless of browser autoplay policy.
