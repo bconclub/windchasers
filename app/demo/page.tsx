@@ -84,10 +84,40 @@ function DemoPageContent() {
       </section>
 
       {/* Demo type cards */}
-      <section className="pb-20 px-6 md:px-12">
-        <div className="max-w-[1400px] mx-auto grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+      <section className="pb-20">
+        {/* Mobile: horizontal scroll carousel; Desktop: 2-col grid */}
+        <div className="md:hidden flex gap-5 overflow-x-auto px-6 pb-3 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+          {[
+            { type: "online" as const, label: "Online", icon: <Monitor className="w-6 h-6 text-[#C5A572]" strokeWidth={1.5} />, title: "Online Demo", features: onlineFeatures },
+            { type: "offline" as const, label: "In-Person", icon: <Building2 className="w-6 h-6 text-[#C5A572]" strokeWidth={1.5} />, title: "Campus Visit", features: campusFeatures },
+          ].map((card) => (
+            <button
+              key={card.type}
+              type="button"
+              onClick={() => handleCardClick(card.type)}
+              className="group relative bg-[#1A1A1A] border-t-2 border-[#C5A572] rounded-xl p-8 text-left shrink-0 w-[82vw] snap-center"
+            >
+              <span className="absolute -top-3 left-6 bg-[#C5A572] text-[#1A1A1A] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                {card.label}
+              </span>
+              <div className="w-12 h-12 rounded-xl bg-[#C5A572]/10 border border-[#C5A572]/20 flex items-center justify-center mb-6 mt-2">
+                {card.icon}
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4">{card.title}</h3>
+              <ul className="space-y-2.5">
+                {card.features.map((f) => (
+                  <li key={f} className="flex items-start gap-2.5 text-white/60 text-sm">
+                    <CheckCircle className="w-4 h-4 text-[#C5A572] mt-0.5 shrink-0" strokeWidth={2} />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </button>
+          ))}
+        </div>
 
-          {/* Online Demo card — WindChasers card pattern */}
+        {/* Desktop: 2-col grid */}
+        <div className="hidden md:grid md:grid-cols-2 gap-6 max-w-4xl mx-auto px-12">
           <motion.button
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -112,7 +142,6 @@ function DemoPageContent() {
             </ul>
           </motion.button>
 
-          {/* Campus Visit card */}
           <motion.button
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -136,7 +165,6 @@ function DemoPageContent() {
               ))}
             </ul>
           </motion.button>
-
         </div>
       </section>
 

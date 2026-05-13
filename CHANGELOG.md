@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /demo: mobile card carousel
+
+- Demo type cards (Online / Campus Visit) now use a horizontal snap-scroll carousel on mobile (82vw per card, snap-center).
+- Desktop keeps the existing 2-column grid unchanged.
+
 ## 2026-05-12 · /demo: hide hero video on mobile
 
 - Hero Vimeo iframe now has `hidden md:block` — not loaded on mobile, desktop-only.
