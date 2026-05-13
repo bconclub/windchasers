@@ -21,8 +21,6 @@ import {
   FileText,
   Download,
   Star,
-  Volume2,
-  VolumeX,
 } from "lucide-react";
 import Script from "next/script";
 import VideoCarousel from "@/components/VideoCarousel";
@@ -277,67 +275,6 @@ export default function PilotTraining() {
   const [showDemoBtn, setShowDemoBtn] = useState(false);
   const lastScrollY = useRef(0);
 
-  // Hero audio
-  const heroIframeRef = useRef<HTMLIFrameElement>(null);
-  const heroSectionRef = useRef<HTMLElement>(null);
-  const [heroMuted, setHeroMuted] = useState(true);
-  const heroFadeRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const heroVolRef = useRef(0);
-
-  const postToHero = (msg: object) => {
-    heroIframeRef.current?.contentWindow?.postMessage(JSON.stringify(msg), "*");
-  };
-
-  const heroFadeIn = () => {
-    if (heroFadeRef.current) clearInterval(heroFadeRef.current);
-    postToHero({ method: "setMuted", value: false });
-    setHeroMuted(false);
-    let vol = heroVolRef.current;
-    heroFadeRef.current = setInterval(() => {
-      vol = Math.min(0.25, vol + 0.05);
-      heroVolRef.current = vol;
-      postToHero({ method: "setVolume", value: vol });
-      if (vol >= 0.25) clearInterval(heroFadeRef.current!);
-    }, 60);
-  };
-
-  const heroFadeOut = () => {
-    if (heroFadeRef.current) clearInterval(heroFadeRef.current);
-    let vol = heroVolRef.current;
-    heroFadeRef.current = setInterval(() => {
-      vol = Math.max(0, vol - 0.05);
-      heroVolRef.current = vol;
-      postToHero({ method: "setVolume", value: vol });
-      if (vol <= 0) {
-        clearInterval(heroFadeRef.current!);
-        postToHero({ method: "setMuted", value: true });
-        setHeroMuted(true);
-      }
-    }, 60);
-  };
-
-  const toggleHeroAudio = () => {
-    if (heroMuted) heroFadeIn();
-    else heroFadeOut();
-  };
-
-  // Auto-mute when scrolled out of view
-  useEffect(() => {
-    const el = heroSectionRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting && !heroMuted) heroFadeOut();
-      },
-      { threshold: 0.3 }
-    );
-    observer.observe(el);
-    return () => {
-      observer.disconnect();
-      if (heroFadeRef.current) clearInterval(heroFadeRef.current);
-    };
-  }, [heroMuted]);
-
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY;
@@ -351,32 +288,20 @@ export default function PilotTraining() {
   return (
     <div className={`${manrope.variable} bg-background text-on-surface`}>
       {/* Section 1: Hero */}
-      <section ref={heroSectionRef} className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
         <div
           className="absolute inset-0 z-0 overflow-hidden bg-cover bg-center"
           style={{ backgroundImage: "url(https://vumbnail.com/1191576047_large.jpg)" }}
         >
           <iframe
-            ref={heroIframeRef}
             className="absolute top-1/2 left-1/2 w-[177.78vh] h-[100vh] min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 border-0 pointer-events-none scale-[1.15]"
-            src="https://player.vimeo.com/video/1191576047?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&controls=0&dnt=1&playsinline=1&api=1"
+            src="https://player.vimeo.com/video/1191576047?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&controls=0&dnt=1&playsinline=1"
             title="Aviation Background"
             allow="autoplay; fullscreen"
             allowFullScreen
           />
           <div className="absolute inset-0 bg-[#131313]/55" />
         </div>
-
-        {/* Audio toggle */}
-        <button
-          type="button"
-          onClick={toggleHeroAudio}
-          aria-label={heroMuted ? "Unmute hero audio" : "Mute hero audio"}
-          className="absolute top-24 right-6 md:top-28 md:right-12 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-black/40 backdrop-blur-md border border-white/15 text-white/80 hover:text-white hover:border-[#C5A572] transition-colors text-xs font-bold uppercase tracking-wider"
-        >
-          {heroMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          {heroMuted ? "Sound off" : "Sound on"}
-        </button>
         <div
           className="absolute inset-0 z-0"
           style={{
