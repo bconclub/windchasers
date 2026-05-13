@@ -43,7 +43,7 @@ export default function VimeoReel({
       JSON.stringify({ method: "setMuted", value: val }),
       "*"
     );
-    if (!val) setVolume(0.5);
+    if (!val) setVolume(0.25);
   };
 
   const fadeOut = () => {
@@ -73,10 +73,10 @@ export default function VimeoReel({
     setMuted(false);
     let vol = currentVolRef.current;
     fadeIntervalRef.current = setInterval(() => {
-      vol = Math.min(0.5, vol + 0.05);
+      vol = Math.min(0.25, vol + 0.05);
       currentVolRef.current = vol;
       setVolume(vol);
-      if (vol >= 0.5) clearInterval(fadeIntervalRef.current!);
+      if (vol >= 0.25) clearInterval(fadeIntervalRef.current!);
     }, 60);
   };
 
