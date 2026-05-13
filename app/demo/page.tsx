@@ -49,11 +49,11 @@ function DemoPageContent() {
     >
       {/* Hero */}
       <section className="relative min-h-[600px] flex items-center justify-center pt-24 pb-16 overflow-hidden">
-        {/* Vimeo background */}
+        {/* Vimeo background — desktop only */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <iframe
             src="https://player.vimeo.com/video/1191576047?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1"
-            className="absolute w-full h-full scale-[1.15]"
+            className="hidden md:block absolute w-full h-full scale-[1.15]"
             style={{ border: 0, top: 0, left: 0 }}
             allow="autoplay; fullscreen"
             title="Demo hero background"

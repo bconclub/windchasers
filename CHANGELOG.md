@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /demo: hide hero video on mobile
+
+- Hero Vimeo iframe now has `hidden md:block` — not loaded on mobile, desktop-only.
+- User-facing: mobile /demo page no longer plays background video (faster load, no heavy iframe).
+
 ## 2026-05-12 · Footer: main pages, map embed, logo at bottom
 
 - Added "Pages" column: Home, Our Team, Book a Demo, Pilot Assessment, AI Counsellor, Pricing.
