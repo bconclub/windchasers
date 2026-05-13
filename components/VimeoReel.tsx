@@ -126,7 +126,7 @@ export default function VimeoReel({
         src={
           cover
             ? `https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1`
-            : `https://player.vimeo.com/video/${vimeoId}?autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1&api=1`
+            : `https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1&api=1`
         }
         className={`absolute inset-0 w-full h-full ${cover ? "pointer-events-none" : ""}`}
         style={zoom !== 1 ? { transform: `scale(${zoom})`, transformOrigin: "center" } : undefined}

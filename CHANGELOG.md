@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · VimeoReel: add background=1 to non-cover embed URL
+
+- Non-cover mode now uses background=1 alongside api=1 — forces Vimeo to autoplay regardless of browser autoplay policy.
+- Fixes: "Building India's next generation" portrait reel (and all other non-cover VimeoReels) stuck on poster/not playing.
+- Mute button and autoUnmuteOnView behaviour unchanged.
+
 ## 2026-05-12 · /dgca, /helicopter, /international: design system refresh
 
 - All three pages: added Manrope display font, #131313/#0e0e0e section alternation, eyebrow labels, tracking-tighter headings, italic gold headline accent.
