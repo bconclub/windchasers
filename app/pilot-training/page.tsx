@@ -263,7 +263,7 @@ function CampusGallery() {
           onClick={() => setExpanded((v) => !v)}
           className="flex items-center gap-2 text-[#C5A572] border border-[#C5A572]/40 hover:border-[#C5A572] px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-wider transition-colors"
         >
-          {expanded ? "Show less" : `View all ${CAMPUS_IMAGES.length} photos`}
+          {expanded ? "Show less" : "View more"}
           <span className={`transition-transform duration-300 ${expanded ? "rotate-180" : ""}`}>↓</span>
         </button>
       </div>
