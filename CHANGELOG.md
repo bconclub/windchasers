@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /dgca: hero + subject cards + Why Choose Us — image-driven
+
+- /dgca hero: facility photo (DSC_0492) painted behind, opacity 35%, dark gradient overlay for legibility.
+- DGCASubjectsGrid: each of the 6 cards gets its own facility background image (opacity 15%, fades to 25% on hover), gradient overlay keeps text readable. Border switched to border-t-2 gold to match design system.
+- WhyChooseUsCarousel: cards now full-bleed background photos (one per feature, 11 total) with bottom-up dark gradient overlay; icon sits in a gold-tinted square. Height bumped, redundant "Why Choose Us" heading inside the carousel removed (parent page provides it).
+
 ## 2026-05-12 · Vimeo thumbnail backdrops (kill the dark-blank flash)
 
 - VimeoReel, StudentsFlyingGallery, VideoCarousel, /pilot-training hero: each Vimeo iframe now has a poster image (vumbnail.com proxy: `https://vumbnail.com/{id}_large.jpg`) painted as the container background.

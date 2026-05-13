@@ -25,6 +25,7 @@ interface Feature {
   icon: LucideIcon;
   title: string;
   description: string;
+  image: string;
 }
 
 const features: Feature[] = [
@@ -32,56 +33,67 @@ const features: Feature[] = [
     icon: Plane,
     title: "Airline Pilots Teaching",
     description: "Learn from experienced active airline pilots with real-world expertise.",
+    image: "/why-windchasers/instructors.webp",
   },
   {
     icon: User,
     title: "Individual Learning Approach",
     description: "Personalized attention tailored to your learning style and pace.",
+    image: "/facility/Sumaiya Ali.webp",
   },
   {
     icon: Target,
     title: "Skills Focus, Not Just Exam Passing",
     description: "We build practical aviation knowledge, not just exam-cracking techniques.",
+    image: "/why-windchasers/Build Around your goals.webp",
   },
   {
     icon: MessageCircle,
     title: "1:1 Doubt Clearing",
     description: "Personal doubt clearing sessions with instructors whenever you need.",
+    image: "/facility/DSC_0549.JPG.webp",
   },
   {
     icon: ClipboardList,
     title: "Weekly Mocks + Past Papers",
     description: "Regular practice with weekly mock tests and comprehensive past paper analysis.",
+    image: "/facility/WC2.webp",
   },
   {
     icon: RotateCcw,
     title: "Free Unlimited Revision",
     description: "Access to all course materials and revision sessions at no extra cost.",
+    image: "/facility/WC4.webp",
   },
   {
     icon: BarChart3,
     title: "Performance Tracking",
     description: "Detailed analytics and progress tracking to identify strengths and areas for improvement.",
+    image: "/facility/DSC_0492.JPG.webp",
   },
   {
     icon: Star,
     title: "95% Pass Rate",
     description: "Proven track record with 95% of students successfully clearing DGCA exams.",
+    image: "/why-windchasers/DGCA Approved.webp",
   },
   {
     icon: Users,
     title: "Guest Lectures by Captains",
     description: "Special sessions with airline captains sharing industry insights and experiences.",
+    image: "/facility/5U2A0673.JPG.webp",
   },
   {
     icon: BookOpen,
     title: "Comprehensive Study Material",
     description: "Well-structured notes, reference books, and digital resources included.",
+    image: "/facility/5U2A0679.JPG.webp",
   },
   {
     icon: CheckCircle,
     title: "Exam Registration Support",
     description: "Complete assistance with DGCA exam registration and documentation.",
+    image: "/facility/DSC_0481.JPG.webp",
   },
 ];
 
@@ -153,11 +165,9 @@ export default function WhyChooseUsCarousel() {
   };
 
   return (
-    <section className="min-h-screen py-20 px-6 lg:px-8 flex flex-col justify-center">
+    <section className="py-8 px-6 lg:px-8 flex flex-col justify-center">
       <div className="max-w-7xl mx-auto w-full">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gold">Why Choose Us</h2>
-        
-        <div className="relative flex items-center justify-center min-h-[400px] md:min-h-[550px]">
+        <div className="relative flex items-center justify-center min-h-[480px] md:min-h-[600px]">
         {/* Card Stack Container */}
         <div className="relative w-full max-w-md md:max-w-[28rem] mx-auto perspective-1000">
           <motion.div
@@ -239,23 +249,29 @@ export default function WhyChooseUsCarousel() {
                     }}
                   >
                     <motion.div
-                      className="bg-accent-dark p-6 md:p-10 rounded-xl border border-white/10 shadow-lg backdrop-blur-sm"
+                      className="relative overflow-hidden rounded-2xl border-t-2 border-[#C5A572] shadow-lg min-h-[420px] md:min-h-[520px] flex flex-col justify-end"
                       style={{
+                        backgroundImage: `url(${feature.image})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
                         transform: `perspective(1000px) rotateY(${rotateY}deg) rotateZ(${transform.rotate}deg)`,
-                        boxShadow: stackPosition === 0 
-                          ? "0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(197, 165, 114, 0.1)"
-                          : `0 ${10 + stackPosition * 5}px ${20 + stackPosition * 10}px rgba(0, 0, 0, 0.2)`,
+                        boxShadow: stackPosition === 0
+                          ? "0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(197, 165, 114, 0.15)"
+                          : `0 ${10 + stackPosition * 5}px ${20 + stackPosition * 10}px rgba(0, 0, 0, 0.3)`,
                       }}
-                      whileHover={stackPosition === 0 ? { 
-                        scale: 1.02,
-                        transition: { duration: 0.2 }
-                      } : {}}
+                      whileHover={stackPosition === 0 ? { scale: 1.02, transition: { duration: 0.2 } } : {}}
                     >
-                      <div className="mb-4">
-                        <feature.icon className="w-12 h-12 md:w-16 md:h-16 text-gold" strokeWidth={1.5} />
+                      {/* Gradient overlay for legibility */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/85 to-[#0a0a0a]/20" />
+
+                      {/* Content */}
+                      <div className="relative z-10 p-6 md:p-10">
+                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-[#C5A572]/15 border border-[#C5A572]/30 flex items-center justify-center mb-5">
+                          <feature.icon className="w-6 h-6 md:w-7 md:h-7 text-[#C5A572]" strokeWidth={1.5} />
+                        </div>
+                        <h3 className="text-xl md:text-2xl font-bold mb-3 text-white">{feature.title}</h3>
+                        <p className="text-white/70 text-sm md:text-base leading-relaxed">{feature.description}</p>
                       </div>
-                      <h3 className="text-lg md:text-2xl font-bold mb-3 text-white">{feature.title}</h3>
-                      <p className="text-white/60 text-sm md:text-lg leading-relaxed">{feature.description}</p>
                     </motion.div>
                   </motion.div>
                 );

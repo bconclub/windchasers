@@ -18,6 +18,7 @@ interface Subject {
   marks: number;
   duration: string;
   icon: React.ReactNode;
+  image: string;
   description: string;
 }
 
@@ -28,6 +29,7 @@ const subjects: Subject[] = [
     marks: 100,
     duration: "6-8 weeks",
     icon: <Navigation className="w-8 h-8" />,
+    image: "/facility/DSC_0481.JPG.webp",
     description:
       "Dead reckoning, wind calculations, flight planning, chart reading, position fixing. Learn to navigate aircraft from point A to B with precision and confidence.",
   },
@@ -37,6 +39,7 @@ const subjects: Subject[] = [
     marks: 100,
     duration: "3-4 weeks",
     icon: <Scale className="w-8 h-8" />,
+    image: "/facility/DSC_0492.JPG.webp",
     description:
       "DGCA rules, ICAO standards, airspace classifications, flight rules, pilot licensing requirements. Master aviation law essentials and regulatory compliance.",
   },
@@ -46,6 +49,7 @@ const subjects: Subject[] = [
     marks: 100,
     duration: "4-5 weeks",
     icon: <Cloud className="w-8 h-8" />,
+    image: "/facility/WC5.webp",
     description:
       "Weather systems, cloud formations, wind patterns, icing, turbulence, weather reports (METAR/TAF). Read the sky like a professional pilot and make informed weather decisions.",
   },
@@ -55,6 +59,7 @@ const subjects: Subject[] = [
     marks: 100,
     duration: "6-8 weeks",
     icon: <Cog className="w-8 h-8" />,
+    image: "/facility/5U2A0673.JPG.webp",
     description:
       "Aircraft systems, engines, electrical, hydraulics, fuel, instruments. Understand how planes actually work from the inside out.",
   },
@@ -64,6 +69,7 @@ const subjects: Subject[] = [
     marks: 100,
     duration: "5-6 weeks",
     icon: <Settings className="w-8 h-8" />,
+    image: "/facility/DSC_0549.JPG.webp",
     description:
       "Specific aircraft systems, aerodynamics, performance, weight & balance. Deep dive into aircraft operations and technical specifications.",
   },
@@ -73,6 +79,7 @@ const subjects: Subject[] = [
     marks: 100,
     duration: "2-3 weeks",
     icon: <Radio className="w-8 h-8" />,
+    image: "/facility/Sumaiya Ali.webp",
     description:
       "ATC communication, phonetic alphabet, emergency calls, clearances. Master radiotelephony and talk like a professional pilot.",
   },
@@ -103,15 +110,21 @@ export default function DGCASubjectsGrid() {
             >
               <motion.div
                 className={`
-                  bg-accent-dark border-2 rounded-lg p-6 cursor-pointer relative
-                  transition-all duration-300
-                  ${isExpanded ? "border-gold bg-dark" : "border-gold/30 hover:border-gold"}
+                  relative overflow-hidden rounded-xl p-6 cursor-pointer
+                  border-t-2 transition-all duration-300
+                  ${isExpanded ? "border-[#C5A572] bg-[#0a0a0a]" : "border-[#C5A572]/50 hover:border-[#C5A572] bg-[#1A1A1A]"}
                 `}
                 onClick={() => toggleExpand(subject.id)}
-                whileHover={{ borderColor: "#C5A572" }}
               >
+                {/* Background image */}
+                <div
+                  className="absolute inset-0 bg-cover bg-center opacity-15 transition-opacity duration-300 group-hover:opacity-25"
+                  style={{ backgroundImage: `url(${subject.image})` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#1A1A1A] via-[#1A1A1A]/85 to-[#1A1A1A]/50" />
+
                 {/* Card Header - Collapsed State */}
-                <div className="flex items-center gap-4">
+                <div className="relative z-10 flex items-center gap-4">
                   <div className="text-gold flex-shrink-0">{subject.icon}</div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-xl font-bold text-gold mb-2">
@@ -130,7 +143,7 @@ export default function DGCASubjectsGrid() {
                 </div>
 
                 {/* Expandable Indicator Arrow - Mobile Only */}
-                <div className="md:hidden absolute bottom-3 right-3">
+                <div className="md:hidden absolute bottom-3 right-3 z-10">
                   <motion.div
                     animate={{ rotate: isExpanded ? 180 : 0 }}
                     transition={{ duration: 0.3 }}
@@ -151,9 +164,9 @@ export default function DGCASubjectsGrid() {
                         duration: 0.4,
                         ease: "easeInOut",
                       }}
-                      className="overflow-hidden"
+                      className="relative z-10 overflow-hidden"
                     >
-                      <div className="pt-4 mt-4 border-t border-gold/20">
+                      <div className="pt-4 mt-4 border-t border-[#C5A572]/30">
                         <p className="text-white/85 leading-relaxed">
                           {subject.description}
                         </p>

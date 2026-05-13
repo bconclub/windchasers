@@ -57,8 +57,13 @@ export default function DGCAPage() {
     <div className={`${manrope.variable}`} style={{ backgroundColor: "#131313", color: "#fff" }}>
 
       {/* Hero */}
-      <section className="pt-36 pb-24 px-6 md:px-12 text-center" style={{ backgroundColor: "#131313" }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+      <section className="relative pt-36 pb-24 px-6 md:px-12 text-center overflow-hidden" style={{ backgroundColor: "#131313" }}>
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-35"
+          style={{ backgroundImage: "url(/facility/DSC_0492.JPG.webp)" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#131313]/70 via-[#131313]/80 to-[#131313]" />
+        <motion.div className="relative z-10" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-xs mb-5 block">
             WindChasers · Ground Training
           </span>
@@ -66,7 +71,7 @@ export default function DGCAPage() {
             DGCA{" "}
             <span className="text-[#C5A572] italic">Ground Classes.</span>
           </h1>
-          <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto">
+          <p className="text-white/70 text-lg md:text-xl max-w-2xl mx-auto">
             Complete CPL theory training. Clear all DGCA exams before you start flying. Structured curriculum with experienced instructors.
           </p>
         </motion.div>
