@@ -2,6 +2,14 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · Footer: main pages, map embed, logo at bottom
+
+- Added "Pages" column: Home, Our Team, Book a Demo, Pilot Assessment, AI Counsellor, Pricing.
+- Added "Pilot Training" and "ATC Courses" to Training Paths column.
+- Added Google Maps embed (right side, 2-of-5 columns) for WindChasers Kothanur campus — grayscale by default, full colour on hover.
+- Bottom bar now shows faded WindChasers logo centered above the copyright line.
+- Layout: 5-column grid (3 nav + 2 map) on desktop, stacked on mobile.
+
 ## 2026-05-12 · /pilot-training: fix hero iframe cover sizing
 
 - Replaced 16:9 viewport-math sizing with min-w/min-h cover approach (w-[177.78vh] h-[100vh] min-w-full min-h-full scale-[1.15]) that handles portrait and landscape source videos.
