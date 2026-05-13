@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
+import { Manrope } from "next/font/google";
 import WhyChooseUsCarousel from "@/components/WhyChooseUsCarousel";
 import PilotJourneyTimeline from "@/components/PilotJourneyTimeline";
 import PricingFormModal from "@/components/PricingFormModal";
@@ -10,239 +11,212 @@ import DGCASubjectsGrid from "@/components/DGCASubjectsGrid";
 import VideoCarousel from "@/components/VideoCarousel";
 import { trackKeyPageView } from "@/lib/analytics";
 
+const manrope = Manrope({ subsets: ["latin"], weight: ["700", "800"], variable: "--font-headline" });
+
+const faqs = [
+  { q: "Do I need 12th pass to join DGCA classes?", a: "Yes. Physics and Math required. If you don't have them, bridge courses available." },
+  { q: "What's the difference between 4 and 6 subject packages?", a: "4 subjects: Air Navigation, Air Regulations, Aviation Meteorology, and RTR. Good for helicopter pilots.\n6 subjects: Complete DGCA for airplane CPL — includes Technical General and Technical Specific in addition to the 4 subjects." },
+  { q: "Can I pay in installments?", a: "Yes. ₹20,000 registration (non-refundable). Rest in installments. No refunds once paid." },
+  { q: "What if I fail a subject?", a: "Free unlimited revision until you pass. No extra fees." },
+  { q: "How tough are DGCA exams?", a: "6 papers, 100 marks each. Need 70% to pass. Our pass rate: 95%." },
+  { q: "When can I attempt exams?", a: "Complete papers within 3 years from first attempt." },
+  { q: "Do I need medical before DGCA?", a: "Class 2 medical recommended before starting. Class 1 needed before flying." },
+  { q: "What after DGCA?", a: "Join flight school for CPL training (flying hours + license)." },
+  { q: "Online or offline — which is better?", a: "Both available. Offline recommended for complex subjects. Online for flexibility." },
+  { q: "Is job guaranteed after CPL?", a: "No guarantees. We provide airline prep, resume help, interview training. Rest depends on you." },
+];
+
 export default function DGCAPage() {
   const [showPricingModal, setShowPricingModal] = useState(false);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   useEffect(() => {
     document.title = "DGCA Ground Classes | WindChasers Aviation Academy";
-    
-    // Track page view
-    trackKeyPageView('DGCA Ground Classes');
-    
-    // Handle scroll to pricing section if hash is present
+    trackKeyPageView("DGCA Ground Classes");
     if (window.location.hash === "#pricing") {
       setTimeout(() => {
-        const pricingSection = document.getElementById("pricing");
-        if (pricingSection) {
-          pricingSection.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
+        document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth", block: "start" });
       }, 100);
     }
   }, []);
 
-
   const videos = [
-    {
-      id: "1",
-      thumbnail: "",
-      embedUrl: "https://player.vimeo.com/video/1150072244",
-    },
-    {
-      id: "2",
-      thumbnail: "",
-      embedUrl: "https://player.vimeo.com/video/1150072000",
-    },
-    {
-      id: "3",
-      thumbnail: "",
-      embedUrl: "https://player.vimeo.com/video/1150070765",
-    },
-    {
-      id: "4",
-      thumbnail: "",
-      embedUrl: "https://player.vimeo.com/video/1150070605",
-    },
-    {
-      id: "5",
-      thumbnail: "",
-      embedUrl: "https://player.vimeo.com/video/1150070400",
-    },
-    {
-      id: "6",
-      thumbnail: "",
-      embedUrl: "https://player.vimeo.com/video/1150071458",
-    },
-    {
-      id: "7",
-      thumbnail: "",
-      embedUrl: "https://player.vimeo.com/video/1150071201",
-    },
-    {
-      id: "8",
-      thumbnail: "",
-      embedUrl: "https://player.vimeo.com/video/1150072494",
-    },
-    {
-      id: "9",
-      thumbnail: "",
-      embedUrl: "https://player.vimeo.com/video/1150070211",
-    },
-    {
-      id: "10",
-      thumbnail: "",
-      embedUrl: "https://player.vimeo.com/video/1150069889",
-    },
+    { id: "1", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150072244" },
+    { id: "2", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150072000" },
+    { id: "3", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150070765" },
+    { id: "4", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150070605" },
+    { id: "5", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150070400" },
+    { id: "6", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150071458" },
+    { id: "7", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150071201" },
+    { id: "8", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150072494" },
+    { id: "9", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150070211" },
+    { id: "10", thumbnail: "", embedUrl: "https://player.vimeo.com/video/1150069889" },
   ];
 
   return (
-    <div className="pt-32 pb-20 px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Hero */}
-        <div className="text-center mb-16">
-          <h1 className="text-[2.5rem] md:text-6xl font-bold mb-6 text-white">
-            DGCA <span className="text-gold">Ground Classes</span>
+    <div className={`${manrope.variable}`} style={{ backgroundColor: "#131313", color: "#fff" }}>
+
+      {/* Hero */}
+      <section className="pt-36 pb-24 px-6 md:px-12 text-center" style={{ backgroundColor: "#131313" }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+          <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-xs mb-5 block">
+            WindChasers · Ground Training
+          </span>
+          <h1 className="font-[family-name:var(--font-headline)] text-5xl md:text-7xl font-extrabold tracking-tighter text-white leading-tight mb-5">
+            DGCA{" "}
+            <span className="text-[#C5A572] italic">Ground Classes.</span>
           </h1>
-          <p className="text-xl text-white/70 max-w-3xl mx-auto">
+          <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto">
             Complete CPL theory training. Clear all DGCA exams before you start flying. Structured curriculum with experienced instructors.
           </p>
-        </div>
+        </motion.div>
+      </section>
 
-        {/* 6 DGCA Subjects - Expandable Grid */}
-        <section className="mb-16 py-12 md:py-12 h-[90vh] md:h-auto">
-          <h2 className="text-3xl font-bold mb-4 md:mb-12 text-center text-gold">
-            6 DGCA Subjects Breakdown
-          </h2>
-          <div className="max-w-6xl mx-auto">
+      {/* 6 DGCA Subjects */}
+      <section className="py-20 px-6 md:px-12" style={{ backgroundColor: "#0e0e0e" }}>
+        <div className="max-w-[1400px] mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-xs mb-3 block">Curriculum</span>
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-extrabold tracking-tighter text-white">
+              6 DGCA Subjects
+            </h2>
+          </motion.div>
+          <div className="max-w-6xl mx-auto h-[90vh] md:h-auto">
             <DGCASubjectsGrid />
           </div>
-          <div className="text-center mt-16 mb-8">
+          <div className="text-center mt-16">
             <Link
               href="/demo"
-              className="inline-block bg-gold text-dark px-10 py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
+              className="inline-block bg-[#C5A572] text-[#1A1A1A] px-10 py-4 rounded-lg font-bold uppercase tracking-wider hover:bg-[#C5A572]/90 transition-all hover:-translate-y-0.5"
             >
               Book a Demo Session
             </Link>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Why Choose Us */}
-        <div className="mt-16">
+      {/* Why Choose Us */}
+      <section className="py-20" style={{ backgroundColor: "#131313" }}>
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-xs mb-3 block">WindChasers</span>
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-extrabold tracking-tighter text-white">
+              Why Choose Us
+            </h2>
+          </motion.div>
           <WhyChooseUsCarousel />
         </div>
+      </section>
 
-        {/* 8-Step Journey */}
-        <section className="py-16">
+      {/* 8-Step Journey */}
+      <section className="py-20 px-6 md:px-12" style={{ backgroundColor: "#0e0e0e" }}>
+        <div className="max-w-[1400px] mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-xs mb-3 block">The Path</span>
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-extrabold tracking-tighter text-white">
+              Your Journey
+            </h2>
+          </motion.div>
           <PilotJourneyTimeline />
           <div className="text-center mt-12">
             <Link
               href="/demo"
-              className="inline-block bg-gold text-dark px-10 py-4 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors"
+              className="inline-block bg-[#C5A572] text-[#1A1A1A] px-10 py-4 rounded-lg font-bold uppercase tracking-wider hover:bg-[#C5A572]/90 transition-all hover:-translate-y-0.5"
             >
               Book a Demo Session
             </Link>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Student Video Carousel */}
-        <VideoCarousel
-          videos={videos}
-          title="Student to Pilot"
-          subtitle="Real journeys. Real results."
-        />
-        {/* Pricing Section - Link to pricing page */}
-        <div id="pricing" className="mb-16 scroll-mt-32 text-center">
-          <h2 className="text-3xl font-bold mb-8 text-center text-gold">Course Pricing</h2>
-          <p className="text-xl text-white/70 mb-8 max-w-3xl mx-auto">
-            View detailed pricing information, package options, and what&apos;s included in our DGCA Ground Classes.
-          </p>
+      {/* Student Video Carousel */}
+      <section className="py-20" style={{ backgroundColor: "#131313" }}>
+        <div className="max-w-[1400px] mx-auto px-6 md:px-12">
+          <VideoCarousel videos={videos} title="Student to Pilot" subtitle="Real journeys. Real results." />
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="py-20 px-6 md:px-12 scroll-mt-32 text-center" style={{ backgroundColor: "#0e0e0e" }}>
+        <div className="max-w-[1400px] mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="mb-10"
+          >
+            <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-xs mb-3 block">Transparent</span>
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-extrabold tracking-tighter text-white mb-4">
+              Course Pricing
+            </h2>
+            <p className="text-white/60 text-xl max-w-3xl mx-auto">
+              View detailed pricing information, package options, and what&apos;s included in our DGCA Ground Classes.
+            </p>
+          </motion.div>
           <button
             onClick={() => setShowPricingModal(true)}
-            className="inline-block bg-gold text-dark px-12 py-5 rounded-lg font-semibold text-lg hover:bg-gold/90 transition-colors cursor-pointer"
+            className="bg-[#C5A572] text-[#1A1A1A] px-12 py-5 rounded-lg font-bold uppercase tracking-wider hover:bg-[#C5A572]/90 transition-all hover:-translate-y-0.5 cursor-pointer"
           >
             View Pricing Details
           </button>
         </div>
+      </section>
 
-        {/* FAQ with Exam Format */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold mb-12 text-center text-gold">Frequently Asked Questions</h2>
-          
-          <div className="max-w-4xl mx-auto space-y-6 mb-12">
-            {/* FAQ Items */}
-            <div className="bg-accent-dark border border-white/10 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gold mb-3">1. Do I need 12th pass to join DGCA classes?</h3>
-              <p className="text-white/80">
-                Yes. Physics and Math required. If you don&apos;t have them, bridge courses available.
-              </p>
-            </div>
-
-            <div className="bg-accent-dark border border-white/10 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gold mb-3">2. What&apos;s the difference between 4 and 6 subject packages?</h3>
-              <p className="text-white/80">
-                4 subjects: Air Navigation, Air Regulations, Aviation Meteorology, and RTR. Good for helicopter pilots.<br />
-                6 subjects: Complete DGCA for airplane CPL - includes Technical General and Technical Specific in addition to the 4 subjects.
-              </p>
-            </div>
-
-            <div className="bg-accent-dark border border-white/10 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gold mb-3">3. Can I pay in installments?</h3>
-              <p className="text-white/80">
-                Yes. ₹20,000 registration (non-refundable). Rest in installments. No refunds once paid.
-              </p>
-            </div>
-
-            <div className="bg-accent-dark border border-white/10 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gold mb-3">4. What if I fail a subject?</h3>
-              <p className="text-white/80">
-                Free unlimited revision until you pass. No extra fees.
-              </p>
-            </div>
-
-            <div className="bg-accent-dark border border-white/10 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gold mb-3">5. How tough are DGCA exams?</h3>
-              <p className="text-white/80">
-                6 papers, 100 marks each. Need 70% to pass. Our pass rate: 95%.
-              </p>
-            </div>
-
-            <div className="bg-accent-dark border border-white/10 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gold mb-3">6. When can I attempt exams?</h3>
-              <p className="text-white/80">
-                Complete papers within 3 years from first attempt.
-              </p>
-            </div>
-
-            <div className="bg-accent-dark border border-white/10 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gold mb-3">7. Do I need medical before DGCA?</h3>
-              <p className="text-white/80">
-                Class 2 medical recommended before starting. Class 1 needed before flying.
-              </p>
-            </div>
-
-            <div className="bg-accent-dark border border-white/10 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gold mb-3">8. What after DGCA?</h3>
-              <p className="text-white/80">
-                Join flight school for CPL training (flying hours + license).
-              </p>
-            </div>
-
-            <div className="bg-accent-dark border border-white/10 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gold mb-3">9. Online or offline - which is better?</h3>
-              <p className="text-white/80">
-                Both available. Offline recommended for complex subjects. Online for flexibility.
-              </p>
-            </div>
-
-            <div className="bg-accent-dark border border-white/10 rounded-lg p-6">
-              <h3 className="text-xl font-bold text-gold mb-3">10. Is job guaranteed after CPL?</h3>
-              <p className="text-white/80">
-                No guarantees. We provide airline prep, resume help, interview training. Rest depends on you.
-              </p>
-            </div>
+      {/* FAQ */}
+      <section className="py-20 px-6 md:px-12" style={{ backgroundColor: "#131313" }}>
+        <div className="max-w-4xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-xs mb-3 block">Help</span>
+            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-extrabold tracking-tighter text-white">
+              Frequently Asked Questions
+            </h2>
+          </motion.div>
+          <div className="space-y-3">
+            {faqs.map((faq, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+                transition={{ delay: i * 0.04 }}
+                className="bg-[#1A1A1A] border-t-2 border-[#C5A572]/40 rounded-xl overflow-hidden"
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-start justify-between gap-4 px-6 py-5 text-left"
+                >
+                  <span className="font-bold text-white">{i + 1}. {faq.q}</span>
+                  <span className="text-[#C5A572] shrink-0 mt-0.5">{openFaq === i ? "−" : "+"}</span>
+                </button>
+                {openFaq === i && (
+                  <div className="px-6 pb-5 text-white/60 text-sm leading-relaxed whitespace-pre-line border-t border-white/5">
+                    {faq.a}
+                  </div>
+                )}
+              </motion.div>
+            ))}
           </div>
         </div>
+      </section>
 
-        {/* Pricing Form Modal */}
-        <PricingFormModal
-          isOpen={showPricingModal}
-          onClose={() => setShowPricingModal(false)}
-          source="dgca"
-          onSuccess={() => {
-            setShowPricingModal(false);
-            window.location.href = "/pricing?source=dgca";
-          }}
-        />
-      </div>
+      <PricingFormModal
+        isOpen={showPricingModal}
+        onClose={() => setShowPricingModal(false)}
+        source="dgca"
+        onSuccess={() => {
+          setShowPricingModal(false);
+          window.location.href = "/pricing?source=dgca";
+        }}
+      />
     </div>
   );
 }

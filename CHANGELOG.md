@@ -2,6 +2,16 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · /dgca, /helicopter, /international: design system refresh
+
+- All three pages: added Manrope display font, #131313/#0e0e0e section alternation, eyebrow labels, tracking-tighter headings, italic gold headline accent.
+- Cards: swapped to WindChasers card pattern (bg-[#1A1A1A] border-t-2 border-[#C5A572] rounded-xl).
+- CTA buttons: gold fill, uppercase, tracking-wider, hover lift — matches /demo and /pilot-training.
+- /dgca: FAQ converted to accordion (click to expand/collapse) with card pattern.
+- /helicopter: numbered training path cards, requirements card, career opportunity cards — all updated.
+- /international: country cards keep click-to-expand highlights; borders and fonts updated; What We Provide now uses card pattern.
+- User-facing: all three pages now visually consistent with /pilot-training and /demo.
+
 ## 2026-05-12 · /demo: mobile card carousel
 
 - Demo type cards (Online / Campus Visit) now use a horizontal snap-scroll carousel on mobile (82vw per card, snap-center).
