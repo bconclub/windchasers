@@ -982,7 +982,7 @@ export default function PilotTraining() {
             const btn = document.querySelector<HTMLElement>('[id*="proxe"], [class*="proxe-launcher"], [class*="widget-launcher"]');
             if (btn) { btn.click(); } else { window.location.href = "/demo"; }
           }}
-          className="flex items-center px-7 py-3 rounded-full text-[#C5A572] text-xs font-bold uppercase tracking-wider active:scale-95 transition-all"
+          className="flex items-center whitespace-nowrap px-5 py-2.5 md:px-7 md:py-3 rounded-full text-[#C5A572] text-[10px] md:text-xs font-bold uppercase tracking-wider active:scale-95 transition-all"
           style={{
             background: "rgba(10,10,10,0.55)",
             backdropFilter: "blur(16px)",

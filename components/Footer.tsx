@@ -100,17 +100,17 @@ export default function Footer() {
             height={72}
             className="h-14 w-auto opacity-30"
           />
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 w-full text-sm text-white/30">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 w-full text-sm text-white/30 text-center sm:text-left">
             <p>&copy; {new Date().getFullYear()} WindChasers Aviation Academy. All rights reserved.</p>
             <p>
-              Built with <span className="text-gold/60">❤️</span> at{" "}
+              Built at{" "}
               <a
                 href="https://bconclub.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gold/60 underline hover:text-gold/80 transition-colors"
               >
-                BCON Club
+                BCON
               </a>
             </p>
           </div>
