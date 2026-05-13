@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-12 · Vimeo thumbnail backdrops (kill the dark-blank flash)
+
+- VimeoReel, StudentsFlyingGallery, VideoCarousel, /pilot-training hero: each Vimeo iframe now has a poster image (vumbnail.com proxy: `https://vumbnail.com/{id}_large.jpg`) painted as the container background.
+- StudentsFlyingGallery iframe URL gained `background=1` for more reliable autoplay (matches VimeoReel).
+- Result: while a Vimeo iframe is loading or switching, the thumbnail shows instead of a black/dark grey box.
+
 ## 2026-05-12 · /pilot-training: hero video sound toggle
 
 - Added "Sound on / Sound off" pill button at top-right of hero (glass style, gold hover).

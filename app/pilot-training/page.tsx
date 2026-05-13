@@ -352,7 +352,10 @@ export default function PilotTraining() {
     <div className={`${manrope.variable} bg-background text-on-surface`}>
       {/* Section 1: Hero */}
       <section ref={heroSectionRef} className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 z-0 overflow-hidden">
+        <div
+          className="absolute inset-0 z-0 overflow-hidden bg-cover bg-center"
+          style={{ backgroundImage: "url(https://vumbnail.com/1191576047_large.jpg)" }}
+        >
           <iframe
             ref={heroIframeRef}
             className="absolute top-1/2 left-1/2 w-[177.78vh] h-[100vh] min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 border-0 pointer-events-none scale-[1.15]"

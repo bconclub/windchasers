@@ -172,11 +172,16 @@ export default function StudentsFlyingGallery({
                   />
                 ) : (
                   <>
+                    {/* Thumbnail backdrop — shown until iframe paints */}
+                    <div
+                      className="absolute inset-0 bg-cover bg-center"
+                      style={{ backgroundImage: `url(https://vumbnail.com/${item.vimeoId}_large.jpg)` }}
+                    />
                     <iframe
                       ref={(el) => {
                         iframeRefs.current[i] = el;
                       }}
-                      src={`https://player.vimeo.com/video/${item.vimeoId}?autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1&api=1`}
+                      src={`https://player.vimeo.com/video/${item.vimeoId}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1&api=1`}
                       className="absolute inset-0 w-full h-full pointer-events-none"
                       allow="autoplay; fullscreen; picture-in-picture"
                       allowFullScreen

@@ -120,6 +120,11 @@ export default function VimeoReel({
     <div
       ref={containerRef}
       className={`relative ${aspectClass} rounded-2xl md:rounded-3xl overflow-hidden ${className}`}
+      style={{
+        backgroundImage: `url(https://vumbnail.com/${vimeoId}_large.jpg)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
     >
       <iframe
         ref={iframeRef}

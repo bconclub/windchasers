@@ -194,7 +194,10 @@ export default function VideoCarousel({ videos, title, subtitle }: VideoCarousel
                       }}
                       onClick={() => setSelectedVideo(video)}
                     >
-                      <div className="relative w-full h-full bg-dark">
+                      <div
+                        className="relative w-full h-full bg-dark bg-cover bg-center"
+                        style={{ backgroundImage: `url(https://vumbnail.com/${(video.embedUrl.match(/video\/(\d+)/) || [])[1]}_large.jpg)` }}
+                      >
                         <iframe
                           src={`${video.embedUrl}?background=1&autoplay=0&loop=0&byline=0&title=0&portrait=0&muted=1&rel=0&controls=0`}
                           className="absolute inset-0 w-full h-full"
