@@ -149,8 +149,8 @@ export default function WhyChooseUsCarousel() {
       const baseY = stackPosition * -10; // Vertical offset (slightly up)
       const baseRotate = stackPosition * 4; // Rotation angle (tilted right)
       const baseRotateY = stackPosition * 2; // 3D rotation
-      const baseScale = 1 - stackPosition * 0.06; // Scale down
-      const opacity = 1 - stackPosition * 0.2; // Fade out
+      const baseScale = 1 - stackPosition * 0.05; // Scale down
+      const opacity = 1 - stackPosition * 0.12; // Fade out (gentler)
 
       return {
         x: baseX + (dragOffset * 0.25), // Move less than front card
@@ -159,7 +159,7 @@ export default function WhyChooseUsCarousel() {
         rotateY: baseRotateY + (dragOffset * 0.02),
         scale: baseScale,
         zIndex: CARD_STACK_SIZE - stackPosition,
-        opacity: Math.max(0.2, opacity),
+        opacity: Math.max(0.55, opacity),
       };
     }
   };
@@ -261,17 +261,21 @@ export default function WhyChooseUsCarousel() {
                       }}
                       whileHover={stackPosition === 0 ? { scale: 1.02, transition: { duration: 0.2 } } : {}}
                     >
-                      {/* Gradient overlay for legibility */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/85 to-[#0a0a0a]/20" />
+                      {/* Gradient overlay — only on front card (back cards stay readable as photos) */}
+                      {stackPosition === 0 && (
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/80 to-transparent" />
+                      )}
 
-                      {/* Content */}
-                      <div className="relative z-10 p-6 md:p-10">
-                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-[#C5A572]/15 border border-[#C5A572]/30 flex items-center justify-center mb-5">
-                          <feature.icon className="w-6 h-6 md:w-7 md:h-7 text-[#C5A572]" strokeWidth={1.5} />
+                      {/* Content — hidden on back cards so only the photo shows */}
+                      {stackPosition === 0 && (
+                        <div className="relative z-10 p-6 md:p-10">
+                          <div className="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-[#C5A572]/15 border border-[#C5A572]/30 flex items-center justify-center mb-5">
+                            <feature.icon className="w-6 h-6 md:w-7 md:h-7 text-[#C5A572]" strokeWidth={1.5} />
+                          </div>
+                          <h3 className="text-xl md:text-2xl font-bold mb-3 text-white">{feature.title}</h3>
+                          <p className="text-white/70 text-sm md:text-base leading-relaxed">{feature.description}</p>
                         </div>
-                        <h3 className="text-xl md:text-2xl font-bold mb-3 text-white">{feature.title}</h3>
-                        <p className="text-white/70 text-sm md:text-base leading-relaxed">{feature.description}</p>
-                      </div>
+                      )}
                     </motion.div>
                   </motion.div>
                 );
