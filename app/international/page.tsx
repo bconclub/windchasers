@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Manrope } from "next/font/google";
 import { CheckCircle } from "lucide-react";
 import { trackKeyPageView } from "@/lib/analytics";
+import { setLastVisitedProgram } from "@/lib/sessionStorage";
 
 const manrope = Manrope({ subsets: ["latin"], weight: ["700", "800"], variable: "--font-headline" });
 
@@ -67,6 +68,7 @@ export default function InternationalPage() {
   useEffect(() => {
     document.title = "Pilot Training Abroad | WindChasers Aviation Academy";
     trackKeyPageView("Fly Abroad");
+    setLastVisitedProgram("pilot_training_abroad");
   }, []);
 
   return (

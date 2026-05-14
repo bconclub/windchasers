@@ -11,6 +11,7 @@ export interface UserSessionData {
   preferredTime?: string;
   assessmentScore?: number;
   tier?: string;
+  lastVisitedProgram?: string;
 }
 
 const SESSION_STORAGE_KEY = "user_data";
@@ -45,6 +46,13 @@ export function saveUserSessionData(data: Partial<UserSessionData>): void {
   } catch (error) {
     console.error("Error saving to sessionStorage:", error);
   }
+}
+
+/**
+ * Record which program page the user last visited so the booking form can pre-fill "I'm Interested In"
+ */
+export function setLastVisitedProgram(program: string): void {
+  saveUserSessionData({ lastVisitedProgram: program });
 }
 
 /**

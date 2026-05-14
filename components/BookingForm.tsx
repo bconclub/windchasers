@@ -72,22 +72,15 @@ export default function BookingForm() {
   const [dateError, setDateError] = useState("");
 
   const mapSourceToInterest = (source: string): InterestSource | null => {
+    // Direct InterestSource values (from lastVisitedProgram)
+    if (source === "dgca_ground" || source === "pilot_training_abroad" || source === "helicopter_license" || source === "other") {
+      return source as InterestSource;
+    }
     const sourceLower = source.toLowerCase();
-    // Exact matches first
-    if (sourceLower === "dgca") {
-      return "dgca_ground";
-    }
-    if (sourceLower === "abroad") {
-      return "pilot_training_abroad";
-    }
-    if (sourceLower === "helicopter") {
-      return "helicopter_license";
-    }
-    // Fallback to includes for other variations
     if (sourceLower.includes("dgca") || sourceLower.includes("ground")) {
       return "dgca_ground";
     }
-    if (sourceLower.includes("abroad") || sourceLower.includes("international")) {
+    if (sourceLower.includes("abroad") || sourceLower.includes("international") || sourceLower === "abroad") {
       return "pilot_training_abroad";
     }
     if (sourceLower.includes("helicopter")) {
@@ -132,13 +125,13 @@ export default function BookingForm() {
       const prefill = searchParams?.get("prefill");
       const source = searchParams?.get("source");
       const demoTypeParam = searchParams?.get("demoType");
-      
+
       // Handle demoType from URL params (takes precedence)
       if (demoTypeParam === "online" || demoTypeParam === "offline") {
         setFormData((prev) => ({ ...prev, demoType: demoTypeParam as DemoType }));
         saveUserSessionData({ demoType: demoTypeParam });
       }
-      
+
       // Handle interest from URL params (takes precedence)
       if (prefill === "assessment" && source) {
         const mappedSource = mapSourceToInterest(source);
@@ -152,6 +145,15 @@ export default function BookingForm() {
         if (mappedSource) {
           setFormData((prev) => ({ ...prev, interest: mappedSource }));
           saveUserSessionData({ interest: mappedSource });
+        }
+      } else if (!source && !prefill) {
+        // No URL source — fall back to last visited program page from session
+        const freshData = getUserSessionData();
+        if (!freshData?.interest && freshData?.lastVisitedProgram) {
+          const mapped = mapSourceToInterest(freshData.lastVisitedProgram);
+          if (mapped) {
+            setFormData((prev) => ({ ...prev, interest: mapped }));
+          }
         }
       }
       

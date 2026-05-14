@@ -9,6 +9,7 @@ import PilotJourneyTimeline from "@/components/PilotJourneyTimeline";
 import DGCASubjectsGrid from "@/components/DGCASubjectsGrid";
 import VideoCarousel from "@/components/VideoCarousel";
 import { trackKeyPageView } from "@/lib/analytics";
+import { setLastVisitedProgram } from "@/lib/sessionStorage";
 
 const manrope = Manrope({ subsets: ["latin"], weight: ["700", "800"], variable: "--font-headline" });
 
@@ -31,6 +32,7 @@ export default function DGCAPage() {
   useEffect(() => {
     document.title = "DGCA Ground Classes | WindChasers Aviation Academy";
     trackKeyPageView("DGCA Ground Classes");
+    setLastVisitedProgram("dgca_ground");
   }, []);
 
   const videos = [

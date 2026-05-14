@@ -30,6 +30,7 @@ import StudentsFlyingGallery, {
 } from "@/components/StudentsFlyingGallery";
 import VimeoReel from "@/components/VimeoReel";
 import CardCarousel from "@/components/CardCarousel";
+import { setLastVisitedProgram } from "@/lib/sessionStorage";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -274,6 +275,10 @@ export default function PilotTraining() {
   const [showMapModal, setShowMapModal] = useState(false);
   const [showDemoBtn, setShowDemoBtn] = useState(false);
   const lastScrollY = useRef(0);
+
+  useEffect(() => {
+    setLastVisitedProgram("pilot_training_abroad");
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {

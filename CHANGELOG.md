@@ -2,6 +2,16 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-14 · feat: track last-visited program to pre-fill BookingForm interest
+
+- `lib/sessionStorage.ts`: Added `lastVisitedProgram?: string` to `UserSessionData` interface and exported `setLastVisitedProgram(program)` helper that writes to session storage
+- `app/dgca/page.tsx`: Calls `setLastVisitedProgram("dgca_ground")` on mount
+- `app/helicopter/page.tsx`: Calls `setLastVisitedProgram("helicopter_license")` on mount
+- `app/international/page.tsx`: Calls `setLastVisitedProgram("pilot_training_abroad")` on mount
+- `app/pilot-training/page.tsx`: Calls `setLastVisitedProgram("pilot_training_abroad")` on mount
+- `components/BookingForm.tsx`: Refactored `mapSourceToInterest` to handle direct `InterestSource` values; added fallback that reads `lastVisitedProgram` from session when no URL `source`/`prefill` param is present
+- User-facing: BookingForm interest field now auto-selects the correct program when a visitor navigates from a program page without a URL source param
+
 ## 2026-05-12 · /dgca: hero + subject cards + Why Choose Us — image-driven
 
 - /dgca hero: facility photo (DSC_0492) painted behind, opacity 35%, dark gradient overlay for legibility.

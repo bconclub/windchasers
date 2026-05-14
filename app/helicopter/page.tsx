@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Manrope } from "next/font/google";
 import { CheckCircle } from "lucide-react";
 import { trackKeyPageView } from "@/lib/analytics";
+import { setLastVisitedProgram } from "@/lib/sessionStorage";
 
 const manrope = Manrope({ subsets: ["latin"], weight: ["700", "800"], variable: "--font-headline" });
 
@@ -37,6 +38,7 @@ export default function HelicopterPage() {
   useEffect(() => {
     document.title = "Helicopter Pilot License | WindChasers Aviation Academy";
     trackKeyPageView("Helicopter Training");
+    setLastVisitedProgram("helicopter_license");
   }, []);
 
   return (
