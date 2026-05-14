@@ -257,7 +257,7 @@ function ThankYouContent() {
               ) : null}
               <p className="text-white/70 text-sm">Need help now? Chat with us on WhatsApp.</p>
               <a
-                href={`https://wa.me/919035098424?text=${encodeURIComponent(
+                href={`https://wa.me/919591004043?text=${encodeURIComponent(
                   "Hi WindChasers, I just submitted the ATC eligibility form and want to chat."
                 )}`}
                 target="_blank"
@@ -489,7 +489,7 @@ function ThankYouContent() {
                 </div>
               ) : null}
               <a
-                href={`https://wa.me/919035098424?text=${encodeURIComponent(waText)}`}
+                href={`https://wa.me/919591004043?text=${encodeURIComponent(waText)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#25D366] px-6 py-3.5 font-semibold text-white transition-colors hover:bg-[#1ebe5d] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-dark"

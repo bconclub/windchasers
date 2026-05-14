@@ -688,7 +688,7 @@ export default function CabinCrewPageClient({
               <div className="rounded-lg border border-red-400/40 bg-red-500/10 p-4 text-sm text-red-100">
                 <p className="mb-2">{submitError}</p>
                 <a
-                  href={`https://wa.me/919035098424?text=${encodeURIComponent(
+                  href={`https://wa.me/919591004043?text=${encodeURIComponent(
                     "Hi WindChasers, I want to know more about the Cabin Crew program."
                   )}`}
                   target="_blank"

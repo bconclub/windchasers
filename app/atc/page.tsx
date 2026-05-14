@@ -629,7 +629,7 @@ export default function ATCPage() {
                   <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-sm text-red-200">
                     <p className="mb-2">{submitError}</p>
                     <a
-                      href={`https://wa.me/919035098424?text=${encodeURIComponent("Hi WindChasers, I want to know more about ATC at your academy")}`}
+                      href={`https://wa.me/919591004043?text=${encodeURIComponent("Hi WindChasers, I want to know more about ATC at your academy")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 text-[#C5A572] hover:underline font-medium"
