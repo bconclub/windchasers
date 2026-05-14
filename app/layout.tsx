@@ -45,8 +45,11 @@ export default function RootLayout({
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              fbq('init', '1431602295033185');
-              fbq('track', 'PageView');
+              if (!window.__wcFbqInited) {
+                fbq('init', '1431602295033185');
+                fbq('track', 'PageView');
+                window.__wcFbqInited = true;
+              }
             `,
           }}
         />
