@@ -16,12 +16,12 @@ const trainingPath = [
 ];
 
 const careers = [
-  { title: "Offshore Operations", desc: "Oil rig crew transport, offshore platform support. High-demand specialized sector." },
-  { title: "Medical Evacuation", desc: "Air ambulance services, emergency medical transport. Critical life-saving operations." },
-  { title: "VIP Transport", desc: "Corporate and executive charter. Premium service for business leaders." },
-  { title: "Tourism", desc: "Scenic tours, charter services. Growing industry in tourist destinations." },
-  { title: "Agriculture", desc: "Crop spraying, agricultural surveys. Specialized farming operations." },
-  { title: "Utility Services", desc: "Power line inspection, pipeline monitoring. Infrastructure support." },
+  { title: "Offshore Operations", desc: "Oil rig crew transport, offshore platform support. High-demand specialized sector.", image: "https://images.unsplash.com/photo-1583995162234-080929f00ec5?auto=format&fit=crop&w=800&q=70" },
+  { title: "Medical Evacuation", desc: "Air ambulance services, emergency medical transport. Critical life-saving operations.", image: "https://images.unsplash.com/photo-1597764690523-15bea4c581c9?auto=format&fit=crop&w=800&q=70" },
+  { title: "VIP Transport", desc: "Corporate and executive charter. Premium service for business leaders.", image: "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?auto=format&fit=crop&w=800&q=70" },
+  { title: "Tourism", desc: "Scenic tours, charter services. Growing industry in tourist destinations.", image: "https://images.unsplash.com/photo-1530841344095-c0a4d4dafdb1?auto=format&fit=crop&w=800&q=70" },
+  { title: "Agriculture", desc: "Crop spraying, agricultural surveys. Specialized farming operations.", image: "https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?auto=format&fit=crop&w=800&q=70" },
+  { title: "Utility Services", desc: "Power line inspection, pipeline monitoring. Infrastructure support.", image: "https://images.unsplash.com/photo-1559625288-9659f1c39ad6?auto=format&fit=crop&w=800&q=70" },
 ];
 
 const requirements = [
@@ -133,10 +133,14 @@ export default function HelicopterPage() {
                 key={c.title}
                 initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                 transition={{ delay: i * 0.07 }}
-                className="bg-[#1A1A1A] border-t-2 border-[#C5A572]/40 rounded-xl p-8 hover:-translate-y-1 hover:border-[#C5A572] transition-all duration-300"
+                className="relative overflow-hidden bg-[#1A1A1A] border-t-2 border-[#C5A572]/40 rounded-xl hover:-translate-y-1 hover:border-[#C5A572] transition-all duration-300 group min-h-[260px] flex flex-col justify-end"
+                style={{ backgroundImage: `url(${c.image})`, backgroundSize: "cover", backgroundPosition: "center" }}
               >
-                <h3 className="text-xl font-bold text-white mb-3">{c.title}</h3>
-                <p className="text-white/60 text-sm leading-relaxed">{c.desc}</p>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/85 to-[#0a0a0a]/30 group-hover:from-[#0a0a0a]/95 transition-colors" />
+                <div className="relative z-10 p-8">
+                  <h3 className="text-xl font-bold text-white mb-3">{c.title}</h3>
+                  <p className="text-white/70 text-sm leading-relaxed">{c.desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>
