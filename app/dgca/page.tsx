@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Manrope } from "next/font/google";
 import WhyChooseUsCarousel from "@/components/WhyChooseUsCarousel";
@@ -28,11 +28,23 @@ const faqs = [
 
 export default function DGCAPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [showDemoBtn, setShowDemoBtn] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     document.title = "DGCA Ground Classes | WindChasers Aviation Academy";
     trackKeyPageView("DGCA Ground Classes");
     setLastVisitedProgram("dgca_ground");
+  }, []);
+
+  useEffect(() => {
+    const onScroll = () => {
+      const y = window.scrollY;
+      setShowDemoBtn(y > 300 && y < lastScrollY.current);
+      lastScrollY.current = y;
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const videos = [
@@ -184,6 +196,25 @@ export default function DGCAPage() {
         </div>
       </section>
 
+
+      {/* Floating Demo CTA */}
+      <div
+        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-40 transition-all duration-300 ${
+          showDemoBtn ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
+        }`}
+      >
+        <button
+          type="button"
+          onClick={() => {
+            const btn = document.querySelector<HTMLElement>('[id*="proxe"], [class*="proxe-launcher"], [class*="widget-launcher"]');
+            if (btn) { btn.click(); } else { window.location.href = "/demo"; }
+          }}
+          className="flex items-center whitespace-nowrap px-6 py-3 md:px-8 md:py-3.5 rounded-full bg-[#C5A572] text-black text-xs md:text-sm font-bold uppercase tracking-wider active:scale-95 transition-all hover:bg-[#d4b885]"
+          style={{ boxShadow: "0 4px 24px rgba(197,165,114,0.5)" }}
+        >
+          Book a Demo Session
+        </button>
+      </div>
     </div>
   );
 }

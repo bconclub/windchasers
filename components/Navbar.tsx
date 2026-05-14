@@ -28,6 +28,9 @@ export default function Navbar() {
   const isStudents = pathname === "/students";
   const isParents = pathname === "/parents";
   const isFlightSchools = pathname === "/flight-schools";
+  const isDGCA = pathname === "/dgca";
+  const isHelicopter = pathname === "/helicopter";
+  const isInternational = pathname === "/international";
   const isAdmin = pathname?.startsWith("/admin") ?? false;
 
   if (isAdmin) {
@@ -44,7 +47,10 @@ export default function Navbar() {
     isWebinar ||
     isStudents ||
     isParents ||
-    isFlightSchools;
+    isFlightSchools ||
+    isDGCA ||
+    isHelicopter ||
+    isInternational;
 
   const compactWhatsAppHref =
     isWebinarParent
@@ -70,7 +76,13 @@ export default function Navbar() {
                             ? "Hi WindChasers, I am a parent exploring pilot training for my child. Please share details."
                             : isFlightSchools
                               ? "Hi WindChasers, I want to explore international flight school options. Please guide me."
-                              : "Hi WindChasers, I need more detail on pilot training"
+                              : isDGCA
+                                ? "Hi WindChasers, I want to know more about DGCA ground classes."
+                                : isHelicopter
+                                  ? "Hi WindChasers, I want to know more about the Helicopter Pilot License program."
+                                  : isInternational
+                                    ? "Hi WindChasers, I want to explore international pilot training options. Please guide me."
+                                    : "Hi WindChasers, I need more detail on pilot training"
           )}`;
 
   const links = [
