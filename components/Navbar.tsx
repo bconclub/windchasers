@@ -112,6 +112,11 @@ export default function Navbar() {
                 )}
                 <a
                   href="tel:+919591004043"
+                  onClick={() => {
+                    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+                      window.fbq("track", "Contact", { method: "phone", source_page: pathname });
+                    }
+                  }}
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-[#C5A572] text-black hover:bg-[#C5A572]/90 transition-colors"
                   aria-label="Call"
                 >
@@ -121,6 +126,11 @@ export default function Navbar() {
                   href={compactWhatsAppHref}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => {
+                    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+                      window.fbq("track", "Contact", { method: "whatsapp", source_page: pathname });
+                    }
+                  }}
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-[#25D366] text-white hover:bg-[#128C7E] transition-colors"
                   aria-label={
                     isWebinarParent

@@ -979,6 +979,9 @@ export default function PilotTraining() {
         <button
           type="button"
           onClick={() => {
+            if (typeof window !== "undefined" && typeof window.fbq === "function") {
+              window.fbq("track", "InitiateCheckout", { content_name: "Sticky Demo CTA", source_page: "/pilot-training" });
+            }
             const btn = document.querySelector<HTMLElement>('[id*="proxe"], [class*="proxe-launcher"], [class*="widget-launcher"]');
             if (btn) { btn.click(); } else { window.location.href = "/demo"; }
           }}

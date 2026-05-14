@@ -14,6 +14,13 @@ Batch-by-batch record of changes that ship via `git push` to `main`. Newest at t
 - StudentsFlyingGallery iframe URL gained `background=1` for more reliable autoplay (matches VimeoReel).
 - Result: while a Vimeo iframe is loading or switching, the thumbnail shows instead of a black/dark grey box.
 
+## 2026-05-12 · Meta Pixel: wire booking, pricing, navbar Contact, sticky InitiateCheckout
+
+- /thank-you: "booking" and "pricing" added to META_LEAD_FORM_TYPES allowlist with their own trackMetaLead branches (Demo Booking, Pricing Request). Booking also fires Google Ads conversion.
+- Navbar Call (tel:) and WhatsApp links now fire fbq("track","Contact",{method, source_page}) on click — captures phone-call and WhatsApp lead intent that was previously invisible.
+- /pilot-training sticky "Book a Demo Class" CTA now fires fbq("track","InitiateCheckout") before opening PROXe widget or redirecting to /demo.
+- Fixes the audit gap where the primary demo-booking conversion ran on Facebook's blind side.
+
 ## 2026-05-12 · /pilot-training: hero video sound toggle
 
 - Added "Sound on / Sound off" pill button at top-right of hero (glass style, gold hover).

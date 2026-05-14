@@ -31,6 +31,8 @@ const META_LEAD_FORM_TYPES = new Set([
   "webinar",
   "assessment",
   "assessment-early",
+  "booking",
+  "pricing",
 ]);
 
 function ThankYouContent() {
@@ -130,6 +132,17 @@ function ThankYouContent() {
       });
       trackEarlyStageLead();
       trackGoogleAdsConversion({ transactionId: dedupeKey });
+    } else if (formType === "booking") {
+      trackMetaLead({
+        content_name: "Demo Booking",
+        content_category: "booking",
+      });
+      trackGoogleAdsConversion({ transactionId: dedupeKey });
+    } else if (formType === "pricing") {
+      trackMetaLead({
+        content_name: "Pricing Request",
+        content_category: "pricing",
+      });
     }
   }, [formType, formData]);
 
