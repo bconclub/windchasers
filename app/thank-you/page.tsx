@@ -33,6 +33,7 @@ const META_LEAD_FORM_TYPES = new Set([
   "assessment-early",
   "booking",
   "pricing",
+  "lead",
 ]);
 
 function ThankYouContent() {
@@ -143,6 +144,12 @@ function ThankYouContent() {
         content_name: "Pricing Request",
         content_category: "pricing",
       });
+    } else if (formType === "lead") {
+      trackMetaLead({
+        content_name: "Student Lead",
+        content_category: "student_lead",
+      });
+      trackGoogleAdsConversion({ transactionId: dedupeKey });
     }
   }, [formType, formData]);
 
