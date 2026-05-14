@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-14 · fix(pilot-training): make sticky demo CTA button visible
+
+- `app/pilot-training/page.tsx`: Replaced semi-transparent glassmorphism button (dark bg, faint gold text) with solid gold button (bg `#C5A572`, black text, gold glow shadow) — was effectively invisible against dark page sections
+- User-facing: "Book a Demo Class" sticky button is now a high-contrast solid gold pill, impossible to miss on scroll
+
 ## 2026-05-14 · feat: track last-visited program to pre-fill BookingForm interest
 
 - `lib/sessionStorage.ts`: Added `lastVisitedProgram?: string` to `UserSessionData` interface and exported `setLastVisitedProgram(program)` helper that writes to session storage
