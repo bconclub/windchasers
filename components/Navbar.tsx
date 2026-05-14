@@ -51,7 +51,7 @@ export default function Navbar() {
       ? WEBINAR_PARENT_WHATSAPP_GROUP_URL
       : isWebinarStudents
         ? WEBINAR_STUDENT_WHATSAPP_GROUP_URL
-        : `https://wa.me/${isPilotTraining || isCabinCrew ? '919035098424' : '919591004043'}?text=${encodeURIComponent(
+        : `https://wa.me/${isPilotTraining ? '919035098424' : '919591004043'}?text=${encodeURIComponent(
             isHome
               ? "Hi WindChasers, I need more detail on your pilot training programs"
               : isATC
