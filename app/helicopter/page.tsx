@@ -17,10 +17,10 @@ const trainingPath = [
 
 const careers = [
   { title: "Offshore Operations", desc: "Oil rig crew transport, offshore platform support. High-demand specialized sector.", image: "https://images.unsplash.com/photo-1512290472191-eb043dfa96e2?auto=format&fit=crop&w=800&q=70" },
-  { title: "Medical Evacuation", desc: "Air ambulance services, emergency medical transport. Critical life-saving operations.", image: "https://images.unsplash.com/photo-1597764690523-15bea4c581c9?auto=format&fit=crop&w=800&q=70" },
-  { title: "VIP Transport", desc: "Corporate and executive charter. Premium service for business leaders.", image: "https://images.unsplash.com/photo-1521405924368-64c5b84bec60?auto=format&fit=crop&w=800&q=70" },
-  { title: "Tourism", desc: "Scenic tours, charter services. Growing industry in tourist destinations.", image: "https://images.unsplash.com/photo-1495554698253-681539e9ea84?auto=format&fit=crop&w=800&q=70" },
-  { title: "Agriculture", desc: "Crop spraying, agricultural surveys. Specialized farming operations.", image: "https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?auto=format&fit=crop&w=800&q=70" },
+  { title: "Medical Evacuation", desc: "Air ambulance services, emergency medical transport. Critical life-saving operations.", image: "https://images.unsplash.com/photo-1534621107955-b06bbc17b043?auto=format&fit=crop&w=800&q=70" },
+  { title: "VIP Transport", desc: "Corporate and executive charter. Premium service for business leaders.", image: "https://images.unsplash.com/photo-1630866217872-764be80838fa?auto=format&fit=crop&w=800&q=70" },
+  { title: "Tourism", desc: "Scenic tours, charter services. Growing industry in tourist destinations.", image: "https://images.unsplash.com/photo-1620734630836-4fa8203b924e?auto=format&fit=crop&w=800&q=70" },
+  { title: "Agriculture", desc: "Crop spraying, agricultural surveys. Specialized farming operations.", image: "https://images.unsplash.com/photo-1549262816-609b1f3d511a?auto=format&fit=crop&w=800&q=70" },
   { title: "Utility Services", desc: "Power line inspection, pipeline monitoring. Infrastructure support.", image: "https://images.unsplash.com/photo-1592569237690-69813b318567?auto=format&fit=crop&w=800&q=70" },
 ];
 
