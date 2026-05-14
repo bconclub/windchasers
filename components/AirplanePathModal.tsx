@@ -37,14 +37,14 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
               {/* Close Button */}
               <button
                 onClick={onClose}
-                className="absolute top-3 right-3 md:top-6 md:right-6 text-white hover:text-gold transition-colors text-2xl z-20 bg-dark/80 md:bg-transparent rounded-full w-9 h-9 md:w-10 md:h-10 flex items-center justify-center"
+                className="fixed md:absolute top-4 right-4 md:top-6 md:right-6 text-white hover:text-gold transition-colors text-2xl z-20 bg-dark/90 md:bg-transparent rounded-full w-10 h-10 md:w-10 md:h-10 flex items-center justify-center backdrop-blur-sm border border-white/10 md:border-0"
                 aria-label="Close"
               >
                 ×
               </button>
 
-              <div className="flex flex-col h-full md:block p-4 md:p-12 pt-12 md:pt-12 overflow-y-auto md:overflow-visible">
-                <h2 className="text-2xl md:text-4xl font-bold text-gold text-center mb-4 md:mb-12 leading-tight">
+              <div className="flex flex-col h-full md:block p-5 md:p-12 pt-14 md:pt-12 pb-28 md:pb-12 overflow-y-auto md:overflow-visible">
+                <h2 className="text-2xl md:text-4xl font-bold text-gold text-center mb-6 md:mb-10 leading-tight">
                   Choose Your Pilot Training Path
                 </h2>
 
