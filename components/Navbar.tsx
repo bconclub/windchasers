@@ -113,8 +113,13 @@ export default function Navbar() {
                 <a
                   href="tel:+919591004043"
                   onClick={() => {
-                    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+                    if (typeof window === "undefined") return;
+                    if (typeof window.fbq === "function") {
                       window.fbq("track", "Contact", { method: "phone", source_page: pathname });
+                    }
+                    if (typeof window.gtag === "function") {
+                      window.gtag("event", "contact_click", { method: "phone", source_page: pathname });
+                      window.gtag("event", "generate_lead", { method: "phone", lead_type: "call", source_page: pathname });
                     }
                   }}
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-[#C5A572] text-black hover:bg-[#C5A572]/90 transition-colors"
@@ -127,8 +132,13 @@ export default function Navbar() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => {
-                    if (typeof window !== "undefined" && typeof window.fbq === "function") {
+                    if (typeof window === "undefined") return;
+                    if (typeof window.fbq === "function") {
                       window.fbq("track", "Contact", { method: "whatsapp", source_page: pathname });
+                    }
+                    if (typeof window.gtag === "function") {
+                      window.gtag("event", "contact_click", { method: "whatsapp", source_page: pathname });
+                      window.gtag("event", "generate_lead", { method: "whatsapp", lead_type: "whatsapp", source_page: pathname });
                     }
                   }}
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-[#25D366] text-white hover:bg-[#128C7E] transition-colors"

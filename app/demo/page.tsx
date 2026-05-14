@@ -86,7 +86,7 @@ function DemoPageContent() {
       {/* Demo type cards */}
       <section className="pb-20">
         {/* Mobile: horizontal scroll carousel; Desktop: 2-col grid */}
-        <div className="md:hidden flex gap-5 overflow-x-auto px-6 pb-3 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+        <div className="md:hidden flex gap-5 overflow-x-auto px-6 pt-6 pb-3 snap-x snap-mandatory [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {[
             { type: "online" as const, label: "Online", icon: <Monitor className="w-6 h-6 text-[#C5A572]" strokeWidth={1.5} />, title: "Online Demo", features: onlineFeatures },
             { type: "offline" as const, label: "In-Person", icon: <Building2 className="w-6 h-6 text-[#C5A572]" strokeWidth={1.5} />, title: "Campus Visit", features: campusFeatures },

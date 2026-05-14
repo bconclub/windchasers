@@ -979,8 +979,13 @@ export default function PilotTraining() {
         <button
           type="button"
           onClick={() => {
-            if (typeof window !== "undefined" && typeof window.fbq === "function") {
-              window.fbq("track", "InitiateCheckout", { content_name: "Sticky Demo CTA", source_page: "/pilot-training" });
+            if (typeof window !== "undefined") {
+              if (typeof window.fbq === "function") {
+                window.fbq("track", "InitiateCheckout", { content_name: "Sticky Demo CTA", source_page: "/pilot-training" });
+              }
+              if (typeof window.gtag === "function") {
+                window.gtag("event", "demo_cta_click", { cta_location: "sticky_pilot_training", source_page: "/pilot-training" });
+              }
             }
             const btn = document.querySelector<HTMLElement>('[id*="proxe"], [class*="proxe-launcher"], [class*="widget-launcher"]');
             if (btn) { btn.click(); } else { window.location.href = "/demo"; }

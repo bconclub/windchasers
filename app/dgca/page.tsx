@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import { Manrope } from "next/font/google";
 import WhyChooseUsCarousel from "@/components/WhyChooseUsCarousel";
 import PilotJourneyTimeline from "@/components/PilotJourneyTimeline";
-import PricingFormModal from "@/components/PricingFormModal";
 import DGCASubjectsGrid from "@/components/DGCASubjectsGrid";
 import VideoCarousel from "@/components/VideoCarousel";
 import { trackKeyPageView } from "@/lib/analytics";
@@ -27,17 +26,11 @@ const faqs = [
 ];
 
 export default function DGCAPage() {
-  const [showPricingModal, setShowPricingModal] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   useEffect(() => {
     document.title = "DGCA Ground Classes | WindChasers Aviation Academy";
     trackKeyPageView("DGCA Ground Classes");
-    if (window.location.hash === "#pricing") {
-      setTimeout(() => {
-        document.getElementById("pricing")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 100);
-    }
   }, []);
 
   const videos = [
@@ -150,30 +143,6 @@ export default function DGCAPage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="py-20 px-6 md:px-12 scroll-mt-32 text-center" style={{ backgroundColor: "#0e0e0e" }}>
-        <div className="max-w-[1400px] mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-            className="mb-10"
-          >
-            <span className="text-[#C5A572] font-bold tracking-[0.2em] uppercase text-xs mb-3 block">Transparent</span>
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl font-extrabold tracking-tighter text-white mb-4">
-              Course Pricing
-            </h2>
-            <p className="text-white/60 text-xl max-w-3xl mx-auto">
-              View detailed pricing information, package options, and what&apos;s included in our DGCA Ground Classes.
-            </p>
-          </motion.div>
-          <button
-            onClick={() => setShowPricingModal(true)}
-            className="bg-[#C5A572] text-[#1A1A1A] px-12 py-5 rounded-lg font-bold uppercase tracking-wider hover:bg-[#C5A572]/90 transition-all hover:-translate-y-0.5 cursor-pointer"
-          >
-            View Pricing Details
-          </button>
-        </div>
-      </section>
-
       {/* FAQ */}
       <section className="py-20 px-6 md:px-12" style={{ backgroundColor: "#131313" }}>
         <div className="max-w-4xl mx-auto">
@@ -213,15 +182,6 @@ export default function DGCAPage() {
         </div>
       </section>
 
-      <PricingFormModal
-        isOpen={showPricingModal}
-        onClose={() => setShowPricingModal(false)}
-        source="dgca"
-        onSuccess={() => {
-          setShowPricingModal(false);
-          window.location.href = "/pricing?source=dgca";
-        }}
-      />
     </div>
   );
 }
