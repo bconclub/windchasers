@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import ConditionalFooter from "@/components/ConditionalFooter";
 import Analytics from "@/components/Analytics";
 import TrackingProvider from "@/components/TrackingProvider";
+import MetaPixelInit from "@/components/MetaPixelInit";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -31,7 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans" style={{ color: '#ffffff', backgroundColor: '#1A1A1A' }}>
-        {/* Meta Pixel Code */}
+        {/* Meta Pixel — queue setup only; init + PageView fired by MetaPixelInit */}
         <Script
           id="facebook-pixel"
           strategy="afterInteractive"
@@ -45,24 +46,10 @@ export default function RootLayout({
               t.src=v;s=b.getElementsByTagName(e)[0];
               s.parentNode.insertBefore(t,s)}(window, document,'script',
               'https://connect.facebook.net/en_US/fbevents.js');
-              if (!window.__wcFbqInited) {
-                fbq('init', '1431602295033185');
-                fbq('track', 'PageView');
-                window.__wcFbqInited = true;
-              }
             `,
           }}
         />
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: 'none' }}
-            src="https://www.facebook.com/tr?id=1431602295033185&ev=PageView&noscript=1"
-            alt=""
-          />
-        </noscript>
-        {/* End Meta Pixel Code */}
+        <MetaPixelInit />
         {/* PROXe widget intentionally NOT loaded globally. Only mounted per-page
             where we want it (currently only /pilot-training-students). */}
         <Analytics />

@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-15 · fix(pixel): eliminate double PageView and double Lead events
+
+- **`components/MetaPixelInit.tsx`** — new client component owns `fbq('init')` and `fbq('track', 'PageView')`. `useRef` guarantees `init` fires exactly once per session; `PageView` fires on every pathname change (correct SPA behaviour).
+- **`app/layout.tsx`** — inline pixel script now only sets up the fbq queue (IIFE). Removed `fbq('init')`, `fbq('track', 'PageView')`, redundant `__wcFbqInited` flag, and `<noscript>` img fallback that Pixel Helper counted as a second PageView.
+- **`app/thank-you/page.tsx`** — replaced window-based dedup Set with `useRef` flag (`leadSentRef`). Ref is tied to the component instance, making it impossible to fire Lead twice in the same page load.
+- User-facing: no UI change. Pixel Helper should now show exactly 1 PageView per page and 1 Lead per form submission.
+
 ## 2026-05-14 · fix(pilot-training): make sticky demo CTA button visible
 
 - `app/pilot-training/page.tsx`: Replaced semi-transparent glassmorphism button (dark bg, faint gold text) with solid gold button (bg `#C5A572`, black text, gold glow shadow) — was effectively invisible against dark page sections
