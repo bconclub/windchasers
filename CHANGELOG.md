@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-15 · fix(pixel): sessionStorage dedup for Lead event
+
+- **`app/thank-you/page.tsx`** — replaced `useRef` dedup with `sessionStorage` key (`wc_lead_sent:<type>:<search>`). Survives Suspense re-mounts (each mount shares the same sessionStorage), so Lead fires exactly once even when Next.js mounts `ThankYouContent` twice during hydration.
+- Removed unused `leadSentRef` and `useRef` import.
+- User-facing: no UI change. Pixel Helper should now show exactly 1 Lead per form submission.
+
 ## 2026-05-15 · fix(pixel): eliminate double PageView and double Lead events
 
 - **`components/MetaPixelInit.tsx`** — new client component owns `fbq('init')` and `fbq('track', 'PageView')`. `useRef` guarantees `init` fires exactly once per session; `PageView` fires on every pathname change (correct SPA behaviour).

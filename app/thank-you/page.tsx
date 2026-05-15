@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -39,7 +39,6 @@ function ThankYouContent() {
   const searchParams = useSearchParams();
   const [formType, setFormType] = useState<string | null>(null);
   const [formData, setFormData] = useState<any>(null);
-  const leadSentRef = useRef(false);
 
   useEffect(() => {
     const type = searchParams?.get("type");
@@ -81,9 +80,9 @@ function ThankYouContent() {
 
   useEffect(() => {
     if (typeof window === "undefined" || !formType || !META_LEAD_FORM_TYPES.has(formType)) return;
-    if (leadSentRef.current) return;
-    leadSentRef.current = true;
-    const dedupeKey = `${formType}:${window.location.pathname}${window.location.search}`;
+    const dedupeKey = `wc_lead_sent:${formType}:${window.location.search}`;
+    if (sessionStorage.getItem(dedupeKey)) return;
+    sessionStorage.setItem(dedupeKey, "1");
 
     if (formType === "atc") {
       trackMetaLead({
