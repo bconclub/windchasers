@@ -2,6 +2,16 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-15 · fix(mobile): restore vertical page scroll when touching carousels
+
+- **Root cause**: `touchAction: "pan-x"` on Framer Motion drag elements tells the browser to handle x-panning natively and block y — vertical page scroll dies when a finger lands on any carousel.
+- **Correct value**: `touchAction: "pan-y"` — browser handles vertical scroll natively, Framer Motion gets horizontal drag events.
+- **`components/VideoCarousel.tsx`** — mobile `motion.div` drag: `pan-x` → `pan-y`
+- **`components/WhyChooseUsCarousel.tsx`** — card stack `motion.div` drag: `pan-x` → `pan-y`
+- **`components/ImageCarousel.tsx`** — mobile `motion.div` drag: `pan-x` → `pan-y`
+- **`components/StudentsFlyingGallery.tsx`** — native CSS scroll container: removed `touch-pan-x` class, replaced with `style={{ touchAction: "pan-x pan-y" }}` so both directions are explicitly allowed.
+- User-facing: touching any carousel card no longer traps vertical page scroll on mobile.
+
 ## 2026-05-15 · fix(pixel): sessionStorage dedup for Lead event
 
 - **`app/thank-you/page.tsx`** — replaced `useRef` dedup with `sessionStorage` key (`wc_lead_sent:<type>:<search>`). Survives Suspense re-mounts (each mount shares the same sessionStorage), so Lead fires exactly once even when Next.js mounts `ThankYouContent` twice during hydration.

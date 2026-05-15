@@ -201,7 +201,7 @@ export default function WhyChooseUsCarousel() {
               setTimeout(() => setShowSwipeIndicator(false), 1000);
             }}
             style={{
-              touchAction: "pan-x",
+              touchAction: "pan-y",
               WebkitUserSelect: "none",
               userSelect: "none",
               cursor: isDragging ? "grabbing" : "grab",

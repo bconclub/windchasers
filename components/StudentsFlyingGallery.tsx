@@ -153,7 +153,8 @@ export default function StudentsFlyingGallery({
 
           <div
             ref={scrollerRef}
-            className="flex gap-3 md:gap-4 overflow-x-auto snap-x snap-proximity pb-4 -mx-6 px-6 md:mx-0 md:px-0 touch-pan-x [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            className="flex gap-3 md:gap-4 overflow-x-auto snap-x snap-proximity pb-4 -mx-6 px-6 md:mx-0 md:px-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            style={{ touchAction: "pan-x pan-y" }}
           >
             {items.map((item, i) => (
               <div

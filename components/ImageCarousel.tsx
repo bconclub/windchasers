@@ -234,8 +234,8 @@ export default function ImageCarousel({ images, eyebrow, title, subtitle }: Imag
                   damping: 30,
                   restDelta: 0.5
                 }}
-                style={{ 
-                  touchAction: "pan-x",
+                style={{
+                  touchAction: "pan-y",
                   WebkitUserSelect: "none",
                   userSelect: "none",
                   cursor: "grab"

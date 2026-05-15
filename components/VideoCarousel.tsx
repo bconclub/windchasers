@@ -289,8 +289,8 @@ export default function VideoCarousel({ videos, title, subtitle }: VideoCarousel
                   ease: [0.25, 0.1, 0.25, 1],
                   type: "tween"
                 }}
-                style={{ 
-                  touchAction: "pan-x",
+                style={{
+                  touchAction: "pan-y",
                   WebkitUserSelect: "none",
                   userSelect: "none",
                   cursor: "grab"
