@@ -2,6 +2,15 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-16 19:30 IST · feat(nz-seminar): new New Zealand flight training seminar landing page
+
+- **`app/nz-seminar/page.tsx`** — new landing page for the May 29, 2026 NZ Flight Training Seminar in Bangalore. Mirrors `/open-house` structure (glass-morphism hero with NZ flag accent, topics covered, walk-out-with section, who-should-attend, registration form, sticky mobile CTA). Copy is tailored to NZ flying schools, CPL roadmap, and cost transparency.
+- **`app/api/nz-seminar/route.ts`** — new POST endpoint that appends seat registrations to the "NZ Seminar" Google Sheet tab (overridable via `GOOGLE_SHEET_TAB_NZ_SEMINAR`).
+- **`lib/sheets.ts`** — added `getNzSeminarSheetTab()` helper.
+- **`app/thank-you/page.tsx`** — added `nz-seminar` form type: meta-lead tracking, doc title, registration summary card with WhatsApp CTA, and secondary "NZ Seminar details" link. Imported `Plane` icon.
+- **`components/Navbar.tsx`** — `/nz-seminar` triggers compact header (logo + Call + WhatsApp), with NZ-specific WhatsApp prefill text.
+- User-facing: new public route at `/nz-seminar` where ad traffic lands to book a seat. Form posts to the new sheet tab so leads don't mix with Open House.
+
 ## 2026-05-15 · fix(mobile): restore vertical page scroll when touching carousels
 
 - **Root cause**: `touchAction: "pan-x"` on Framer Motion drag elements tells the browser to handle x-panning natively and block y — vertical page scroll dies when a finger lands on any carousel.

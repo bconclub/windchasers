@@ -4,7 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { CheckCircle, Calendar, Mail, Phone, BookOpen, DollarSign, Award, Radio, Users, Sparkles, Video, GraduationCap } from "lucide-react";
+import { CheckCircle, Calendar, Mail, Phone, BookOpen, DollarSign, Award, Radio, Users, Sparkles, Video, GraduationCap, Plane } from "lucide-react";
 import { trackMetaLead } from "@/lib/metaPixel";
 import {
   trackAssessmentCompleted,
@@ -26,6 +26,7 @@ import {
 const META_LEAD_FORM_TYPES = new Set([
   "atc",
   "open-house",
+  "nz-seminar",
   "summercamp",
   "cabin-crew",
   "webinar",
@@ -63,6 +64,8 @@ function ThankYouContent() {
       document.title = "Thank You | ATC | WindChasers Aviation Academy";
     } else if (formType === "open-house") {
       document.title = "Thank You | Open House | WindChasers Aviation Academy";
+    } else if (formType === "nz-seminar") {
+      document.title = "Thank You | New Zealand Seminar | WindChasers Aviation Academy";
     } else if (formType === "summercamp") {
       document.title = "Thank You | Summer Camp | WindChasers Aviation Academy";
     } else if (formType === "cabin-crew") {
@@ -94,6 +97,12 @@ function ThankYouContent() {
         content_name: "Open House Registration",
         content_category: "open_house",
       });
+    } else if (formType === "nz-seminar") {
+      trackMetaLead({
+        content_name: "NZ Seminar Registration",
+        content_category: "nz_seminar",
+      });
+      trackGoogleAdsConversion({ transactionId: dedupeKey });
     } else if (formType === "summercamp") {
       trackMetaLead({
         content_name: "Summer Camp Registration",
@@ -335,6 +344,63 @@ function ThankYouContent() {
             "Join the WhatsApp group above so you don’t miss updates",
             "Add Saturday, May 9, 2026 · 11:30 AM to your calendar",
             "Bring a parent if you’re a student (optional but encouraged)",
+          ],
+        };
+      }
+
+      case "nz-seminar": {
+        const name = formData?.name || "I am";
+        const waText = `Hi WindChasers, I am ${name} and I just registered for the New Zealand Flight Training Seminar on May 29.`;
+        return {
+          title: "You're registered — NZ Seminar",
+          icon: Plane,
+          message:
+            "Thank you for securing your seat for the New Zealand Flight Training Seminar on Saturday, May 29, 2026 at 3:00 PM. Our team will WhatsApp you the venue details and a reminder.",
+          details: (
+            <div className="space-y-4">
+              {formData && (formData.name || formData.city || formData.role) ? (
+                <div className="bg-accent-dark/50 rounded-lg p-4 border border-gold/30">
+                  <h3 className="text-lg font-bold text-gold mb-3">Registration summary</h3>
+                  <ul className="space-y-2 text-white/80 text-sm">
+                    {formData.name ? (
+                      <li>
+                        <strong className="text-white/90">Name:</strong> {formData.name}
+                      </li>
+                    ) : null}
+                    {formData.city ? (
+                      <li>
+                        <strong className="text-white/90">City:</strong> {formData.city}
+                      </li>
+                    ) : null}
+                    {formData.role ? (
+                      <li>
+                        <strong className="text-white/90">Attending as:</strong>{" "}
+                        {formData.role === "parent" ? "Parent / Guardian" : "Student / Aspiring Pilot"}
+                      </li>
+                    ) : null}
+                  </ul>
+                </div>
+              ) : null}
+              <a
+                href={`https://wa.me/919591004043?text=${encodeURIComponent(waText)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#25D366] px-6 py-3.5 font-semibold text-white transition-colors hover:bg-[#1ebe5d] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#25D366] focus-visible:ring-offset-2 focus-visible:ring-offset-dark"
+              >
+                <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884" />
+                </svg>
+                Chat on WhatsApp
+              </a>
+              <p className="text-white/50 text-xs text-center">
+                We&apos;ll send venue details and reminders before the seminar.
+              </p>
+            </div>
+          ),
+          nextSteps: [
+            "Add Saturday, May 29, 2026 · 3:00 PM to your calendar",
+            "Watch your WhatsApp — we&apos;ll share venue details and a reminder",
+            "If you&apos;re a student, bring a parent (highly encouraged)",
           ],
         };
       }
@@ -806,6 +872,14 @@ function ThankYouContent() {
                 className="bg-white/10 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-colors border border-white/20 text-center"
               >
                 Open House details
+              </Link>
+            )}
+            {formType === "nz-seminar" && (
+              <Link
+                href="/nz-seminar"
+                className="bg-white/10 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/20 transition-colors border border-white/20 text-center"
+              >
+                NZ Seminar details
               </Link>
             )}
             {formType === "summercamp" && (

@@ -18,6 +18,7 @@ export default function Navbar() {
   // Compact header (logo + call + WhatsApp) on selected pages
   const isSummerCamp = pathname === "/summercamp";
   const isOpenHouse = pathname === "/open-house";
+  const isNzSeminar = pathname === "/nz-seminar";
   const isHome = pathname === "/";
   const isPilotTraining = pathname?.startsWith("/pilot-training") ?? false;
   const isATC = pathname === "/atc";
@@ -40,6 +41,7 @@ export default function Navbar() {
   const showCompact =
     isSummerCamp ||
     isOpenHouse ||
+    isNzSeminar ||
     isHome ||
     isPilotTraining ||
     isATC ||
@@ -70,6 +72,8 @@ export default function Navbar() {
                       ? "Hi WindChasers, I have a question about the April 25 webinar"
                       : isOpenHouse
                         ? "Hi WindChasers, I need more detail on the open house"
+                        : isNzSeminar
+                          ? "Hi WindChasers, I need more detail on the New Zealand Flight Training Seminar on May 29"
                         : isStudents
                           ? "Hi WindChasers, I am a student exploring pilot training. Please share details."
                           : isParents

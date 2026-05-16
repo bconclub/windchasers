@@ -22,6 +22,11 @@ export function getWebinarSheetTab(): string {
   return process.env.GOOGLE_SHEET_TAB_WEBINAR?.trim() || "Webinar";
 }
 
+/** NZ Seminar registrations - set `GOOGLE_SHEET_TAB_NZ_SEMINAR` if the tab name differs. */
+export function getNzSeminarSheetTab(): string {
+  return process.env.GOOGLE_SHEET_TAB_NZ_SEMINAR?.trim() || "NZ Seminar";
+}
+
 /** Students CPL funnel - set `GOOGLE_SHEET_TAB_STUDENTS` once the tab is created. */
 export function getStudentsSheetTab(): string {
   return process.env.GOOGLE_SHEET_TAB_STUDENTS?.trim() || "Students Web Lead";
