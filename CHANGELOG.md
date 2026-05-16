@@ -2,6 +2,14 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-16 20:15 IST · feat(nz-seminar): add Unsplash imagery to topic cards
+
+- **`app/nz-seminar/page.tsx`** — each of the 6 "What we'll cover" cards now leads with a 16:9 hero image (NZ mountains, cockpit training, financial planning, flight instructor, airline pilot, family decision-making). Icon sits below the image with the existing title + description.
+- **`public/unsplash/*.jpg`** — 6 new photos (52–124 KB each, served via `next/image`).
+- **`public/unsplash/_credits.json`** — credits appended for the 6 new NZ-seminar photos.
+- **`scripts/unsplash-fetch.mjs`** — reusable script that searches Unsplash, downloads at `w=900&q=72`, and updates the credits ledger.
+- User-facing: NZ seminar topic cards now have rich imagery instead of just icons.
+
 ## 2026-05-16 19:30 IST · feat(nz-seminar): new New Zealand flight training seminar landing page
 
 - **`app/nz-seminar/page.tsx`** — new landing page for the May 29, 2026 NZ Flight Training Seminar in Bangalore. Mirrors `/open-house` structure (glass-morphism hero with NZ flag accent, topics covered, walk-out-with section, who-should-attend, registration form, sticky mobile CTA). Copy is tailored to NZ flying schools, CPL roadmap, and cost transparency.

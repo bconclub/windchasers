@@ -26,12 +26,12 @@ import { useTracking } from "@/hooks/useTracking";
 import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
 
 const TOPICS = [
-  { Icon: Compass, title: "Why New Zealand for flight training", desc: "ICAO-recognised CAA standards, year-round flying weather, and a pipeline trusted by global airlines." },
-  { Icon: Route, title: "Fastest route from 12th to CPL", desc: "Exact path, exam-by-exam. Zero gaps between Class 12, NZ CPL, and the right-seat job." },
-  { Icon: Wallet, title: "Full cost breakdown in INR", desc: "Tuition, hours, accommodation, exams, visa, medicals. Every rupee mapped before you commit." },
-  { Icon: ShieldCheck, title: "How NZ standards protect your investment", desc: "Why CAA training holds value globally and where Indian families lose money picking the wrong country." },
-  { Icon: Briefcase, title: "Career path after CPL", desc: "Returning to India, conversion to DGCA, airline cadetships, and instructor hours in NZ." },
-  { Icon: AlertTriangle, title: "Biggest mistakes families make", desc: "Cheap schools, missing accreditations, visa traps. What to verify before you wire a single rupee." },
+  { Icon: Compass, image: "/unsplash/nz-aviation-CjpAnjRn.jpg", title: "Why New Zealand for flight training", desc: "ICAO-recognised CAA standards, year-round flying weather, and a pipeline trusted by global airlines." },
+  { Icon: Route, image: "/unsplash/cockpit-training-dI284PFy.jpg", title: "Fastest route from 12th to CPL", desc: "Exact path, exam-by-exam. Zero gaps between Class 12, NZ CPL, and the right-seat job." },
+  { Icon: Wallet, image: "/unsplash/financial-planning-heiYgqp0.jpg", title: "Full cost breakdown in INR", desc: "Tuition, hours, accommodation, exams, visa, medicals. Every rupee mapped before you commit." },
+  { Icon: ShieldCheck, image: "/unsplash/flight-instructor-MKh27bPC.jpg", title: "How NZ standards protect your investment", desc: "Why CAA training holds value globally and where Indian families lose money picking the wrong country." },
+  { Icon: Briefcase, image: "/unsplash/airline-pilot-QtXNsDcO.jpg", title: "Career path after CPL", desc: "Returning to India, conversion to DGCA, airline cadetships, and instructor hours in NZ." },
+  { Icon: AlertTriangle, image: "/unsplash/family-decision-LfqvVFSo.jpg", title: "Biggest mistakes families make", desc: "Cheap schools, missing accreditations, visa traps. What to verify before you wire a single rupee." },
 ];
 
 const WHO_SHOULD_ATTEND = [
@@ -475,20 +475,32 @@ export default function NzSeminarPage() {
           </motion.p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {TOPICS.map(({ title, desc, Icon }, i) => (
+            {TOPICS.map(({ title, desc, Icon, image }, i) => (
               <motion.div
                 key={title}
                 initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : i * 0.07 }}
-                className="bg-[#1A1A1A] border-t-2 border-[#C5A572] rounded-lg p-8 hover:-translate-y-1 hover:shadow-xl hover:border-t-[3px] transition-all duration-300"
+                className="bg-[#1A1A1A] border-t-2 border-[#C5A572] rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-xl hover:border-t-[3px] transition-all duration-300 flex flex-col"
               >
-                <Icon className="w-8 h-8 text-[#C5A572] mb-4" />
-                <h3 className="text-white font-semibold text-lg mb-2 leading-snug">
-                  {title}
-                </h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+                <div className="relative w-full aspect-[16/9] overflow-hidden bg-black">
+                  <Image
+                    src={image}
+                    alt={title}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-[#1A1A1A]/30 to-transparent" />
+                </div>
+                <div className="p-8 flex-1">
+                  <Icon className="w-8 h-8 text-[#C5A572] mb-4" />
+                  <h3 className="text-white font-semibold text-lg mb-2 leading-snug">
+                    {title}
+                  </h3>
+                  <p className="text-gray-400 text-sm leading-relaxed">{desc}</p>
+                </div>
               </motion.div>
             ))}
           </div>

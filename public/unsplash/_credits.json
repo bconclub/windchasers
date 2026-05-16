@@ -40,5 +40,53 @@
     "photographer": "SPACEDEZERT",
     "photographer_url": "https://unsplash.com/@spacedezert",
     "photo_url": "https://unsplash.com/photos/white-and-black-drone-flying-under-blue-sky-during-daytime-IPglR5U8yEw"
+  },
+  {
+    "id": "CjpAnjRn2j8",
+    "used_at": "/nz-seminar",
+    "slot": "nz-aviation",
+    "photographer": "Trish H-C",
+    "photographer_url": "https://unsplash.com/@trish_hc",
+    "photo_url": "https://unsplash.com/photos/photography-snow-capped-mountain-during-daytime-CjpAnjRn2j8"
+  },
+  {
+    "id": "dI284PFy_pU",
+    "used_at": "/nz-seminar",
+    "slot": "cockpit-training",
+    "photographer": "Mike Petrucci",
+    "photographer_url": "https://unsplash.com/@mikepetrucci",
+    "photo_url": "https://unsplash.com/photos/black-flat-screen-computer-monitor-dI284PFy_pU"
+  },
+  {
+    "id": "heiYgqp0Tsk",
+    "used_at": "/nz-seminar",
+    "slot": "financial-planning",
+    "photographer": "Jakub Żerdzicki",
+    "photographer_url": "https://unsplash.com/@jakubzerdzicki",
+    "photo_url": "https://unsplash.com/photos/office-desk-with-smartphone-and-financial-charts-heiYgqp0Tsk"
+  },
+  {
+    "id": "MKh27bPCPGc",
+    "used_at": "/nz-seminar",
+    "slot": "flight-instructor",
+    "photographer": "Oskar Kadaksoo",
+    "photographer_url": "https://unsplash.com/@oskark",
+    "photo_url": "https://unsplash.com/photos/a-close-up-of-the-cockpit-of-a-plane-MKh27bPCPGc"
+  },
+  {
+    "id": "QtXNsDcOrd4",
+    "used_at": "/nz-seminar",
+    "slot": "airline-pilot",
+    "photographer": "naillul autar",
+    "photographer_url": "https://unsplash.com/@kmrzaman",
+    "photo_url": "https://unsplash.com/photos/two-pilots-in-the-cockpit-of-a-plane-QtXNsDcOrd4"
+  },
+  {
+    "id": "LfqvVFSoFwM",
+    "used_at": "/nz-seminar",
+    "slot": "family-decision",
+    "photographer": "Frederick Shaw",
+    "photographer_url": "https://unsplash.com/@dropfastcollective",
+    "photo_url": "https://unsplash.com/photos/a-group-of-women-sitting-next-to-each-other-LfqvVFSoFwM"
   }
 ]
