@@ -2,7 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { trackPageView, getSessionId, getUTMParams, captureAndStoreUTMParams } from "@/lib/tracking";
+import {
+  trackPageView,
+  getSessionId,
+  getStoredUTMParams,
+  captureAndStoreUTMParams,
+} from "@/lib/tracking";
 
 export function useTracking() {
   const pathname = usePathname();
@@ -49,7 +54,10 @@ export function useTracking() {
 
   return {
     sessionId: getSessionId(),
-    utmParams: getUTMParams(),
+    // First-touch UTMs from sessionStorage. Persists across in-tab navigation
+    // so a user who lands with ?utm_source=fb and clicks to /open-house still
+    // sends the original campaign attribution with their form submission.
+    utmParams: getStoredUTMParams(),
   };
 }
 

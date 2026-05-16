@@ -231,6 +231,9 @@ export default function CabinCrewPageClient({
 
     setIsSubmitting(true);
     try {
+      const { getStoredUTMParamsFull, getLandingPage, getStoredReferrer } =
+        await import("@/lib/tracking");
+      const utm = getStoredUTMParamsFull();
       const response = await fetch("/api/cabin-crew", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -243,6 +246,10 @@ export default function CabinCrewPageClient({
           englishCommunication: formData.englishCommunication,
           age: formData.age.trim(),
           joiningTimeline: formData.joiningTimeline,
+          ...utm,
+          utmParams: utm,
+          landing_page: getLandingPage(),
+          referrer: getStoredReferrer(),
         }),
       });
 

@@ -2,6 +2,19 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-16 21:30 IST · feat(attribution): persist first-touch UTMs through every form, write them to all sheet tabs
+
+- **`hooks/useTracking.ts`** — `utmParams` returned by the hook now reads from sessionStorage (`getStoredUTMParams`) instead of the current URL. So a user landing with `?utm_source=fb&utm_campaign=nz-may-26` and clicking through to /open-house, /nz-seminar, /atc still sends the original campaign attribution.
+- **`lib/sheets.ts`** — new `extractAttributionCells(data)` helper. Returns a stable 7-cell array `[utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, referrer]` to append to every form's sheet row.
+- **`app/api/open-house/route.ts`** — range A:H → A:O. Appends 7 UTM/landing/referrer cells.
+- **`app/api/nz-seminar/route.ts`** — range A:H → A:O. Same.
+- **`app/api/webinar/route.ts`** — range A:I → A:P.
+- **`app/api/summercamp/route.ts`** — range A:I → A:P.
+- **`app/api/cabin-crew/route.ts`** — range A:I → A:P.
+- **`app/api/atc/route.ts`** — range A1:I1 → A1:P1.
+- **`app/cabin-crew/page.client.tsx`** + **`app/summercamp/page.tsx`** — now read stored UTMs/landing/referrer at submit time and include them in the POST body. (Open House, NZ Seminar, ATC already submitted `utmParams` via `useTracking` — now those values are first-touch instead of current-URL.)
+- User-facing: no UI change. Sheet-side: rows now show campaign attribution. Verified locally that UTMs persist across page navigation and reach the API payload.
+
 ## 2026-05-16 21:00 IST · feat(nz-seminar): add "Meet the speakers" section
 
 - **`app/nz-seminar/page.tsx`** — new section between "You'll spend lakhs..." and "What we'll cover" featuring Irene King (CEO, Ardmore Flying School) and Anton Ramenskiy (Sr. Marketing Manager, Auckland International Pilot Academy). Cards show name, role, school in a horizontal layout with a gold-bordered avatar. Falls back to initials (IK / AR) when no headshot file is present.

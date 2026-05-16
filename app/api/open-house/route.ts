@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { appendToSheet, getOpenHouseSheetTab, resolveSpreadsheetId } from "@/lib/sheets";
+import {
+  appendToSheet,
+  extractAttributionCells,
+  getOpenHouseSheetTab,
+  resolveSpreadsheetId,
+} from "@/lib/sheets";
 
 export async function POST(request: Request) {
   try {
@@ -14,7 +19,7 @@ export async function POST(request: Request) {
     console.log("Open House append tab:", tab);
     console.log("Open House spreadsheetId:", spreadsheetId);
 
-    const result = await appendToSheet(tab, "A:H", [
+    const result = await appendToSheet(tab, "A:O", [
       new Date().toISOString(),      // Date (A)
       data.role || "",               // Type (B)
       data.name || "",               // Name (C)
@@ -23,6 +28,7 @@ export async function POST(request: Request) {
       data.city || "",               // City (F)
       data.parentAttending || "",    // With Someone (G)
       data.status || "",             // Status (H)
+      ...extractAttributionCells(data), // utm_source..referrer (I:O)
     ], spreadsheetId);
 
     console.log("Open House Sheets API success:", JSON.stringify(result));

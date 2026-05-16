@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { appendToSheet, getWebinarSheetTab, resolveSpreadsheetId } from "@/lib/sheets";
+import {
+  appendToSheet,
+  extractAttributionCells,
+  getWebinarSheetTab,
+  resolveSpreadsheetId,
+} from "@/lib/sheets";
 
 export async function POST(request: Request) {
   try {
@@ -14,7 +19,7 @@ export async function POST(request: Request) {
       "GOOGLE_SHEET_ID"
     );
 
-    const result = await appendToSheet(tab, "A:I", [
+    const result = await appendToSheet(tab, "A:P", [
       new Date().toISOString(),
       data.webinarSlug || "",
       data.webinarTitle || "",
@@ -24,6 +29,7 @@ export async function POST(request: Request) {
       data.city || "",
       data.role || "",
       data.status || "",
+      ...extractAttributionCells(data), // utm_source..referrer (J:P)
     ], spreadsheetId);
 
     return NextResponse.json({ success: true, data: result });

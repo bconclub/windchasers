@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { appendToSheet, getSummerCampSheetTab, resolveSpreadsheetId } from "@/lib/sheets";
+import {
+  appendToSheet,
+  extractAttributionCells,
+  getSummerCampSheetTab,
+  resolveSpreadsheetId,
+} from "@/lib/sheets";
 
 // Helper function to format phone number with +91 prefix
 function formatPhone(phone: string): string {
@@ -99,7 +104,7 @@ export async function POST(request: NextRequest) {
     console.log("Summer Camp spreadsheetId:", spreadsheetId);
 
     // Write to Google Sheets
-    const result = await appendToSheet(tab, "A:I", [
+    const result = await appendToSheet(tab, "A:P", [
       timestamp,                          // A: Date
       parentName,                         // B: Name
       formatPhone(phone),                 // C: Phone
@@ -109,6 +114,7 @@ export async function POST(request: NextRequest) {
       formatBatch(batchPreference),       // G: Batch
       "New Lead",                         // H: Status
       "Web Lead",                         // I: Source
+      ...extractAttributionCells(body),   // utm_source..referrer (J:P)
     ], spreadsheetId);
 
     console.log("Summer Camp Sheets API success:", JSON.stringify(result));

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { appendToSheet, resolveSpreadsheetId } from "@/lib/sheets";
+import { appendToSheet, extractAttributionCells, resolveSpreadsheetId } from "@/lib/sheets";
 
 const ATC_TAB_FROM_ENV = process.env.GOOGLE_SHEET_TAB_ATC?.trim();
 
@@ -8,23 +8,18 @@ function getAtcTabsToTry() {
   return candidates.filter((tab, idx, arr): tab is string => !!tab && arr.indexOf(tab) === idx);
 }
 
-function atcRow(data: {
-  name?: string;
-  phone?: string;
-  email?: string;
-  city?: string;
-  qualification?: string;
-}) {
+function atcRow(data: Record<string, unknown>) {
   return [
-    data.name || "",
-    data.phone || "",
-    data.email || "",
-    data.city || "",
-    data.qualification || "",
+    (data.name as string) || "",
+    (data.phone as string) || "",
+    (data.email as string) || "",
+    (data.city as string) || "",
+    (data.qualification as string) || "",
     "New Lead",
     "",
     "ATC",
     "",
+    ...extractAttributionCells(data), // utm_source..referrer (J:P)
   ];
 }
 
@@ -57,7 +52,7 @@ export async function POST(request: Request) {
 
     for (const tab of tabsToTry) {
       try {
-        sheetsResult = await appendToSheet(tab, "A1:I1", row, spreadsheetId);
+        sheetsResult = await appendToSheet(tab, "A1:P1", row, spreadsheetId);
         sheetsError = null;
         console.log("ATC Sheets API success, tab:", tab, JSON.stringify(sheetsResult));
         break;

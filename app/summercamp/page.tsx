@@ -200,6 +200,9 @@ export default function SummerCampPage() {
     setSubmitError("");
     setIsSubmitting(true);
     try {
+      const { getStoredUTMParamsFull, getLandingPage, getStoredReferrer } =
+        await import("@/lib/tracking");
+      const utm = getStoredUTMParamsFull();
       const res = await fetch("/api/summercamp", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -210,6 +213,10 @@ export default function SummerCampPage() {
           childAge: formData.childAge,
           interest: formData.interest,
           batchPreference: formData.batchPreference,
+          ...utm,
+          utmParams: utm,
+          landing_page: getLandingPage(),
+          referrer: getStoredReferrer(),
         }),
       });
       const payload = await res.json().catch(() => ({}));

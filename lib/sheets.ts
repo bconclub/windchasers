@@ -27,6 +27,33 @@ export function getNzSeminarSheetTab(): string {
   return process.env.GOOGLE_SHEET_TAB_NZ_SEMINAR?.trim() || "NZ Seminar";
 }
 
+/**
+ * Extract the 7 attribution cells appended at the end of every form's sheet row:
+ * [utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, referrer].
+ *
+ * Forms POST UTMs either flat (utm_source) or nested (utmParams.utm_source). This
+ * helper handles both. The order is stable so sheet columns line up across forms.
+ */
+export function extractAttributionCells(data: Record<string, unknown>): string[] {
+  const utm =
+    (data.utmParams as Record<string, unknown> | undefined) ?? data;
+  const pick = (k: string): string => {
+    const direct = data[k];
+    if (typeof direct === "string" && direct) return direct;
+    const nested = utm?.[k];
+    return typeof nested === "string" ? nested : "";
+  };
+  return [
+    pick("utm_source"),
+    pick("utm_medium"),
+    pick("utm_campaign"),
+    pick("utm_term"),
+    pick("utm_content"),
+    typeof data.landing_page === "string" ? data.landing_page : "",
+    typeof data.referrer === "string" ? data.referrer : "",
+  ];
+}
+
 /** Students CPL funnel - set `GOOGLE_SHEET_TAB_STUDENTS` once the tab is created. */
 export function getStudentsSheetTab(): string {
   return process.env.GOOGLE_SHEET_TAB_STUDENTS?.trim() || "Students Web Lead";

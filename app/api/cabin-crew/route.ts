@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { appendToSheet } from "@/lib/sheets";
+import { appendToSheet, extractAttributionCells } from "@/lib/sheets";
 
 const CABIN_CREW_SHEET_ID = "1duvoUCamcswz72myE2NnGwbRr81-gkuoNDy5uLRYZW8";
 const CABIN_CREW_TAB = "Cabin Crew New";
@@ -18,12 +18,13 @@ export async function POST(request: Request) {
       data.englishCommunication || "",
       data.age || "",
       data.joiningTimeline || "",
+      ...extractAttributionCells(data), // utm_source..referrer (J:P)
     ];
 
     let sheetsResult = null;
     let sheetsError: string | null = null;
     try {
-      sheetsResult = await appendToSheet(CABIN_CREW_TAB, "A:I", row, CABIN_CREW_SHEET_ID);
+      sheetsResult = await appendToSheet(CABIN_CREW_TAB, "A:P", row, CABIN_CREW_SHEET_ID);
       sheetsError = null;
     } catch (sheetErr) {
       sheetsError = sheetErr instanceof Error ? sheetErr.message : String(sheetErr);
