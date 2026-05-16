@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-16 20:40 IST · fix(nz-seminar): swap "biggest mistakes" card image to an affluent family
+
+- **`app/nz-seminar/page.tsx`** — replaced the "Biggest mistakes families make" card photo. Old shot (Frederick Shaw) read as a village family — wrong audience signal. New shot (Surface) shows a father and two kids at a laptop, which matches the target audience (families planning ₹1cr+ flight training spends).
+- **`public/unsplash/family-decision-OaD5um45.jpg`** — new 71KB photo.
+- **`public/unsplash/family-decision-LfqvVFSo.jpg`** — removed.
+- **`public/unsplash/_credits.json`** — credit swapped.
+
 ## 2026-05-16 20:15 IST · feat(nz-seminar): add Unsplash imagery to topic cards
 
 - **`app/nz-seminar/page.tsx`** — each of the 6 "What we'll cover" cards now leads with a 16:9 hero image (NZ mountains, cockpit training, financial planning, flight instructor, airline pilot, family decision-making). Icon sits below the image with the existing title + description.
