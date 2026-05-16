@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-16 21:00 IST · feat(nz-seminar): add "Meet the speakers" section
+
+- **`app/nz-seminar/page.tsx`** — new section between "You'll spend lakhs..." and "What we'll cover" featuring Irene King (CEO, Ardmore Flying School) and Anton Ramenskiy (Sr. Marketing Manager, Auckland International Pilot Academy). Cards show name, role, school in a horizontal layout with a gold-bordered avatar. Falls back to initials (IK / AR) when no headshot file is present.
+- **`public/team-nz/README.md`** — placeholder folder + instructions for dropping the two JPG headshots. Wiring auto-picks them up once present.
+- Reordered section backgrounds so alternating `#131313 / #1A1A1A` is preserved after the insertion.
+
 ## 2026-05-16 20:40 IST · fix(nz-seminar): swap "biggest mistakes" card image to an affluent family
 
 - **`app/nz-seminar/page.tsx`** — replaced the "Biggest mistakes families make" card photo. Old shot (Frederick Shaw) read as a village family — wrong audience signal. New shot (Surface) shows a father and two kids at a laptop, which matches the target audience (families planning ₹1cr+ flight training spends).

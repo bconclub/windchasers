@@ -55,6 +55,29 @@ const HIGHLIGHTS = [
   { Icon: Compass, title: "Walk out with a plan", desc: "Leave with clarity on country, school, timeline, and the next 30 days." },
 ];
 
+const SPEAKERS: Array<{
+  name: string;
+  role: string;
+  school: string;
+  initials: string;
+  image: string | null;
+}> = [
+  {
+    name: "Irene King",
+    role: "CEO",
+    school: "Ardmore Flying School",
+    initials: "IK",
+    image: null,
+  },
+  {
+    name: "Anton Ramenskiy",
+    role: "Senior Marketing Manager",
+    school: "Auckland International Pilot Academy",
+    initials: "AR",
+    image: null,
+  },
+];
+
 type Role = "" | "student" | "parent";
 
 type Status =
@@ -452,8 +475,73 @@ export default function NzSeminarPage() {
         </div>
       </section>
 
-      {/* Topics covered */}
+      {/* Meet the speakers */}
       <section className="py-20 px-6 lg:px-8 bg-[#131313]">
+        <div className="max-w-[1100px] mx-auto">
+          <motion.div
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: transitionDuration ?? 0.6 }}
+            className="text-center mb-12"
+          >
+            <p className="text-[#C5A572] text-xs uppercase tracking-[3px] font-medium mb-4">Flown in for the seminar</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-[#C5A572] mb-4">
+              Meet the speakers
+            </h2>
+            <p className="text-gray-400 text-base md:text-lg max-w-2xl mx-auto">
+              Talk in person to the heads of two of New Zealand&apos;s top flying schools. Ask them everything about NZ.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {SPEAKERS.map(({ name, role, school, initials, image }, i) => (
+              <motion.div
+                key={name}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : i * 0.07 }}
+                className="bg-[#1A1A1A] border border-[#C5A572]/30 rounded-2xl p-8 hover:border-[#C5A572] transition-colors"
+              >
+                <div className="flex items-center gap-5">
+                  <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden border-2 border-[#C5A572]/50 bg-[#252525] flex items-center justify-center flex-shrink-0">
+                    {image ? (
+                      <Image
+                        src={image}
+                        alt={name}
+                        fill
+                        sizes="96px"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <span className="text-[#C5A572] font-bold text-2xl">{initials}</span>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="text-white text-xl font-bold leading-tight mb-1">{name}</h3>
+                    <p className="text-[#C5A572] text-sm font-semibold mb-1">{role}</p>
+                    <p className="text-gray-400 text-sm leading-snug">{school}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.p
+            initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: transitionDuration ?? 0.6, delay: shouldReduceMotion ? 0 : 0.25 }}
+            className="text-center text-gray-500 text-sm mt-8"
+          >
+            More NZ flying school representatives joining the panel — full list shared closer to the date.
+          </motion.p>
+        </div>
+      </section>
+
+      {/* Topics covered */}
+      <section className="py-20 px-6 lg:px-8 bg-[#1A1A1A]">
         <div className="max-w-[1200px] mx-auto">
           <motion.h2
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
@@ -508,7 +596,7 @@ export default function NzSeminarPage() {
       </section>
 
       {/* What you walk out with */}
-      <section className="py-20 px-6 lg:px-8 bg-[#1A1A1A]">
+      <section className="py-20 px-6 lg:px-8 bg-[#131313]">
         <div className="max-w-[1200px] mx-auto">
           <motion.h2
             initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
