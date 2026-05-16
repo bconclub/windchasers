@@ -612,11 +612,11 @@ function ThankYouContent() {
           message: "",
           details: (
             <div className="space-y-8">
-              {/* Big Score Display */}
+              {/* Big Score Display — internal scoring is /150; we surface /100 to users. */}
               <div className="text-center">
                 <div className={`text-8xl md:text-9xl font-bold mb-4 ${tierInfo.color}`}>
-                  {score}
-                  <span className="text-4xl md:text-5xl text-white/60">/150</span>
+                  {Math.round((score * 100) / 150)}
+                  <span className="text-4xl md:text-5xl text-white/60">/100</span>
                 </div>
               </div>
 

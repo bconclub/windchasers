@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-16 22:15 IST · feat(pat): display PAT result as score/100 instead of score/150
+
+- **`app/thank-you/page.tsx`** — the big PAT score panel now renders `Math.round(score × 100 / 150)/100` instead of `score/150`. Examples: 150 → 100/100, 120 → 80/100, 90 → 60/100.
+- Internal scoring (`PAT_MAX_TOTAL = 150`), the PROXe `total_score` payload, and tier thresholds (premium ≥140, strong ≥120, moderate ≥90) all remain on the original 150 scale. Historical leads stay comparable; only the user-facing display changes.
+- User-facing: PAT result reads as a more intuitive percentage.
+
 ## 2026-05-16 21:30 IST · feat(attribution): persist first-touch UTMs through every form, write them to all sheet tabs
 
 - **`hooks/useTracking.ts`** — `utmParams` returned by the hook now reads from sessionStorage (`getStoredUTMParams`) instead of the current URL. So a user landing with `?utm_source=fb&utm_campaign=nz-may-26` and clicking through to /open-house, /nz-seminar, /atc still sends the original campaign attribution.
