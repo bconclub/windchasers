@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 20:15 IST · fix(nz-seminar): remove eligibility note + route Pursuing 12th to early path too
+
+- **`app/nz-seminar/page.tsx`** — removed the inline eligibility note above the form (too noisy). Form now stands clean.
+- The status dropdown now routes both `Pursuing 12th` AND `Below 12th` to the early-stage path (was only Below 12th). The seminar's value prop is what-after-12th, so anyone still in school gets a better experience on `/assessment/early`.
+- Updated the blocked-state copy: "We have a better fit for you" instead of "This seminar isn't the right fit yet" — friendlier framing, no judgment.
+
 ## 2026-05-17 19:55 IST · feat(nz-seminar): eligibility note + dedicated below-12 path
 
 - **`app/nz-seminar/page.tsx`** — added a visible eligibility note above the form: "This seminar is for students who have completed or are currently in 12th. Below 12th? See our early-stage path →" with an inline link to `/assessment/early`.

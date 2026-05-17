@@ -219,7 +219,12 @@ export default function NzSeminarPage() {
       return;
     }
 
-    if (role === "student" && form.status === "Below 12th") {
+    // This seminar is built around what to do AFTER 12th. Students still in
+    // school or below get routed to the early-stage path instead.
+    if (
+      role === "student" &&
+      (form.status === "Below 12th" || form.status === "Pursuing 12th")
+    ) {
       setBlocked(true);
       return;
     }
@@ -698,20 +703,6 @@ export default function NzSeminarPage() {
               </div>
             </div>
 
-            {/* Eligibility note */}
-            <div className="mb-6 rounded-lg border border-[#C5A572]/30 bg-[#C5A572]/5 px-4 py-3 text-sm text-white/80">
-              <span className="font-semibold text-[#C5A572]">Eligibility:</span>{" "}
-              This seminar is for students who have completed or are currently in
-              12th (PCM/PCB/Commerce/Arts), and their parents. Below 12th? See our
-              {" "}
-              <a
-                href="/assessment/early"
-                className="text-[#C5A572] underline underline-offset-2 hover:text-[#d4b885]"
-              >
-                early-stage path →
-              </a>
-            </div>
-
             {blocked ? (
               <motion.div
                 initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.96 }}
@@ -721,17 +712,17 @@ export default function NzSeminarPage() {
                 role="alert"
               >
                 <h3 className="text-2xl font-bold text-[#C5A572] mb-3">
-                  This seminar isn&apos;t the right fit yet.
+                  We have a better fit for you.
                 </h3>
                 <p className="text-white/85 text-base leading-relaxed mb-2">
-                  It&apos;s built for students who&apos;ve completed or are pursuing
-                  12th. You&apos;re earlier in the journey — that&apos;s great news,
-                  you have time to plan properly.
+                  This seminar is built around what happens after 12th —
+                  picking the right country, costs, and the fastest path to
+                  CPL. You&apos;re earlier in the journey.
                 </p>
                 <p className="text-white/70 text-sm leading-relaxed mb-6">
                   We have a dedicated early-stage path with the roadmap, costs,
-                  and a counsellor to talk to. Reach out and we&apos;ll guide
-                  you from here.
+                  and a counsellor to talk to. Take 30 seconds to share your
+                  details and we&apos;ll guide you from here.
                 </p>
 
                 <div className="flex flex-col gap-3">
