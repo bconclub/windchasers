@@ -67,14 +67,14 @@ const SPEAKERS: Array<{
     role: "CEO",
     school: "Ardmore Flying School",
     initials: "IK",
-    image: "/webinar/Irene King.png",
+    image: "/nz-seminar/Irene King.png",
   },
   {
     name: "Anton Ramenskiy",
     role: "Senior Marketing Manager",
     school: "Auckland International Pilot Academy",
     initials: "AR",
-    image: "/webinar/Antony.png",
+    image: "/nz-seminar/Antony.png",
   },
 ];
 
@@ -273,7 +273,7 @@ export default function NzSeminarPage() {
   };
 
   const transitionDuration = shouldReduceMotion ? 0 : undefined;
-  const { ref: heroRef, isInView: heroInView } = useInView<HTMLElement>();
+  const { ref: heroRef } = useInView<HTMLElement>();
 
   return (
     <>
@@ -293,23 +293,20 @@ export default function NzSeminarPage() {
 
       {/* Hero - Glass Morphism Design */}
       <section ref={heroRef} className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
-        {/* Background Video */}
+        {/* Background — New Zealand still */}
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-black">
-          {heroInView && (
-            <iframe
-              className="absolute top-1/2 left-1/2 w-[100vw] h-[56.25vw] min-h-[100vh] min-w-[177.77vh] -translate-x-1/2 -translate-y-1/2 border-0"
-              src="https://player.vimeo.com/video/1160946921?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&background=1"
-              title="Aviation Background"
-              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-              allowFullScreen
-              loading="eager"
-              style={{ pointerEvents: "none" }}
-            />
-          )}
+          <Image
+            src="/nz-seminar/NEw Zealand.avif"
+            alt="New Zealand landscape"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
         </div>
 
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.2)_0%,_rgba(0,0,0,0.5)_70%)] z-10" />
-        <div className="absolute inset-0 bg-black/20 z-10" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0.25)_0%,_rgba(0,0,0,0.65)_75%)] z-10" />
+        <div className="absolute inset-0 bg-black/30 z-10" />
 
         {/* Glass Container */}
         <div className="relative z-20 w-full px-4 md:px-0 md:mx-auto md:max-w-[720px] pt-20">

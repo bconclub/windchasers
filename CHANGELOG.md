@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 19:05 IST · feat(nz-seminar): use NZ landscape AVIF as hero + consolidate assets under /public/nz-seminar/
+
+- **`app/nz-seminar/page.tsx`** — replaced the generic Vimeo aviation iframe with a static `/nz-seminar/NEw Zealand.avif` (138KB) rendered via `next/image priority`. NZ-specific, no external dependency. Darkened overlays to `0.65 / 0.30` so the glass-morphism card stays readable on the new bg.
+- **`public/nz-seminar/`** — assets moved here from `public/webinar/` (Irene King.png, Antony.png, takeoff.mp4) so all NZ-page imagery sits in one folder. Speaker headshot paths in the page updated accordingly.
+- Cleaned up the now-unused `heroInView` destructure.
+
 ## 2026-05-17 18:50 IST · fix(nz-seminar): topic cards now read as actual cards
 
 - **`app/nz-seminar/page.tsx`** — root cause: card bg `#1A1A1A` matched the section bg, so the card had no visible container. Changes:
