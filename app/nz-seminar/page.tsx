@@ -67,14 +67,14 @@ const SPEAKERS: Array<{
     role: "CEO",
     school: "Ardmore Flying School",
     initials: "IK",
-    image: null,
+    image: "/webinar/Irene King.png",
   },
   {
     name: "Anton Ramenskiy",
     role: "Senior Marketing Manager",
     school: "Auckland International Pilot Academy",
     initials: "AR",
-    image: null,
+    image: "/webinar/Antony.png",
   },
 ];
 

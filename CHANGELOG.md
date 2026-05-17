@@ -2,6 +2,10 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 18:30 IST · feat(nz-seminar): wire speaker headshots
+
+- **`app/nz-seminar/page.tsx`** — Irene King and Anton Ramenskiy speaker cards now show real headshots instead of initials fallback. Sourced from existing `/public/webinar/` assets (Irene King.png · 60KB, Antony.png · 46KB).
+
 ## 2026-05-16 22:15 IST · feat(pat): display PAT result as score/100 instead of score/150
 
 - **`app/thank-you/page.tsx`** — the big PAT score panel now renders `Math.round(score × 100 / 150)/100` instead of `score/150`. Examples: 150 → 100/100, 120 → 80/100, 90 → 60/100.
