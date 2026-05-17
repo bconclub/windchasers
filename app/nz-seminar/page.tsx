@@ -570,7 +570,7 @@ export default function NzSeminarPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : i * 0.07 }}
-                className="bg-[#1A1A1A] border-t-2 border-[#C5A572] rounded-lg overflow-hidden hover:-translate-y-1 hover:shadow-xl hover:border-t-[3px] transition-all duration-300 flex flex-col"
+                className="group bg-[#1F1F1F] border border-white/10 rounded-2xl overflow-hidden shadow-lg shadow-black/30 hover:-translate-y-1 hover:border-[#C5A572]/60 hover:shadow-2xl hover:shadow-[#C5A572]/10 transition-all duration-300 flex flex-col"
               >
                 <div className="relative w-full aspect-[16/9] overflow-hidden bg-black">
                   <Image
@@ -578,12 +578,14 @@ export default function NzSeminarPage() {
                     alt={title}
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
-                    className="object-cover"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-[#1A1A1A]/30 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#1F1F1F] via-transparent to-transparent" />
+                  <div className="absolute top-4 left-4 flex items-center justify-center w-11 h-11 rounded-full bg-[#1F1F1F]/85 backdrop-blur-sm border border-[#C5A572]/40">
+                    <Icon className="w-5 h-5 text-[#C5A572]" />
+                  </div>
                 </div>
-                <div className="p-8 flex-1">
-                  <Icon className="w-8 h-8 text-[#C5A572] mb-4" />
+                <div className="p-6 flex-1 flex flex-col">
                   <h3 className="text-white font-semibold text-lg mb-2 leading-snug">
                     {title}
                   </h3>

@@ -2,6 +2,14 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 18:50 IST · fix(nz-seminar): topic cards now read as actual cards
+
+- **`app/nz-seminar/page.tsx`** — root cause: card bg `#1A1A1A` matched the section bg, so the card had no visible container. Changes:
+  - Card bg lifted to `#1F1F1F` with a `border border-white/10` all the way around + `rounded-2xl` + `shadow-lg shadow-black/30`. Now sits clearly on the `#1A1A1A` section.
+  - Hover: subtle `border-[#C5A572]/60` + gold-tinted shadow + `-translate-y-1` + 5% image zoom.
+  - Icon moved off the awkward gap between image and text — now a 44px circular badge floating over the top-left of the image (`bg-[#1F1F1F]/85 backdrop-blur-sm`). Image and copy now read as one cohesive card.
+  - Gradient overlay updated to fade to the new card bg.
+
 ## 2026-05-17 18:30 IST · feat(nz-seminar): wire speaker headshots
 
 - **`app/nz-seminar/page.tsx`** — Irene King and Anton Ramenskiy speaker cards now show real headshots instead of initials fallback. Sourced from existing `/public/webinar/` assets (Irene King.png · 60KB, Antony.png · 46KB).
