@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 20:40 IST · feat(nz-seminar): redirect modal fires on Below/Pursuing select + dropdown reordered
+
+- **`app/nz-seminar/page.tsx`** — Current Status dropdown reordered ascending by stage: Below 12th → Pursuing 12th → Completed 12th → Graduate or above.
+- Selecting "Below 12th" or "Pursuing 12th" now triggers the redirect modal **immediately** on change (was submit-time). Users don't waste effort filling the form when we know they need a different flow.
+- Blocked panel converted from an inline form replacement to a true centered modal (fixed inset-0, z-100, backdrop blur). Has "Get the early-stage roadmap" + "Chat on WhatsApp" + a "go back, I picked wrong" escape hatch.
+- Form alignment now stays clean because the modal floats above instead of swapping body content.
+
 ## 2026-05-17 20:15 IST · fix(nz-seminar): remove eligibility note + route Pursuing 12th to early path too
 
 - **`app/nz-seminar/page.tsx`** — removed the inline eligibility note above the form (too noisy). Form now stands clean.

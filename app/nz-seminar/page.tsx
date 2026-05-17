@@ -703,51 +703,7 @@ export default function NzSeminarPage() {
               </div>
             </div>
 
-            {blocked ? (
-              <motion.div
-                initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.96 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: shouldReduceMotion ? 0 : undefined }}
-                className="rounded-2xl border border-[#C5A572]/40 bg-[#252525] p-8 text-center"
-                role="alert"
-              >
-                <h3 className="text-2xl font-bold text-[#C5A572] mb-3">
-                  We have a better fit for you.
-                </h3>
-                <p className="text-white/85 text-base leading-relaxed mb-2">
-                  This seminar is built around what happens after 12th —
-                  picking the right country, costs, and the fastest path to
-                  CPL. You&apos;re earlier in the journey.
-                </p>
-                <p className="text-white/70 text-sm leading-relaxed mb-6">
-                  We have a dedicated early-stage path with the roadmap, costs,
-                  and a counsellor to talk to. Take 30 seconds to share your
-                  details and we&apos;ll guide you from here.
-                </p>
-
-                <div className="flex flex-col gap-3">
-                  <a
-                    href="/assessment/early"
-                    className="w-full bg-[#C5A572] text-black h-12 rounded-lg font-semibold text-base inline-flex items-center justify-center hover:bg-[#C5A572]/90 transition-colors"
-                  >
-                    Get the early-stage roadmap
-                  </a>
-                  <a
-                    href="https://wa.me/919591004043?text=Hi%20WindChasers%2C%20I%27m%20below%2012th%20and%20interested%20in%20pilot%20training.%20Please%20guide%20me."
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full bg-[#25D366] text-white h-12 rounded-lg font-semibold text-base inline-flex items-center justify-center hover:bg-[#1ebe5d] transition-colors"
-                  >
-                    Chat with us on WhatsApp
-                  </a>
-                </div>
-
-                <p className="text-white/50 text-xs mt-5">
-                  Or wait — we&apos;ll take you to the early-stage path automatically.
-                </p>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} noValidate className="space-y-5">
+            <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 {/* Role selector */}
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">
@@ -860,11 +816,14 @@ export default function NzSeminarPage() {
                         required
                         value={form.status}
                         onChange={(e) => {
-                          setForm((f) => ({
-                            ...f,
-                            status: e.target.value as Status,
-                          }));
+                          const next = e.target.value as Status;
+                          setForm((f) => ({ ...f, status: next }));
                           setErrors((prev) => ({ ...prev, status: undefined }));
+                          // Pursuing/Below 12th — open the redirect modal immediately,
+                          // no need to wait for the user to fill the rest of the form.
+                          if (next === "Below 12th" || next === "Pursuing 12th") {
+                            setBlocked(true);
+                          }
                         }}
                         aria-invalid={errors.status ? "true" : "false"}
                         aria-describedby={errors.status ? "status-error" : undefined}
@@ -873,10 +832,10 @@ export default function NzSeminarPage() {
                         <option value="" disabled>
                           Select your status
                         </option>
-                        <option value="Completed 12th">Completed 12th</option>
-                        <option value="Pursuing 12th">Pursuing 12th</option>
-                        <option value="Graduate or above">Graduate or above</option>
                         <option value="Below 12th">Below 12th</option>
+                        <option value="Pursuing 12th">Pursuing 12th</option>
+                        <option value="Completed 12th">Completed 12th</option>
+                        <option value="Graduate or above">Graduate or above</option>
                       </select>
                       <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                     </div>
@@ -961,7 +920,6 @@ export default function NzSeminarPage() {
                   No spam. We&apos;ll only send you event details and a reminder.
                 </p>
               </form>
-            )}
           </motion.div>
         </div>
       </section>
@@ -975,6 +933,70 @@ export default function NzSeminarPage() {
           >
             Secure Your Seat
           </button>
+        </div>
+      )}
+
+      {/* Early-stage redirect modal — fires when the student picks Pursuing
+          or Below 12th. The seminar is post-12th; we route those leads to
+          /assessment/early instead. */}
+      {blocked && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="nz-block-title"
+        >
+          <motion.div
+            initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.2 }}
+            className="w-full max-w-[480px] rounded-2xl border border-[#C5A572]/40 bg-[#1A1A1A] p-7 text-center shadow-[0_25px_60px_rgba(0,0,0,0.6)]"
+          >
+            <h3 id="nz-block-title" className="text-2xl font-bold text-[#C5A572] mb-3">
+              We have a better fit for you.
+            </h3>
+            <p className="text-white/85 text-base leading-relaxed mb-2">
+              This seminar is built around what to do{" "}
+              <span className="font-semibold">after 12th</span> — picking the
+              right country, costs, and the fastest path to CPL.
+            </p>
+            <p className="text-white/70 text-sm leading-relaxed mb-6">
+              You&apos;re earlier in the journey. We have a dedicated
+              early-stage path with the roadmap, costs, and a counsellor
+              to talk to.
+            </p>
+
+            <div className="flex flex-col gap-3">
+              <a
+                href="/assessment/early"
+                className="w-full bg-[#C5A572] text-black h-12 rounded-lg font-semibold text-base inline-flex items-center justify-center hover:bg-[#C5A572]/90 transition-colors"
+              >
+                Get the early-stage roadmap →
+              </a>
+              <a
+                href="https://wa.me/919591004043?text=Hi%20WindChasers%2C%20I%27m%20still%20in%20school%20and%20interested%20in%20pilot%20training.%20Please%20guide%20me."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full bg-[#25D366] text-white h-12 rounded-lg font-semibold text-base inline-flex items-center justify-center hover:bg-[#1ebe5d] transition-colors"
+              >
+                Chat with us on WhatsApp
+              </a>
+              <button
+                type="button"
+                onClick={() => {
+                  setBlocked(false);
+                  setForm((f) => ({ ...f, status: "" }));
+                }}
+                className="text-white/50 hover:text-white/80 text-xs underline-offset-2 hover:underline transition-colors mt-1"
+              >
+                I picked the wrong status — go back
+              </button>
+            </div>
+
+            <p className="text-white/40 text-xs mt-5">
+              We&apos;ll take you to the early-stage path in a moment.
+            </p>
+          </motion.div>
         </div>
       )}
     </>
