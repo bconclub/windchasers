@@ -22,9 +22,10 @@ export function getWebinarSheetTab(): string {
   return process.env.GOOGLE_SHEET_TAB_WEBINAR?.trim() || "Webinar";
 }
 
-/** NZ Seminar registrations - set `GOOGLE_SHEET_TAB_NZ_SEMINAR` if the tab name differs. */
+/** NZ Seminar registrations - matches the "29 NZ Webinar Confirms" tab in
+ * Event Data 2026. Override with `GOOGLE_SHEET_TAB_NZ_SEMINAR` if renamed. */
 export function getNzSeminarSheetTab(): string {
-  return process.env.GOOGLE_SHEET_TAB_NZ_SEMINAR?.trim() || "NZ Seminar";
+  return process.env.GOOGLE_SHEET_TAB_NZ_SEMINAR?.trim() || "29 NZ Webinar Confirms";
 }
 
 /**

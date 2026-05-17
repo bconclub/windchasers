@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 19:35 IST · feat(nz-seminar): wire form submissions to "29 NZ Webinar Confirms" tab
+
+- **`lib/sheets.ts`** — `getNzSeminarSheetTab()` default tab is now `29 NZ Webinar Confirms` (matches the actual tab name in Event Data 2026). Was a placeholder `NZ Seminar` before.
+- **`app/api/nz-seminar/route.ts`** — pinned to Event Data 2026 spreadsheet (`145KgARkFGEi4_hjwR5dN6Vv8NJlnmzHhX8I7wvNOc-w`) explicitly so no env misconfig sends leads elsewhere. Override still possible via `GOOGLE_SHEET_ID_NZ_SEMINAR` or `EVENT_DATA_2026_SHEET_ID`.
+- Column layout updated to match the existing sheet: row writes A Date, B Type, C Name, D Phone, E Email, F City, G With +1, H Current Status, I Stage (blank — counsellor fills), J Remarks (blank — counsellor fills), K-Q utm_source / utm_medium / utm_campaign / utm_term / utm_content / landing_page / referrer. Range expanded `A:O` → `A:Q`.
+
 ## 2026-05-17 19:20 IST · fix(nz-seminar): swap biggest-mistakes card image to brand-supplied Indian-family photo
 
 - **`app/nz-seminar/page.tsx`** — replaced stock Unsplash (Surface, father + 2 toddlers) with the user-supplied `/nz-seminar/Parent image.webp` (80KB). On-brief: Indian parents + adult student matching the target audience.
