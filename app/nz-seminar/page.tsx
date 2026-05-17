@@ -31,7 +31,7 @@ const TOPICS = [
   { Icon: Wallet, image: "/unsplash/financial-planning-heiYgqp0.jpg", title: "Full cost breakdown in INR", desc: "Tuition, hours, accommodation, exams, visa, medicals. Every rupee mapped before you commit." },
   { Icon: ShieldCheck, image: "/unsplash/flight-instructor-MKh27bPC.jpg", title: "How NZ standards protect your investment", desc: "Why CAA training holds value globally and where Indian families lose money picking the wrong country." },
   { Icon: Briefcase, image: "/unsplash/airline-pilot-QtXNsDcO.jpg", title: "Career path after CPL", desc: "Returning to India, conversion to DGCA, airline cadetships, and instructor hours in NZ." },
-  { Icon: AlertTriangle, image: "/unsplash/family-decision-OaD5um45.jpg", title: "Biggest mistakes families make", desc: "Cheap schools, missing accreditations, visa traps. What to verify before you wire a single rupee." },
+  { Icon: AlertTriangle, image: "/nz-seminar/Parent image.webp", title: "Biggest mistakes families make", desc: "Cheap schools, missing accreditations, visa traps. What to verify before you wire a single rupee." },
 ];
 
 const WHO_SHOULD_ATTEND = [

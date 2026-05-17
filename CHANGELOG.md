@@ -2,6 +2,10 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 19:20 IST · fix(nz-seminar): swap biggest-mistakes card image to brand-supplied Indian-family photo
+
+- **`app/nz-seminar/page.tsx`** — replaced stock Unsplash (Surface, father + 2 toddlers) with the user-supplied `/nz-seminar/Parent image.webp` (80KB). On-brief: Indian parents + adult student matching the target audience.
+
 ## 2026-05-17 19:05 IST · feat(nz-seminar): use NZ landscape AVIF as hero + consolidate assets under /public/nz-seminar/
 
 - **`app/nz-seminar/page.tsx`** — replaced the generic Vimeo aviation iframe with a static `/nz-seminar/NEw Zealand.avif` (138KB) rendered via `next/image priority`. NZ-specific, no external dependency. Darkened overlays to `0.65 / 0.30` so the glass-morphism card stays readable on the new bg.
