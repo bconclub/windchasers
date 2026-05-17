@@ -147,7 +147,8 @@ export default function NzSeminarPage() {
 
   useEffect(() => {
     if (!blocked) return;
-    const t = setTimeout(() => router.push("/"), 3000);
+    // Below-12 students go to the early-stage flow instead of the seminar.
+    const t = setTimeout(() => router.push("/assessment/early"), 6000);
     return () => clearTimeout(t);
   }, [blocked, router]);
 
@@ -697,22 +698,61 @@ export default function NzSeminarPage() {
               </div>
             </div>
 
+            {/* Eligibility note */}
+            <div className="mb-6 rounded-lg border border-[#C5A572]/30 bg-[#C5A572]/5 px-4 py-3 text-sm text-white/80">
+              <span className="font-semibold text-[#C5A572]">Eligibility:</span>{" "}
+              This seminar is for students who have completed or are currently in
+              12th (PCM/PCB/Commerce/Arts), and their parents. Below 12th? See our
+              {" "}
+              <a
+                href="/assessment/early"
+                className="text-[#C5A572] underline underline-offset-2 hover:text-[#d4b885]"
+              >
+                early-stage path →
+              </a>
+            </div>
+
             {blocked ? (
               <motion.div
                 initial={{ opacity: shouldReduceMotion ? 1 : 0, scale: shouldReduceMotion ? 1 : 0.96 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: shouldReduceMotion ? 0 : undefined }}
-                className="rounded-lg border border-white/10 bg-[#252525] p-8 text-center"
+                className="rounded-2xl border border-[#C5A572]/40 bg-[#252525] p-8 text-center"
                 role="alert"
               >
-                <p className="text-white/90 text-lg leading-relaxed mb-3">
-                  This seminar is for students who have completed 12th or above (or
-                  parents of such students). Visit our homepage to see programs that
-                  fit your current stage.
+                <h3 className="text-2xl font-bold text-[#C5A572] mb-3">
+                  This seminar isn&apos;t the right fit yet.
+                </h3>
+                <p className="text-white/85 text-base leading-relaxed mb-2">
+                  It&apos;s built for students who&apos;ve completed or are pursuing
+                  12th. You&apos;re earlier in the journey — that&apos;s great news,
+                  you have time to plan properly.
                 </p>
-                <p className="text-white/60 text-sm">
-                  Redirecting you{" "}
-                  <span className="text-[#C5A572]">shortly...</span>
+                <p className="text-white/70 text-sm leading-relaxed mb-6">
+                  We have a dedicated early-stage path with the roadmap, costs,
+                  and a counsellor to talk to. Reach out and we&apos;ll guide
+                  you from here.
+                </p>
+
+                <div className="flex flex-col gap-3">
+                  <a
+                    href="/assessment/early"
+                    className="w-full bg-[#C5A572] text-black h-12 rounded-lg font-semibold text-base inline-flex items-center justify-center hover:bg-[#C5A572]/90 transition-colors"
+                  >
+                    Get the early-stage roadmap
+                  </a>
+                  <a
+                    href="https://wa.me/919591004043?text=Hi%20WindChasers%2C%20I%27m%20below%2012th%20and%20interested%20in%20pilot%20training.%20Please%20guide%20me."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-[#25D366] text-white h-12 rounded-lg font-semibold text-base inline-flex items-center justify-center hover:bg-[#1ebe5d] transition-colors"
+                  >
+                    Chat with us on WhatsApp
+                  </a>
+                </div>
+
+                <p className="text-white/50 text-xs mt-5">
+                  Or wait — we&apos;ll take you to the early-stage path automatically.
                 </p>
               </motion.div>
             ) : (

@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 19:55 IST · feat(nz-seminar): eligibility note + dedicated below-12 path
+
+- **`app/nz-seminar/page.tsx`** — added a visible eligibility note above the form: "This seminar is for students who have completed or are currently in 12th. Below 12th? See our early-stage path →" with an inline link to `/assessment/early`.
+- When a student selects "Below 12th" and submits, the blocked state now shows a thoughtful message ("This seminar isn't the right fit yet — you have time to plan properly") plus two big CTAs: `Get the early-stage roadmap` (→ `/assessment/early`) and `Chat with us on WhatsApp` (pre-filled message). Auto-redirect target switched from `/` to `/assessment/early` and the timer is now 6s so users can read and click.
+
 ## 2026-05-17 19:35 IST · feat(nz-seminar): wire form submissions to "29 NZ Webinar Confirms" tab
 
 - **`lib/sheets.ts`** — `getNzSeminarSheetTab()` default tab is now `29 NZ Webinar Confirms` (matches the actual tab name in Event Data 2026). Was a placeholder `NZ Seminar` before.
