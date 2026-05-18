@@ -2,6 +2,15 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 21:15 IST · copy(nz-seminar): Anton role + page meta tags
+
+- **`app/nz-seminar/page.tsx`** — Anton Ramenskiy role shortened to "Senior Manager" (was "Senior Marketing Manager").
+- Page meta updated to match the latest hero copy:
+  - `<title>` now leads with "Train where the world's best pilots train" + venue/date.
+  - `<meta name="description">` rewritten to the new value prop: "Meet the New Zealand flight schools turning students into commercial pilots faster than anywhere else. Free in-person seminar, Bangalore, Sat May 29, 2026 · 3:00 PM. Only 30 seats."
+  - `og:title` / `og:description` aligned with the new headline.
+  - Added Twitter card meta so link unfurls render properly on X/Twitter too.
+
 ## 2026-05-17 21:05 IST · copy(nz-seminar): rewrite hero subtext
 
 - **`app/nz-seminar/page.tsx`** — subtext now reads "Meet the New Zealand flight schools turning students into commercial pilots faster than anywhere else." (was "The fastest route from 12th to commercial pilot starts here."). Names the value prop and the country in one line.

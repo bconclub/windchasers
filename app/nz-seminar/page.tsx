@@ -71,7 +71,7 @@ const SPEAKERS: Array<{
   },
   {
     name: "Anton Ramenskiy",
-    role: "Senior Marketing Manager",
+    role: "Senior Manager",
     school: "Auckland International Pilot Academy",
     initials: "AR",
     image: "/nz-seminar/Antony.png",
@@ -292,17 +292,23 @@ export default function NzSeminarPage() {
   return (
     <>
       <Head>
-        <title>New Zealand Flight Training Seminar · May 29, 2026 · WindChasers</title>
+        <title>Train where the world&apos;s best pilots train · NZ Flight Training Seminar · Bangalore, May 29 · WindChasers</title>
         <meta
           name="description"
-          content="Free in-person seminar in Bangalore on May 29, 2026. Meet New Zealand's top flying schools, get the full CPL roadmap, costs, and timelines from 12th to commercial pilot. Only 30 seats."
+          content="Meet the New Zealand flight schools turning students into commercial pilots faster than anywhere else. Free in-person seminar, Bangalore, Sat May 29, 2026 · 3:00 PM. Only 30 seats."
         />
-        <meta property="og:title" content="New Zealand Flight Training Seminar · May 29, 2026 · WindChasers" />
+        <meta property="og:title" content="Train where the world&apos;s best pilots train · NZ Flight Training Seminar · Bangalore" />
         <meta
           property="og:description"
-          content="Skip Google and Reddit. Meet New Zealand's top flying schools in person. Full CPL roadmap, costs, and timelines after 12th."
+          content="Meet the New Zealand flight schools turning students into commercial pilots faster than anywhere else. Free seminar in Bangalore on May 29, 2026."
         />
         <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Train where the world&apos;s best pilots train · NZ Flight Training Seminar" />
+        <meta
+          name="twitter:description"
+          content="Meet the New Zealand flight schools turning students into commercial pilots faster than anywhere else. Bangalore, May 29. Only 30 seats."
+        />
       </Head>
 
       {/* Hero - Glass Morphism Design */}
