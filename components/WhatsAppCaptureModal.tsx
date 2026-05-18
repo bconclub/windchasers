@@ -172,7 +172,7 @@ export function WhatsAppCaptureModal({
                 id="wa-capture-title"
                 className="text-white text-base font-semibold leading-tight"
               >
-                Start a WhatsApp chat
+                Start a chat
               </p>
               <p className="text-white/50 text-xs mt-1">
                 Phone only. We&apos;ll be ready when you message us.
