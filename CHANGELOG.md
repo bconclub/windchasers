@@ -2,6 +2,15 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 14:00 IST · fix(api/leads): sanitize PROXe runtime errors before showing to user
+
+PAT submissions were failing with the cryptic "taskErr is not defined" message because PROXe's backend was crashing and we were faithfully relaying their JS runtime error to the end user.
+
+- **`app/api/leads/route.ts`** — when the upstream message matches a server-error shape (`is not defined`, `TypeError`, `ReferenceError`, stack-trace fragments like `at func (`), we now log the raw message server-side and surface "We could not save your details just now. Please try again in a moment." to the user.
+- Keeps the lead-loss visible (the request still fails with 502) so we know to investigate, but stops leaking PROXe's internals to candidates filling the PAT.
+
+NOTE: this masks a real PROXe-side bug. The PROXe team needs to ship a fix for whatever's throwing `taskErr is not defined`. Until they do, leads from the affected window won't reach the CRM.
+
 ## 2026-05-18 13:45 IST · fix(wa-capture): drop duplicate "Hi WindChasers" greeting
 
 The WhatsApp message was reading "Hi! I'm Thanzeel, Hi WindChasers, I'd like to..." because the modal already prepends "Hi! I'm {name}, " and each per-page template also started with "Hi WindChasers, ". Stripped the leading greeting from every template in `components/Navbar.tsx`. Final message now reads naturally: "Hi! I'm Thanzeel, I'd like to know more about pilot training."

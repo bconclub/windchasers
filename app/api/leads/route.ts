@@ -474,15 +474,35 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // ---- Other upstream errors ------------------------------------------
     if (!upstreamRes.ok) {
+      const rawMsg =
+        typeof upstreamJson?.message === "string"
+          ? upstreamJson.message
+          : typeof upstreamJson?.error === "string"
+            ? upstreamJson.error
+            : "";
+
+      // Detect PROXe runtime-error leakage (e.g. "taskErr is not defined",
+      // "TypeError: ...", stack traces). Don't echo that to end users.
+      // Log the original for our team, surface a generic message instead.
+      const looksLikeServerError =
+        /is not defined|TypeError|ReferenceError|SyntaxError|RangeError|\bat\s+\w+\s+\(/i.test(
+          rawMsg
+        );
+      if (looksLikeServerError) {
+        log({
+          stage: "upstream_server_error",
+          request_id: requestId,
+          upstream_status: upstreamRes.status,
+          upstream_raw_message: rawMsg,
+        });
+      }
+
       return errorResponse({
         type,
         error: "upstream",
-        message:
-          typeof upstreamJson?.message === "string"
-            ? upstreamJson.message
-            : typeof upstreamJson?.error === "string"
-              ? upstreamJson.error
-              : "PROXe returned an error",
+        message: looksLikeServerError
+          ? "We could not save your details just now. Please try again in a moment."
+          : rawMsg || "PROXe returned an error",
         status: 502,
         upstream_status: upstreamRes.status,
       });
