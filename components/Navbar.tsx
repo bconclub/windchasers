@@ -56,6 +56,45 @@ export default function Navbar() {
     isHelicopter ||
     isInternational;
 
+  // Pages where we want to capture name + phone BEFORE the user leaves to
+  // WhatsApp. Top-of-funnel program pages where a WA tap is the main
+  // primary CTA.
+  const useWaCapture =
+    isHome || isPilotTraining || isDGCA || isHelicopter || isInternational;
+
+  // Per-page WhatsApp number + pre-filled message body. The capture modal
+  // prepends "Hi! I'm {name}, " to the message before opening wa.me.
+  const waCaptureConfig = isPilotTraining
+    ? {
+        waNumber: "919035098424",
+        message: "I'd like to know more about Windchasers' pilot training programs.",
+        source: "pilot_training_wa_prelaunch",
+      }
+    : isDGCA
+      ? {
+          waNumber: "919591004043",
+          message: "I'd like to know more about DGCA ground classes.",
+          source: "dgca_wa_prelaunch",
+        }
+      : isHelicopter
+        ? {
+            waNumber: "919591004043",
+            message: "I'd like to know more about the Helicopter Pilot License program.",
+            source: "helicopter_wa_prelaunch",
+          }
+        : isInternational
+          ? {
+              waNumber: "919591004043",
+              message: "I'd like to explore international pilot training options.",
+              source: "international_wa_prelaunch",
+            }
+          : {
+              // isHome (default)
+              waNumber: "919591004043",
+              message: "I'd like to know more about Windchasers.",
+              source: "home_wa_prelaunch",
+            };
+
   const compactWhatsAppHref =
     isWebinarParent
       ? WEBINAR_PARENT_WHATSAPP_GROUP_URL
@@ -144,7 +183,7 @@ export default function Navbar() {
                 >
                   <Phone className="w-5 h-5" />
                 </a>
-                {isPilotTraining ? (
+                {useWaCapture ? (
                   <button
                     type="button"
                     onClick={() => {
@@ -264,15 +303,17 @@ export default function Navbar() {
         )}
       </AnimatePresence>
 
-      {/* WhatsApp prelaunch capture for the pilot-training funnel.
-          Pops a name + phone capture before redirecting to wa.me so the
-          lead lands in PROXe even if the user never actually messages. */}
+      {/* WhatsApp prelaunch capture for top-of-funnel program pages
+          (home, pilot-training, DGCA, helicopter, international). Captures
+          name + phone before redirecting to wa.me so PROXe gets the lead
+          even if the user never actually messages on WhatsApp. Page-specific
+          message + source set in waCaptureConfig above. */}
       <WhatsAppCaptureModal
         open={waCaptureOpen}
         onClose={() => setWaCaptureOpen(false)}
-        waNumber="919035098424"
-        messageTemplate="I'd like to know more about Windchasers' pilot training programs."
-        source="pilot_training_wa_prelaunch"
+        waNumber={waCaptureConfig.waNumber}
+        messageTemplate={waCaptureConfig.message}
+        source={waCaptureConfig.source}
       />
     </>
   );

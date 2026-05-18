@@ -2,6 +2,18 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 11:40 IST · feat(wa-capture): expand to all program pages
+
+- **`components/Navbar.tsx`** — WA capture modal now triggered on `/`, `/pilot-training*`, `/dgca`, `/helicopter`, `/international` (was only `/pilot-training*`). Each page gets its own pre-filled message + PROXe source tag:
+  - Home → `home_wa_prelaunch`, "I'd like to know more about Windchasers."
+  - Pilot training → `pilot_training_wa_prelaunch`, "I'd like to know more about Windchasers' pilot training programs." (waNumber 919035098424)
+  - DGCA → `dgca_wa_prelaunch`, "I'd like to know more about DGCA ground classes."
+  - Helicopter → `helicopter_wa_prelaunch`, "I'd like to know more about the Helicopter Pilot License program."
+  - International → `international_wa_prelaunch`, "I'd like to explore international pilot training options."
+- Everything else (NZ seminar, webinars, ATC, cabin crew, summer camp, open house, students, parents, flight schools) keeps the existing direct `wa.me` anchor.
+
+Verified each page renders the capture button via preview; NZ-seminar still uses the direct anchor.
+
 ## 2026-05-18 11:20 IST · feat(wa-capture): name+phone capture before WhatsApp on /pilot-training*
 
 Stop losing the lead when a visitor taps WhatsApp without sending the message. The Navbar WA pill on `/pilot-training*` now opens a small modal asking for name + phone, fires the lead to PROXe (via `/api/leads`, type=event, event_name=`pilot_training_wa_prelaunch`), then redirects to wa.me with the name pre-filled into the message.
