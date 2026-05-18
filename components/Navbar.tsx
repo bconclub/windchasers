@@ -64,37 +64,41 @@ export default function Navbar() {
 
   // Per-page WhatsApp number + pre-filled message body. The capture modal
   // prepends "Hi! I'm {name}, " to the message before opening wa.me.
+  // All program pages route to the dedicated marketing/automation WhatsApp
+  // agent (+91 90350 98424). Other pages keep using the general support
+  // number elsewhere on the site.
+  const MARKETING_WA_AGENT = "919035098424";
   const waCaptureConfig = isPilotTraining
     ? {
-        waNumber: "919035098424",
+        waNumber: MARKETING_WA_AGENT,
         message: "Hi WindChasers, I'd like to know more about pilot training.",
         source: "navbar_pilot_training",
         program: "Pilot Training",
       }
     : isDGCA
       ? {
-          waNumber: "919591004043",
+          waNumber: MARKETING_WA_AGENT,
           message: "Hi WindChasers, I'd like to know more about DGCA ground classes.",
           source: "navbar_dgca",
           program: "DGCA Ground Classes",
         }
       : isHelicopter
         ? {
-            waNumber: "919591004043",
+            waNumber: MARKETING_WA_AGENT,
             message: "Hi WindChasers, I'd like to know more about the Helicopter Pilot License program.",
             source: "navbar_helicopter",
             program: "Helicopter License",
           }
         : isInternational
           ? {
-              waNumber: "919591004043",
+              waNumber: MARKETING_WA_AGENT,
               message: "Hi WindChasers, I'd like to explore international pilot training options.",
               source: "navbar_international",
               program: "International Flying",
             }
           : {
               // isHome (default)
-              waNumber: "919591004043",
+              waNumber: MARKETING_WA_AGENT,
               message: "Hi WindChasers, I'd like to know more about your programs.",
               source: "navbar_home",
               program: "Homepage",

@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 12:30 IST · feat(wa-capture): all program pages route to marketing WA agent (98424)
+
+- **`components/Navbar.tsx`** — every WA capture entry (home, pilot training, DGCA, helicopter, international) now redirects to `+91 90350 98424` (the marketing/automation agent). Previously DGCA, helicopter, international, and home went to `+91 95910 04043` (general support). All five program pages now hit the same automated funnel.
+- Extracted the number into a `MARKETING_WA_AGENT` constant so it's a single point of change next time.
+
 ## 2026-05-18 12:20 IST · ux(wa-capture): inline phone input + button, centered on mobile
 
 - **`components/WhatsAppCaptureModal.tsx`** — phone input and "Open WhatsApp" button now sit on the same row (input left, button right) instead of stacked. Modal width up from 360px to 440px to fit both comfortably.
