@@ -140,7 +140,7 @@ export function WhatsAppCaptureModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.15 }}
-          className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           aria-labelledby="wa-capture-title"
@@ -154,7 +154,7 @@ export function WhatsAppCaptureModal({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 24 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="relative w-full max-w-[360px] rounded-2xl border border-[#C5A572]/25 bg-[#1A1A1A] p-5 shadow-[0_25px_60px_rgba(0,0,0,0.6)]"
+            className="relative w-full max-w-[440px] rounded-2xl border border-[#C5A572]/25 bg-[#1A1A1A] p-5 shadow-[0_25px_60px_rgba(0,0,0,0.6)]"
           >
             {/* Close affordance */}
             <button
@@ -179,45 +179,46 @@ export function WhatsAppCaptureModal({
               </p>
             </div>
 
-            {/* Phone input — leading icon */}
+            {/* Inline: phone input on the left, action button on the right */}
             <label htmlFor="wa-phone" className="sr-only">
               Phone number
             </label>
-            <div className="relative mb-3">
-              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C5A572]" />
-              <input
-                id="wa-phone"
-                type="tel"
-                autoComplete="tel"
-                inputMode="tel"
-                autoFocus
-                placeholder="+91 98765 43210"
-                value={phone}
-                onChange={(e) => {
-                  setPhone(e.target.value);
-                  if (error) setError(null);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") handleSubmit();
-                }}
-                className="w-full bg-[#0D0D0D] border border-[#333] rounded-lg pl-10 pr-4 h-12 text-white placeholder:text-white/30 focus:outline-none focus:border-[#C5A572] transition-colors"
-              />
+            <div className="flex items-stretch gap-2">
+              <div className="relative flex-1 min-w-0">
+                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C5A572]" />
+                <input
+                  id="wa-phone"
+                  type="tel"
+                  autoComplete="tel"
+                  inputMode="tel"
+                  autoFocus
+                  placeholder="+91 98765 43210"
+                  value={phone}
+                  onChange={(e) => {
+                    setPhone(e.target.value);
+                    if (error) setError(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleSubmit();
+                  }}
+                  className="w-full bg-[#0D0D0D] border border-[#333] rounded-lg pl-10 pr-3 h-11 text-white placeholder:text-white/30 focus:outline-none focus:border-[#C5A572] transition-colors text-sm"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                disabled={submitting}
+                className="shrink-0 px-4 sm:px-5 bg-[#25D366] text-white h-11 rounded-lg font-semibold text-sm hover:bg-[#1ebe5d] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(37,211,102,0.3)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none whitespace-nowrap"
+              >
+                {submitting ? "Opening..." : "Open WhatsApp"}
+              </button>
             </div>
 
             {error && (
-              <p className="text-red-400 text-xs mb-3 px-1" role="alert">
+              <p className="text-red-400 text-xs mt-2 px-1" role="alert">
                 {error}
               </p>
             )}
-
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={submitting}
-              className="w-full bg-[#25D366] text-white h-11 rounded-lg font-semibold text-sm hover:bg-[#1ebe5d] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(37,211,102,0.3)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
-            >
-              {submitting ? "Opening WhatsApp..." : "Open WhatsApp"}
-            </button>
           </motion.div>
         </motion.div>
       )}

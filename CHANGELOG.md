@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 12:20 IST · ux(wa-capture): inline phone input + button, centered on mobile
+
+- **`components/WhatsAppCaptureModal.tsx`** — phone input and "Open WhatsApp" button now sit on the same row (input left, button right) instead of stacked. Modal width up from 360px to 440px to fit both comfortably.
+- Mobile: modal is now centered (was sliding up from bottom). Same `items-center` everywhere.
+- Title: "Start a chat" (was "Start a WhatsApp chat" from earlier).
+- Button label shortens to "Opening..." while submitting so the inline layout doesn't reflow.
+
 ## 2026-05-18 12:00 IST · ux(wa-capture): phone-only modal + cleaner PROXe fields
 
 Made the WA capture modal much smaller and stripped the name field — the conversation starts on WhatsApp anyway, so the name surfaces naturally there. Also restructured the PROXe payload so CRM rows show meaningful labels instead of `pilot_training_wa_prelaunch`.
