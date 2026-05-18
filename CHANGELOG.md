@@ -2,6 +2,14 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 15:00 IST · fix(pat-backup): auto-create the "PAT Backup" tab on first write
+
+The dual-write safety net was failing in prod because the "PAT Backup" tab didn't exist in the Event Data 2026 spreadsheet yet — `/api/pat-backup` returned `Unable to parse range: 'PAT Backup'!A:V`. Combined with PROXe still down, every PAT lead was being lost.
+
+- **`lib/sheets.ts`** — new `appendToSheetEnsuringTab()` wrapper. Tries to append; on a missing-tab error (regex match against `Unable to parse range`, `not found`, `No such sheet`, `sheet name`), calls `spreadsheets.batchUpdate.addSheet` to create the tab, then retries the append. Also tolerates `already exists` from a concurrent creation.
+- **`app/api/pat-backup/route.ts`** — switched from `appendToSheet` to `appendToSheetEnsuringTab`. First successful submission after deploy will create the "PAT Backup" tab automatically.
+- No manual sheet setup required anymore. Tab will exist after the first PAT submission in prod.
+
 ## 2026-05-18 14:30 IST · feat(pat): dual-write to PROXe + Sheets so a PROXe outage never costs us a PAT lead
 
 PROXe's `/api/agent/leads/inbound` was returning `500 taskErr is not defined` for every PAT submission today. Confirmed via curl against prod `/api/leads` — every PAT lead during the outage was being lost. Fix: dual-write to both destinations and decouple the thank-you redirect from PROXe success.

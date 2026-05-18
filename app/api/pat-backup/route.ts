@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import {
-  appendToSheet,
+  appendToSheetEnsuringTab,
   extractAttributionCells,
   getPatBackupSheetTab,
 } from "@/lib/sheets";
@@ -58,7 +58,7 @@ export async function POST(request: Request) {
     //   G Total  H Tier  I Qualification  J Aptitude  K Readiness
     //   L Eligible 12th  M PROXe Status  N PROXe Lead ID  O Answers (JSON)
     //   P-V utm_source..utm_content, landing_page, referrer
-    const result = await appendToSheet(
+    const result = await appendToSheetEnsuringTab(
       tab,
       "A:V",
       [

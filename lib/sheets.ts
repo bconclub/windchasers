@@ -148,3 +148,79 @@ export async function appendToSheet(
   console.log("[SHEETS APPEND] success:", JSON.stringify(result.data));
   return result.data;
 }
+
+/** Returns true if the error indicates the named tab doesn't exist yet. */
+function isMissingTabError(err: unknown): boolean {
+  if (!err) return false;
+  const msg =
+    err instanceof Error
+      ? err.message
+      : typeof err === "string"
+        ? err
+        : (err as { message?: string })?.message || JSON.stringify(err);
+  return (
+    /Unable to parse range/i.test(msg) ||
+    /not found/i.test(msg) ||
+    /No such sheet/i.test(msg) ||
+    /sheet name/i.test(msg)
+  );
+}
+
+/** Creates the named tab in the given spreadsheet. Idempotent: if the tab
+ * already exists, the Google API returns 400 with `already exists`, which we
+ * swallow. */
+async function ensureSheetTab(
+  tabName: string,
+  spreadsheetId: string
+): Promise<void> {
+  const auth = getAuth();
+  const sheets = google.sheets({ version: "v4", auth });
+  try {
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: [
+          {
+            addSheet: {
+              properties: { title: tabName },
+            },
+          },
+        ],
+      },
+    });
+    console.log("[SHEETS] created tab:", tabName);
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (/already exists/i.test(msg)) {
+      console.log("[SHEETS] tab already exists, skipping create:", tabName);
+      return;
+    }
+    throw err;
+  }
+}
+
+/**
+ * Like `appendToSheet`, but auto-creates the named tab on the first write
+ * if it doesn't exist yet. Use this for surfaces where we control the tab
+ * lifecycle (e.g. PAT Backup) and don't want to require manual setup in
+ * the spreadsheet.
+ */
+export async function appendToSheetEnsuringTab(
+  tabName: string,
+  range: string,
+  values: (string | number | boolean | null | undefined)[],
+  spreadsheetId: string
+) {
+  try {
+    return await appendToSheet(tabName, range, values, spreadsheetId);
+  } catch (err) {
+    if (!isMissingTabError(err)) throw err;
+    console.warn(
+      "[SHEETS] tab missing, creating it then retrying:",
+      tabName,
+      err instanceof Error ? err.message : String(err)
+    );
+    await ensureSheetTab(tabName, spreadsheetId);
+    return await appendToSheet(tabName, range, values, spreadsheetId);
+  }
+}
