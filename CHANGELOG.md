@@ -2,6 +2,24 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 12:00 IST · ux(wa-capture): phone-only modal + cleaner PROXe fields
+
+Made the WA capture modal much smaller and stripped the name field — the conversation starts on WhatsApp anyway, so the name surfaces naturally there. Also restructured the PROXe payload so CRM rows show meaningful labels instead of `pilot_training_wa_prelaunch`.
+
+UX:
+- **`components/WhatsAppCaptureModal.tsx`** — phone-only single field. Max width `360px` (was `400px`). Compact 5-unit padding (was 6). Headline shrunk from `text-xl` to `text-base`. Added close X button top-right. Slides up from bottom on mobile (`items-end sm:items-center`). Auto-focuses phone on open. Submits on Enter.
+- Phone validity check: requires ≥ 10 digits.
+- Input style now follows the design system: `bg-[#0D0D0D] border border-[#333]` with gold focus ring + leading phone icon, matching ATC form style.
+- CTA button: 11-unit height (was 12), keeps WhatsApp green with gold-tinted hover lift.
+
+PROXe labels:
+- `data.event_name` now sends `"WhatsApp Prelaunch"` (was snake_case like `pilot_training_wa_prelaunch`). This becomes the human-readable `notes` field in PROXe.
+- `data.touchpoint` carries the per-page slug (`navbar_pilot_training`, `navbar_dgca`, etc.) for analytics filtering.
+- `data.channel` = `"whatsapp"`.
+- `data.program` = human-readable program name (`"Pilot Training"`, `"DGCA Ground Classes"`, `"Helicopter License"`, `"International Flying"`, `"Homepage"`).
+- `data.page` = pathname only (e.g. `/pilot-training`) instead of full URL with query.
+- Name no longer captured client-side; sentinel `"WhatsApp Lead"` is sent so PROXe's required-name field is satisfied. The real name surfaces in the WhatsApp chat itself.
+
 ## 2026-05-18 11:40 IST · feat(wa-capture): expand to all program pages
 
 - **`components/Navbar.tsx`** — WA capture modal now triggered on `/`, `/pilot-training*`, `/dgca`, `/helicopter`, `/international` (was only `/pilot-training*`). Each page gets its own pre-filled message + PROXe source tag:

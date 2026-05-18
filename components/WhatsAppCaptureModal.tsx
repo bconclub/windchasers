@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Phone, X } from "lucide-react";
 import { getStoredAttribution } from "@/lib/attribution";
 
 export interface WhatsAppCaptureModalProps {
@@ -9,19 +10,27 @@ export interface WhatsAppCaptureModalProps {
   onClose: () => void;
   /** WhatsApp business number, digits only with country code (e.g. "919591004043"). */
   waNumber: string;
-  /** Pre-filled WhatsApp message body. Will be prefixed with "Hi! I'm {name}, ". */
+  /** Pre-filled WhatsApp message body. */
   messageTemplate?: string;
   /** Source tag pushed to PROXe so the team knows where this lead came from. */
   source?: string;
+  /** Human-readable program name, e.g. "Pilot Training". Surfaced to PROXe as `program`. */
+  program?: string;
   /** Optional callback fired right before the user is redirected to wa.me. */
   onRedirect?: () => void;
 }
 
 /**
- * Lead-capture gate in front of every WhatsApp redirect. Pops a small form
- * (name + phone), POSTs the lead to /api/leads (PROXe), then opens wa.me.
- * The PROXe write is fire-and-forget — if it fails we still let the user
- * reach WhatsApp.
+ * Lead-capture gate in front of every WhatsApp redirect. Phone-only: name
+ * happens naturally inside the WhatsApp conversation. POSTs to /api/leads
+ * (PROXe) with structured fields the CRM can filter on:
+ *   - notes: "WhatsApp Prelaunch"
+ *   - custom_fields.channel: "whatsapp"
+ *   - custom_fields.program: <program>
+ *   - custom_fields.page: <pathname>
+ *   - custom_fields.touchpoint: <source>
+ *   - custom_fields.utm_*: first-touch attribution
+ * Fire-and-forget — PROXe never blocks the WhatsApp redirect.
  */
 export function WhatsAppCaptureModal({
   open,
@@ -29,15 +38,14 @@ export function WhatsAppCaptureModal({
   waNumber,
   messageTemplate = "I'd like to know more about Windchasers.",
   source = "wa_prelaunch",
+  program,
   onRedirect,
 }: WhatsAppCaptureModalProps) {
-  const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Reset state every time the modal opens so a previous attempt doesn't
-  // leak through.
+  // Reset every time the modal opens so a previous attempt doesn't leak through.
   useEffect(() => {
     if (open) {
       setError(null);
@@ -45,7 +53,7 @@ export function WhatsAppCaptureModal({
     }
   }, [open]);
 
-  // Close on Esc key for a11y.
+  // Close on Esc for a11y.
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -57,21 +65,29 @@ export function WhatsAppCaptureModal({
 
   async function handleSubmit() {
     setError(null);
-    const trimmedName = name.trim();
     const trimmedPhone = phone.trim();
-    if (!trimmedName || !trimmedPhone) {
-      setError("Please enter your name and phone");
+    if (!trimmedPhone) {
+      setError("Please enter your phone number");
+      return;
+    }
+    // Strip everything that isn't a digit or leading + for the validity check.
+    const digits = trimmedPhone.replace(/[\s\-()]/g, "").replace(/^\+/, "");
+    if (digits.length < 10) {
+      setError("Please enter a valid phone number");
       return;
     }
     setSubmitting(true);
 
     const attribution = getStoredAttribution();
-    const pageUrl =
-      typeof window !== "undefined" ? window.location.href : undefined;
+    const pageUrl = typeof window !== "undefined" ? window.location.href : "";
+    const pagePath = typeof window !== "undefined" ? window.location.pathname : "";
 
     const leadPayload = {
       type: "event" as const,
-      name: trimmedName,
+      // PROXe requires a name field; the WhatsApp thread will surface the real
+      // name once the conversation starts. Use a sentinel that's easy to spot
+      // in PROXe so the team knows to look at the WA chat for the real name.
+      name: "WhatsApp Lead",
       phone: trimmedPhone,
       page_url: pageUrl,
       utm: {
@@ -82,12 +98,20 @@ export function WhatsAppCaptureModal({
         content: attribution.utm_content || undefined,
       },
       data: {
-        event_name: source,
+        // event_name becomes `notes` + `custom_fields.form_type` on PROXe.
+        // Keep it human-readable so CRM rows show "WhatsApp Prelaunch", not
+        // a snake_case tag.
+        event_name: "WhatsApp Prelaunch",
+        // Specific touchpoint (per-page granularity) so analytics can slice
+        // by which program page the click came from.
+        touchpoint: source,
+        channel: "whatsapp",
+        program: program || "",
+        page: pagePath,
         wa_target_number: waNumber,
       },
     };
 
-    // Fire-and-forget — never block the WhatsApp redirect on PROXe.
     try {
       void fetch("/api/leads", {
         method: "POST",
@@ -95,7 +119,7 @@ export function WhatsAppCaptureModal({
         body: JSON.stringify(leadPayload),
         keepalive: true,
       }).catch(() => {
-        /* silent — lead capture is best-effort, must not break WA redirect */
+        /* silent — PROXe must not block the WA redirect */
       });
     } catch {
       /* unreachable in practice */
@@ -103,11 +127,7 @@ export function WhatsAppCaptureModal({
 
     if (onRedirect) onRedirect();
 
-    const safeName = trimmedName.replace(/[\r\n]+/g, " ").slice(0, 80);
-    const message = `Hi! I'm ${safeName}, ${messageTemplate}`;
-    const waHref = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
-    // Use location.href so the redirect waits on the keepalive POST queueing
-    // but doesn't depend on the fetch resolving.
+    const waHref = `https://wa.me/${waNumber}?text=${encodeURIComponent(messageTemplate)}`;
     window.location.href = waHref;
   }
 
@@ -119,8 +139,8 @@ export function WhatsAppCaptureModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.18 }}
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+          transition={{ duration: 0.15 }}
+          className="fixed inset-0 z-[200] flex items-end sm:items-center justify-center p-4 sm:p-6 bg-black/70 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           aria-labelledby="wa-capture-title"
@@ -130,52 +150,62 @@ export function WhatsAppCaptureModal({
         >
           <motion.div
             key="wa-modal-card"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.96 }}
-            transition={{ duration: 0.2 }}
-            className="w-full max-w-[400px] rounded-2xl border border-[#C5A572]/30 bg-[#1A1A1A] p-6 shadow-[0_25px_60px_rgba(0,0,0,0.6)]"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 24 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="relative w-full max-w-[360px] rounded-2xl border border-[#C5A572]/25 bg-[#1A1A1A] p-5 shadow-[0_25px_60px_rgba(0,0,0,0.6)]"
           >
-            <h3
-              id="wa-capture-title"
-              className="text-xl font-bold text-[#C5A572] mb-2"
+            {/* Close affordance */}
+            <button
+              type="button"
+              aria-label="Close"
+              onClick={onClose}
+              className="absolute top-3 right-3 w-7 h-7 rounded-full flex items-center justify-center text-white/40 hover:text-white/80 hover:bg-white/5 transition-colors"
             >
-              Start a WhatsApp Chat
-            </h3>
-            <p className="text-white/60 text-sm mb-5">
-              Drop your name and phone. We&apos;ll be ready when you message us.
-            </p>
+              <X className="w-4 h-4" />
+            </button>
 
-            <label className="block text-xs text-white/70 mb-1.5" htmlFor="wa-name">
-              Your Name
-            </label>
-            <input
-              id="wa-name"
-              type="text"
-              autoComplete="name"
-              autoFocus
-              placeholder="Your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full bg-[#252525] border border-[#444] rounded-lg px-4 h-11 text-white placeholder:text-white/40 focus:outline-none focus:border-[#C5A572] transition-colors mb-3"
-            />
+            {/* Headline */}
+            <div className="text-center mb-4">
+              <p
+                id="wa-capture-title"
+                className="text-white text-base font-semibold leading-tight"
+              >
+                Start a WhatsApp chat
+              </p>
+              <p className="text-white/50 text-xs mt-1">
+                Phone only. We&apos;ll be ready when you message us.
+              </p>
+            </div>
 
-            <label className="block text-xs text-white/70 mb-1.5" htmlFor="wa-phone">
-              Phone
+            {/* Phone input — leading icon */}
+            <label htmlFor="wa-phone" className="sr-only">
+              Phone number
             </label>
-            <input
-              id="wa-phone"
-              type="tel"
-              autoComplete="tel"
-              inputMode="tel"
-              placeholder="+91 98765 43210"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full bg-[#252525] border border-[#444] rounded-lg px-4 h-11 text-white placeholder:text-white/40 focus:outline-none focus:border-[#C5A572] transition-colors mb-4"
-            />
+            <div className="relative mb-3">
+              <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#C5A572]" />
+              <input
+                id="wa-phone"
+                type="tel"
+                autoComplete="tel"
+                inputMode="tel"
+                autoFocus
+                placeholder="+91 98765 43210"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
+                  if (error) setError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSubmit();
+                }}
+                className="w-full bg-[#0D0D0D] border border-[#333] rounded-lg pl-10 pr-4 h-12 text-white placeholder:text-white/30 focus:outline-none focus:border-[#C5A572] transition-colors"
+              />
+            </div>
 
             {error && (
-              <p className="text-red-400 text-sm mb-3" role="alert">
+              <p className="text-red-400 text-xs mb-3 px-1" role="alert">
                 {error}
               </p>
             )}
@@ -184,16 +214,9 @@ export function WhatsAppCaptureModal({
               type="button"
               onClick={handleSubmit}
               disabled={submitting}
-              className="w-full bg-[#25D366] text-white h-12 rounded-lg font-semibold text-base hover:bg-[#1ebe5d] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full bg-[#25D366] text-white h-11 rounded-lg font-semibold text-sm hover:bg-[#1ebe5d] transition-all hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(37,211,102,0.3)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
             >
               {submitting ? "Opening WhatsApp..." : "Open WhatsApp"}
-            </button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="w-full text-white/50 hover:text-white/80 text-sm py-2 mt-2 transition-colors"
-            >
-              Cancel
             </button>
           </motion.div>
         </motion.div>

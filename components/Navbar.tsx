@@ -67,32 +67,37 @@ export default function Navbar() {
   const waCaptureConfig = isPilotTraining
     ? {
         waNumber: "919035098424",
-        message: "I'd like to know more about Windchasers' pilot training programs.",
-        source: "pilot_training_wa_prelaunch",
+        message: "Hi WindChasers, I'd like to know more about pilot training.",
+        source: "navbar_pilot_training",
+        program: "Pilot Training",
       }
     : isDGCA
       ? {
           waNumber: "919591004043",
-          message: "I'd like to know more about DGCA ground classes.",
-          source: "dgca_wa_prelaunch",
+          message: "Hi WindChasers, I'd like to know more about DGCA ground classes.",
+          source: "navbar_dgca",
+          program: "DGCA Ground Classes",
         }
       : isHelicopter
         ? {
             waNumber: "919591004043",
-            message: "I'd like to know more about the Helicopter Pilot License program.",
-            source: "helicopter_wa_prelaunch",
+            message: "Hi WindChasers, I'd like to know more about the Helicopter Pilot License program.",
+            source: "navbar_helicopter",
+            program: "Helicopter License",
           }
         : isInternational
           ? {
               waNumber: "919591004043",
-              message: "I'd like to explore international pilot training options.",
-              source: "international_wa_prelaunch",
+              message: "Hi WindChasers, I'd like to explore international pilot training options.",
+              source: "navbar_international",
+              program: "International Flying",
             }
           : {
               // isHome (default)
               waNumber: "919591004043",
-              message: "I'd like to know more about Windchasers.",
-              source: "home_wa_prelaunch",
+              message: "Hi WindChasers, I'd like to know more about your programs.",
+              source: "navbar_home",
+              program: "Homepage",
             };
 
   const compactWhatsAppHref =
@@ -314,6 +319,7 @@ export default function Navbar() {
         waNumber={waCaptureConfig.waNumber}
         messageTemplate={waCaptureConfig.message}
         source={waCaptureConfig.source}
+        program={waCaptureConfig.program}
       />
     </>
   );
