@@ -275,22 +275,6 @@ export function WhatsAppCaptureModal({
               </span>
             </button>
 
-            {/* Trust strip */}
-            <div className="mt-5 pt-4 border-t border-white/5 flex items-center justify-center gap-4 text-[11px] text-white/35">
-              <span className="inline-flex items-center gap-1.5">
-                <svg className="w-3 h-3 text-[#C5A572]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                A real human replies
-              </span>
-              <span className="w-px h-3 bg-white/10" aria-hidden="true" />
-              <span className="inline-flex items-center gap-1.5">
-                <svg className="w-3 h-3 text-[#C5A572]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-                No marketing spam
-              </span>
-            </div>
           </motion.div>
         </motion.div>
       )}
