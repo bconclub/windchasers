@@ -8,6 +8,7 @@ import {
   getStoredUTMParams,
   captureAndStoreUTMParams,
 } from "@/lib/tracking";
+import { captureAttributionToLocalStorage } from "@/lib/attribution";
 
 export function useTracking() {
   const pathname = usePathname();
@@ -17,6 +18,9 @@ export function useTracking() {
   useEffect(() => {
     // Capture UTM params, landing page, and referrer on initial load
     captureAndStoreUTMParams();
+    // Long-lived first-touch attribution for WhatsApp prelaunch capture
+    // and any other cross-session lead surface.
+    captureAttributionToLocalStorage();
   }, []);
 
   useEffect(() => {

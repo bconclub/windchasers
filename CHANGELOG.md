@@ -2,6 +2,18 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 11:20 IST · feat(wa-capture): name+phone capture before WhatsApp on /pilot-training*
+
+Stop losing the lead when a visitor taps WhatsApp without sending the message. The Navbar WA pill on `/pilot-training*` now opens a small modal asking for name + phone, fires the lead to PROXe (via `/api/leads`, type=event, event_name=`pilot_training_wa_prelaunch`), then redirects to wa.me with the name pre-filled into the message.
+
+- **`components/WhatsAppCaptureModal.tsx`** (new) — reusable modal. Name + phone inputs, validates, fire-and-forget POST to `/api/leads`, then `wa.me` redirect with `Hi! I'm {name}, ...` message body.
+- **`lib/attribution.ts`** (new) — first-touch UTM persistence in `localStorage` under `attr_utm_*` keys. Survives tab close and return visits, unlike the existing sessionStorage capture which only lasts the tab session.
+- **`hooks/useTracking.ts`** — calls `captureAttributionToLocalStorage()` on first render alongside the existing sessionStorage capture. PAT and sheet forms unaffected (they still read sessionStorage).
+- **`components/Navbar.tsx`** — on `/pilot-training*` the green WhatsApp pill is a `<button>` that opens the capture modal. Every other page still uses the direct `<a href="wa.me/...">` (no behavior change). WA business number for pilot training: `+91 90350 98424`.
+- Lead is sent to existing PROXe `/api/leads` proxy as `type: "event"` with `data.event_name = "pilot_training_wa_prelaunch"` and full attribution (utm_*, page_url). No new API route or PROXe key exposure.
+
+User-facing: tapping the WhatsApp icon in the navbar on `/pilot-training`, `/pilot-training-students`, `/pilot-training-parents` now opens a 2-field modal before going to WhatsApp.
+
 ## 2026-05-17 21:40 IST · fix(sheets): force INSERT_ROWS so new submissions never land shifted
 
 - **`lib/sheets.ts`** — `appendToSheet()` now passes `insertDataOption: "INSERT_ROWS"` to Google Sheets. Previously the API used OVERWRITE mode with table detection: when a row had gap-columns mid-row (e.g. NZ-seminar's blank Stage/Remarks at I/J with attribution data at K-Q), the detector could anchor to the rightmost fragment and write the next submission starting at column P instead of column A.
