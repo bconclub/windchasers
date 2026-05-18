@@ -68,38 +68,40 @@ export default function Navbar() {
   // agent (+91 90350 98424). Other pages keep using the general support
   // number elsewhere on the site.
   const MARKETING_WA_AGENT = "919035098424";
+  // The modal prepends "Hi! I'm {name}, " — keep these templates as the
+  // sentence tail so we don't double-greet ("Hi! I'm X, Hi WindChasers, ...").
   const waCaptureConfig = isPilotTraining
     ? {
         waNumber: MARKETING_WA_AGENT,
-        message: "Hi WindChasers, I'd like to know more about pilot training.",
+        message: "I'd like to know more about pilot training.",
         source: "navbar_pilot_training",
         program: "Pilot Training",
       }
     : isDGCA
       ? {
           waNumber: MARKETING_WA_AGENT,
-          message: "Hi WindChasers, I'd like to know more about DGCA ground classes.",
+          message: "I'd like to know more about DGCA ground classes.",
           source: "navbar_dgca",
           program: "DGCA Ground Classes",
         }
       : isHelicopter
         ? {
             waNumber: MARKETING_WA_AGENT,
-            message: "Hi WindChasers, I'd like to know more about the Helicopter Pilot License program.",
+            message: "I'd like to know more about the Helicopter Pilot License program.",
             source: "navbar_helicopter",
             program: "Helicopter License",
           }
         : isInternational
           ? {
               waNumber: MARKETING_WA_AGENT,
-              message: "Hi WindChasers, I'd like to explore international pilot training options.",
+              message: "I'd like to explore international pilot training options.",
               source: "navbar_international",
               program: "International Flying",
             }
           : {
               // isHome (default)
               waNumber: MARKETING_WA_AGENT,
-              message: "Hi WindChasers, I'd like to know more about your programs.",
+              message: "I'd like to know more about your programs.",
               source: "navbar_home",
               program: "Homepage",
             };

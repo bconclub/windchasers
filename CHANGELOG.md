@@ -2,6 +2,10 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 13:45 IST · fix(wa-capture): drop duplicate "Hi WindChasers" greeting
+
+The WhatsApp message was reading "Hi! I'm Thanzeel, Hi WindChasers, I'd like to..." because the modal already prepends "Hi! I'm {name}, " and each per-page template also started with "Hi WindChasers, ". Stripped the leading greeting from every template in `components/Navbar.tsx`. Final message now reads naturally: "Hi! I'm Thanzeel, I'd like to know more about pilot training."
+
 ## 2026-05-18 13:35 IST · feat(wa-capture): add name field back to WhatsApp modal
 
 The sentinel `"WhatsApp Lead"` name in PROXe was hard to triage — every WA prelaunch row looked the same. Reintroduced a name input above the phone:
