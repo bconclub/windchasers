@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 21:40 IST · fix(sheets): force INSERT_ROWS so new submissions never land shifted
+
+- **`lib/sheets.ts`** — `appendToSheet()` now passes `insertDataOption: "INSERT_ROWS"` to Google Sheets. Previously the API used OVERWRITE mode with table detection: when a row had gap-columns mid-row (e.g. NZ-seminar's blank Stage/Remarks at I/J with attribution data at K-Q), the detector could anchor to the rightmost fragment and write the next submission starting at column P instead of column A.
+- Fix is global. Every event form (open-house, nz-seminar, webinar, summercamp, cabin-crew, atc) now inserts cleanly below the last row, anchored to column A.
+- Pre-existing misplaced rows in the sheet need to be deleted manually. New submissions from this point will align correctly.
+
 ## 2026-05-17 21:25 IST · copy: strip em dashes from thank-you and NZ-seminar content
 
 Brand voice update. Em dashes removed everywhere they appeared in the thank-you flow and the NZ seminar page. Examples:

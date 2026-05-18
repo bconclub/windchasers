@@ -129,6 +129,11 @@ export async function appendToSheet(
     spreadsheetId: resolvedSpreadsheetId,
     range: fullRange,
     valueInputOption: "USER_ENTERED",
+    // INSERT_ROWS forces the API to add a new row below the detected table
+    // instead of trying to find empty cells (OVERWRITE default). Without
+    // this, sheets that have gap-columns mid-row (e.g. blank Stage/Remarks)
+    // confuse the table detector and new rows can land shifted to the right.
+    insertDataOption: "INSERT_ROWS",
     requestBody: {
       values: [values.map((v) => (v == null ? "" : String(v)))],
     },
