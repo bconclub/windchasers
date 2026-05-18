@@ -140,4 +140,27 @@ html {
   [class*="proxe"] button {
     pointer-events: auto;
   }
+
+  /* Pin the PROXe web agent widget to the bottom-right corner. The widget's
+   * embed.js defaults to the bottom-left; overriding here so it doesn't
+   * collide with content blocks on the left side of the page (sticky CTAs,
+   * legal links, etc.) and matches the conventional chat-widget position. */
+  #proxe-widget-container,
+  [id^="proxe-widget"],
+  [class*="proxe-widget"],
+  [class*="proxe-launcher"],
+  [class*="widget-launcher"] {
+    left: auto !important;
+    right: 16px !important;
+  }
+
+  @media (min-width: 768px) {
+    #proxe-widget-container,
+    [id^="proxe-widget"],
+    [class*="proxe-widget"],
+    [class*="proxe-launcher"],
+    [class*="widget-launcher"] {
+      right: 24px !important;
+    }
+  }
 }

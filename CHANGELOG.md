@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 13:10 IST · fix(proxe-widget): pin web agent to bottom-right
+
+- **`app/globals.css`** — added `!important` left/right overrides on the PROXe widget container + launcher selectors. Default embed.js positions the widget bottom-left; new rules force `right: 16px` (mobile) / `right: 24px` (≥768px) and `left: auto`.
+- Applies to every page that mounts the PROXe embed script (`/pilot-training`, `/dgca`, `/helicopter`, `/international`, `/agent`).
+- Quick removal of clutter: matches the conventional chat-widget position so it doesn't collide with left-side content (sticky CTAs, footer links).
+
 ## 2026-05-18 12:50 IST · ux(wa-capture): premium redesign matching the open-house glass hero
 
 Brand-native rebuild of the WhatsApp capture modal. Old version read as a generic SaaS popup; new version mirrors the open-house glass-hero language (gold corner accents, top gradient hairline, eyebrow with live pulse) so it feels native to the rest of the site.
