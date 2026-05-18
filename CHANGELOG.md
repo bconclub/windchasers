@@ -2,6 +2,10 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 21:05 IST · copy(nz-seminar): rewrite hero subtext
+
+- **`app/nz-seminar/page.tsx`** — subtext now reads "Meet the New Zealand flight schools turning students into commercial pilots faster than anywhere else." (was "The fastest route from 12th to commercial pilot starts here."). Names the value prop and the country in one line.
+
 ## 2026-05-17 21:00 IST · fix(nz-seminar): hide sticky mobile CTA while hero CTA is on screen
 
 - **`app/nz-seminar/page.tsx`** — sticky mobile "Secure Your Seat" no longer stacks on top of the hero CTA. New behavior:

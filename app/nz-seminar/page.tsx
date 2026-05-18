@@ -390,7 +390,7 @@ export default function NzSeminarPage() {
               transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.3 }}
               className="text-base md:text-lg text-gray-300 font-normal text-center mt-4"
             >
-              The fastest route from 12th to commercial pilot starts here.
+              Meet the New Zealand flight schools turning students into commercial pilots faster than anywhere else.
             </motion.p>
 
             {/* Event Details Row */}
