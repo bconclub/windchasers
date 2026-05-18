@@ -2,6 +2,17 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 13:35 IST · feat(wa-capture): add name field back to WhatsApp modal
+
+The sentinel `"WhatsApp Lead"` name in PROXe was hard to triage — every WA prelaunch row looked the same. Reintroduced a name input above the phone:
+
+- **`components/WhatsAppCaptureModal.tsx`** — new name input (gold user icon, autocomplete=name, autofocus). Microcopy switched from "Phone only" to "Drop your details". Phone input no longer auto-focuses (name takes precedence).
+- The captured name is now sent as the real `name` field in the PROXe payload (was `"WhatsApp Lead"` sentinel). Counsellors see the actual lead name in CRM rows.
+- WhatsApp redirect message now pre-fills with `Hi! I'm {name}, {messageTemplate}` so the conversation opens with introduction context.
+- Validation: name and phone both required; phone still needs ≥ 10 digits.
+
+User-facing: modal asks for name + phone; submit composes `Hi! I'm <name>, I'd like to know more about ...` and opens WhatsApp.
+
 ## 2026-05-18 13:20 IST · fix(nz-seminar): May 29, 2026 is a Friday, not Saturday
 
 Calendar check: 2026 starts on a Thursday; May 29 = day 149 of the year; 148 mod 7 = 1; Thursday + 1 = **Friday**. Every "Saturday"/"Sat" reference flipped to "Friday"/"Fri":

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send } from "lucide-react";
+import { X, Send, User as UserIcon } from "lucide-react";
 import { getStoredAttribution } from "@/lib/attribution";
 
 export interface WhatsAppCaptureModalProps {
@@ -36,6 +36,7 @@ export function WhatsAppCaptureModal({
   program,
   onRedirect,
 }: WhatsAppCaptureModalProps) {
+  const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -70,7 +71,12 @@ export function WhatsAppCaptureModal({
 
   async function handleSubmit() {
     setError(null);
+    const trimmedName = name.trim();
     const trimmedPhone = phone.trim();
+    if (!trimmedName) {
+      setError("Please enter your name");
+      return;
+    }
     if (!trimmedPhone) {
       setError("Please enter your phone number");
       return;
@@ -88,7 +94,7 @@ export function WhatsAppCaptureModal({
 
     const leadPayload = {
       type: "event" as const,
-      name: "WhatsApp Lead",
+      name: trimmedName,
       phone: trimmedPhone,
       page_url: pageUrl,
       utm: {
@@ -123,7 +129,10 @@ export function WhatsAppCaptureModal({
 
     if (onRedirect) onRedirect();
 
-    const waHref = `https://wa.me/${waNumber}?text=${encodeURIComponent(messageTemplate)}`;
+    // Strip newlines and cap the name for the WA URL.
+    const safeName = trimmedName.replace(/[\r\n]+/g, " ").slice(0, 80);
+    const message = `Hi! I'm ${safeName}, ${messageTemplate}`;
+    const waHref = `https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`;
     window.location.href = waHref;
   }
 
@@ -210,8 +219,34 @@ export function WhatsAppCaptureModal({
               Start a chat
             </h2>
             <p className="text-white/55 text-center text-[13px] leading-relaxed mb-6 max-w-[340px] mx-auto">
-              Drop your number, we&apos;ll pick it up on WhatsApp.
+              Drop your details, we&apos;ll pick it up on WhatsApp.
             </p>
+
+            {/* Name input */}
+            <label htmlFor="wa-name" className="sr-only">
+              Your name
+            </label>
+            <div className="relative flex items-stretch bg-[#0D0D0D] border border-white/10 rounded-xl overflow-hidden focus-within:border-[#C5A572] focus-within:shadow-[0_0_0_3px_rgba(197,165,114,0.08)] transition-all duration-200 mb-3">
+              <div className="flex items-center justify-center pl-4 pr-3 h-12 text-[#C5A572] select-none">
+                <UserIcon className="w-4 h-4" />
+              </div>
+              <input
+                id="wa-name"
+                type="text"
+                autoComplete="name"
+                autoFocus
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  if (error) setError(null);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") handleSubmit();
+                }}
+                className="flex-1 min-w-0 bg-transparent pr-4 h-12 text-white text-[15px] tracking-wide placeholder:text-white/25 focus:outline-none"
+              />
+            </div>
 
             {/* Phone input — boarding-pass style with country code chip */}
             <label htmlFor="wa-phone" className="sr-only">
@@ -228,7 +263,6 @@ export function WhatsAppCaptureModal({
                 type="tel"
                 autoComplete="tel"
                 inputMode="tel"
-                autoFocus
                 placeholder="98765 43210"
                 value={phone}
                 onChange={(e) => {
