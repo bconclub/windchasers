@@ -371,8 +371,8 @@ export default function NzSeminarPage() {
               className="text-[28px] md:text-[44px] font-bold leading-[1.15] text-white text-center"
               style={{ textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
             >
-              Train in the world&apos;s best country for{" "}
-              <span className="text-[#C5A572]">flight training.</span>
+              Train where the world&apos;s best{" "}
+              <span className="text-[#C5A572]">pilots train.</span>
             </motion.h1>
 
             {/* Subheadline */}
@@ -382,7 +382,7 @@ export default function NzSeminarPage() {
               transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.3 }}
               className="text-base md:text-lg text-gray-300 font-normal text-center mt-4"
             >
-              Skip Google and Reddit. Meet New Zealand&apos;s top flying schools in person. Get the full roadmap, real costs, and a plan in two hours.
+              The fastest route from 12th to commercial pilot starts here.
             </motion.p>
 
             {/* Event Details Row */}

@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 20:50 IST · copy(nz-seminar): tighten hero headline + subtext
+
+- **`app/nz-seminar/page.tsx`** — hero copy updated:
+  - H1: "Train where the world's best **pilots train.**" (was "Train in the world's best country for flight training.")
+  - Subtext: "The fastest route from 12th to commercial pilot starts here." (was the longer "Skip Google and Reddit…" line)
+
 ## 2026-05-17 20:40 IST · feat(nz-seminar): redirect modal fires on Below/Pursuing select + dropdown reordered
 
 - **`app/nz-seminar/page.tsx`** — Current Status dropdown reordered ascending by stage: Below 12th → Pursuing 12th → Completed 12th → Graduate or above.
