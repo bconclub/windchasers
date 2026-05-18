@@ -355,7 +355,7 @@ function ThankYouContent() {
           title: "You're registered for the NZ Seminar",
           icon: Plane,
           message:
-            "Thank you for securing your seat for the New Zealand Flight Training Seminar on Saturday, May 29, 2026 at 3:00 PM. Our team will WhatsApp you the venue details and a reminder.",
+            "Thank you for securing your seat for the New Zealand Flight Training Seminar on Friday, May 29, 2026 at 3:00 PM. Our team will WhatsApp you the venue details and a reminder.",
           details: (
             <div className="space-y-4">
               {formData && (formData.name || formData.city || formData.role) ? (
@@ -398,7 +398,7 @@ function ThankYouContent() {
             </div>
           ),
           nextSteps: [
-            "Add Saturday, May 29, 2026 · 3:00 PM to your calendar",
+            "Add Friday, May 29, 2026 · 3:00 PM to your calendar",
             "Watch your WhatsApp. We&apos;ll share venue details and a reminder",
             "If you&apos;re a student, bring a parent (highly encouraged)",
           ],

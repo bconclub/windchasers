@@ -295,7 +295,7 @@ export default function NzSeminarPage() {
         <title>Train where the world&apos;s best pilots train · NZ Flight Training Seminar · Bangalore, May 29 · WindChasers</title>
         <meta
           name="description"
-          content="Meet the New Zealand flight schools turning students into commercial pilots faster than anywhere else. Free in-person seminar, Bangalore, Sat May 29, 2026 · 3:00 PM. Only 30 seats."
+          content="Meet the New Zealand flight schools turning students into commercial pilots faster than anywhere else. Free in-person seminar, Bangalore, Fri May 29, 2026 · 3:00 PM. Only 30 seats."
         />
         <meta property="og:title" content="Train where the world&apos;s best pilots train · NZ Flight Training Seminar · Bangalore" />
         <meta
@@ -408,7 +408,7 @@ export default function NzSeminarPage() {
             >
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-[#C5A572]" />
-                <span className="text-sm text-white">Sat, May 29, 2026</span>
+                <span className="text-sm text-white">Fri, May 29, 2026</span>
               </div>
               <div className="hidden md:block w-px h-4 bg-white/20" />
               <div className="flex items-center gap-2">
@@ -703,7 +703,7 @@ export default function NzSeminarPage() {
               Secure Your Seat
             </h2>
             <p className="text-gray-400 text-center mb-6">
-              Only 30 seats · Sat, May 29, 2026 · 3:00 PM · WindChasers Bangalore
+              Only 30 seats · Fri, May 29, 2026 · 3:00 PM · WindChasers Bangalore
             </p>
 
             {/* Scarcity bar */}

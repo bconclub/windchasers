@@ -2,6 +2,15 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 13:20 IST · fix(nz-seminar): May 29, 2026 is a Friday, not Saturday
+
+Calendar check: 2026 starts on a Thursday; May 29 = day 149 of the year; 148 mod 7 = 1; Thursday + 1 = **Friday**. Every "Saturday"/"Sat" reference flipped to "Friday"/"Fri":
+
+- `app/nz-seminar/page.tsx` — meta description, hero event-details row, "Secure Your Seat" subtitle
+- `app/thank-you/page.tsx` — NZ seminar confirmation message, next-steps "add to calendar" line
+
+User-facing: every place we tell users the seminar day now matches the actual calendar.
+
 ## 2026-05-18 13:10 IST · fix(proxe-widget): pin web agent to bottom-right
 
 - **`app/globals.css`** — added `!important` left/right overrides on the PROXe widget container + launcher selectors. Default embed.js positions the widget bottom-left; new rules force `right: 16px` (mobile) / `right: 24px` (≥768px) and `left: auto`.
