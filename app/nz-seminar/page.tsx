@@ -51,7 +51,7 @@ const WHO_SHOULD_ATTEND = [
 
 const HIGHLIGHTS = [
   { Icon: Plane, title: "Meet NZ's top flying schools", desc: "Talk directly to flight school representatives flown in for this seminar." },
-  { Icon: Award, title: "1:1 sessions", desc: "Private 1:1 conversations with school heads — your questions, your child, your budget." },
+  { Icon: Award, title: "1:1 sessions", desc: "Private 1:1 conversations with school heads. Your questions, your child, your budget." },
   { Icon: Compass, title: "Walk out with a plan", desc: "Leave with clarity on country, school, timeline, and the next 30 days." },
 ];
 
@@ -143,7 +143,7 @@ export default function NzSeminarPage() {
   const [submitError, setSubmitError] = useState("");
   const [blocked, setBlocked] = useState(false);
   const registerRef = useRef<HTMLElement>(null);
-  // Sticky CTA shows only between the hero and the register section — never
+  // Sticky CTA shows only between the hero and the register section. Never
   // both at the same time as the hero CTA or the form's submit button.
   const [stickyVisible, setStickyVisible] = useState(false);
   const showStickyBar = stickyVisible && !blocked;
@@ -313,7 +313,7 @@ export default function NzSeminarPage() {
 
       {/* Hero - Glass Morphism Design */}
       <section ref={heroRef} className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
-        {/* Background — New Zealand still */}
+        {/* Background. New Zealand still */}
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0 bg-black">
           <Image
             src="/nz-seminar/NEw Zealand.avif"
@@ -552,7 +552,7 @@ export default function NzSeminarPage() {
             transition={{ duration: transitionDuration ?? 0.6, delay: shouldReduceMotion ? 0 : 0.25 }}
             className="text-center text-gray-500 text-sm mt-8"
           >
-            More NZ flying school representatives joining the panel — full list shared closer to the date.
+            More NZ flying school representatives joining the panel. Full list shared closer to the date.
           </motion.p>
         </div>
       </section>
@@ -833,7 +833,7 @@ export default function NzSeminarPage() {
                           const next = e.target.value as Status;
                           setForm((f) => ({ ...f, status: next }));
                           setErrors((prev) => ({ ...prev, status: undefined }));
-                          // Pursuing/Below 12th — open the redirect modal immediately,
+                          // Pursuing/Below 12th. Open the redirect modal immediately,
                           // no need to wait for the user to fill the rest of the form.
                           if (next === "Below 12th" || next === "Pursuing 12th") {
                             setBlocked(true);
@@ -938,7 +938,7 @@ export default function NzSeminarPage() {
         </div>
       </section>
 
-      {/* Sticky mobile CTA — hidden when hero or register CTA is on screen. */}
+      {/* Sticky mobile CTA. Hidden when hero or register CTA is on screen. */}
       {showStickyBar && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-md border-t border-white/10 px-4 py-3">
           <button
@@ -950,7 +950,7 @@ export default function NzSeminarPage() {
         </div>
       )}
 
-      {/* Early-stage redirect modal — fires when the student picks Pursuing
+      {/* Early-stage redirect modal. Fires when the student picks Pursuing
           or Below 12th. The seminar is post-12th; we route those leads to
           /assessment/early instead. */}
       {blocked && (
@@ -971,7 +971,7 @@ export default function NzSeminarPage() {
             </h3>
             <p className="text-white/85 text-base leading-relaxed mb-2">
               This seminar is built around what to do{" "}
-              <span className="font-semibold">after 12th</span> — picking the
+              <span className="font-semibold">after 12th</span>. Picking the
               right country, costs, and the fastest path to CPL.
             </p>
             <p className="text-white/70 text-sm leading-relaxed mb-6">
@@ -1003,7 +1003,7 @@ export default function NzSeminarPage() {
                 }}
                 className="text-white/50 hover:text-white/80 text-xs underline-offset-2 hover:underline transition-colors mt-1"
               >
-                I picked the wrong status — go back
+                I picked the wrong status, go back
               </button>
             </div>
 

@@ -2,6 +2,17 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 21:25 IST · copy: strip em dashes from thank-you and NZ-seminar content
+
+Brand voice update. Em dashes removed everywhere they appeared in the thank-you flow and the NZ seminar page. Examples:
+- thank-you: "You're registered for the NZ Seminar" (was "You're registered — NZ Seminar")
+- thank-you next steps: "Watch your WhatsApp. We'll share venue details and a reminder" (was "Watch your WhatsApp — we'll share venue details and a reminder")
+- nz-seminar walk-out card: "Private 1:1 conversations with school heads. Your questions, your child, your budget."
+- nz-seminar speakers note: "More NZ flying school representatives joining the panel. Full list shared closer to the date."
+- early-stage modal: split the dash-joined clauses into two sentences.
+- below-12 back link: "I picked the wrong status, go back" (was a dash).
+Also cleaned up internal code comments for consistency.
+
 ## 2026-05-17 21:15 IST · copy(nz-seminar): Anton role + page meta tags
 
 - **`app/nz-seminar/page.tsx`** — Anton Ramenskiy role shortened to "Senior Manager" (was "Senior Marketing Manager").

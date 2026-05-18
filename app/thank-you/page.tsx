@@ -352,7 +352,7 @@ function ThankYouContent() {
         const name = formData?.name || "I am";
         const waText = `Hi WindChasers, I am ${name} and I just registered for the New Zealand Flight Training Seminar on May 29.`;
         return {
-          title: "You're registered — NZ Seminar",
+          title: "You're registered for the NZ Seminar",
           icon: Plane,
           message:
             "Thank you for securing your seat for the New Zealand Flight Training Seminar on Saturday, May 29, 2026 at 3:00 PM. Our team will WhatsApp you the venue details and a reminder.",
@@ -399,7 +399,7 @@ function ThankYouContent() {
           ),
           nextSteps: [
             "Add Saturday, May 29, 2026 · 3:00 PM to your calendar",
-            "Watch your WhatsApp — we&apos;ll share venue details and a reminder",
+            "Watch your WhatsApp. We&apos;ll share venue details and a reminder",
             "If you&apos;re a student, bring a parent (highly encouraged)",
           ],
         };
@@ -612,7 +612,7 @@ function ThankYouContent() {
           message: "",
           details: (
             <div className="space-y-8">
-              {/* Big Score Display — internal scoring is /150; we surface /100 to users. */}
+              {/* Big Score Display. Internal scoring is /150; we surface /100 to users. */}
               <div className="text-center">
                 <div className={`text-8xl md:text-9xl font-bold mb-4 ${tierInfo.color}`}>
                   {Math.round((score * 100) / 150)}
