@@ -2,6 +2,29 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 14:30 IST · feat(pat): dual-write to PROXe + Sheets so a PROXe outage never costs us a PAT lead
+
+PROXe's `/api/agent/leads/inbound` was returning `500 taskErr is not defined` for every PAT submission today. Confirmed via curl against prod `/api/leads` — every PAT lead during the outage was being lost. Fix: dual-write to both destinations and decouple the thank-you redirect from PROXe success.
+
+- **`lib/sheets.ts`** — new `getPatBackupSheetTab()` helper. Default tab name `PAT Backup`; override with `GOOGLE_SHEET_TAB_PAT_BACKUP`.
+- **`app/api/pat-backup/route.ts`** (new) — backup endpoint for PAT submissions. Writes 22 columns to the Event Data 2026 workbook:
+  ```
+  A Date  B Name  C Phone  D Email  E City  F Audience
+  G Total  H Tier  I Qual  J Apt  K Read
+  L Eligible 12th  M PROXe Status  N PROXe Lead ID  O Answers (JSON)
+  P-V utm_source / utm_medium / utm_campaign / utm_term / utm_content
+       / landing_page / referrer
+  ```
+- **`components/AssessmentForm.tsx`** — submit phase now fires `/api/leads` (PROXe) and `/api/pat-backup` (Sheets) **in parallel via `Promise.all`**. Both outcomes are logged.
+  - **At least one succeeded** → user proceeds to `/thank-you?type=assessment` and sees their score.
+  - **Both failed** (network down, both backends offline) → "Please check your connection and try again."
+  - PROXe = system of record when healthy; Sheets = permanent safety net.
+
+Need on the Sheet side:
+- Create the **`PAT Backup`** tab in Event Data 2026 (`145KgARkFGEi4_hjwR5dN6Vv8NJlnmzHhX8I7wvNOc-w`).
+- Optionally add column headers in row 1 — see the column layout above.
+- Once PROXe is fixed and the outage row is reconciled, the team should treat Sheets-only rows (`PROXe Status = pending` or empty `Lead ID`) as leads to manually push into PROXe.
+
 ## 2026-05-18 14:00 IST · fix(api/leads): sanitize PROXe runtime errors before showing to user
 
 PAT submissions were failing with the cryptic "taskErr is not defined" message because PROXe's backend was crashing and we were faithfully relaying their JS runtime error to the end user.

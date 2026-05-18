@@ -299,60 +299,144 @@ export default function AssessmentForm() {
     const preview = scoreAnswers(answersForScoring);
 
     const utm = getStoredUTMParamsFull();
+    const identity = {
+      name: (snapshot.identity.firstName ?? "").trim(),
+      phone: snapshot.identity.phone ?? "",
+      email: snapshot.identity.email ?? "",
+      city: snapshot.identity.city ?? "",
+    };
+    const pageUrl = typeof window !== "undefined" ? window.location.href : undefined;
 
-    try {
-      const res = await fetch("/api/leads", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: "pat",
-          name: (snapshot.identity.firstName ?? "").trim(),
-          phone: snapshot.identity.phone ?? "",
-          email: snapshot.identity.email ?? "",
-          city: snapshot.identity.city ?? "",
-          audience: "student",
-          page_url:
-            typeof window !== "undefined" ? window.location.href : undefined,
-          utm: {
-            source: utm.utm_source || undefined,
-            medium: utm.utm_medium || undefined,
-            campaign: utm.utm_campaign || undefined,
-            term: utm.utm_term || undefined,
-            content: utm.utm_content || undefined,
+    // Fire PROXe AND the Google Sheets backup in parallel. PROXe is the CRM
+    // and the system of record when it's healthy; the sheet is a permanent
+    // safety net that protects us from outages (PROXe was returning 502 on
+    // 2026-05-18 with a "taskErr is not defined" runtime error, losing every
+    // PAT lead in that window). As long as at least one write succeeds, the
+    // user proceeds to /thank-you and gets their score.
+
+    const proxePromise: Promise<{
+      ok: boolean;
+      lead_id?: string;
+      errorMsg?: string;
+    }> = fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "pat",
+        name: identity.name,
+        phone: identity.phone,
+        email: identity.email,
+        city: identity.city,
+        audience: "student",
+        page_url: pageUrl,
+        utm: {
+          source: utm.utm_source || undefined,
+          medium: utm.utm_medium || undefined,
+          campaign: utm.utm_campaign || undefined,
+          term: utm.utm_term || undefined,
+          content: utm.utm_content || undefined,
+        },
+        data: {
+          answers: answersForUpstream,
+          scores: {
+            qualification: preview.subScores.qualification,
+            aptitude: preview.subScores.aptitude,
+            readiness: preview.subScores.readiness,
+            total: preview.total,
           },
-          data: {
-            answers: answersForUpstream,
-            scores: {
-              qualification: preview.subScores.qualification,
-              aptitude: preview.subScores.aptitude,
-              readiness: preview.subScores.readiness,
-              total: preview.total,
-            },
-            tier: preview.tier,
-            // The eligibility gate has already routed the user past Class 12;
-            // Below-12 aspirants are sent to /assessment/early instead.
-            eligible_class_12_pass: true,
-          },
-        }),
+          tier: preview.tier,
+          // The eligibility gate has already routed the user past Class 12;
+          // Below-12 aspirants are sent to /assessment/early instead.
+          eligible_class_12_pass: true,
+        },
+      }),
+    })
+      .then(async (res) => {
+        const j = (await res.json().catch(() => ({}))) as {
+          ok?: boolean;
+          lead_id?: string;
+          message?: string;
+          error?: string;
+        };
+        if (!res.ok || j.ok === false) {
+          return {
+            ok: false,
+            errorMsg:
+              typeof j.message === "string"
+                ? j.message
+                : typeof j.error === "string"
+                  ? j.error
+                  : `PROXe ${res.status}`,
+          };
+        }
+        return { ok: true, lead_id: j.lead_id };
+      })
+      .catch((err) => ({
+        ok: false,
+        errorMsg: err instanceof Error ? err.message : String(err),
+      }));
+
+    const sheetPromise: Promise<{ ok: boolean }> = fetch("/api/pat-backup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ...identity,
+        audience: "student",
+        page_url: pageUrl,
+        total_score: preview.total,
+        qualification_score: preview.subScores.qualification,
+        aptitude_score: preview.subScores.aptitude,
+        readiness_score: preview.subScores.readiness,
+        tier: preview.tier,
+        eligible_class_12_pass: true,
+        answers: answersForUpstream,
+        proxe_status: "pending",
+        ...utm,
+        utmParams: utm,
+        page_path:
+          typeof window !== "undefined" ? window.location.pathname : undefined,
+      }),
+    })
+      .then(async (res) => ({ ok: res.ok }))
+      .catch(() => ({ ok: false }));
+
+    const [proxeOutcome, sheetOutcome] = await Promise.all([
+      proxePromise,
+      sheetPromise,
+    ]);
+
+    // Log both outcomes so we can spot PROXe outages from console + analytics.
+    if (!proxeOutcome.ok) {
+      console.error(
+        "[PAT] PROXe write failed:",
+        proxeOutcome.errorMsg,
+        sheetOutcome.ok
+          ? "(saved to sheet backup)"
+          : "(sheet backup ALSO failed)"
+      );
+    }
+    if (!sheetOutcome.ok) {
+      console.error(
+        "[PAT] Sheet backup failed",
+        proxeOutcome.ok ? "(saved to PROXe)" : "(PROXe ALSO failed)"
+      );
+    }
+
+    // If BOTH writes failed, we genuinely lost the lead — block the user so
+    // they can retry. Otherwise let them through to /thank-you.
+    if (!proxeOutcome.ok && !sheetOutcome.ok) {
+      console.error("Assessment submission failed: both writes failed");
+      setError({
+        message:
+          "We could not save your assessment just now. Please check your connection and try again.",
       });
+      setPhase("error");
+      return;
+    }
 
-      const payload = (await res.json().catch(() => ({}))) as {
-        ok?: boolean;
-        error?: string;
-        message?: string;
-      };
-      if (!res.ok || payload.ok === false) {
-        throw new Error(
-          typeof payload.message === "string"
-            ? payload.message
-            : typeof payload.error === "string"
-              ? payload.error
-              : "We could not save your assessment. Please try again."
-        );
-      }
-
-      // PROXe is the system of record now; the proxy does not return scores
-      // back to the client. Fall back to the local preview.
+    // PROXe is the system of record now; the proxy does not return scores
+    // back to the client. Fall back to the local preview.
+    try {
       const finalScores = preview.subScores;
       const finalTotal = preview.total;
       const finalTier = preview.tier;
@@ -398,12 +482,13 @@ export default function AssessmentForm() {
       );
       window.location.href = `/thank-you?type=assessment&data=${data}`;
     } catch (err) {
-      console.error("Assessment submission failed:", err);
+      // Lead is already saved at this point (we returned early above if both
+      // writes failed). This catch is for analytics tracking / redirect
+      // hiccups — the user still has their score, we just couldn't move them.
+      console.error("Assessment post-save error:", err);
       setError({
         message:
-          err instanceof Error
-            ? err.message
-            : "We could not save your assessment. Please try again.",
+          "Your assessment was saved. We hit a snag showing your results — please try again.",
       });
       setPhase("error");
     }

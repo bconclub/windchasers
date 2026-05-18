@@ -28,6 +28,12 @@ export function getNzSeminarSheetTab(): string {
   return process.env.GOOGLE_SHEET_TAB_NZ_SEMINAR?.trim() || "29 NZ Webinar Confirms";
 }
 
+/** PAT backup tab. PROXe is the system of record but flaky; we mirror every
+ * PAT submission here so a backend outage never costs us a lead. */
+export function getPatBackupSheetTab(): string {
+  return process.env.GOOGLE_SHEET_TAB_PAT_BACKUP?.trim() || "PAT Backup";
+}
+
 /**
  * Extract the 7 attribution cells appended at the end of every form's sheet row:
  * [utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, referrer].
