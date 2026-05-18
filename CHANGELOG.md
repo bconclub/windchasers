@@ -2,6 +2,26 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 12:50 IST · ux(wa-capture): premium redesign matching the open-house glass hero
+
+Brand-native rebuild of the WhatsApp capture modal. Old version read as a generic SaaS popup; new version mirrors the open-house glass-hero language (gold corner accents, top gradient hairline, eyebrow with live pulse) so it feels native to the rest of the site.
+
+What changed in **`components/WhatsAppCaptureModal.tsx`**:
+
+- **Ambient gold glow halo** behind the card via a 520×420 `bg-[#C5A572]/8 blur-[100px]` orb. Hard to notice consciously, but it makes the dialog feel anchored on the page instead of floating.
+- **Gold gradient hairline** along the top edge (`from-transparent via-[#C5A572] to-transparent`). Reuses the open-house hero treatment.
+- **L-shaped corner accents** in gold at top-left and bottom-right corners (2px stroke, 20px reach). Same pattern as the open-house glass card.
+- **Concierge eyebrow** "AVIATORS DESK · LIVE" with a pulsing green dot (same `animate-ping` pattern as the homepage "Admissions Open" status pill).
+- **Headline upgraded** to 28px semibold with a subtle text-shadow for depth.
+- **Phone input redesigned** as a single boarding-pass field with a fixed country-code chip ("+91" in gold + "IN" sublabel) on the left, then the number itself. Focus state lights up the border in gold + a soft 3px gold ring.
+- **CTA button** still WhatsApp green, but with a Send icon, a hairline white inner highlight, a green-tinted lift shadow on hover, and an animated spinner during "Connecting…" state.
+- **Trust strip** under the CTA: two gold checkmark inline-flags ("A real human replies" · "No marketing spam") separated by a thin divider.
+- Body scroll is locked while the modal is open so the page can't sneak under.
+- Backdrop bumped to `bg-black/80 backdrop-blur-md` for stronger focus.
+- Modal width 440 → 480 to accommodate the richer layout without feeling cramped.
+
+User-facing: tapping the WhatsApp pill in the navbar on `/`, `/pilot-training*`, `/dgca`, `/helicopter`, `/international` now opens a designed, on-brand modal instead of the generic dark box.
+
 ## 2026-05-18 12:30 IST · feat(wa-capture): all program pages route to marketing WA agent (98424)
 
 - **`components/Navbar.tsx`** — every WA capture entry (home, pilot training, DGCA, helicopter, international) now redirects to `+91 90350 98424` (the marketing/automation agent). Previously DGCA, helicopter, international, and home went to `+91 95910 04043` (general support). All five program pages now hit the same automated funnel.
