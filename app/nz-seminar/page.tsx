@@ -143,7 +143,10 @@ export default function NzSeminarPage() {
   const [submitError, setSubmitError] = useState("");
   const [blocked, setBlocked] = useState(false);
   const registerRef = useRef<HTMLElement>(null);
-  const [showStickyBar, setShowStickyBar] = useState(true);
+  // Sticky CTA shows only between the hero and the register section — never
+  // both at the same time as the hero CTA or the form's submit button.
+  const [stickyVisible, setStickyVisible] = useState(false);
+  const showStickyBar = stickyVisible && !blocked;
 
   useEffect(() => {
     if (!blocked) return;
@@ -153,22 +156,27 @@ export default function NzSeminarPage() {
   }, [blocked, router]);
 
   useEffect(() => {
-    const section = registerRef.current;
-    if (!section) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setShowStickyBar(false);
-        } else {
-          setShowStickyBar(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    observer.observe(section);
-    return () => observer.disconnect();
+    const updateSticky = () => {
+      const register = registerRef.current;
+      const heroBottom = window.innerHeight; // hero is min-h-screen, so it ends at ~viewport height from page top
+      const scrolled = window.scrollY;
+      // Show sticky only after the user has scrolled past the hero CTA but
+      // before the register form's submit button is on screen.
+      let pastHero = scrolled > heroBottom * 0.6;
+      let registerVisible = false;
+      if (register) {
+        const r = register.getBoundingClientRect();
+        registerVisible = r.top < window.innerHeight - 80 && r.bottom > 80;
+      }
+      setStickyVisible(pastHero && !registerVisible);
+    };
+    updateSticky();
+    window.addEventListener("scroll", updateSticky, { passive: true });
+    window.addEventListener("resize", updateSticky);
+    return () => {
+      window.removeEventListener("scroll", updateSticky);
+      window.removeEventListener("resize", updateSticky);
+    };
   }, []);
 
   const validateForm = useCallback((): boolean => {
@@ -924,8 +932,8 @@ export default function NzSeminarPage() {
         </div>
       </section>
 
-      {/* Sticky mobile CTA */}
-      {showStickyBar && !blocked && (
+      {/* Sticky mobile CTA — hidden when hero or register CTA is on screen. */}
+      {showStickyBar && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-md border-t border-white/10 px-4 py-3">
           <button
             onClick={() => document.getElementById("register")?.scrollIntoView({ behavior: shouldReduceMotion ? "auto" : "smooth" })}

@@ -2,6 +2,14 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-17 21:00 IST · fix(nz-seminar): hide sticky mobile CTA while hero CTA is on screen
+
+- **`app/nz-seminar/page.tsx`** — sticky mobile "Secure Your Seat" no longer stacks on top of the hero CTA. New behavior:
+  - Hero CTA on screen → sticky hidden
+  - Scrolled past hero (>60% of viewport scrolled) → sticky shown
+  - Register form's submit button on screen → sticky hidden again
+- Implementation switched from two IntersectionObservers to a single scroll/resize handler measuring `window.scrollY` vs hero height and `registerRef.getBoundingClientRect()`. More reliable, no flash on first paint.
+
 ## 2026-05-17 20:50 IST · copy(nz-seminar): tighten hero headline + subtext
 
 - **`app/nz-seminar/page.tsx`** — hero copy updated:
