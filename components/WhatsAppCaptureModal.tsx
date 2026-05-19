@@ -4,6 +4,13 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, User as UserIcon } from "lucide-react";
 import { getStoredAttribution } from "@/lib/attribution";
+import {
+  getStoredUTMParamsFull,
+  getStoredClickIds,
+  getLandingPage,
+  getStoredReferrer,
+  deriveTrafficSource,
+} from "@/lib/tracking";
 
 export interface WhatsAppCaptureModalProps {
   open: boolean;
@@ -88,7 +95,30 @@ export function WhatsAppCaptureModal({
     }
     setSubmitting(true);
 
-    const attribution = getStoredAttribution();
+    // Pull every flavour of attribution we have:
+    //   - localStorage attr_utm_* (survives tab close; first-touch from
+    //     the original ad click days/weeks ago)
+    //   - sessionStorage utm_params (current tab session)
+    //   - ad-network click IDs (gclid/fbclid/etc.)
+    //   - referrer + derived traffic source as last-resort signals
+    // getStoredUTMParamsFull is the "tab session" view (sessionStorage),
+    // getStoredAttribution is the "long term" view (localStorage). We
+    // prefer the long-term view since a user might be on the WA modal
+    // after navigating internally for a while, but fall back to the
+    // tab view if localStorage was never seeded.
+    const localAttr = getStoredAttribution();
+    const sessionAttr = getStoredUTMParamsFull();
+    const utm = {
+      source: localAttr.utm_source || sessionAttr.utm_source || "",
+      medium: localAttr.utm_medium || sessionAttr.utm_medium || "",
+      campaign: localAttr.utm_campaign || sessionAttr.utm_campaign || "",
+      term: localAttr.utm_term || sessionAttr.utm_term || "",
+      content: localAttr.utm_content || sessionAttr.utm_content || "",
+    };
+    const clickIds = getStoredClickIds();
+    const landingUrl = getLandingPage();
+    const referrer = getStoredReferrer();
+    const trafficSource = deriveTrafficSource();
     const pageUrl = typeof window !== "undefined" ? window.location.href : "";
     const pagePath = typeof window !== "undefined" ? window.location.pathname : "";
 
@@ -97,13 +127,17 @@ export function WhatsAppCaptureModal({
       name: trimmedName,
       phone: trimmedPhone,
       page_url: pageUrl,
+      landing_url: landingUrl || undefined,
+      referrer: referrer || undefined,
+      traffic_source: trafficSource || undefined,
       utm: {
-        source: attribution.utm_source || undefined,
-        medium: attribution.utm_medium || undefined,
-        campaign: attribution.utm_campaign || undefined,
-        term: attribution.utm_term || undefined,
-        content: attribution.utm_content || undefined,
+        source: utm.source || undefined,
+        medium: utm.medium || undefined,
+        campaign: utm.campaign || undefined,
+        term: utm.term || undefined,
+        content: utm.content || undefined,
       },
+      click_ids: Object.keys(clickIds).length > 0 ? clickIds : undefined,
       data: {
         event_name: "WhatsApp Prelaunch",
         touchpoint: source,
@@ -114,17 +148,42 @@ export function WhatsAppCaptureModal({
       },
     };
 
+    // Fire PROXe write; we DO await it briefly (max 2s) so we can log a
+    // hard failure to console for debugging. But we still proceed to the
+    // WhatsApp redirect even on failure — the lead's worst case is they
+    // hit our team on WA without a CRM row, which is recoverable.
     try {
-      void fetch("/api/leads", {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
+      const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(leadPayload),
         keepalive: true,
-      }).catch(() => {
-        /* silent — PROXe never blocks the WA redirect */
+        signal: controller.signal,
+      }).catch((err) => {
+        console.warn("[wa-capture] PROXe write failed:", err);
+        return null;
       });
-    } catch {
-      /* unreachable in practice */
+      clearTimeout(timeoutId);
+      if (res) {
+        const j = (await res.json().catch(() => ({}))) as {
+          ok?: boolean;
+          lead_id?: string;
+          message?: string;
+        };
+        if (!res.ok || j.ok === false) {
+          console.warn(
+            "[wa-capture] PROXe non-OK:",
+            res.status,
+            j.message || ""
+          );
+        } else if (j.lead_id) {
+          console.info("[wa-capture] PROXe lead:", j.lead_id);
+        }
+      }
+    } catch (err) {
+      console.warn("[wa-capture] unexpected error:", err);
     }
 
     if (onRedirect) onRedirect();

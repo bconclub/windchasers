@@ -2,6 +2,17 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-19 19:00 IST · fix(wa-capture): attribution gap — modal wasn't sending click IDs / referrer / landing
+
+The WhatsApp capture modal (navbar pill on /, /pilot-training*, /dgca, /helicopter, /international) was only sending `utm_*` from localStorage to PROXe. Meta auto-tags ad URLs with `fbclid`, not `utm_*`, so every WA lead from an Instagram or Facebook ad was landing in PROXe with no attribution → bucketed as DIRECT or, when paired with a sentinel name, untriageable.
+
+- **`components/WhatsAppCaptureModal.tsx`** — payload now sends every attribution signal the form/PAT path sends:
+  - `landing_url`, `referrer`, `traffic_source`
+  - `click_ids` (gclid / fbclid / msclkid / ttclid / li_fat_id / twclid / wbraid / gbraid)
+  - utm_* now merges localStorage + sessionStorage with a localStorage preference (so a user who came back days later still carries the original campaign attribution)
+- Replaced the fire-and-forget POST with a 2-second awaited fetch + console.warn on failure. We still proceed to the WA redirect even on failure — the worst case is a missing CRM row, recoverable. But now developers can see in the browser console when PROXe rejects.
+- Net effect: ad-driven traffic reaching the WA modal now arrives in PROXe with the same `channel` / `fbclid` / `has_click_id` fields that PAT and demo leads carry.
+
 ## 2026-05-19 18:30 IST · feat(attribution): capture ad-network click IDs + referrer + landing — stop bucketing ads into "DIRECT"
 
 PROXe was showing **DIRECT** for every lead in the CRM (screenshot: Deepak Ravi from /pilot-training, Himadri from /assessment), because Meta auto-tags ad URLs with `fbclid` and Google Ads with `gclid` — **not** `utm_*`. Our capture only watched `utm_*`, so every ad-driven lead came through unattributed.
