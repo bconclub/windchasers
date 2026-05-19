@@ -38,6 +38,25 @@ interface LeadRequest {
     term?: string;
     content?: string;
   };
+  // Ad-network click IDs (Meta/Google/etc auto-tag with these instead of utm).
+  click_ids?: {
+    gclid?: string;
+    fbclid?: string;
+    msclkid?: string;
+    ttclid?: string;
+    li_fat_id?: string;
+    twclid?: string;
+    wbraid?: string;
+    gbraid?: string;
+  };
+  // Full landing URL with original query string (preserves UTMs + click IDs
+  // even if PROXe ignores the custom_fields and only stores top-level URL).
+  landing_url?: string;
+  // document.referrer at first touch.
+  referrer?: string;
+  // Derived coarse channel for when no UTM/click-id is present (e.g.
+  // "google", "facebook", "referral:bing.com"). Lets PROXe avoid DIRECT.
+  traffic_source?: string;
   data: Record<string, unknown>;
 }
 
@@ -277,6 +296,24 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const upstreamApiKey = inboundKey;
     let upstreamPayload: Record<string, unknown>;
 
+    // Resolve a coarse channel string used by PROXe's `source` column. Order
+    // of preference: explicit utm_source → traffic_source derived from
+    // referrer → presence of any click ID → the form type itself. The last
+    // fallback is so leads that legitimately came in cold (typed URL,
+    // organic search where the referrer was stripped) still get categorised
+    // rather than dumped into DIRECT.
+    const clickIds = body.click_ids ?? {};
+    const hasAnyClickId = Object.values(clickIds).some((v) => !!v);
+    const channelFallback =
+      utm.source ||
+      body.traffic_source ||
+      (clickIds.gclid ? "google_ads" : "") ||
+      (clickIds.fbclid ? "facebook_ads" : "") ||
+      (clickIds.msclkid ? "bing_ads" : "") ||
+      (clickIds.ttclid ? "tiktok_ads" : "") ||
+      (clickIds.li_fat_id ? "linkedin_ads" : "") ||
+      "";
+
     switch (type) {
       case "pat": {
         const scores = (data.scores ?? {}) as Record<string, unknown>;
@@ -284,6 +321,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           name,
           phone,
           email: body.email,
+          // Keep the high-level source as the form bucket so PROXe can group
+          // PAT leads together. The actual marketing channel goes into
+          // utm_source / channel below — PROXe should be configured to read
+          // those for attribution columns.
           source: "pat",
           campaign: utm.campaign ?? null,
           city: body.city,
@@ -292,6 +333,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             form_type: "pilot_aptitude_test",
             audience: body.audience,
             page_url: body.page_url,
+            landing_url: body.landing_url,
+            referrer: body.referrer,
+            channel: channelFallback || "direct",
+            traffic_source: body.traffic_source,
             tier: data.tier,
             total_score: scores.total,
             qualification_score: scores.qualification,
@@ -304,6 +349,15 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             utm_campaign: utm.campaign,
             utm_term: utm.term,
             utm_content: utm.content,
+            gclid: clickIds.gclid,
+            fbclid: clickIds.fbclid,
+            msclkid: clickIds.msclkid,
+            ttclid: clickIds.ttclid,
+            li_fat_id: clickIds.li_fat_id,
+            twclid: clickIds.twclid,
+            wbraid: clickIds.wbraid,
+            gbraid: clickIds.gbraid,
+            has_click_id: hasAnyClickId,
           },
         };
         break;
@@ -327,6 +381,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             form_type: formName,
             audience: body.audience,
             page_url: body.page_url,
+            landing_url: body.landing_url,
+            referrer: body.referrer,
+            channel: channelFallback || "direct",
+            traffic_source: body.traffic_source,
             course_interest: data.course_interest,
             training_type: data.training_type,
             user_type: body.audience,
@@ -337,6 +395,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             utm_campaign: utm.campaign,
             utm_term: utm.term,
             utm_content: utm.content,
+            gclid: clickIds.gclid,
+            fbclid: clickIds.fbclid,
+            msclkid: clickIds.msclkid,
+            ttclid: clickIds.ttclid,
+            li_fat_id: clickIds.li_fat_id,
+            has_click_id: hasAnyClickId,
           },
         };
         break;
@@ -361,11 +425,21 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             form_type: eventLabel,
             audience: body.audience,
             page_url: body.page_url,
+            landing_url: body.landing_url,
+            referrer: body.referrer,
+            channel: channelFallback || "direct",
+            traffic_source: body.traffic_source,
             utm_source: utm.source,
             utm_medium: utm.medium,
             utm_campaign: utm.campaign,
             utm_term: utm.term,
             utm_content: utm.content,
+            gclid: clickIds.gclid,
+            fbclid: clickIds.fbclid,
+            msclkid: clickIds.msclkid,
+            ttclid: clickIds.ttclid,
+            li_fat_id: clickIds.li_fat_id,
+            has_click_id: hasAnyClickId,
             ...restData,
           },
         };

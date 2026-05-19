@@ -59,10 +59,29 @@ export interface TrackingData {
 const SESSION_ID_KEY = "windchasers_session_id";
 const TRACKING_DATA_KEY = "windchasers_tracking_data";
 const UTM_STORAGE_KEY = "utm_params";
+const CLICK_ID_STORAGE_KEY = "click_ids";
 const LANDING_PAGE_KEY = "landing_page";
 const REFERRER_KEY = "referrer";
 
 const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"] as const;
+
+// Ad-network click IDs we want to capture so paid traffic doesn't fall
+// through to "DIRECT" in the CRM. Meta auto-tags with `fbclid`, Google Ads
+// with `gclid`, Microsoft with `msclkid`, TikTok with `ttclid`, LinkedIn with
+// `li_fat_id`. Most of these are added automatically when ad auto-tagging is
+// on — they replace utm_* completely on Google Ads.
+const CLICK_ID_KEYS = [
+  "gclid",
+  "fbclid",
+  "msclkid",
+  "ttclid",
+  "li_fat_id",
+  "twclid",
+  "wbraid",
+  "gbraid",
+] as const;
+
+export type ClickIds = Partial<Record<(typeof CLICK_ID_KEYS)[number], string>>;
 
 // ---------------------------------------------------------------------------
 // Session id
@@ -97,6 +116,18 @@ export function getUTMParams(): UTMParams {
   return out;
 }
 
+/** Pull any ad-network click IDs off the current URL. */
+export function getClickIds(): ClickIds {
+  if (typeof window === "undefined") return {};
+  const params = new URLSearchParams(window.location.search);
+  const out: ClickIds = {};
+  for (const key of CLICK_ID_KEYS) {
+    const value = params.get(key);
+    if (value) out[key] = value;
+  }
+  return out;
+}
+
 /**
  * Capture and persist UTM parameters, landing page, and referrer on initial
  * site load. First-touch wins - subsequent navigations do not overwrite the
@@ -114,6 +145,16 @@ export function captureAndStoreUTMParams(): void {
       }
     }
 
+    // Ad-network click IDs (gclid/fbclid/msclkid/etc). First-touch wins, same
+    // as UTMs. Captured separately so we don't muddle the utm_* shape.
+    const existingClickIds = sessionStorage.getItem(CLICK_ID_STORAGE_KEY);
+    if (!existingClickIds) {
+      const clickIds = getClickIds();
+      if (Object.keys(clickIds).length > 0) {
+        sessionStorage.setItem(CLICK_ID_STORAGE_KEY, JSON.stringify(clickIds));
+      }
+    }
+
     if (!sessionStorage.getItem(LANDING_PAGE_KEY)) {
       sessionStorage.setItem(
         LANDING_PAGE_KEY,
@@ -126,6 +167,47 @@ export function captureAndStoreUTMParams(): void {
     }
   } catch (error) {
     console.error("Error storing UTM params:", error);
+  }
+}
+
+/** Stored first-touch click IDs. */
+export function getStoredClickIds(): ClickIds {
+  if (typeof window === "undefined") return {};
+  try {
+    const stored = sessionStorage.getItem(CLICK_ID_STORAGE_KEY);
+    if (stored) return JSON.parse(stored) as ClickIds;
+    return getClickIds();
+  } catch {
+    return getClickIds();
+  }
+}
+
+/**
+ * Derive a coarse traffic source when no UTM is present. Looks at the
+ * referrer hostname so paid/organic traffic doesn't all bucket into DIRECT.
+ * Falls back to empty string (caller can decide what "no signal" means).
+ */
+export function deriveTrafficSource(): string {
+  if (typeof window === "undefined") return "";
+  try {
+    const ref = sessionStorage.getItem(REFERRER_KEY) || document.referrer || "";
+    if (!ref) return "";
+    const host = new URL(ref).hostname.toLowerCase();
+    if (host.includes("google.")) return "google";
+    if (host.includes("facebook.") || host.includes("fb.com")) return "facebook";
+    if (host.includes("instagram.")) return "instagram";
+    if (host.includes("youtube.")) return "youtube";
+    if (host.includes("linkedin.")) return "linkedin";
+    if (host.includes("twitter.") || host === "t.co" || host.includes("x.com"))
+      return "twitter";
+    if (host.includes("bing.")) return "bing";
+    if (host.includes("duckduckgo.")) return "duckduckgo";
+    if (host.includes("reddit.")) return "reddit";
+    if (host.includes("tiktok.")) return "tiktok";
+    // Strip any www. prefix and treat the bare hostname as a referral.
+    return `referral:${host.replace(/^www\./, "")}`;
+  } catch {
+    return "";
   }
 }
 

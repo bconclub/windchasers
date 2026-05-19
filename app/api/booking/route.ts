@@ -31,6 +31,15 @@ export async function POST(request: NextRequest) {
       utm_campaign,
       utm_term,
       utm_content,
+      gclid,
+      fbclid,
+      msclkid,
+      ttclid,
+      li_fat_id,
+      twclid,
+      wbraid,
+      gbraid,
+      traffic_source,
       referrer,
       landing_page,
       sessionId,
@@ -83,6 +92,29 @@ export async function POST(request: NextRequest) {
     const utmCampaign = utm_campaign || utmParams?.utm_campaign || "";
     const utmTerm = utm_term || utmParams?.utm_term || "";
     const utmContent = utm_content || utmParams?.utm_content || "";
+
+    // Channel attribution. PROXe's source column reads utm_source / channel
+    // first; fall back to ad-click-IDs and finally to derived traffic_source
+    // so paid-ads traffic doesn't get bucketed into "DIRECT".
+    const channel =
+      utmSource ||
+      traffic_source ||
+      (gclid ? "google_ads" : "") ||
+      (fbclid ? "facebook_ads" : "") ||
+      (msclkid ? "bing_ads" : "") ||
+      (ttclid ? "tiktok_ads" : "") ||
+      (li_fat_id ? "linkedin_ads" : "") ||
+      "direct";
+    const hasAnyClickId = !!(
+      gclid ||
+      fbclid ||
+      msclkid ||
+      ttclid ||
+      li_fat_id ||
+      twclid ||
+      wbraid ||
+      gbraid
+    );
 
     // ── Sheets backup (non-blocking) ────────────────────────────────────────
     // Wrapped in its own try/catch so a Sheets misconfiguration / quota issue
@@ -179,6 +211,22 @@ export async function POST(request: NextRequest) {
         utm_campaign: utmCampaign || undefined,
         utm_term: utmTerm || undefined,
         utm_content: utmContent || undefined,
+        // Ad-network click IDs (auto-tagged by Meta / Google Ads / etc.).
+        // We send these even when utm_* is missing so PROXe stops bucketing
+        // ad traffic into "DIRECT".
+        gclid: gclid || undefined,
+        fbclid: fbclid || undefined,
+        msclkid: msclkid || undefined,
+        ttclid: ttclid || undefined,
+        li_fat_id: li_fat_id || undefined,
+        twclid: twclid || undefined,
+        wbraid: wbraid || undefined,
+        gbraid: gbraid || undefined,
+        has_click_id: hasAnyClickId,
+        // Coarse channel + landing context for attribution dashboards.
+        channel,
+        traffic_source: traffic_source || undefined,
+        landing_url: landing_page || undefined,
       },
     };
 

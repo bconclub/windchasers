@@ -29,6 +29,10 @@ import {
 import {
   trackFormSubmission,
   getStoredUTMParamsFull,
+  getStoredClickIds,
+  getLandingPage,
+  getStoredReferrer,
+  deriveTrafficSource,
   recordAssessmentSession,
 } from "@/lib/tracking";
 import {
@@ -299,6 +303,10 @@ export default function AssessmentForm() {
     const preview = scoreAnswers(answersForScoring);
 
     const utm = getStoredUTMParamsFull();
+    const clickIds = getStoredClickIds();
+    const landingUrl = getLandingPage();
+    const referrer = getStoredReferrer();
+    const trafficSource = deriveTrafficSource();
     const identity = {
       name: (snapshot.identity.firstName ?? "").trim(),
       phone: snapshot.identity.phone ?? "",
@@ -329,6 +337,9 @@ export default function AssessmentForm() {
         city: identity.city,
         audience: "student",
         page_url: pageUrl,
+        landing_url: landingUrl || undefined,
+        referrer: referrer || undefined,
+        traffic_source: trafficSource || undefined,
         utm: {
           source: utm.utm_source || undefined,
           medium: utm.utm_medium || undefined,
@@ -336,6 +347,7 @@ export default function AssessmentForm() {
           term: utm.utm_term || undefined,
           content: utm.utm_content || undefined,
         },
+        click_ids: Object.keys(clickIds).length > 0 ? clickIds : undefined,
         data: {
           answers: answersForUpstream,
           scores: {

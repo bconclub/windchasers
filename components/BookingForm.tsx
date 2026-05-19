@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { Calendar } from "lucide-react";
-import { trackFormSubmission, sendTrackingData, getStoredUTMParams, getLandingPage, getStoredReferrer } from "@/lib/tracking";
+import { trackFormSubmission, sendTrackingData, getStoredUTMParams, getLandingPage, getStoredReferrer, getStoredClickIds, deriveTrafficSource } from "@/lib/tracking";
 import { getUserSessionData, saveUserSessionData, markBookingCompleted } from "@/lib/sessionStorage";
 import { trackPilotLead } from "@/lib/analytics";
 import { isSlotInPast, getMinBookingDateIST } from "@/lib/booking-time";
@@ -236,10 +236,12 @@ export default function BookingForm() {
       // Track form submission
       trackFormSubmission("booking", formData, source, formData.interest);
 
-      // Get stored UTM params, landing page, and referrer
+      // Get stored UTM params, click IDs, landing page, and referrer
       const utmParams = getStoredUTMParams();
+      const clickIds = getStoredClickIds();
       const landingPage = getLandingPage();
       const referrer = getStoredReferrer();
+      const trafficSource = deriveTrafficSource();
 
       const requestBody = {
         ...formData,
@@ -250,6 +252,16 @@ export default function BookingForm() {
         utm_campaign: utmParams.utm_campaign || "",
         utm_term: utmParams.utm_term || "",
         utm_content: utmParams.utm_content || "",
+        // Include ad-network click IDs (Meta/Google/etc auto-tag)
+        gclid: clickIds.gclid || "",
+        fbclid: clickIds.fbclid || "",
+        msclkid: clickIds.msclkid || "",
+        ttclid: clickIds.ttclid || "",
+        li_fat_id: clickIds.li_fat_id || "",
+        twclid: clickIds.twclid || "",
+        wbraid: clickIds.wbraid || "",
+        gbraid: clickIds.gbraid || "",
+        traffic_source: trafficSource || "",
         // Include referrer and landing page
         referrer: referrer || "",
         landing_page: landingPage || "",

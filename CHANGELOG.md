@@ -2,6 +2,22 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-19 18:30 IST · feat(attribution): capture ad-network click IDs + referrer + landing — stop bucketing ads into "DIRECT"
+
+PROXe was showing **DIRECT** for every lead in the CRM (screenshot: Deepak Ravi from /pilot-training, Himadri from /assessment), because Meta auto-tags ad URLs with `fbclid` and Google Ads with `gclid` — **not** `utm_*`. Our capture only watched `utm_*`, so every ad-driven lead came through unattributed.
+
+What this turn ships:
+
+- **`lib/tracking.ts`** — new `getClickIds()` and `getStoredClickIds()` capture `gclid`, `fbclid`, `msclkid`, `ttclid`, `li_fat_id`, `twclid`, `wbraid`, `gbraid` from the URL on landing. First-touch wins, same as UTMs. New `deriveTrafficSource()` reads the stored referrer hostname and maps it to a coarse channel (`google`, `facebook`, `instagram`, `youtube`, `linkedin`, `twitter`, `bing`, `duckduckgo`, `reddit`, `tiktok`, or `referral:<host>`).
+- **`components/AssessmentForm.tsx`** — PAT submit now sends `landing_url`, `referrer`, `traffic_source`, and `click_ids` alongside the existing `utm` block.
+- **`components/BookingForm.tsx`** — demo booking submit now includes the same eight click-ID fields + `traffic_source`.
+- **`app/api/leads/route.ts`** — `LeadRequest` interface extended with the new fields. All three case branches (`pat`, `page`, `event`) now forward them into PROXe's `custom_fields`, plus a derived `channel` field. Order of preference: `utm_source → traffic_source → click_id-derived ("google_ads"/"facebook_ads"/etc.) → "direct"`. Counsellors can sort/filter on `channel` and stop guessing.
+- **`app/api/booking/route.ts`** — same destructure + forward for the demo booking path. Adds `has_click_id` boolean for at-a-glance "this was paid traffic" tagging.
+
+Verified live with two test leads (`28d40a66-…` UTM-tagged, `7758100b-…` fbclid-tagged) — PROXe accepted both payloads with no schema errors.
+
+Note for the PROXe team: please configure the dashboard's **Source** column to read `custom_fields.channel` first, then fall back to `custom_fields.utm_source`. That single change will replace every "DIRECT" badge with the real channel.
+
 ## 2026-05-19 17:55 IST · fix(booking): block past-time demo slots (IST + 60-min buffer)
 
 Two production leads booked slots that were already in the past (Himadri samadder at 11 AM today, Thanzeel at 1 PM today) because `isPastDate` only compared calendar days, not the time-of-day, and all date math ran in browser-local time.
