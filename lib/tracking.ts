@@ -211,14 +211,51 @@ export function deriveTrafficSource(): string {
   }
 }
 
-/** Stored first-touch UTM params, falling back to whatever is on the URL now. */
+/**
+ * Stored first-touch UTM params. Resolution order:
+ *   1. sessionStorage utm_params (same-tab session)
+ *   2. localStorage attr_utm_* (survives tab close, ~90 days)
+ *   3. current URL search params (fresh landing)
+ * The localStorage fallback means a user can land tagged, close the tab,
+ * come back days later from a bookmark, complete a PAT, and still carry
+ * the original campaign attribution. The localStorage values are written
+ * by captureAttributionToLocalStorage() in lib/attribution.ts on every page
+ * mount via TrackingProvider.
+ */
+function readLocalStorageAttr(): UTMParams {
+  if (typeof window === "undefined") return {};
+  try {
+    const out: UTMParams = {};
+    for (const k of UTM_KEYS) {
+      const v = localStorage.getItem(`attr_${k}`);
+      if (v) out[k] = v;
+    }
+    return out;
+  } catch {
+    return {};
+  }
+}
+
 export function getStoredUTMParams(): UTMParams {
   if (typeof window === "undefined") return {};
 
   try {
     const stored = sessionStorage.getItem(UTM_STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored) as UTMParams;
+      const parsed = JSON.parse(stored) as UTMParams;
+      if (parsed && Object.keys(parsed).length > 0) return parsed;
+    }
+    // Tab restarted but localStorage still has the first-touch from the
+    // original visit — use that before falling back to bare URL.
+    const localAttr = readLocalStorageAttr();
+    if (Object.keys(localAttr).length > 0) {
+      // Hydrate sessionStorage so subsequent reads in this tab are fast.
+      try {
+        sessionStorage.setItem(UTM_STORAGE_KEY, JSON.stringify(localAttr));
+      } catch {
+        /* sessionStorage write can fail in private mode — ignore */
+      }
+      return localAttr;
     }
     return getUTMParams();
   } catch (error) {
