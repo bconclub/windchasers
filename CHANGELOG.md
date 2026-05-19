@@ -2,6 +2,23 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-19 17:55 IST · fix(booking): block past-time demo slots (IST + 60-min buffer)
+
+Two production leads booked slots that were already in the past (Himadri samadder at 11 AM today, Thanzeel at 1 PM today) because `isPastDate` only compared calendar days, not the time-of-day, and all date math ran in browser-local time.
+
+- **`lib/booking-time.ts`** (new) — shared helper used by both the client and the API:
+  - `getISTNow(now?)` reads the current wall clock in `Asia/Kolkata` via `Intl.DateTimeFormat({ timeZone: "Asia/Kolkata" })` (no new dep) and returns `{ dateStr: "YYYY-MM-DD", timeMins: 0–1439 }`.
+  - `isSlotInPast(dateStr, timeStr, now?)` returns true if the slot is at-or-before `now + 60 minutes` in IST. Used to filter the slot grid AND to gate the API submission.
+  - `getMinBookingDateIST()` — IST today as `YYYY-MM-DD`, used for `<input type="date" min>`.
+  - 60-minute buffer (`BOOKING_BUFFER_MINUTES`) gives the user time to actually reach the call / set up Google Meet.
+- **`components/BookingForm.tsx`**:
+  - Replaced browser-local `isPastDate` + `getMinDate` with the IST-aware versions.
+  - Slot grid now filters out past slots per the selected date. When today has no slots left, shows: *"No slots available today — please pick a date from tomorrow."* and disables the Continue button.
+  - `handleStep1Next` re-checks `isSlotInPast` so a stale `preferredTime` (e.g. carried over from sessionStorage, or selected before the user lingered past the cutoff) is rejected with the same copy.
+- **`app/api/booking/route.ts`** — server-side guard runs the same `isSlotInPast` predicate before forwarding to PROXe. Returns 400 with *"This slot has already passed. Please pick a future time."* if a clever client tries to bypass the UI. Also logs a warning with date+time+phone so we can spot bypass attempts.
+
+Sanity-checked the helper at 5:47 PM IST on 2026-05-19: every slot in our 11 AM–4 PM range blocks for today, all slots for tomorrow allow, all slots for yesterday block.
+
 ## 2026-05-18 15:30 IST · ux(thank-you): minimal header — logo + Call + WhatsApp, no hamburger
 
 `/thank-you` was falling through to the navbar's hamburger-menu branch because it wasn't in the `showCompact` list. After a form submission users don't need a nav drawer — they need a clean confirmation page.

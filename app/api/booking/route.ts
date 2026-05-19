@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { appendToSheet, resolveSpreadsheetId } from "@/lib/sheets";
+import { isSlotInPast } from "@/lib/booking-time";
 
 // =============================================================================
 // POST /api/booking — Demo session booking
@@ -51,6 +52,27 @@ export async function POST(request: NextRequest) {
       console.error("Missing required fields:", missingFields, "Body received:", body);
       return NextResponse.json(
         { error: `Missing required fields: ${missingFields.join(", ")}` },
+        { status: 400 }
+      );
+    }
+
+    // Past-time guard — never trust the client. Same predicate the form uses
+    // (lib/booking-time.ts → Asia/Kolkata + 60min buffer). Catches clever
+    // users who edit the request, AND any race where a slot was valid at
+    // form open but expired by the time submit landed.
+    if (preferredTime && isSlotInPast(preferredDate, preferredTime)) {
+      console.warn(
+        "Booking blocked — slot in past:",
+        preferredDate,
+        preferredTime,
+        "phone:",
+        phone
+      );
+      return NextResponse.json(
+        {
+          error:
+            "This slot has already passed. Please pick a future time.",
+        },
         { status: 400 }
       );
     }

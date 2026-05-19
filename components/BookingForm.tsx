@@ -7,6 +7,7 @@ import { Calendar } from "lucide-react";
 import { trackFormSubmission, sendTrackingData, getStoredUTMParams, getLandingPage, getStoredReferrer } from "@/lib/tracking";
 import { getUserSessionData, saveUserSessionData, markBookingCompleted } from "@/lib/sessionStorage";
 import { trackPilotLead } from "@/lib/analytics";
+import { isSlotInPast, getMinBookingDateIST } from "@/lib/booking-time";
 
 type DemoType = "online" | "offline";
 type EducationLevel = "pursuing_10_2" | "completed_10_2" | "graduate" | "working_professional";
@@ -38,20 +39,15 @@ const isWeekday = (dateString: string): boolean => {
   return day !== 0; // Return true if not Sunday
 };
 
-// Check if date is in the past
+// Check if date is in the past relative to today in IST. Same comparison
+// the server-side guard uses — see lib/booking-time.ts.
 const isPastDate = (dateString: string): boolean => {
   if (!dateString) return false;
-  const selectedDate = new Date(dateString + "T00:00:00");
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return selectedDate < today;
+  return dateString < getMinBookingDateIST();
 };
 
-// Get minimum date (today)
-const getMinDate = (): string => {
-  const today = new Date();
-  return today.toISOString().split("T")[0];
-};
+// Get minimum date (today in IST, not browser-local).
+const getMinDate = (): string => getMinBookingDateIST();
 
 export default function BookingForm() {
   const searchParams = useSearchParams();
@@ -206,6 +202,14 @@ export default function BookingForm() {
     }
     if (!formData.preferredTime) {
       setDateError("Please select a preferred time.");
+      return;
+    }
+    // Past-time guard: catches the case where the user picked a slot, then
+    // waited long enough that the slot is now within the booking buffer, OR
+    // the previously-picked time got carried over from sessionStorage.
+    if (isSlotInPast(formData.preferredDate, formData.preferredTime)) {
+      setDateError("This slot has already passed. Please pick a future time.");
+      setFormData({ ...formData, preferredTime: "" });
       return;
     }
     setDateError("");
@@ -548,40 +552,64 @@ export default function BookingForm() {
               )}
             </div>
 
-            {formData.preferredDate && (
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Preferred Time (Hourly Slots)
-                </label>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                  {timeSlots.map((slot) => (
-                    <motion.button
-                      key={slot.value}
-                      type="button"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => {
-                        setDateError("");
-                        setFormData({ ...formData, preferredTime: slot.value });
-                        saveUserSessionData({ preferredTime: slot.value });
-                      }}
-                      className={`p-3 rounded-lg border-2 transition-all ${
-                        formData.preferredTime === slot.value
-                          ? "border-[#C5A572] bg-[#C5A572]/10 text-[#C5A572]"
-                          : "border-[#444] hover:border-[#C5A572]/50 text-white/60"
-                      }`}
-                    >
-                      {slot.label}
-                    </motion.button>
-                  ))}
+            {formData.preferredDate && (() => {
+              // Filter out any slot that's already in the past for the
+              // selected date (IST, with the booking buffer applied). Same
+              // check the server enforces in /api/booking, so this isn't
+              // just cosmetic.
+              const availableSlots = timeSlots.filter(
+                (slot) => !isSlotInPast(formData.preferredDate, slot.value)
+              );
+              const noSlotsLeft = availableSlots.length === 0;
+
+              return (
+                <div>
+                  <label className="block text-sm font-medium mb-2">
+                    Preferred Time (Hourly Slots)
+                  </label>
+                  {noSlotsLeft ? (
+                    <div className="rounded-lg border border-[#C5A572]/30 bg-[#C5A572]/5 px-4 py-3 text-sm text-white/80">
+                      No slots available today — please pick a date from
+                      tomorrow.
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {availableSlots.map((slot) => (
+                        <motion.button
+                          key={slot.value}
+                          type="button"
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => {
+                            setDateError("");
+                            setFormData({ ...formData, preferredTime: slot.value });
+                            saveUserSessionData({ preferredTime: slot.value });
+                          }}
+                          className={`p-3 rounded-lg border-2 transition-all ${
+                            formData.preferredTime === slot.value
+                              ? "border-[#C5A572] bg-[#C5A572]/10 text-[#C5A572]"
+                              : "border-[#444] hover:border-[#C5A572]/50 text-white/60"
+                          }`}
+                        >
+                          {slot.label}
+                        </motion.button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             <button
               type="button"
               onClick={handleStep1Next}
-              className="w-full bg-[#C5A572] text-[#1A1A1A] py-3.5 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-[#C5A572]/90 transition-all hover:-translate-y-0.5 active:scale-95"
+              disabled={
+                !!formData.preferredDate &&
+                timeSlots.every((slot) =>
+                  isSlotInPast(formData.preferredDate, slot.value)
+                )
+              }
+              className="w-full bg-[#C5A572] text-[#1A1A1A] py-3.5 rounded-lg font-bold text-sm uppercase tracking-wider hover:bg-[#C5A572]/90 transition-all hover:-translate-y-0.5 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
             >
               Continue
             </button>
