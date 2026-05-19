@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-18 15:30 IST · ux(thank-you): minimal header — logo + Call + WhatsApp, no hamburger
+
+`/thank-you` was falling through to the navbar's hamburger-menu branch because it wasn't in the `showCompact` list. After a form submission users don't need a nav drawer — they need a clean confirmation page.
+
+- **`components/Navbar.tsx`** — added `isThankYou = pathname?.startsWith("/thank-you")` to the `showCompact` predicate. Same logo + Call + WhatsApp icon pair as the rest of the funnel pages, identical on mobile and desktop. No menu, no slide-out.
+- Did **not** add /thank-you to `useWaCapture` — the WhatsApp pill on the thank-you page links directly to `wa.me` (no point capturing phone again right after they submit).
+
 ## 2026-05-18 15:00 IST · fix(pat-backup): auto-create the "PAT Backup" tab on first write
 
 The dual-write safety net was failing in prod because the "PAT Backup" tab didn't exist in the Event Data 2026 spreadsheet yet — `/api/pat-backup` returned `Unable to parse range: 'PAT Backup'!A:V`. Combined with PROXe still down, every PAT lead was being lost.

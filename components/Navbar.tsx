@@ -34,6 +34,7 @@ export default function Navbar() {
   const isDGCA = pathname === "/dgca";
   const isHelicopter = pathname === "/helicopter";
   const isInternational = pathname === "/international";
+  const isThankYou = pathname?.startsWith("/thank-you") ?? false;
   const isAdmin = pathname?.startsWith("/admin") ?? false;
 
   if (isAdmin) {
@@ -54,7 +55,8 @@ export default function Navbar() {
     isFlightSchools ||
     isDGCA ||
     isHelicopter ||
-    isInternational;
+    isInternational ||
+    isThankYou;
 
   // Pages where we want to capture name + phone BEFORE the user leaves to
   // WhatsApp. Top-of-funnel program pages where a WA tap is the main
