@@ -16,9 +16,11 @@ import {
 
 import {
   getStoredUTMParamsFull,
+  getStoredClickIds,
   getLandingPage,
   getStoredReferrer,
   getSessionId,
+  deriveTrafficSource,
   trackFormSubmission,
 } from "@/lib/tracking";
 import { trackEarlyStageLead } from "@/lib/analytics";
@@ -74,6 +76,8 @@ export default function AssessmentEarlyPage() {
 
     setIsSubmitting(true);
     const utm = getStoredUTMParamsFull();
+    const clickIds = getStoredClickIds();
+    const trafficSource = deriveTrafficSource();
 
     try {
       const res = await fetch("/api/assessment-early", {
@@ -90,6 +94,16 @@ export default function AssessmentEarlyPage() {
           utm_campaign: utm.utm_campaign,
           utm_term: utm.utm_term,
           utm_content: utm.utm_content,
+          // Ad-network click IDs + channel derivation (Meta/Google auto-tag).
+          gclid: clickIds.gclid,
+          fbclid: clickIds.fbclid,
+          msclkid: clickIds.msclkid,
+          ttclid: clickIds.ttclid,
+          li_fat_id: clickIds.li_fat_id,
+          twclid: clickIds.twclid,
+          wbraid: clickIds.wbraid,
+          gbraid: clickIds.gbraid,
+          traffic_source: trafficSource,
           referrer: getStoredReferrer(),
           landing_page: getLandingPage(),
           sessionId: getSessionId(),

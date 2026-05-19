@@ -9,6 +9,7 @@ function getAtcTabsToTry() {
 }
 
 function atcRow(data: Record<string, unknown>) {
+  // A-I form data, then 15 attribution cells (utm + click IDs + channel)
   return [
     (data.name as string) || "",
     (data.phone as string) || "",
@@ -19,7 +20,7 @@ function atcRow(data: Record<string, unknown>) {
     "",
     "ATC",
     "",
-    ...extractAttributionCells(data), // utm_source..referrer (J:P)
+    ...extractAttributionCells(data), // J:X — utm/click/channel
   ];
 }
 
@@ -52,7 +53,7 @@ export async function POST(request: Request) {
 
     for (const tab of tabsToTry) {
       try {
-        sheetsResult = await appendToSheet(tab, "A1:P1", row, spreadsheetId);
+        sheetsResult = await appendToSheet(tab, "A1:X1", row, spreadsheetId);
         sheetsError = null;
         console.log("ATC Sheets API success, tab:", tab, JSON.stringify(sheetsResult));
         break;

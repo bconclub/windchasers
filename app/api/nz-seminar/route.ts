@@ -23,8 +23,8 @@ export async function POST(request: Request) {
 
     // Sheet column layout (matches "29 NZ Webinar Confirms"):
     //   A Date  B Type  C Name  D Phone  E Email  F City  G With +1
-    //   H Current Status  I Stage  J Remarks  K-Q UTMs/landing/referrer
-    const result = await appendToSheet(tab, "A:Q", [
+    //   H Current Status  I Stage  J Remarks  K-Y 15 attribution cells
+    const result = await appendToSheet(tab, "A:Y", [
       new Date().toISOString(),      // Date (A)
       data.role || "",               // Type (B)
       data.name || "",               // Name (C)
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       data.status || "",             // Current Status (H)
       "",                            // Stage (I) — filled manually by counsellor
       "",                            // Remarks (J) — filled manually by counsellor
-      ...extractAttributionCells(data), // utm_source..referrer (K:Q)
+      ...extractAttributionCells(data), // K:Y — utm/click/channel
     ], spreadsheetId);
 
     console.log("NZ Seminar Sheets API success:", JSON.stringify(result));

@@ -35,29 +35,77 @@ export function getPatBackupSheetTab(): string {
 }
 
 /**
- * Extract the 7 attribution cells appended at the end of every form's sheet row:
- * [utm_source, utm_medium, utm_campaign, utm_term, utm_content, landing_page, referrer].
+ * Extract the 15 attribution cells appended at the end of every form's sheet row:
+ *   utm_source, utm_medium, utm_campaign, utm_term, utm_content,
+ *   landing_page, referrer,
+ *   gclid, fbclid, msclkid, ttclid, li_fat_id,
+ *   traffic_source, channel, has_click_id
  *
- * Forms POST UTMs either flat (utm_source) or nested (utmParams.utm_source). This
- * helper handles both. The order is stable so sheet columns line up across forms.
+ * Order is stable so sheet columns line up across every form. Click IDs
+ * matter because Meta auto-tags ad URLs with `fbclid` (not `utm_*`) and
+ * Google Ads with `gclid` — without these columns ad-driven leads look
+ * like organic / DIRECT traffic in reports.
+ *
+ * Forms POST these either flat (`utm_source` / `fbclid`) or nested
+ * (`utmParams.utm_source` / `clickIds.fbclid`). This helper handles both.
  */
 export function extractAttributionCells(data: Record<string, unknown>): string[] {
   const utm =
     (data.utmParams as Record<string, unknown> | undefined) ?? data;
-  const pick = (k: string): string => {
-    const direct = data[k];
-    if (typeof direct === "string" && direct) return direct;
-    const nested = utm?.[k];
-    return typeof nested === "string" ? nested : "";
+  const clickIds =
+    (data.clickIds as Record<string, unknown> | undefined) ??
+    (data.click_ids as Record<string, unknown> | undefined) ??
+    data;
+  const pick = (
+    obj: Record<string, unknown> | undefined,
+    k: string
+  ): string => {
+    const v = obj?.[k];
+    if (typeof v === "string" && v) return v;
+    return "";
   };
+  const utmPick = (k: string) => pick(data, k) || pick(utm, k);
+  const clickPick = (k: string) => pick(data, k) || pick(clickIds, k);
+
+  // Compute channel + has_click_id at write time so the sheet has the
+  // resolved value even if the client didn't pre-compute one.
+  const utmSource = utmPick("utm_source");
+  const trafficSource = pick(data, "traffic_source");
+  const gclid = clickPick("gclid");
+  const fbclid = clickPick("fbclid");
+  const msclkid = clickPick("msclkid");
+  const ttclid = clickPick("ttclid");
+  const liFatId = clickPick("li_fat_id");
+  const explicitChannel = pick(data, "channel");
+  const channel =
+    explicitChannel ||
+    utmSource ||
+    trafficSource ||
+    (gclid ? "google_ads" : "") ||
+    (fbclid ? "facebook_ads" : "") ||
+    (msclkid ? "bing_ads" : "") ||
+    (ttclid ? "tiktok_ads" : "") ||
+    (liFatId ? "linkedin_ads" : "") ||
+    "direct";
+  const hasClickId =
+    !!(gclid || fbclid || msclkid || ttclid || liFatId);
+
   return [
-    pick("utm_source"),
-    pick("utm_medium"),
-    pick("utm_campaign"),
-    pick("utm_term"),
-    pick("utm_content"),
-    typeof data.landing_page === "string" ? data.landing_page : "",
-    typeof data.referrer === "string" ? data.referrer : "",
+    utmSource,                                                       // K utm_source
+    utmPick("utm_medium"),                                           // L utm_medium
+    utmPick("utm_campaign"),                                         // M utm_campaign
+    utmPick("utm_term"),                                             // N utm_term
+    utmPick("utm_content"),                                          // O utm_content
+    typeof data.landing_page === "string" ? data.landing_page : "",  // P landing_page
+    typeof data.referrer === "string" ? data.referrer : "",          // Q referrer
+    gclid,                                                           // R gclid
+    fbclid,                                                          // S fbclid
+    msclkid,                                                         // T msclkid
+    ttclid,                                                          // U ttclid
+    liFatId,                                                         // V li_fat_id
+    trafficSource,                                                   // W traffic_source
+    channel,                                                         // X channel
+    hasClickId ? "TRUE" : "FALSE",                                   // Y has_click_id
   ];
 }
 

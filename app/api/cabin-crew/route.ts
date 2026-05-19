@@ -8,6 +8,7 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
+    // A-I form data, then 15 attribution cells (utm + click IDs + channel)
     const row = [
       new Date().toISOString(),
       data.name || "",
@@ -18,13 +19,13 @@ export async function POST(request: Request) {
       data.englishCommunication || "",
       data.age || "",
       data.joiningTimeline || "",
-      ...extractAttributionCells(data), // utm_source..referrer (J:P)
+      ...extractAttributionCells(data), // J:X — utm/click/channel
     ];
 
     let sheetsResult = null;
     let sheetsError: string | null = null;
     try {
-      sheetsResult = await appendToSheet(CABIN_CREW_TAB, "A:P", row, CABIN_CREW_SHEET_ID);
+      sheetsResult = await appendToSheet(CABIN_CREW_TAB, "A:X", row, CABIN_CREW_SHEET_ID);
       sheetsError = null;
     } catch (sheetErr) {
       sheetsError = sheetErr instanceof Error ? sheetErr.message : String(sheetErr);

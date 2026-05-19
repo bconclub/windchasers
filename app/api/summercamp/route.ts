@@ -103,8 +103,8 @@ export async function POST(request: NextRequest) {
     console.log("Summer Camp append tab:", tab);
     console.log("Summer Camp spreadsheetId:", spreadsheetId);
 
-    // Write to Google Sheets
-    const result = await appendToSheet(tab, "A:P", [
+    // A-I form data, then 15 attribution cells (utm + click IDs + channel)
+    const result = await appendToSheet(tab, "A:X", [
       timestamp,                          // A: Date
       parentName,                         // B: Name
       formatPhone(phone),                 // C: Phone
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
       formatBatch(batchPreference),       // G: Batch
       "New Lead",                         // H: Status
       "Web Lead",                         // I: Source
-      ...extractAttributionCells(body),   // utm_source..referrer (J:P)
+      ...extractAttributionCells(body),   // J:X — utm/click/channel
     ], spreadsheetId);
 
     console.log("Summer Camp Sheets API success:", JSON.stringify(result));

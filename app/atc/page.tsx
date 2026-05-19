@@ -26,7 +26,7 @@ import {
   Phone,
 } from "lucide-react";
 import { useTracking } from "@/hooks/useTracking";
-import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
+import { getTrackingData, getLandingPage, getStoredReferrer, getStoredClickIds, deriveTrafficSource } from "@/lib/tracking";
 
 const PROGRAM_CATEGORIES = [
   {
@@ -192,7 +192,9 @@ export default function ATCPage() {
 
     try {
       const trackingData = getTrackingData();
-      // Dedicated route → Google Sheet tab "ATC Web Lead" (A:I) + Proxe backup (see app/api/atc/route.ts)
+      // Dedicated route → Google Sheet tab "ATC Web Lead" (A:X) + Proxe backup (see app/api/atc/route.ts)
+      const clickIds = getStoredClickIds();
+      const trafficSource = deriveTrafficSource();
       const res = await fetch("/api/atc", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -204,7 +206,13 @@ export default function ATCPage() {
           qualification: formData.qualification,
           sessionId,
           utmParams,
+          ...utmParams,
+          // Ad-network click IDs + channel for paid attribution
+          clickIds,
+          ...clickIds,
+          traffic_source: trafficSource,
           referrer: getStoredReferrer(),
+          landing_page: getLandingPage(),
           landingPage: getLandingPage(),
           pageViews: trackingData.pageViews,
           formSubmissions: trackingData.formSubmissions,

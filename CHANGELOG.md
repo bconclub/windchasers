@@ -2,6 +2,23 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-19 19:45 IST · feat(attribution): full attribution to every sheet form + assessment-early → PROXe; scope WA pill to program pages
+
+Two related closes-the-loop pieces.
+
+**1. Attribution is now uniform across every form path.**
+
+- **`lib/sheets.ts`** — `extractAttributionCells()` widened from 7 → 15 cells. Adds gclid, fbclid, msclkid, ttclid, li_fat_id, traffic_source, channel (derived), has_click_id. Channel resolution: utm_source → traffic_source → click-id-derived (`google_ads` / `facebook_ads` / `bing_ads` / `tiktok_ads` / `linkedin_ads`) → "direct".
+- **`app/api/open-house/route.ts`** range A:O → A:W. Same for nz-seminar (A:Q → A:Y), webinar (A:P → A:X), summercamp (A:P → A:X), cabin-crew (A:P → A:X), atc (A1:P1 → A1:X1).
+- **`app/api/assessment-early/route.ts`** — added 8 new columns N-U (gclid, fbclid, msclkid, ttclid, li_fat_id, traffic_source, channel, has_click_id) without disturbing the existing A:M layout, so old rows still line up. Range A1:M1 → A1:U1. **Also now forwards every submission to PROXe** via `/api/agent/leads/inbound` as a `type: "page"` lead with `notes: "assessment_early"`. Sheet stays as the durable backup; PROXe is best-effort with a 4-second timeout.
+- **Client forms** (nz-seminar, open-house, atc, summercamp, cabin-crew, assessment-early) now call `getStoredClickIds()` and `deriveTrafficSource()` and include them in the POST body alongside utm. Same pattern PAT, demo, and the WA capture modal use.
+
+**2. WhatsApp pill scoped to the program funnel pages only.**
+
+- **`components/Navbar.tsx`** — the green WhatsApp pill in the compact header now renders **only** on `/`, `/pilot-training*`, `/dgca`, `/helicopter`, `/international` (where it opens the lead-capture modal) and the two webinar group-invite pages (`/webinar/parents`, `/webinar/students` — direct group link). Every other page (NZ seminar, ATC, cabin crew, summer camp, open house, students, parents, flight schools, thank-you, demo, assessment) gets only the logo + Call button. No more silent direct `wa.me` links that bypass PROXe.
+
+User-facing: WA button removed from non-program pages.
+
 ## 2026-05-19 19:00 IST · fix(wa-capture): attribution gap — modal wasn't sending click IDs / referrer / landing
 
 The WhatsApp capture modal (navbar pill on /, /pilot-training*, /dgca, /helicopter, /international) was only sending `utm_*` from localStorage to PROXe. Meta auto-tags ad URLs with `fbclid`, not `utm_*`, so every WA lead from an Instagram or Facebook ad was landing in PROXe with no attribution → bucketed as DIRECT or, when paired with a sentinel name, untriageable.

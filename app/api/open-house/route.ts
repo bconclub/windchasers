@@ -19,7 +19,8 @@ export async function POST(request: Request) {
     console.log("Open House append tab:", tab);
     console.log("Open House spreadsheetId:", spreadsheetId);
 
-    const result = await appendToSheet(tab, "A:O", [
+    // A-H form data, then 15 attribution cells (utm + click IDs + channel)
+    const result = await appendToSheet(tab, "A:W", [
       new Date().toISOString(),      // Date (A)
       data.role || "",               // Type (B)
       data.name || "",               // Name (C)
@@ -28,7 +29,7 @@ export async function POST(request: Request) {
       data.city || "",               // City (F)
       data.parentAttending || "",    // With Someone (G)
       data.status || "",             // Status (H)
-      ...extractAttributionCells(data), // utm_source..referrer (I:O)
+      ...extractAttributionCells(data), // I:W — utm/click/channel
     ], spreadsheetId);
 
     console.log("Open House Sheets API success:", JSON.stringify(result));

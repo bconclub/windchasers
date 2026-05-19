@@ -231,9 +231,16 @@ export default function CabinCrewPageClient({
 
     setIsSubmitting(true);
     try {
-      const { getStoredUTMParamsFull, getLandingPage, getStoredReferrer } =
-        await import("@/lib/tracking");
+      const {
+        getStoredUTMParamsFull,
+        getStoredClickIds,
+        getLandingPage,
+        getStoredReferrer,
+        deriveTrafficSource,
+      } = await import("@/lib/tracking");
       const utm = getStoredUTMParamsFull();
+      const clickIds = getStoredClickIds();
+      const trafficSource = deriveTrafficSource();
       const response = await fetch("/api/cabin-crew", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -248,6 +255,10 @@ export default function CabinCrewPageClient({
           joiningTimeline: formData.joiningTimeline,
           ...utm,
           utmParams: utm,
+          // Ad-network click IDs + channel for paid attribution
+          clickIds,
+          ...clickIds,
+          traffic_source: trafficSource,
           landing_page: getLandingPage(),
           referrer: getStoredReferrer(),
         }),

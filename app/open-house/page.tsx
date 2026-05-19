@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import Head from "next/head";
 import { useTracking } from "@/hooks/useTracking";
-import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
+import { getTrackingData, getLandingPage, getStoredReferrer, getStoredClickIds, deriveTrafficSource } from "@/lib/tracking";
 import WindChasersPastOpenHousesGallery from "@/components/marketing/WindChasersPastOpenHousesGallery";
 
 const TOPICS = [
@@ -225,6 +225,8 @@ export default function OpenHousePage() {
     setSubmitting(true);
     try {
       const trackingData = getTrackingData();
+      const clickIds = getStoredClickIds();
+      const trafficSource = deriveTrafficSource();
       const res = await fetch("/api/open-house", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -240,6 +242,10 @@ export default function OpenHousePage() {
           sessionId,
           utmParams,
           ...utmParams,
+          // Ad-network click IDs + derived channel for paid attribution
+          clickIds,
+          ...clickIds,
+          traffic_source: trafficSource,
           referrer: getStoredReferrer(),
           landing_page: getLandingPage(),
           pageViews: trackingData.pageViews,

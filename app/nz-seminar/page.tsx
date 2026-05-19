@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import Head from "next/head";
 import { useTracking } from "@/hooks/useTracking";
-import { getTrackingData, getLandingPage, getStoredReferrer } from "@/lib/tracking";
+import { getTrackingData, getLandingPage, getStoredReferrer, getStoredClickIds, deriveTrafficSource } from "@/lib/tracking";
 
 const TOPICS = [
   { Icon: Compass, image: "/unsplash/nz-aviation-CjpAnjRn.jpg", title: "Why New Zealand for flight training", desc: "ICAO-recognised CAA standards, year-round flying weather, and a pipeline trusted by global airlines." },
@@ -240,6 +240,8 @@ export default function NzSeminarPage() {
     setSubmitting(true);
     try {
       const trackingData = getTrackingData();
+      const clickIds = getStoredClickIds();
+      const trafficSource = deriveTrafficSource();
       const res = await fetch("/api/nz-seminar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -255,6 +257,11 @@ export default function NzSeminarPage() {
           sessionId,
           utmParams,
           ...utmParams,
+          // Ad-network click IDs (Meta/Google auto-tag) + derived channel
+          // so sheet rows capture paid traffic, not just utm-tagged.
+          clickIds,
+          ...clickIds,
+          traffic_source: trafficSource,
           referrer: getStoredReferrer(),
           landing_page: getLandingPage(),
           pageViews: trackingData.pageViews,

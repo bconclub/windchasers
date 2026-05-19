@@ -19,7 +19,8 @@ export async function POST(request: Request) {
       "GOOGLE_SHEET_ID"
     );
 
-    const result = await appendToSheet(tab, "A:P", [
+    // A-I form data, then 15 attribution cells (utm + click IDs + channel)
+    const result = await appendToSheet(tab, "A:X", [
       new Date().toISOString(),
       data.webinarSlug || "",
       data.webinarTitle || "",
@@ -29,7 +30,7 @@ export async function POST(request: Request) {
       data.city || "",
       data.role || "",
       data.status || "",
-      ...extractAttributionCells(data), // utm_source..referrer (J:P)
+      ...extractAttributionCells(data), // J:X — utm/click/channel
     ], spreadsheetId);
 
     return NextResponse.json({ success: true, data: result });
