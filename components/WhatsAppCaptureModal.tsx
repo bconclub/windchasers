@@ -141,7 +141,12 @@ export function WhatsAppCaptureModal({
       data: {
         event_name: "WhatsApp Prelaunch",
         touchpoint: source,
-        channel: "whatsapp",
+        // `submission_surface` is the user-facing context (which form). It
+        // is NEVER the marketing channel — channel is resolved server-side
+        // from utm_source / click-IDs / referrer. Keeping these separate
+        // means a WA-popup lead from a Meta ad gets `channel="facebook_ads"`
+        // (correct attribution) instead of being clobbered into "whatsapp".
+        submission_surface: "whatsapp_popup",
         program: program || "",
         page: pagePath,
         wa_target_number: waNumber,

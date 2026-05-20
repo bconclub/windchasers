@@ -93,17 +93,19 @@ export async function POST(request: NextRequest) {
     const utmTerm = utm_term || utmParams?.utm_term || "";
     const utmContent = utm_content || utmParams?.utm_content || "";
 
-    // Channel attribution. PROXe's source column reads utm_source / channel
-    // first; fall back to ad-click-IDs and finally to derived traffic_source
-    // so paid-ads traffic doesn't get bucketed into "DIRECT".
+    // Channel attribution. PROXe's source column reads custom_fields.channel.
+    // Order: utm_source → click-IDs (Meta/Google auto-tag with these and
+    // they're a stronger paid-ad signal than the referrer) → traffic_source
+    // (referrer-derived) → "direct".
     const channel =
       utmSource ||
-      traffic_source ||
-      (gclid ? "google_ads" : "") ||
       (fbclid ? "facebook_ads" : "") ||
+      (gclid || wbraid || gbraid ? "google_ads" : "") ||
       (msclkid ? "bing_ads" : "") ||
       (ttclid ? "tiktok_ads" : "") ||
       (li_fat_id ? "linkedin_ads" : "") ||
+      (twclid ? "twitter_ads" : "") ||
+      traffic_source ||
       "direct";
     const hasAnyClickId = !!(
       gclid ||

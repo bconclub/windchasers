@@ -2,6 +2,25 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-21 16:30 IST · fix(attribution): channel=whatsapp override fixed; resolver reordered (click-IDs before referrer)
+
+Two real bugs identified in production lead attribution. Both shipped.
+
+**Bug A — hard-coded `channel: "whatsapp"` was clobbering the server-resolved channel.**
+- `components/WhatsAppCaptureModal.tsx:144` was sending `data: { channel: "whatsapp", ... }`. In `/api/leads` the `event` case spreads `...restData` AFTER setting `channel`, so the modal's value won.
+- WA modal now sends `submission_surface: "whatsapp_popup"` instead (platform context, not marketing channel).
+- `/api/leads` event case hardened: client `data.*` fields that match resolver-owned keys (channel, traffic_source, utm_*, *_id, has_click_id, landing_url, referrer, page_url) are filtered out of `restData` so future clients can't accidentally clobber attribution either.
+- `lib/sheets.ts` `extractAttributionCells()` also blocks platform tags (`whatsapp`/`web`/`voice`/`call`/`form`) from `data.channel` so the sheet column never gets a platform value either.
+
+**Bug B — resolver was ordered wrong: referrer beat click-IDs.**
+- A Meta-ad click carries BOTH a `m.facebook.com` referrer AND an `fbclid`. The old order returned `facebook` (from `traffic_source` step) instead of `facebook_ads` (from `fbclid` step), losing the paid-traffic signal.
+- All 4 resolvers (api/leads, api/booking, api/assessment-early, lib/sheets) reordered to: **utm_source → click-IDs → traffic_source → "direct"**.
+- Also added missing mappings: `wbraid`/`gbraid` → `google_ads`, `twclid` → `twitter_ads`.
+
+Verified live with two synthetic leads:
+- `1007ae7d-…` (IG-ad-like payload with `utm_source: "ig"` and `fbclid`) — should resolve to `channel: "ig"` once deploy lands
+- `0dc726f5-…` (no UTM, no click-IDs, no referrer) — should resolve to `channel: "direct"` (NOT `whatsapp`)
+
 ## 2026-05-19 19:45 IST · feat(attribution): full attribution to every sheet form + assessment-early → PROXe; scope WA pill to program pages
 
 Two related closes-the-loop pieces.

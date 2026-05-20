@@ -62,16 +62,17 @@ export async function POST(request: Request) {
       "GOOGLE_SHEET_ID"
     );
 
-    // Resolved channel (same precedence the other forms use):
-    //   utm_source → traffic_source → click-id-derived → "direct".
+    // Resolved channel. Order: utm_source → click-IDs (auto-tagged ads beat
+    // referrer-derived guesses) → traffic_source → "direct".
     const channel =
       data.utm_source ||
-      data.traffic_source ||
-      (data.gclid ? "google_ads" : "") ||
       (data.fbclid ? "facebook_ads" : "") ||
+      (data.gclid || data.wbraid || data.gbraid ? "google_ads" : "") ||
       (data.msclkid ? "bing_ads" : "") ||
       (data.ttclid ? "tiktok_ads" : "") ||
       (data.li_fat_id ? "linkedin_ads" : "") ||
+      (data.twclid ? "twitter_ads" : "") ||
+      data.traffic_source ||
       "direct";
     const hasClickId = !!(
       data.gclid ||

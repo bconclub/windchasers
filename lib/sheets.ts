@@ -76,19 +76,48 @@ export function extractAttributionCells(data: Record<string, unknown>): string[]
   const msclkid = clickPick("msclkid");
   const ttclid = clickPick("ttclid");
   const liFatId = clickPick("li_fat_id");
-  const explicitChannel = pick(data, "channel");
+  // Discard client-supplied channel values that are platform tags (e.g.
+  // "whatsapp" from the WA capture modal) — those belong in form_type, not
+  // here. Only honour an explicit `channel` when it looks like a marketing
+  // source value the client already resolved.
+  const PLATFORM_BLOCKLIST = new Set([
+    "whatsapp",
+    "web",
+    "voice",
+    "call",
+    "form",
+  ]);
+  const explicitChannelRaw = pick(data, "channel").toLowerCase();
+  const explicitChannel = PLATFORM_BLOCKLIST.has(explicitChannelRaw)
+    ? ""
+    : pick(data, "channel");
+  // Order: explicit channel → utm_source → click-IDs (Meta/Google auto-tag
+  // with these and they win over a referrer-only signal) → traffic_source
+  // (referrer-derived) → "direct".
+  const wbraid = clickPick("wbraid");
+  const gbraid = clickPick("gbraid");
+  const twclid = clickPick("twclid");
   const channel =
     explicitChannel ||
     utmSource ||
-    trafficSource ||
-    (gclid ? "google_ads" : "") ||
     (fbclid ? "facebook_ads" : "") ||
+    (gclid || wbraid || gbraid ? "google_ads" : "") ||
     (msclkid ? "bing_ads" : "") ||
     (ttclid ? "tiktok_ads" : "") ||
     (liFatId ? "linkedin_ads" : "") ||
+    (twclid ? "twitter_ads" : "") ||
+    trafficSource ||
     "direct";
-  const hasClickId =
-    !!(gclid || fbclid || msclkid || ttclid || liFatId);
+  const hasClickId = !!(
+    gclid ||
+    fbclid ||
+    msclkid ||
+    ttclid ||
+    liFatId ||
+    wbraid ||
+    gbraid ||
+    twclid
+  );
 
   return [
     utmSource,                                                       // K utm_source

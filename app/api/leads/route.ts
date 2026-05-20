@@ -296,22 +296,28 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const upstreamApiKey = inboundKey;
     let upstreamPayload: Record<string, unknown>;
 
-    // Resolve a coarse channel string used by PROXe's `source` column. Order
-    // of preference: explicit utm_source → traffic_source derived from
-    // referrer → presence of any click ID → the form type itself. The last
-    // fallback is so leads that legitimately came in cold (typed URL,
-    // organic search where the referrer was stripped) still get categorised
-    // rather than dumped into DIRECT.
+    // Resolve a coarse channel string used by PROXe's `source` column.
+    // Order of preference (ordered most-to-least specific):
+    //   1. explicit utm_source — direct marketing signal the team set up
+    //   2. ad-network click IDs — Meta/Google auto-tag URLs with these
+    //      INSTEAD of utm_*, so they win over referrer (a user clicking
+    //      a Meta ad has both `fbclid` AND a `m.facebook.com` referrer;
+    //      `fbclid` means "paid ad" while the referrer alone is ambiguous)
+    //   3. traffic_source — referrer-derived (organic social, organic search)
+    //   4. "direct" — typed URL / referrer stripped
+    // Note: this is the marketing channel, NOT the submission surface.
+    // The form/popup type lives in form_type / event_name, not here.
     const clickIds = body.click_ids ?? {};
     const hasAnyClickId = Object.values(clickIds).some((v) => !!v);
     const channelFallback =
       utm.source ||
-      body.traffic_source ||
-      (clickIds.gclid ? "google_ads" : "") ||
       (clickIds.fbclid ? "facebook_ads" : "") ||
+      (clickIds.gclid || clickIds.wbraid || clickIds.gbraid ? "google_ads" : "") ||
       (clickIds.msclkid ? "bing_ads" : "") ||
       (clickIds.ttclid ? "tiktok_ads" : "") ||
       (clickIds.li_fat_id ? "linkedin_ads" : "") ||
+      (clickIds.twclid ? "twitter_ads" : "") ||
+      body.traffic_source ||
       "";
 
     switch (type) {
@@ -412,6 +418,35 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         const { event_name, ...restData } = data;
         const eventLabel =
           typeof event_name === "string" ? event_name : "event";
+        // Strip any field from restData that the resolver owns. The client
+        // (e.g. WhatsAppCaptureModal) used to send `data.channel = "whatsapp"`
+        // and it would clobber the server-resolved channel via the spread.
+        // Whitelist-out: channel, traffic_source, utm_*, *_id (click IDs).
+        const protectedKeys = new Set([
+          "channel",
+          "traffic_source",
+          "utm_source",
+          "utm_medium",
+          "utm_campaign",
+          "utm_term",
+          "utm_content",
+          "gclid",
+          "fbclid",
+          "msclkid",
+          "ttclid",
+          "li_fat_id",
+          "twclid",
+          "wbraid",
+          "gbraid",
+          "has_click_id",
+          "landing_url",
+          "referrer",
+          "page_url",
+        ]);
+        const safeRestData: Record<string, unknown> = {};
+        for (const [k, v] of Object.entries(restData)) {
+          if (!protectedKeys.has(k)) safeRestData[k] = v;
+        }
         upstreamPayload = {
           name,
           phone,
@@ -427,6 +462,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             page_url: body.page_url,
             landing_url: body.landing_url,
             referrer: body.referrer,
+            // Spread client-supplied event metadata FIRST so the
+            // attribution fields below cannot be clobbered by callers
+            // sending e.g. `channel: "whatsapp"` in their data block.
+            ...safeRestData,
             channel: channelFallback || "direct",
             traffic_source: body.traffic_source,
             utm_source: utm.source,
@@ -440,7 +479,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             ttclid: clickIds.ttclid,
             li_fat_id: clickIds.li_fat_id,
             has_click_id: hasAnyClickId,
-            ...restData,
           },
         };
         break;
