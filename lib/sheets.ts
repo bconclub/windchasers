@@ -79,7 +79,8 @@ export function extractAttributionCells(data: Record<string, unknown>): string[]
   // Discard client-supplied channel values that are platform tags (e.g.
   // "whatsapp" from the WA capture modal) — those belong in form_type, not
   // here. Only honour an explicit `channel` when it looks like a marketing
-  // source value the client already resolved.
+  // source value the client already resolved. Also reject the legacy
+  // `referral:<host>` catch-all format which polluted older rows.
   const PLATFORM_BLOCKLIST = new Set([
     "whatsapp",
     "web",
@@ -88,9 +89,11 @@ export function extractAttributionCells(data: Record<string, unknown>): string[]
     "form",
   ]);
   const explicitChannelRaw = pick(data, "channel").toLowerCase();
-  const explicitChannel = PLATFORM_BLOCKLIST.has(explicitChannelRaw)
-    ? ""
-    : pick(data, "channel");
+  const isReferralPrefix = explicitChannelRaw.startsWith("referral:");
+  const explicitChannel =
+    PLATFORM_BLOCKLIST.has(explicitChannelRaw) || isReferralPrefix
+      ? ""
+      : pick(data, "channel");
   // Order: explicit channel → utm_source → click-IDs (Meta/Google auto-tag
   // with these and they win over a referrer-only signal) → traffic_source
   // (referrer-derived) → "direct".

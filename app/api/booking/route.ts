@@ -97,6 +97,12 @@ export async function POST(request: NextRequest) {
     // Order: utm_source → click-IDs (Meta/Google auto-tag with these and
     // they're a stronger paid-ad signal than the referrer) → traffic_source
     // (referrer-derived) → "direct".
+    // Reject legacy `referral:<host>` strings from older sessionStorage.
+    const safeTrafficSource =
+      typeof traffic_source === "string" &&
+      !traffic_source.toLowerCase().startsWith("referral:")
+        ? traffic_source
+        : "";
     const channel =
       utmSource ||
       (fbclid ? "facebook_ads" : "") ||
@@ -105,7 +111,7 @@ export async function POST(request: NextRequest) {
       (ttclid ? "tiktok_ads" : "") ||
       (li_fat_id ? "linkedin_ads" : "") ||
       (twclid ? "twitter_ads" : "") ||
-      traffic_source ||
+      safeTrafficSource ||
       "direct";
     const hasAnyClickId = !!(
       gclid ||

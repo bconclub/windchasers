@@ -2,6 +2,16 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-21 17:15 IST · fix(attribution): drop `referral:<host>` catch-all + skip self-referrer
+
+Demo Form lead landed in PROXe with `channel: REFERRAL:PILOT.WINDCHASERS.IN` because `deriveTrafficSource` was using a catch-all `return \`referral:${host}\`` for any unknown referrer. Internal navigation from `pilot.windchasers.in/<page>` → another page would store the site itself as the first-touch referrer and surface that string in the CRM source column.
+
+- **`lib/tracking.ts`** — `deriveTrafficSource()` now ONLY returns recognised external networks (google, facebook, instagram, youtube, linkedin, twitter, bing, duckduckgo, reddit, tiktok). Unknown hosts and self-referrers return empty string so the resolver falls through to `"direct"`. Subdomain-aware: pilot.windchasers.in → windchasers.in are both treated as self.
+- **`captureAndStoreUTMParams()`** — also skips storing self-referrers at capture time so future sessions can't pollute.
+- **`lib/sheets.ts`** + **`app/api/leads/route.ts`** + **`app/api/booking/route.ts`** + **`app/api/assessment-early/route.ts`** — all 4 resolvers now reject any incoming `channel` / `traffic_source` value that starts with `referral:`, in case stale sessionStorage from before this fix still has the old format. They fall through to `"direct"` instead.
+
+User-facing: Source column shows `direct` for organic / internal navigation, never `REFERRAL:PILOT.WINDCHASERS.IN`.
+
 ## 2026-05-21 16:30 IST · fix(attribution): channel=whatsapp override fixed; resolver reordered (click-IDs before referrer)
 
 Two real bugs identified in production lead attribution. Both shipped.

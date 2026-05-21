@@ -163,7 +163,26 @@ export function captureAndStoreUTMParams(): void {
     }
 
     if (!sessionStorage.getItem(REFERRER_KEY) && document.referrer) {
-      sessionStorage.setItem(REFERRER_KEY, document.referrer);
+      // Skip self-referrers — `pilot.windchasers.in → /pilot-training` is
+      // internal navigation, not a marketing channel. Without this filter
+      // any in-tab nav would store the site itself as the first-touch
+      // referrer and the CRM would show `referral:pilot.windchasers.in`.
+      try {
+        const refHost = new URL(document.referrer)
+          .hostname.toLowerCase()
+          .replace(/^www\./, "");
+        const currentHost = window.location.hostname
+          .toLowerCase()
+          .replace(/^www\./, "");
+        const rootCurrent = currentHost.split(".").slice(-2).join(".");
+        const rootRef = refHost.split(".").slice(-2).join(".");
+        if (refHost !== currentHost && rootRef !== rootCurrent) {
+          sessionStorage.setItem(REFERRER_KEY, document.referrer);
+        }
+      } catch {
+        // Malformed referrer URL — be safe, just store it raw.
+        sessionStorage.setItem(REFERRER_KEY, document.referrer);
+      }
     }
   } catch (error) {
     console.error("Error storing UTM params:", error);
@@ -183,29 +202,45 @@ export function getStoredClickIds(): ClickIds {
 }
 
 /**
- * Derive a coarse traffic source when no UTM is present. Looks at the
- * referrer hostname so paid/organic traffic doesn't all bucket into DIRECT.
- * Falls back to empty string (caller can decide what "no signal" means).
+ * Derive a coarse traffic source when no UTM / click-ID is present. Only
+ * returns RECOGNISED external networks. Anything else (self-referrer from
+ * internal navigation, unknown sites, no referrer at all) returns "" so
+ * the channel resolver falls through to "direct" instead of polluting
+ * the CRM with `referral:pilot.windchasers.in` style values.
  */
 export function deriveTrafficSource(): string {
   if (typeof window === "undefined") return "";
   try {
     const ref = sessionStorage.getItem(REFERRER_KEY) || document.referrer || "";
     if (!ref) return "";
-    const host = new URL(ref).hostname.toLowerCase();
+    const host = new URL(ref).hostname.toLowerCase().replace(/^www\./, "");
+
+    // Self-referrer (internal navigation) is not a marketing source.
+    const currentHost = window.location.hostname.toLowerCase().replace(/^www\./, "");
+    if (host === currentHost) return "";
+    // Also strip subdomain matches — pilot.windchasers.in → root domain
+    // windchasers.in. A user bouncing between pilot.* and www.* is still
+    // "us", not a referral.
+    const rootCurrent = currentHost.split(".").slice(-2).join(".");
+    const rootRef = host.split(".").slice(-2).join(".");
+    if (rootRef === rootCurrent) return "";
+
     if (host.includes("google.")) return "google";
-    if (host.includes("facebook.") || host.includes("fb.com")) return "facebook";
+    if (host.includes("facebook.") || host === "fb.com" || host.endsWith(".fb.com"))
+      return "facebook";
     if (host.includes("instagram.")) return "instagram";
     if (host.includes("youtube.")) return "youtube";
-    if (host.includes("linkedin.")) return "linkedin";
+    if (host.includes("linkedin.") || host === "lnkd.in") return "linkedin";
     if (host.includes("twitter.") || host === "t.co" || host.includes("x.com"))
       return "twitter";
     if (host.includes("bing.")) return "bing";
     if (host.includes("duckduckgo.")) return "duckduckgo";
     if (host.includes("reddit.")) return "reddit";
     if (host.includes("tiktok.")) return "tiktok";
-    // Strip any www. prefix and treat the bare hostname as a referral.
-    return `referral:${host.replace(/^www\./, "")}`;
+
+    // Unknown external referrer: don't make up a "referral:<host>" label.
+    // Fall through to "direct" at the resolver layer.
+    return "";
   } catch {
     return "";
   }

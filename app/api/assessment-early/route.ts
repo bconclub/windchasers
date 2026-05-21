@@ -64,6 +64,12 @@ export async function POST(request: Request) {
 
     // Resolved channel. Order: utm_source → click-IDs (auto-tagged ads beat
     // referrer-derived guesses) → traffic_source → "direct".
+    // Reject legacy `referral:<host>` strings from older sessionStorage.
+    const safeTrafficSource =
+      typeof data.traffic_source === "string" &&
+      !data.traffic_source.toLowerCase().startsWith("referral:")
+        ? data.traffic_source
+        : "";
     const channel =
       data.utm_source ||
       (data.fbclid ? "facebook_ads" : "") ||
@@ -72,7 +78,7 @@ export async function POST(request: Request) {
       (data.ttclid ? "tiktok_ads" : "") ||
       (data.li_fat_id ? "linkedin_ads" : "") ||
       (data.twclid ? "twitter_ads" : "") ||
-      data.traffic_source ||
+      safeTrafficSource ||
       "direct";
     const hasClickId = !!(
       data.gclid ||

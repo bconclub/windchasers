@@ -309,6 +309,14 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     // The form/popup type lives in form_type / event_name, not here.
     const clickIds = body.click_ids ?? {};
     const hasAnyClickId = Object.values(clickIds).some((v) => !!v);
+    // Reject legacy `referral:<host>` catch-all format from traffic_source.
+    // Stale clients (sessionStorage from before this fix) might still send
+    // it; treat as unknown signal and fall through to "direct".
+    const safeTrafficSource =
+      typeof body.traffic_source === "string" &&
+      !body.traffic_source.toLowerCase().startsWith("referral:")
+        ? body.traffic_source
+        : "";
     const channelFallback =
       utm.source ||
       (clickIds.fbclid ? "facebook_ads" : "") ||
@@ -317,7 +325,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       (clickIds.ttclid ? "tiktok_ads" : "") ||
       (clickIds.li_fat_id ? "linkedin_ads" : "") ||
       (clickIds.twclid ? "twitter_ads" : "") ||
-      body.traffic_source ||
+      safeTrafficSource ||
       "";
 
     switch (type) {
