@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, User as UserIcon } from "lucide-react";
+import { trackMetaLead } from "@/lib/metaPixel";
 import { getStoredAttribution } from "@/lib/attribution";
 import {
   getStoredUTMParamsFull,
@@ -190,6 +191,9 @@ export function WhatsAppCaptureModal({
     } catch (err) {
       console.warn("[wa-capture] unexpected error:", err);
     }
+
+    // Fire Meta Pixel Lead event before leaving the page.
+    trackMetaLead({ content_name: "WhatsApp Chat", content_category: "whatsapp_lead" });
 
     if (onRedirect) onRedirect();
 
