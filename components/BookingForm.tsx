@@ -7,9 +7,16 @@ import { Calendar } from "lucide-react";
 import { trackFormSubmission, sendTrackingData, getStoredUTMParams, getLandingPage, getStoredReferrer, getStoredClickIds, deriveTrafficSource } from "@/lib/tracking";
 import { getUserSessionData, saveUserSessionData, markBookingCompleted } from "@/lib/sessionStorage";
 import { trackPilotLead } from "@/lib/analytics";
-import { isSlotInPast, getMinBookingDateIST } from "@/lib/booking-time";
+import {
+  isSlotInPast,
+  getMinBookingDateIST,
+  getBookingTimeSlots,
+  getBookingWindowLabel,
+  isAllowedBookingTime,
+  type BookingDemoType,
+} from "@/lib/booking-time";
 
-type DemoType = "online" | "offline";
+type DemoType = BookingDemoType;
 type EducationLevel = "pursuing_10_2" | "completed_10_2" | "graduate" | "working_professional";
 type InterestSource = "dgca_ground" | "pilot_training_abroad" | "helicopter_license" | "other";
 
@@ -19,17 +26,6 @@ const interestOptions = [
   { value: "helicopter_license", label: "Helicopter License" },
   { value: "other", label: "Other" },
 ];
-
-// Generate hourly time slots from 11 AM to 4 PM
-const timeSlots = Array.from({ length: 6 }, (_, i) => {
-  const hour = 11 + i; // 11 AM to 4 PM (11, 12, 13, 14, 15, 16)
-  const period = hour >= 12 ? "PM" : "AM";
-  const displayHour = hour === 12 ? 12 : hour > 12 ? hour - 12 : hour;
-  return {
-    value: `${hour.toString().padStart(2, "0")}:00`,
-    label: `${displayHour}:00 ${period}`,
-  };
-});
 
 // Check if a date is Monday to Saturday (not Sunday)
 const isWeekday = (dateString: string): boolean => {
@@ -124,8 +120,12 @@ export default function BookingForm() {
 
       // Handle demoType from URL params (takes precedence)
       if (demoTypeParam === "online" || demoTypeParam === "offline") {
-        setFormData((prev) => ({ ...prev, demoType: demoTypeParam as DemoType }));
-        saveUserSessionData({ demoType: demoTypeParam });
+        setFormData((prev) => ({
+          ...prev,
+          demoType: demoTypeParam as DemoType,
+          preferredTime: "",
+        }));
+        saveUserSessionData({ demoType: demoTypeParam, preferredTime: "" });
       }
 
       // Handle interest from URL params (takes precedence)
@@ -185,6 +185,7 @@ export default function BookingForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const timeSlots = getBookingTimeSlots(formData.demoType);
 
   const handleStep1Next = () => {
     // Validate step 1 fields
@@ -202,6 +203,12 @@ export default function BookingForm() {
     }
     if (!formData.preferredTime) {
       setDateError("Please select a preferred time.");
+      return;
+    }
+    if (!isAllowedBookingTime(formData.demoType, formData.preferredTime)) {
+      setDateError("Please choose a time inside the selected session window.");
+      setFormData({ ...formData, preferredTime: "" });
+      saveUserSessionData({ preferredTime: "" });
       return;
     }
     // Past-time guard: catches the case where the user picked a slot, then
@@ -440,8 +447,16 @@ export default function BookingForm() {
                 <button
                   type="button"
                   onClick={() => {
-                    setFormData({ ...formData, demoType: "online" });
-                    saveUserSessionData({ demoType: "online" });
+                    setDateError("");
+                    setFormData({
+                      ...formData,
+                      demoType: "online",
+                      preferredTime: "",
+                    });
+                    saveUserSessionData({
+                      demoType: "online",
+                      preferredTime: "",
+                    });
                   }}
                   className={`p-3 sm:p-4 rounded-lg border-2 transition-all text-left ${
                     formData.demoType === "online"
@@ -456,8 +471,16 @@ export default function BookingForm() {
                 <button
                   type="button"
                   onClick={() => {
-                    setFormData({ ...formData, demoType: "offline" });
-                    saveUserSessionData({ demoType: "offline" });
+                    setDateError("");
+                    setFormData({
+                      ...formData,
+                      demoType: "offline",
+                      preferredTime: "",
+                    });
+                    saveUserSessionData({
+                      demoType: "offline",
+                      preferredTime: "",
+                    });
                   }}
                   className={`p-3 sm:p-4 rounded-lg border-2 transition-all text-left ${
                     formData.demoType === "offline"
@@ -577,12 +600,15 @@ export default function BookingForm() {
               return (
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Preferred Time (Hourly Slots)
+                    Preferred Time
                   </label>
+                  <p className="mb-3 text-xs text-white/60">
+                    {getBookingWindowLabel(formData.demoType)}
+                  </p>
                   {noSlotsLeft ? (
                     <div className="rounded-lg border border-[#C5A572]/30 bg-[#C5A572]/5 px-4 py-3 text-sm text-white/80">
-                      No slots available today — please pick a date from
-                      tomorrow.
+                      No slots available for this date. Please pick another
+                      date or session type.
                     </div>
                   ) : (
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

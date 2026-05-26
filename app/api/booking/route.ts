@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { appendToSheet, resolveSpreadsheetId } from "@/lib/sheets";
-import { isSlotInPast } from "@/lib/booking-time";
+import {
+  isSlotInPast,
+  isAllowedBookingTime,
+  isValidBookingDemoType,
+} from "@/lib/booking-time";
 
 // =============================================================================
 // POST /api/booking — Demo session booking
@@ -56,6 +60,7 @@ export async function POST(request: NextRequest) {
     if (!interest) missingFields.push("interest");
     if (!demoType) missingFields.push("demoType");
     if (!preferredDate) missingFields.push("preferredDate");
+    if (!preferredTime) missingFields.push("preferredTime");
 
     if (missingFields.length > 0) {
       console.error("Missing required fields:", missingFields, "Body received:", body);
@@ -65,11 +70,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!isValidBookingDemoType(demoType)) {
+      return NextResponse.json(
+        { error: "Invalid demo type." },
+        { status: 400 }
+      );
+    }
+
+    if (!isAllowedBookingTime(demoType, preferredTime)) {
+      console.warn(
+        "Booking blocked - slot outside session window:",
+        demoType,
+        preferredTime,
+        "phone:",
+        phone
+      );
+      return NextResponse.json(
+        {
+          error:
+            "This time is not available for the selected session type.",
+        },
+        { status: 400 }
+      );
+    }
+
     // Past-time guard — never trust the client. Same predicate the form uses
     // (lib/booking-time.ts → Asia/Kolkata + 60min buffer). Catches clever
     // users who edit the request, AND any race where a slot was valid at
     // form open but expired by the time submit landed.
-    if (preferredTime && isSlotInPast(preferredDate, preferredTime)) {
+    if (isSlotInPast(preferredDate, preferredTime)) {
       console.warn(
         "Booking blocked — slot in past:",
         preferredDate,

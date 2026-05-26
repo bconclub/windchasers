@@ -192,8 +192,20 @@ export function WhatsAppCaptureModal({
       console.warn("[wa-capture] unexpected error:", err);
     }
 
-    // Fire Meta Pixel Lead event before leaving the page.
-    trackMetaLead({ content_name: "WhatsApp Chat", content_category: "whatsapp_lead" });
+    // Fire Meta Pixel Lead event before leaving the page. The tiny wait gives
+    // the Pixel request time to leave the browser before the wa.me navigation.
+    const metaLeadSent = trackMetaLead({
+      content_name: "WhatsApp Chat",
+      content_category: "whatsapp_lead",
+      source,
+      program: program || "WindChasers",
+      page_path: pagePath,
+    });
+    if (!metaLeadSent) {
+      console.warn("[wa-capture] Meta Pixel fbq unavailable; Lead event not fired");
+    } else {
+      await new Promise((resolve) => setTimeout(resolve, 250));
+    }
 
     if (onRedirect) onRedirect();
 
