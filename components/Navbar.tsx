@@ -144,10 +144,17 @@ export default function Navbar() {
           )}`;
 
   const links = [
-    { href: "/dgca", label: "DGCA Ground Classes" },
-    { href: "/international", label: "Pilot Training Abroad" },
-    { href: "/helicopter", label: "Helicopter Pilot Training" },
-    { href: "/agent", label: "Agent Page" },
+    { href: "/commercial-pilot-license", label: "Commercial Pilot License" },
+    { href: "/private-pilot-license", label: "Private Pilot License" },
+    { href: "/dgca-ground-classes", label: "DGCA Ground Classes" },
+    { href: "/type-rating", label: "Type Ratings" },
+    { href: "/airline", label: "Cadet & Airline Track" },
+    { href: "/helicopter-training", label: "Helicopter Training" },
+    { href: "/pilot-training-in-india", label: "Train Abroad" },
+    { href: "/cabin-crew-program", label: "Cabin Crew" },
+    { href: "/blog", label: "Blog" },
+    { href: "/about", label: "About Us" },
+    { href: "/contact-us", label: "Contact Us" },
     { href: "/assessment", label: "Take Pilot Assessment" },
     { href: "/demo", label: "Book a Demo Session" },
   ];

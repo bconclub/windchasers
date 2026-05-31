@@ -2,6 +2,19 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-31 16:00 IST · feat(migration): windchasers.in → Next.js — 43 SEO pages at exact live slugs
+
+The legacy WordPress site (windchasers.in) was compromised; this migrates all ranking content into the Next.js app at the SAME live URLs so rankings carry over.
+
+- **New shared templates** — `components/ProgramPage.tsx` (data-driven program/landing template: richtext/cards/list/steps/facts/gallery blocks + FAQ + related chips + CTA band) and `components/ArticlePage.tsx` (blog article layout).
+- **35 leaf pages** rebuilt at exact live slugs: licenses (CPL, PPL, ATPL, foreign-cpl, license-conversion-course), ratings (instrument, multi-engine, MEIR, CFI, night-rating-progam), type ratings (B737, A320), ground (dgca-ground-classes, diploma-in-aviation, ielts-training-program), cadet/airline programs (pre-cadet, cadet-pilot, airline-preparation, airline-cadet-interview-training), 6 location pages (india/usa/canada/australia/new-zealand/south-africa), helicopter-training, cabin-crew-program, women-in-aviation, brand (about, windchasers-meet-the-team, with-the-founder, contact-us), 3 legal pages.
+- **2 hub pages** — `/type-rating`, `/airline`. **Blog** — `/blog` index + 4 migrated articles at their live slugs.
+- **Content** migrated faithfully from live (eligibility, DGCA requirements, durations, country-specific copy); typos fixed ("Progam"→"Program", "Traning"→"Training"); hype avoided.
+- **Images** — 1,059 media files pulled from live WP uploads into `public/migrated/<slug>/`.
+- **SEO** — `app/sitemap.ts` (43 canonical URLs) + `app/robots.ts`; 10× 301 redirects in `next.config.js` (about-us→about, privacy-policy-2→privacy-policy, /some, /home2, old home draft, 4 thin posts, /category/blog → /blog); Navbar + Footer relinked to the new tree.
+- **User-facing:** full pilot-training catalogue, location pages, blog, and company pages live at their original URLs.
+- Verified: `npm run build` exit 0 (85 pages), `tsc --noEmit` 0 errors, all 37 migrated routes HTTP 200.
+
 ## 2026-05-21 17:15 IST · fix(attribution): drop `referral:<host>` catch-all + skip self-referrer
 
 Demo Form lead landed in PROXe with `channel: REFERRAL:PILOT.WINDCHASERS.IN` because `deriveTrafficSource` was using a catch-all `return \`referral:${host}\`` for any unknown referrer. Internal navigation from `pilot.windchasers.in/<page>` → another page would store the site itself as the first-touch referrer and surface that string in the CRM source column.

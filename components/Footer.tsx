@@ -24,30 +24,55 @@ export default function Footer() {
               </p>
             </div>
 
-            {/* Training Paths */}
+            {/* Licenses & Ratings */}
             <div>
-              <h4 className="font-semibold mb-4 text-white">Training Paths</h4>
+              <h4 className="font-semibold mb-4 text-white">Licenses &amp; Ratings</h4>
               <ul className="space-y-2 text-sm text-white/60">
-                <li><Link href="/pilot-training" className="hover:text-white transition-colors">Pilot Training</Link></li>
-                <li><Link href="/dgca" className="hover:text-white transition-colors">DGCA Ground</Link></li>
-                <li><Link href="/international" className="hover:text-white transition-colors">International Flying</Link></li>
-                <li><Link href="/helicopter" className="hover:text-white transition-colors">Helicopter License</Link></li>
+                <li><Link href="/commercial-pilot-license" className="hover:text-white transition-colors">Commercial Pilot License</Link></li>
+                <li><Link href="/private-pilot-license" className="hover:text-white transition-colors">Private Pilot License</Link></li>
+                <li><Link href="/airline-transport-pilot-license" className="hover:text-white transition-colors">Airline Transport (ATPL)</Link></li>
+                <li><Link href="/instrument-rating" className="hover:text-white transition-colors">Instrument Rating</Link></li>
+                <li><Link href="/multi-engine-rating" className="hover:text-white transition-colors">Multi-Engine Rating</Link></li>
+                <li><Link href="/certified-flight-instructor" className="hover:text-white transition-colors">Flight Instructor (CFI)</Link></li>
+                <li><Link href="/type-rating" className="hover:text-white transition-colors">Type Ratings</Link></li>
               </ul>
             </div>
 
-            {/* Pages */}
+            {/* Programs */}
             <div>
-              <h4 className="font-semibold mb-4 text-white">Pages</h4>
+              <h4 className="font-semibold mb-4 text-white">Programs</h4>
               <ul className="space-y-2 text-sm text-white/60">
-                <li><Link href="/" className="hover:text-white transition-colors">Home</Link></li>
-                <li><Link href="/team" className="hover:text-white transition-colors">Our Team</Link></li>
-                <li><Link href="/demo" className="hover:text-white transition-colors">Book a Demo</Link></li>
-                <li><Link href="/assessment" className="hover:text-white transition-colors">Pilot Assessment</Link></li>
+                <li><Link href="/dgca-ground-classes" className="hover:text-white transition-colors">DGCA Ground Classes</Link></li>
+                <li><Link href="/diploma-in-aviation" className="hover:text-white transition-colors">Diploma in Aviation</Link></li>
+                <li><Link href="/airline" className="hover:text-white transition-colors">Cadet &amp; Airline Track</Link></li>
+                <li><Link href="/helicopter-training" className="hover:text-white transition-colors">Helicopter Training</Link></li>
+                <li><Link href="/cabin-crew-program" className="hover:text-white transition-colors">Cabin Crew Program</Link></li>
+                <li><Link href="/ielts-training-program" className="hover:text-white transition-colors">IELTS Training</Link></li>
+              </ul>
+            </div>
+
+            {/* Train Abroad + Pages */}
+            <div>
+              <h4 className="font-semibold mb-4 text-white">Train Abroad</h4>
+              <ul className="space-y-2 text-sm text-white/60">
+                <li><Link href="/pilot-training-in-india" className="hover:text-white transition-colors">India</Link></li>
+                <li><Link href="/pilot-training-in-usa" className="hover:text-white transition-colors">USA</Link></li>
+                <li><Link href="/pilot-training-in-canada" className="hover:text-white transition-colors">Canada</Link></li>
+                <li><Link href="/pilot-training-in-australia" className="hover:text-white transition-colors">Australia</Link></li>
+                <li><Link href="/pilot-training-in-new-zealand" className="hover:text-white transition-colors">New Zealand</Link></li>
+                <li><Link href="/pilot-training-in-south-africa" className="hover:text-white transition-colors">South Africa</Link></li>
+              </ul>
+              <h4 className="font-semibold mb-4 mt-6 text-white">Company</h4>
+              <ul className="space-y-2 text-sm text-white/60">
+                <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+                <li><Link href="/windchasers-meet-the-team" className="hover:text-white transition-colors">Meet the Team</Link></li>
+                <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
+                <li><Link href="/contact-us" className="hover:text-white transition-colors">Contact Us</Link></li>
               </ul>
             </div>
 
             {/* Contact */}
-            <div className="col-span-2 sm:col-span-2">
+            <div className="col-span-2 sm:col-span-4">
               <h4 className="font-semibold mb-4 text-white">Contact</h4>
               <ul className="space-y-2 text-sm text-white/60">
                 <li>
@@ -97,6 +122,11 @@ export default function Footer() {
             height={72}
             className="h-14 w-auto opacity-30"
           />
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-white/40">
+            <Link href="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
+            <Link href="/refund-policy" className="hover:text-white transition-colors">Refund Policy</Link>
+            <Link href="/terms-conditions" className="hover:text-white transition-colors">Terms &amp; Conditions</Link>
+          </div>
           <div className="flex flex-col sm:flex-row justify-between items-center gap-3 w-full text-sm text-white/30 text-center sm:text-left">
             <p>&copy; {new Date().getFullYear()} WindChasers Aviation Academy. All rights reserved.</p>
             <p>

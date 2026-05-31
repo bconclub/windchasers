@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
 interface VimeoReelProps {
@@ -27,58 +27,29 @@ export default function VimeoReel({
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [muted, setMuted] = useState(true);
+  const [isInView, setIsInView] = useState(false);
 
-  const fadeIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const currentVolRef = useRef(0);
-
-  const setVolume = (vol: number) => {
+  const sendVimeoCommand = useCallback((method: string, value?: unknown) => {
     iframeRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ method: "setVolume", value: vol }),
-      "*"
+      JSON.stringify(
+        value === undefined ? { method } : { method, value }
+      ),
+      "https://player.vimeo.com"
     );
-  };
+  }, []);
 
-  const sendMute = (val: boolean) => {
-    iframeRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ method: "setMuted", value: val }),
-      "*"
-    );
-    if (!val) setVolume(0.25);
-  };
-
-  const fadeOut = () => {
-    if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
-    let vol = currentVolRef.current;
-    fadeIntervalRef.current = setInterval(() => {
-      vol = Math.max(0, vol - 0.05);
-      currentVolRef.current = vol;
-      setVolume(vol);
-      if (vol <= 0) {
-        clearInterval(fadeIntervalRef.current!);
-        iframeRef.current?.contentWindow?.postMessage(
-          JSON.stringify({ method: "setMuted", value: true }),
-          "*"
-        );
-        setMuted(true);
-      }
-    }, 60);
-  };
-
-  const fadeIn = () => {
-    if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
-    iframeRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ method: "setMuted", value: false }),
-      "*"
-    );
+  const playAudible = useCallback(() => {
+    sendVimeoCommand("play");
+    sendVimeoCommand("setMuted", false);
+    sendVimeoCommand("setVolume", 1);
     setMuted(false);
-    let vol = currentVolRef.current;
-    fadeIntervalRef.current = setInterval(() => {
-      vol = Math.min(0.25, vol + 0.05);
-      currentVolRef.current = vol;
-      setVolume(vol);
-      if (vol >= 0.25) clearInterval(fadeIntervalRef.current!);
-    }, 60);
-  };
+  }, [sendVimeoCommand]);
+
+  const muteVideo = useCallback(() => {
+    sendVimeoCommand("setMuted", true);
+    sendVimeoCommand("setVolume", 0);
+    setMuted(true);
+  }, [sendVimeoCommand]);
 
   useEffect(() => {
     if (!autoUnmuteOnView || cover) return;
@@ -87,9 +58,11 @@ export default function VimeoReel({
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          fadeIn();
+          setIsInView(true);
+          playAudible();
         } else {
-          fadeOut();
+          setIsInView(false);
+          muteVideo();
         }
       },
       { threshold: 0.5 }
@@ -97,14 +70,17 @@ export default function VimeoReel({
     observer.observe(el);
     return () => {
       observer.disconnect();
-      if (fadeIntervalRef.current) clearInterval(fadeIntervalRef.current);
     };
-  }, [autoUnmuteOnView, cover]);
+  }, [autoUnmuteOnView, cover, muteVideo, playAudible]);
 
   const toggleMute = () => {
     const next = !muted;
     setMuted(next);
-    sendMute(next);
+    if (next) {
+      muteVideo();
+    } else {
+      playAudible();
+    }
   };
 
   const aspectClass =
@@ -131,13 +107,22 @@ export default function VimeoReel({
         src={
           cover
             ? `https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1`
-            : `https://player.vimeo.com/video/${vimeoId}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1&api=1`
+            : `https://player.vimeo.com/video/${vimeoId}?autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1&api=1&autopause=0`
         }
         className={`absolute inset-0 w-full h-full ${cover ? "pointer-events-none" : ""}`}
         style={zoom !== 1 ? { transform: `scale(${zoom})`, transformOrigin: "center" } : undefined}
         allow="autoplay; fullscreen; picture-in-picture"
         allowFullScreen
         title={title || `Vimeo ${vimeoId}`}
+        onLoad={() => {
+          if (!autoUnmuteOnView || cover) return;
+
+          sendVimeoCommand("play");
+          if (isInView) {
+            window.setTimeout(playAudible, 150);
+            window.setTimeout(playAudible, 600);
+          }
+        }}
       />
       {!cover && (
         <button

@@ -11,7 +11,13 @@
       "Bash(timeout:*)",
       "Bash(git push:*)",
       "Bash(git commit:*)",
-      "Bash(gh run list:*)"
+      "Bash(gh run list:*)",
+      "PowerShell(Get-ChildItem -Path app -Recurse -Filter page.tsx | ForEach-Object { $_.FullName.Replace\\(\\(Get-Location\\).Path, ''\\) } | Out-String)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"https://windchasers.in/sitemap.xml\" -UseBasicParsing -TimeoutSec 30; $r.Content } catch { \"ERROR: $\\($_.Exception.Message\\)\" })",
+      "PowerShell(\"waiting marker\")",
+      "PowerShell($slugs = \"pilot-training-in-india\",\"pilot-training-in-usa\",\"pilot-training-in-canada\",\"pilot-training-in-australia\",\"pilot-training-in-new-zealand\",\"pilot-training-in-south-africa\"; foreach\\($s in $slugs\\){ $p = \"C:\\\\Users\\\\user\\\\Builds\\\\Windchasers\\\\public\\\\migrated\\\\$s\"; if\\(Test-Path $p\\){ Write-Output \"== $s ==\"; Get-ChildItem $p | Select-Object -ExpandProperty Name } else { Write-Output \"== $s == \\(none\\)\" } })",
+      "PowerShell($out = npx tsc --noEmit 2>&1 | Out-String; Write-Output $out; Write-Output \"LASTEXIT=$LASTEXITCODE\")",
+      "PowerShell($env:CI=\"1\"; & npx tsc --noEmit -p \"C:\\\\Users\\\\user\\\\Builds\\\\Windchasers\\\\tsconfig.json\" 2>&1 | Select-Object -First 40)"
     ]
   }
 }
