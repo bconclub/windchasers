@@ -3,11 +3,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Manrope } from "next/font/google";
-import { Check, ArrowRight, Star, Sparkles, Phone } from "lucide-react";
+import { Check, ArrowRight, Sparkles } from "lucide-react";
 import StudentsFlyingGallery from "@/components/StudentsFlyingGallery";
 import { testimonialGallery, campusImages } from "@/content/shared/galleries";
+import { migratedImages } from "@/content/shared/migratedImages";
 
 const manrope = Manrope({ subsets: ["latin"], weight: ["600", "700", "800"], variable: "--font-headline" });
 
@@ -247,9 +249,31 @@ function BlockView({ block, index }: { block: Block; index: number }) {
   }
 }
 
+function ImageBand({ src, caption }: { src: string; caption?: string }) {
+  return (
+    <section className="relative h-[260px] md:h-[420px] overflow-hidden">
+      <Image src={src} alt={caption || ""} fill className="object-cover" sizes="100vw" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
+      {caption && (
+        <div className="absolute bottom-0 left-0 right-0 px-6 md:px-12 pb-8">
+          <div className="max-w-[1400px] mx-auto">
+            <p className="text-white font-[family-name:var(--font-headline)] text-2xl md:text-4xl font-extrabold tracking-tighter drop-shadow-lg">{caption}</p>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
 export default function ProgramPage({ content }: { content: ProgramContent }) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const showTestimonials = content.testimonials !== false;
+  const pathname = usePathname();
+  const slug = (pathname || "").replace(/^\/+|\/+$/g, "");
+  const imgs = migratedImages[slug] || [];
+  const heroImage = imgs[0] || content.heroImage;
+  // Photos available to weave between content sections (skip the hero photo).
+  const bandImages = imgs.slice(1);
 
   useEffect(() => {
     if (content.metaTitle) document.title = content.metaTitle;
@@ -258,44 +282,78 @@ export default function ProgramPage({ content }: { content: ProgramContent }) {
   let sectionIdx = 0;
   const nextBg = () => (sectionIdx++ % 2 === 0 ? "bg-background" : "bg-surface-container-lowest");
 
+  // Insert an image band after roughly every 2nd content block, using band images in order.
+  let bandCursor = 0;
+
   return (
     <div className={`${manrope.variable} bg-background text-on-surface`}>
-      {/* Hero */}
-      <section className="relative min-h-[68vh] flex items-center justify-center overflow-hidden pt-28 pb-20 px-6 md:px-12">
-        {content.heroImage && (
+      {/* Hero — two-column on desktop with a clearly visible framed photo */}
+      <section className="relative overflow-hidden pt-28 pb-16 md:pb-20 px-6 md:px-12">
+        {heroImage && (
           <div className="absolute inset-0">
-            <Image src={content.heroImage} alt="" fill priority className="object-cover opacity-40" sizes="100vw" />
+            <Image src={heroImage} alt="" fill priority className="object-cover opacity-25 lg:hidden" sizes="100vw" />
+            <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/85 to-background lg:hidden" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-b from-background/75 via-background/85 to-background" />
-        <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="relative z-10 max-w-4xl mx-auto text-center"
-        >
-          <span className="text-primary font-bold tracking-[0.25em] uppercase text-xs mb-5 block">{content.kicker}</span>
-          <h1 className="font-[family-name:var(--font-headline)] text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter text-white leading-[1.05] mb-6">
-            {content.title} {content.accent && <span className="text-primary italic">{content.accent}</span>}
-          </h1>
-          <p className="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light">{content.intro}</p>
-          <div className="mt-9 flex flex-wrap gap-4 justify-center">
-            <Link href="/demo" className="inline-flex items-center gap-2 bg-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:bg-primary-container transition-all" style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}>
-              Book a Demo Session <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link href="/contact-us" className="inline-flex items-center gap-2 border-2 border-primary text-primary px-8 py-4 rounded-lg font-bold hover:bg-primary hover:text-on-primary transition-all">
-              Talk to an Expert
-            </Link>
-          </div>
-        </motion.div>
+        <div className="relative z-10 max-w-[1400px] mx-auto grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 22 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="text-center lg:text-left"
+          >
+            <span className="text-primary font-bold tracking-[0.25em] uppercase text-xs mb-5 block">{content.kicker}</span>
+            <h1 className="font-[family-name:var(--font-headline)] text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter text-white leading-[1.05] mb-6">
+              {content.title} {content.accent && <span className="text-primary italic">{content.accent}</span>}
+            </h1>
+            <p className="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">{content.intro}</p>
+            <div className="mt-9 flex flex-wrap gap-4 justify-center lg:justify-start">
+              <Link href="/demo" className="inline-flex items-center gap-2 bg-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:bg-primary-container transition-all" style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}>
+                Book a Demo Session <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link href="/contact-us" className="inline-flex items-center gap-2 border-2 border-primary text-primary px-8 py-4 rounded-lg font-bold hover:bg-primary hover:text-on-primary transition-all">
+                Talk to an Expert
+              </Link>
+            </div>
+          </motion.div>
+
+          {heroImage && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+              className="relative hidden lg:block aspect-[4/3] rounded-[28px] overflow-hidden border border-outline-variant/30 shadow-2xl"
+            >
+              <Image src={heroImage} alt={content.title} fill priority className="object-cover" sizes="50vw" />
+              <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-[28px]" />
+            </motion.div>
+          )}
+        </div>
       </section>
 
-      {/* Content blocks — alternating backgrounds, split blocks get their own rhythm */}
-      {content.blocks.map((block, i) => (
-        <section key={i} className={`py-20 md:py-28 px-6 md:px-12 ${nextBg()}`}>
-          <BlockView block={block} index={i} />
+      {/* Content blocks — alternating backgrounds, image bands woven between */}
+      {content.blocks.map((block, i) => {
+        const showBand = i > 0 && i % 2 === 1 && bandCursor < bandImages.length;
+        const bandSrc = showBand ? bandImages[bandCursor++] : null;
+        return (
+          <div key={i}>
+            {bandSrc && <ImageBand src={bandSrc} />}
+            <section className={`py-20 md:py-28 px-6 md:px-12 ${nextBg()}`}>
+              <BlockView block={block} index={i} />
+            </section>
+          </div>
+        );
+      })}
+
+      {/* Leftover photos → gallery so every image gets used */}
+      {bandImages.slice(bandCursor).length >= 2 && (
+        <section className={`py-20 md:py-28 px-6 md:px-12 ${nextBg()}`}>
+          <BlockView
+            block={{ type: "gallery", kicker: "Gallery", title: "A look inside", images: bandImages.slice(bandCursor) }}
+            index={98}
+          />
         </section>
-      ))}
+      )}
 
       {/* Reusable testimonials */}
       {showTestimonials && (

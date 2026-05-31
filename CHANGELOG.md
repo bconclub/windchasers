@@ -2,6 +2,16 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-31 18:05 IST · feat(design): real hero photos + image bands on every program page
+
+- **`scripts/build-migrated-image-manifest.mjs`** + **`content/shared/migratedImages.ts`** — auto-generated map of each migrated slug → its usable full-size photos (41 slugs, 254 photos; icons/logos/resized-variants filtered out, best hero scored first).
+- **`components/ProgramPage.tsx`** — now reads the manifest by URL slug and:
+  - **Visible hero** — two-column on desktop (headline + CTAs left, a large framed real photo right) instead of a faint 25%-opacity wash. Falls back to the content hero image.
+  - **Image bands** — full-width cinematic photo strips (260–420px) woven between every other content section, so each page is visually broken up, not a wall of text.
+  - **End gallery** — leftover photos render as a masonry "A look inside" gallery so all images get used.
+- **User-facing:** every license/program/location page now leads with a real hero photo and has distinct image sections — e.g. CPL surfaces 7 photos, Canada 6, DGCA 4.
+- Verified: build exit 0 (87 pages), tsc 0 errors; migrated-image refs confirmed rendering on CPL / Canada / DGCA.
+
 ## 2026-05-31 16:30 IST · feat(nav): home-only mega menu
 
 - **New `components/MegaMenu.tsx`** — full-width dropdown panel with all migrated programs in 8 categories (Licenses, Ratings, Type Ratings, Ground & Academics, Cadet & Airline, Train Abroad, More Training, Company) — 34 links + Assessment/Demo CTA row. ESC + backdrop-click to close, body-scroll lock while open.
