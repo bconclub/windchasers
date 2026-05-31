@@ -7,6 +7,7 @@ const nextConfig = {
       { source: "/webinar/pilot-roadmap", destination: "/webinar/students", permanent: true },
 
       // --- windchasers.in migration: canonical + junk/duplicate cleanup ---
+      { source: "/cabin-crew", destination: "/cabin-crew-program", permanent: true },
       { source: "/about-us", destination: "/about", permanent: true },
       { source: "/privacy-policy-2", destination: "/privacy-policy", permanent: true },
       { source: "/some", destination: "/license-conversion-course", permanent: true },

@@ -25,7 +25,7 @@ export default function Navbar() {
   const isHome = pathname === "/";
   const isPilotTraining = pathname?.startsWith("/pilot-training") ?? false;
   const isATC = pathname === "/atc";
-  const isCabinCrew = pathname === "/cabin-crew";
+  const isCabinCrew = pathname === "/cabin-crew" || pathname === "/cabin-crew-program";
   const isWebinar = pathname?.startsWith("/webinar") ?? false;
   const isWebinarParent = pathname === "/webinar/parents";
   const isWebinarStudents = pathname === "/webinar/students";
