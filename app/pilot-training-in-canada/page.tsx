@@ -8,5 +8,5 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <ProgramPage content={content} />;
+  return <ProgramPage content={content} slug="pilot-training-in-canada" />;
 }

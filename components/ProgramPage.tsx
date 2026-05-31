@@ -38,6 +38,8 @@ export type ProgramContent = {
   ctaText?: string;
   related?: { label: string; href: string }[];
   metaTitle?: string;
+  /** Explicit photo list (overrides the slug→manifest lookup). */
+  images?: string[];
   /** Show the reusable student testimonials reel. Default: true. */
   testimonials?: boolean;
   /** Show the campus / facility gallery. Default: false. */
@@ -265,12 +267,14 @@ function ImageBand({ src, caption }: { src: string; caption?: string }) {
   );
 }
 
-export default function ProgramPage({ content }: { content: ProgramContent }) {
+export default function ProgramPage({ content, slug: slugProp }: { content: ProgramContent; slug?: string }) {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const showTestimonials = content.testimonials !== false;
   const pathname = usePathname();
-  const slug = (pathname || "").replace(/^\/+|\/+$/g, "");
-  const imgs = migratedImages[slug] || [];
+  // Prefer the explicit slug prop (reliable during static prerender);
+  // fall back to the URL pathname for client navigation.
+  const slug = (slugProp || pathname || "").replace(/^\/+|\/+$/g, "");
+  const imgs = content.images || migratedImages[slug] || [];
   const heroImage = imgs[0] || content.heroImage;
   // Photos available to weave between content sections (skip the hero photo).
   const bandImages = imgs.slice(1);

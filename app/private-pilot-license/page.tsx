@@ -10,5 +10,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <ProgramPage content={content} />;
+  return <ProgramPage content={content} slug="private-pilot-license" />;
 }
