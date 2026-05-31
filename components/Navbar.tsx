@@ -11,6 +11,7 @@ import {
   WEBINAR_STUDENT_WHATSAPP_GROUP_URL,
 } from "@/lib/webinar";
 import { WhatsAppCaptureModal } from "@/components/WhatsAppCaptureModal";
+import MegaMenu from "@/components/MegaMenu";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -178,6 +179,9 @@ export default function Navbar() {
             {/* Right side actions */}
             {showCompact ? (
               <div className="flex items-center gap-2">
+                {/* Home-only mega menu — quick access to all programs.
+                    Scoped to isHome so no other page header changes. */}
+                {isHome && <MegaMenu />}
                 {(isHome || isPilotTraining) && (
                   <div className="hidden sm:flex items-center gap-2 mr-1">
                     <span className="relative flex h-2.5 w-2.5">

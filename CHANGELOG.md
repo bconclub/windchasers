@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-05-31 16:30 IST · feat(nav): home-only mega menu
+
+- **New `components/MegaMenu.tsx`** — full-width dropdown panel with all migrated programs in 8 categories (Licenses, Ratings, Type Ratings, Ground & Academics, Cadet & Airline, Train Abroad, More Training, Company) — 34 links + Assessment/Demo CTA row. ESC + backdrop-click to close, body-scroll lock while open.
+- **`components/Navbar.tsx`** — renders `<MegaMenu />` ONLY when `isHome`, as a "Programs" pill beside the existing call + WhatsApp buttons. No other page header changed; existing buttons untouched.
+- **User-facing:** the home header now has a Programs mega menu for quick access to every course page.
+- Verified: build exit 0 (87 pages), tsc 0 errors; mega menu present on `/`, absent on leaf pages.
+
 ## 2026-05-31 16:00 IST · feat(migration): windchasers.in → Next.js — 43 SEO pages at exact live slugs
 
 The legacy WordPress site (windchasers.in) was compromised; this migrates all ranking content into the Next.js app at the SAME live URLs so rankings carry over.
