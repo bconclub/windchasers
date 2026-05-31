@@ -7,6 +7,7 @@ const content: ProgramContent = {
   intro:
     "Our cancellation and refund terms, including timeframes for reporting issues and processing approved refunds.",
   metaTitle: "Refund Policy | WindChasers Aviation Academy",
+  testimonials: false,
   blocks: [
     {
       type: "richtext",

@@ -7,6 +7,7 @@ const content: ProgramContent = {
   intro:
     "The terms that govern your use of the WindChasers website and our goods and services.",
   metaTitle: "Terms & Conditions | WindChasers Aviation Academy",
+  testimonials: false,
   blocks: [
     {
       type: "richtext",
