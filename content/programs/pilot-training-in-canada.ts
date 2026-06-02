@@ -6,7 +6,7 @@ const content: ProgramContent = {
   accent: "Canada.",
   intro:
     "Canada is renowned for its rigorous training standards and stunning, varied landscapes, making it an excellent choice for pilots who want a globally respected licence.",
-  heroImage: "/migrated/pilot-training-in-canada/28_canada_flag_illustration.webp",
+  heroImage: "/migrated/pilot-training-in-canada/plane-6.webp",
   metaTitle: "Pilot Training in Canada | WindChasers Aviation Academy",
   blocks: [
     {

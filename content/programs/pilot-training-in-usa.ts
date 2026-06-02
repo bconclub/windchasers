@@ -6,7 +6,7 @@ const content: ProgramContent = {
   accent: "USA.",
   intro:
     "The United States is home to the world's largest and most established general aviation industry, making it one of the most popular destinations for aspiring pilots from around the globe.",
-  heroImage: "/migrated/pilot-training-in-usa/national-flag-united-states-america-usa-background-with-flag-united-states-america-usa.webp",
+  heroImage: "/migrated/pilot-training-in-usa/cheerful-woman-flight-attendant-standing-outdoors-airport.webp",
   metaTitle: "Pilot Training in USA | WindChasers Aviation Academy",
   blocks: [
     {
