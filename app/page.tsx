@@ -438,9 +438,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Events — homepage only (upcoming + past carousel) */}
-      <UpcomingEvents />
-
       {/* Path Selection — Airplane / Helicopter */}
       <section id="path-selection" className="relative min-h-screen flex flex-col md:flex-row">
         {/* Airplane Half */}
@@ -668,6 +665,9 @@ export default function Home() {
 
       {/* Primary conversion cluster — placed high, right after the 6-step process */}
       <ConversionCluster heading={<>Ready to start your <span className="text-primary italic">pilot training?</span></>} />
+
+      {/* Events — homepage only (upcoming + past carousel) */}
+      <UpcomingEvents />
 
       {/* Chapter 6: The Captains of Your Career */}
       <section className="py-24 md:py-32 bg-background relative overflow-hidden">

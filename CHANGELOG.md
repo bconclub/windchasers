@@ -2,6 +2,14 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-03 · refactor(home): move Events below the "Ready to start" conversion cluster
+
+- Homepage Events carousel moved from right-after-hero to after the "Ready to
+  start your pilot training?" conversion section, before "The Captains of Your
+  Career". New order: Hero → Path → Honest → Students Flying → Journey →
+  Ready-to-start CTA → Events → Captains → ...
+- Verified order live on dev. Build exit 0 (87 pages), tsc 0 errors.
+
 ## 2026-06-03 · feat(home): rebuild homepage from pilot-training sections + booking form required fields
 
 - Homepage rebuilt: keeps the original home hero ("Your Career Path to the Cockpit")
