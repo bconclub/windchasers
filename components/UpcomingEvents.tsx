@@ -4,19 +4,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { CalendarDays, ArrowRight, Radio, Play } from "lucide-react";
+import CardCarousel from "@/components/CardCarousel";
 import { getUpcomingEvents, getPastEvents, type WindEvent } from "@/content/shared/events";
 
 function EventCard({ ev, past }: { ev: WindEvent; past?: boolean }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 22 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      className="group flex flex-col bg-accent-dark border border-white/10 rounded-2xl overflow-hidden hover:border-gold/50 transition-all duration-300 hover:-translate-y-1"
+    <div
+      className={`group flex flex-col h-full bg-accent-dark border border-white/10 rounded-2xl overflow-hidden hover:border-gold/50 transition-all duration-300 hover:-translate-y-1 ${past ? "opacity-70 hover:opacity-100" : ""}`}
     >
       {/* Teaser media */}
-      <div className="relative aspect-video overflow-hidden bg-dark">
+      <div className={`relative aspect-video overflow-hidden bg-dark ${past ? "grayscale group-hover:grayscale-0 transition-[filter] duration-300" : ""}`}>
         {ev.vimeoId ? (
           <>
             <div
@@ -56,18 +53,20 @@ function EventCard({ ev, past }: { ev: WindEvent; past?: boolean }) {
           {past ? "Watch Highlights" : "Register Now"} <ArrowRight className="w-4 h-4" />
         </Link>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 /**
- * Homepage events section: upcoming events + a "Past events" row for proof.
- * Renders nothing if there are neither (see content/shared/events.ts).
+ * Homepage events — one carousel. Upcoming first, past events follow (grayed
+ * out, still clickable to view highlights). Renders nothing if there are none.
  */
 export default function UpcomingEvents() {
   const upcoming = getUpcomingEvents();
   const past = getPastEvents();
-  if (upcoming.length === 0 && past.length === 0) return null;
+  const all = [...upcoming, ...past];
+  if (all.length === 0) return null;
+  const upcomingCount = upcoming.length;
 
   return (
     <section className="py-20 px-6 lg:px-8 bg-dark">
@@ -84,31 +83,15 @@ export default function UpcomingEvents() {
           </span>
           <h2 className="text-4xl md:text-5xl font-bold text-white">Events</h2>
           <p className="text-white/60 text-lg mt-4 max-w-2xl mx-auto">
-            Free webinars and open houses. Watch a clip, then register to join the next one.
+            Free webinars and open houses. Register for what is coming up, or watch highlights from past events.
           </p>
         </motion.div>
 
-        {upcoming.length > 0 && (
-          <div className={`grid gap-6 ${upcoming.length === 1 ? "max-w-3xl mx-auto" : "md:grid-cols-2"}`}>
-            {upcoming.map((ev) => (
-              <EventCard key={ev.id} ev={ev} />
-            ))}
-          </div>
-        )}
-
-        {past.length > 0 && (
-          <>
-            <div className="text-center mt-16 mb-8">
-              <h3 className="text-2xl md:text-3xl font-bold text-white/90">Past events</h3>
-              <p className="text-white/50 mt-2">A look at what our community has been part of.</p>
-            </div>
-            <div className={`grid gap-6 ${past.length === 1 ? "max-w-3xl mx-auto" : "md:grid-cols-2"}`}>
-              {past.map((ev) => (
-                <EventCard key={ev.id} ev={ev} past />
-              ))}
-            </div>
-          </>
-        )}
+        <CardCarousel variant="legacy" cardWidthClass="w-[85%] sm:w-[60%] md:w-[46%] lg:w-[42%]">
+          {all.map((ev, i) => (
+            <EventCard key={ev.id} ev={ev} past={i >= upcomingCount} />
+          ))}
+        </CardCarousel>
       </div>
     </section>
   );

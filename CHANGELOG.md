@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-03 · refactor(events): single carousel, past events grayed inline
+
+- Homepage Events is now ONE carousel (CardCarousel) instead of separate
+  "upcoming" + "Past events" sections. Upcoming cards first, past events follow
+  grayed out (grayscale + reduced opacity), still clickable → Watch Highlights.
+- Verified: build exit 0 (87 pages), tsc 0 errors.
+
 ## 2026-06-03 · fix(analytics): correct Microsoft Clarity project to mmlkzcnd2z
 
 - Swapped Clarity project ID from `uv11b4d3ex` to `mmlkzcnd2z` in `components/Analytics.tsx`.
