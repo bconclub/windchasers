@@ -2,6 +2,20 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-03 · feat(home): rebuild homepage from pilot-training sections + booking form required fields
+
+- Homepage rebuilt: keeps the original home hero ("Your Career Path to the Cockpit")
+  and the Events carousel, then renders ALL of the pilot-training page's rich
+  sections (path selection, the honest part, students flying, the journey, the
+  captains, why windchasers, testimonials, campus, aptitude test, final CTA).
+  The pilot-training hero + inline lead form are NOT on the homepage.
+- /pilot-training is UNCHANGED — still its own landing page (own hero + inline
+  form, no events). The two pages are independent (no shared component, no redirect).
+- Booking form (/demo): Email and City are now REQUIRED (were "Optional"). Added
+  client-side validation + dropped the "(Optional)" labels.
+- Backups saved to .backups/ before the merge.
+- Verified: build exit 0 (87 pages), tsc 0 errors; home H1 = original, no form; /pilot-training intact.
+
 ## 2026-06-03 · fix(dgca): rebuild broken "Why Choose Us" carousel as a grid
 
 - The DGCA page "Why Choose Us" drag-stack carousel rendered broken on desktop

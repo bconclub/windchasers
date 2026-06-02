@@ -226,7 +226,19 @@ export default function BookingForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
+    // Email + city are required.
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      setSubmitStatus("error");
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+    if (!formData.city.trim()) {
+      setSubmitStatus("error");
+      setErrorMessage("Please enter your city.");
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus("idle");
     setErrorMessage("");
@@ -710,11 +722,12 @@ export default function BookingForm() {
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium mb-2">
-                  Your Email (Optional)
+                  Your Email
                 </label>
                 <input
                   type="email"
                   id="email"
+                  required
                   value={formData.email}
                   onChange={(e) => {
                     const newValue = e.target.value;
@@ -746,11 +759,12 @@ export default function BookingForm() {
 
             <div>
               <label htmlFor="city" className="block text-sm font-medium mb-2">
-                City (Optional)
+                City
               </label>
               <input
                 type="text"
                 id="city"
+                required
                 value={formData.city}
                 onChange={(e) => {
                   const newValue = e.target.value;
