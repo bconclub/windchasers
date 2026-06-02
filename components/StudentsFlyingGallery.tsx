@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
+import { ChevronLeft, ChevronRight, Volume2, VolumeX, Play } from "lucide-react";
 
 type ImageItem = { kind: "image"; src: string; alt?: string };
 type VideoItem = { kind: "video"; vimeoId: string; label?: string };
@@ -26,9 +26,36 @@ export default function StudentsFlyingGallery({
 }: StudentsFlyingGalleryProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const iframeRefs = useRef<(HTMLIFrameElement | null)[]>([]);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
   const [unmutedId, setUnmutedId] = useState<number | null>(null);
+  // Video iframes mount lazily — only those scrolled into view (mobile speed).
+  const [activeVideos, setActiveVideos] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    const io = new IntersectionObserver(
+      (entries) => {
+        const next: number[] = [];
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            const idx = Number((e.target as HTMLElement).dataset.cardIndex);
+            if (!Number.isNaN(idx)) next.push(idx);
+          }
+        });
+        if (next.length) {
+          setActiveVideos((prev) => {
+            const merged = new Set(prev);
+            next.forEach((n) => merged.add(n));
+            return merged;
+          });
+        }
+      },
+      { root: scrollerRef.current, rootMargin: "300px" }
+    );
+    cardRefs.current.forEach((el) => el && io.observe(el));
+    return () => io.disconnect();
+  }, [items]);
 
   const sendVimeoCommand = (
     iframe: HTMLIFrameElement | null,
@@ -160,6 +187,8 @@ export default function StudentsFlyingGallery({
               <div
                 key={i}
                 data-gallery-card
+                data-card-index={i}
+                ref={(el) => { cardRefs.current[i] = el; }}
                 className={`relative shrink-0 w-[78%] sm:w-[42%] md:w-[31%] lg:w-[23%] xl:w-[19%] aspect-[9/16] rounded-xl md:rounded-2xl overflow-hidden border ${cardBorder} snap-start group`}
               >
                 {item.kind === "image" ? (
@@ -173,36 +202,47 @@ export default function StudentsFlyingGallery({
                   />
                 ) : (
                   <>
-                    {/* Thumbnail backdrop — shown until iframe paints */}
+                    {/* Thumbnail backdrop — always visible; iframe mounts lazily */}
                     <div
                       className="absolute inset-0 bg-cover bg-center"
                       style={{ backgroundImage: `url(https://vumbnail.com/${item.vimeoId}_large.jpg)` }}
                     />
-                    <iframe
-                      ref={(el) => {
-                        iframeRefs.current[i] = el;
-                      }}
-                      src={`https://player.vimeo.com/video/${item.vimeoId}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1&api=1`}
-                      className="absolute inset-0 w-full h-full pointer-events-none"
-                      allow="autoplay; fullscreen; picture-in-picture"
-                      allowFullScreen
-                      title={item.label || `Student flying ${i + 1}`}
-                    />
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleMute(i);
-                      }}
-                      aria-label={unmutedId === i ? "Mute" : "Unmute"}
-                      className="absolute bottom-3 right-3 z-10 w-9 h-9 rounded-full bg-black/55 hover:bg-black/75 backdrop-blur text-white flex items-center justify-center transition-colors"
-                    >
-                      {unmutedId === i ? (
-                        <Volume2 className="w-4 h-4" />
-                      ) : (
-                        <VolumeX className="w-4 h-4" />
-                      )}
-                    </button>
+                    {activeVideos.has(i) ? (
+                      <iframe
+                        ref={(el) => {
+                          iframeRefs.current[i] = el;
+                        }}
+                        src={`https://player.vimeo.com/video/${item.vimeoId}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1&api=1`}
+                        className="absolute inset-0 w-full h-full pointer-events-none"
+                        allow="autoplay; fullscreen; picture-in-picture"
+                        allowFullScreen
+                        loading="lazy"
+                        title={item.label || `Student flying ${i + 1}`}
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                        <span className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/90 text-on-primary shadow-lg">
+                          <Play className="w-5 h-5 ml-0.5" fill="currentColor" />
+                        </span>
+                      </div>
+                    )}
+                    {activeVideos.has(i) && (
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleMute(i);
+                        }}
+                        aria-label={unmutedId === i ? "Mute" : "Unmute"}
+                        className="absolute bottom-3 right-3 z-10 w-9 h-9 rounded-full bg-black/55 hover:bg-black/75 backdrop-blur text-white flex items-center justify-center transition-colors"
+                      >
+                        {unmutedId === i ? (
+                          <Volume2 className="w-4 h-4" />
+                        ) : (
+                          <VolumeX className="w-4 h-4" />
+                        )}
+                      </button>
+                    )}
                   </>
                 )}
               </div>

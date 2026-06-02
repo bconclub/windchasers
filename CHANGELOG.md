@@ -2,6 +2,19 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-02 18:30 IST · feat: pre-launch batch — pixel swap, global web chat, OG, conversion + SEO
+
+- **Meta Pixel swapped** to the WindChasers aviation pixel `1097272771358425` (old `1431602295033185` removed). Single init in `MetaPixelInit.tsx`, so PageView + all Lead events route to the aviation pixel.
+- **Web chat global** — PROXe widget moved into `app/layout.tsx`; now loads on every page (was only /pilot-training + /agent). Removed the duplicate from pilot-training.
+- **OG / social** — added `metadataBase` + site-wide OpenGraph + Twitter card with `WC HEro.webp` as the share image.
+- **Lead capture** — new lean 2-field `InlineLeadForm` (name + phone) on the /pilot-training hero, posts to `/api/leads` (type `page`, form_name `pilot_training_hero`) → PROXe. On submit it swaps to a success tick in place (no redirect, keep exploring) and fires `fbq Lead` + GA `generate_lead`.
+- **Pilot-training landing page**: keyword H1 "Pilot Training in Bangalore", DGCA six-papers fix, DGCA-aligned wording (not "approved"), placement promises removed, superlative claims softened, conversion cluster moved up after the 6-step process, SEO meta. Hero shows the cockpit poster (`/hero/cockpit.webp`) with the bg video playing on top.
+- **Lazy Vimeo** — new `LazyVimeo` + `StudentsFlyingGallery` video cards mount on scroll-into-view (mobile speed). Simulator reels lazy too.
+- **Homepage** reverted to the original (no form), now with an **Events** section (2 upcoming + 2 past) from `content/shared/events.ts`. Events removed from /pilot-training.
+- **noindex middleware** — `pilot.windchasers.in` host returns `X-Robots-Tag: noindex` + disallow robots.txt so it won't compete with windchasers.in after the DNS cutover.
+- Leads routing: main landing form + WhatsApp popup + assessment + demo/cabin-crew/ATC/students/parents → PROXe. Event forms (flight-schools, NZ seminar, open-house, webinar) stay Sheets-only by design.
+- Verified: clean `next build` exit 0 (87 pages), tsc 0 errors.
+
 ## 2026-05-31 18:05 IST · feat(design): real hero photos + image bands on every program page
 
 - **`scripts/build-migrated-image-manifest.mjs`** + **`content/shared/migratedImages.ts`** — auto-generated map of each migrated slug → its usable full-size photos (41 slugs, 254 photos; icons/logos/resized-variants filtered out, best hero scored first).

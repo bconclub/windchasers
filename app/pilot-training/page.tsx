@@ -8,7 +8,6 @@ import { Manrope } from "next/font/google";
 import AirplanePathModal from "@/components/AirplanePathModal";
 import {
   ArrowRight,
-  PlaneTakeoff,
   HelpCircle,
   Award,
   Globe,
@@ -18,19 +17,15 @@ import {
   Receipt,
   Phone,
   Sparkles,
-  FileText,
-  Download,
   Star,
 } from "lucide-react";
-import Script from "next/script";
-import VideoCarousel from "@/components/VideoCarousel";
-import ImageCarousel from "@/components/ImageCarousel";
 import StudentsFlyingGallery, {
   type GalleryItem,
 } from "@/components/StudentsFlyingGallery";
 import VimeoReel from "@/components/VimeoReel";
 import CardCarousel from "@/components/CardCarousel";
-import UpcomingEvents from "@/components/UpcomingEvents";
+import InlineLeadForm from "@/components/InlineLeadForm";
+import LazyVimeo from "@/components/LazyVimeo";
 import { setLastVisitedProgram } from "@/lib/sessionStorage";
 
 const manrope = Manrope({
@@ -92,8 +87,8 @@ const steps = [
   },
   {
     n: "03",
-    title: "Ground School",
-    body: "Five DGCA theory papers, in-house at our Bengaluru campus. Master the science before the skill.",
+    title: "DGCA Ground Classes",
+    body: "Six DGCA theory papers, taught in-house at our Bengaluru campus: Air Navigation, Aviation Meteorology, Air Regulations, Aircraft Technical (General), Aircraft Technical (Specific), and Radio Telephony.",
   },
   {
     n: "04",
@@ -138,7 +133,7 @@ const whyCards = [
     icon: Headphones,
     label: "Support",
     title: "End-to-end support",
-    body: "Loan documentation, visa, accommodation, post-CPL placement. We do not drop you halfway.",
+    body: "Loan documentation, visa, accommodation, and interview and placement assistance. We support you at every step, not just in the classroom.",
     image: "/facility/Sumaiya Ali.webp",
   },
   {
@@ -153,7 +148,7 @@ const whyCards = [
     icon: Receipt,
     label: "Pricing",
     title: "Honest pricing",
-    body: "Full cost breakdown upfront. No surprise add-ons. Real graduates flying today.",
+    body: "Full cost breakdown upfront. No surprise add-ons. You know exactly what you are paying for.",
     image: "/facility/DSC05362.JPG.webp",
   },
 ];
@@ -271,11 +266,78 @@ function CampusGallery() {
   );
 }
 
+function ConversionCluster({ heading }: { heading: React.ReactNode }) {
+  return (
+    <section className="py-24 md:py-32 px-6 md:px-12 bg-background border-y border-outline-variant/10">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12 md:mb-16"
+        >
+          <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tighter">
+            {heading}
+          </h2>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="group bg-primary-container/15 border border-primary/40 rounded-3xl p-8 md:p-10 hover:border-primary transition-all"
+          >
+            <Sparkles className="w-10 h-10 text-primary mb-5" />
+            <h3 className="text-2xl font-bold text-white mb-3">
+              Take the Pilot Assessment Test now
+            </h3>
+            <p className="text-on-surface-variant mb-8 leading-relaxed">
+              Three minutes. Free. Honest score, honest next step. See if pilot
+              training after 12th is the right fit for you.
+            </p>
+            <Link
+              href="/assessment"
+              className="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-on-primary px-7 py-3.5 rounded-lg font-bold transition-colors group/btn"
+            >
+              Take the Pilot Assessment Test
+              <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+            className="group bg-surface-container-low border border-outline-variant/30 rounded-3xl p-8 md:p-10 hover:border-primary/40 transition-all"
+          >
+            <Phone className="w-10 h-10 text-primary mb-5" />
+            <h3 className="text-2xl font-bold text-white mb-3">Talk to a counsellor</h3>
+            <p className="text-on-surface-variant mb-8 leading-relaxed">
+              Real conversation about CPL course fees, timelines, and your route
+              to becoming a pilot in India. No sales pitch.
+            </p>
+            <Link
+              href="/demo"
+              className="inline-flex items-center gap-2 border-2 border-primary text-primary px-7 py-3.5 rounded-lg font-bold hover:bg-primary hover:text-on-primary transition-colors"
+            >
+              Book a 1-on-1 call
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function PilotTraining() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
   const [showDemoBtn, setShowDemoBtn] = useState(false);
-  const [heroVideoLoaded, setHeroVideoLoaded] = useState(false);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
@@ -297,7 +359,8 @@ export default function PilotTraining() {
       {/* Section 1: Hero */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0 overflow-hidden">
-          {/* Cockpit poster — shows instantly, stays until the video has loaded */}
+          {/* Cockpit poster — sits underneath as the instant/fallback frame
+              so there is never a blank flash before the video paints. */}
           <Image
             src="/hero/cockpit.webp"
             alt="View from the cockpit"
@@ -306,10 +369,10 @@ export default function PilotTraining() {
             sizes="100vw"
             className="object-cover"
           />
-          {/* Background video — fades in only once fully loaded */}
+          {/* Background video — always rendered on top and playing. The poster
+              shows through only until the video paints over it. */}
           <iframe
-            onLoad={() => setHeroVideoLoaded(true)}
-            className={`absolute top-1/2 left-1/2 w-[177.78vh] h-[100vh] min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 border-0 pointer-events-none scale-[1.15] transition-opacity duration-1000 ${heroVideoLoaded ? "opacity-100" : "opacity-0"}`}
+            className="absolute top-1/2 left-1/2 w-[177.78vh] h-[100vh] min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 border-0 pointer-events-none scale-[1.15]"
             src="https://player.vimeo.com/video/1191576047?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&controls=0&dnt=1&playsinline=1"
             title="Aviation Background"
             allow="autoplay; fullscreen"
@@ -325,51 +388,49 @@ export default function PilotTraining() {
           }}
         />
 
-        <div className="relative z-10 max-w-4xl px-6 text-center space-y-8 pt-20">
+        <div className="relative z-10 w-full max-w-2xl px-6 space-y-7 pt-20">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
-            className="font-[family-name:var(--font-headline)] text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-white leading-[1.1]"
+            className="font-[family-name:var(--font-headline)] text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter text-white leading-[1.08] text-center"
           >
-            Your Pilot Career <br />
-            <span className="text-primary italic">Starts Here.</span>
+            Pilot Training in <br />
+            <span className="text-primary italic">Bangalore.</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.15 }}
-            className="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light"
+            className="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light text-center"
           >
-            No false promises. Real costs. Real guidance. DGCA-aligned ground
-            training, with DGCA-approved flying partners.
+            Your route from 12th to the cockpit. DGCA-aligned ground classes
+            in-house, with DGCA-approved partner FTOs for flight training. Real
+            costs, real guidance, no false promises.
           </motion.p>
 
+          {/* Inline lead capture — primary hero conversion action */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="flex justify-center pt-4"
           >
-            <a
-              href="#path-selection"
-              className="bg-primary hover:bg-primary-container text-on-primary px-10 md:px-12 py-4 md:py-5 rounded-lg font-bold text-lg transition-all flex items-center group"
-              style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}
-            >
-              Choose Your Path
-              <PlaneTakeoff className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </a>
+            <InlineLeadForm
+              formName="pilot_training_hero"
+              heading="Talk to an aviation counsellor"
+              subtext="Leave your number and we will call you back. No spam, no pressure."
+            />
           </motion.div>
         </div>
 
         {/* Trust strip pinned to bottom of hero */}
-        <div className="absolute bottom-0 w-full bg-surface-container-low/80 backdrop-blur-sm border-t border-outline-variant/10 py-6 md:py-8 z-10">
+        <div className="absolute bottom-0 w-full bg-surface-container-low/80 backdrop-blur-sm border-t border-outline-variant/10 py-5 md:py-6 z-10">
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex flex-nowrap md:flex-wrap items-center md:justify-center gap-6 md:gap-12 overflow-x-auto md:overflow-visible text-on-surface-variant text-[11px] md:text-sm font-bold tracking-[0.15em] uppercase [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {[
-              "100+ Successful Pilots",
-              "DGCA Approved Curriculum",
-              "Commercial Pilot Instructors",
+              "DGCA-aligned ground training",
+              "Commercial pilot instructors",
+              "Training partners across 6 countries",
             ].map((t) => (
               <span key={t} className="flex items-center gap-2 whitespace-nowrap flex-shrink-0">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
@@ -474,9 +535,6 @@ export default function PilotTraining() {
         onClose={() => setShowAirplaneModal(false)}
       />
 
-      {/* Upcoming Events — auto-hides when none are scheduled */}
-      <UpcomingEvents />
-
       {/* Chapter 3: The Honest Part */}
       <section className="py-24 md:py-32 bg-background relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-6 md:px-12 flex flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16">
@@ -497,9 +555,10 @@ export default function PilotTraining() {
             <div className="space-y-6 text-on-surface-variant text-lg leading-relaxed font-light">
               <p>Most academies sell you a dream. We give you a plan.</p>
               <p>
-                Ground classes here in Bengaluru, flight training at our partner
-                schools in India or abroad. Class 1 medical first. DGCA theory
-                exams next. Flight hours come after.{" "}
+                A pilot training academy in Bangalore for serious aspirants:
+                DGCA ground classes here in Bengaluru, and commercial pilot
+                license training at our partner FTOs in India or abroad. Class 1
+                medical first. DGCA theory exams next. Flight hours come after.{" "}
                 <span className="text-white">
                   If you can do the work, we can show you the road.
                 </span>
@@ -548,7 +607,7 @@ export default function PilotTraining() {
             className="text-center mb-16 md:mb-24"
           >
             <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-7xl font-extrabold text-white tracking-tighter mb-6">
-              From here to your CPL. <br className="hidden md:block" />
+              How to become a pilot in India. <br className="hidden md:block" />
               Step by step.
             </h2>
             <div className="w-24 h-1 bg-primary mx-auto" />
@@ -606,6 +665,9 @@ export default function PilotTraining() {
           </div>
         </div>
       </section>
+
+      {/* Primary conversion cluster — placed high, right after the 6-step process */}
+      <ConversionCluster heading={<>Ready to start your <span className="text-primary italic">pilot training?</span></>} />
 
       {/* Chapter 6: The Captains of Your Career */}
       <section className="py-24 md:py-32 bg-background relative overflow-hidden">
@@ -828,18 +890,12 @@ export default function PilotTraining() {
             className="grid grid-cols-3 gap-3 md:gap-4"
           >
             {SIMULATOR_VIMEO_IDS.map((id, i) => (
-              <div
+              <LazyVimeo
                 key={id}
-                className="relative aspect-[9/16] rounded-xl md:rounded-2xl overflow-hidden border border-outline-variant/20 bg-surface-container-low"
-              >
-                <iframe
-                  src={`https://player.vimeo.com/video/${id}?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1`}
-                  className="absolute inset-0 w-full h-full pointer-events-none"
-                  allow="autoplay; fullscreen; picture-in-picture"
-                  allowFullScreen
-                  title={`Simulator footage ${i + 1}`}
-                />
-              </div>
+                vimeoId={id}
+                title={`Simulator footage ${i + 1}`}
+                className="aspect-[9/16] rounded-xl md:rounded-2xl border border-outline-variant/20 bg-surface-container-low"
+              />
             ))}
           </motion.div>
         </div>
@@ -923,70 +979,8 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* Section 9: Final CTA */}
-      <section className="py-24 md:py-32 px-6 md:px-12 bg-background border-t border-outline-variant/10">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-12 md:mb-16"
-          >
-            <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tighter">
-              Two ways to <span className="text-primary italic">start.</span>
-            </h2>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="group bg-primary-container/15 border border-primary/40 rounded-3xl p-8 md:p-10 hover:border-primary transition-all"
-            >
-              <Sparkles className="w-10 h-10 text-primary mb-5" />
-              <h3 className="text-2xl font-bold text-white mb-3">
-                Take the Pilot Assessment Test now
-              </h3>
-              <p className="text-on-surface-variant mb-8 leading-relaxed">
-                Three minutes. Free. Honest score, honest next step.
-              </p>
-              <Link
-                href="/assessment"
-                className="inline-flex items-center gap-2 bg-primary hover:bg-primary-container text-on-primary px-7 py-3.5 rounded-lg font-bold transition-colors group/btn"
-              >
-                Take the Pilot Assessment Test
-                <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
-              </Link>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="group bg-surface-container-low border border-outline-variant/30 rounded-3xl p-8 md:p-10 hover:border-primary/40 transition-all"
-            >
-              <Phone className="w-10 h-10 text-primary mb-5" />
-              <h3 className="text-2xl font-bold text-white mb-3">
-                Talk to a counsellor
-              </h3>
-              <p className="text-on-surface-variant mb-8 leading-relaxed">
-                Real conversation. No sales pitch.
-              </p>
-              <Link
-                href="/demo"
-                className="inline-flex items-center gap-2 border-2 border-primary text-primary px-7 py-3.5 rounded-lg font-bold hover:bg-primary hover:text-on-primary transition-colors"
-              >
-                Book a 1-on-1 call
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      {/* Final CTA — reuses the conversion cluster */}
+      <ConversionCluster heading={<>Two ways to <span className="text-primary italic">start.</span></>} />
 
       {/* Scroll-up demo CTA */}
       <div
@@ -1016,12 +1010,6 @@ export default function PilotTraining() {
           Book a Demo Class
         </button>
       </div>
-
-      {/* PROXe chat widget */}
-      <Script
-        src="https://proxe.windchasers.in/api/widget/embed.js"
-        strategy="afterInteractive"
-      />
     </div>
   );
 }

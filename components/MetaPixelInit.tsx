@@ -11,7 +11,7 @@ export default function MetaPixelInit() {
     if (typeof window === "undefined" || typeof window.fbq !== "function") return;
     if (!initialized.current) {
       initialized.current = true;
-      window.fbq("init", "1431602295033185");
+      window.fbq("init", "1097272771358425");
     }
     window.fbq("track", "PageView");
   }, [pathname]);

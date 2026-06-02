@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Pilot Training in Bangalore | WindChasers Aviation Academy",
+  title: "Pilot Training in Bangalore | CPL & DGCA Ground Classes | WindChasers",
   description:
-    "You. In the cockpit. Inside two years. DGCA-aligned ground training in Bengaluru with DGCA-approved flying partners. Real costs, real guidance, no false promises.",
+    "Pilot training in Bangalore for aspirants after 12th. DGCA ground classes in-house, commercial pilot license (CPL) training with DGCA-approved partner FTOs in India and abroad. Real costs, real guidance, no false promises.",
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

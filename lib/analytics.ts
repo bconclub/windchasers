@@ -1,7 +1,7 @@
 // Google Analytics + Google Ads event helpers.
 //
 // gtag() and fbq() are loaded globally in app/layout.tsx + components/Analytics.tsx
-// (GA4 ID G-3WDV2V65F5, Meta Pixel 1431602295033185). These helpers no-op when
+// (GA4 ID G-3WDV2V65F5, Meta Pixel 1097272771358425 — WindChasers aviation pixel). These helpers no-op when
 // the globals are missing (SSR, blocked by ad blocker, etc).
 
 declare global {

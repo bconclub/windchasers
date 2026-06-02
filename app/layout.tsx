@@ -14,13 +14,29 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Windchasers - India's Top Pilot Training Academy- Bangalore",
-  description: "DGCA approved pilot training with real cost transparency. Certified flight instructors. No false promises.",
+  metadataBase: new URL("https://windchasers.in"),
+  title: "Pilot Training in Bangalore | CPL & DGCA Ground Classes | WindChasers",
+  description: "Pilot training in Bangalore after 12th. DGCA-aligned ground classes in-house and commercial pilot license (CPL) training with DGCA-approved partner FTOs. Real costs, real guidance, no false promises.",
   icons: {
     icon: [
       { url: "/favicon.ico" },
       { url: "/Windhcasers Icon.png", type: "image/png" },
     ],
+  },
+  openGraph: {
+    title: "Pilot Training in Bangalore | WindChasers Aviation Academy",
+    description: "DGCA-aligned ground classes and commercial pilot license (CPL) training. Real costs, real guidance, no false promises.",
+    url: "https://windchasers.in",
+    siteName: "WindChasers Aviation Academy",
+    images: [{ url: "/WC HEro.webp", width: 1200, height: 630, alt: "WindChasers Aviation Academy" }],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Pilot Training in Bangalore | WindChasers Aviation Academy",
+    description: "DGCA-aligned ground classes and commercial pilot license (CPL) training in Bangalore.",
+    images: ["/WC HEro.webp"],
   },
 };
 
@@ -50,8 +66,12 @@ export default function RootLayout({
           }}
         />
         <MetaPixelInit />
-        {/* PROXe widget intentionally NOT loaded globally. Only mounted per-page
-            where we want it (currently only /pilot-training-students). */}
+        {/* PROXe web-chat widget — loaded globally so the chat launcher is
+            available on every page. */}
+        <Script
+          src="https://proxe.windchasers.in/api/widget/embed.js"
+          strategy="afterInteractive"
+        />
         <Analytics />
         <TrackingProvider>
           <Navbar />
