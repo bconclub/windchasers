@@ -2,6 +2,16 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-03 · fix(dgca): rebuild broken "Why Choose Us" carousel as a grid
+
+- The DGCA page "Why Choose Us" drag-stack carousel rendered broken on desktop
+  (single narrow card stranded in dead space, fanned back-cards spilling out as
+  gold geometric shards). Replaced WhyChooseUsCarousel with a clean responsive
+  card grid (1/2/3 cols), image + icon + title + copy. No drag-stack / 3D
+  transform artifacts.
+- Verified on desktop (1440px): 11 cards, 3 per row, no overflow.
+- Build exit 0 (87 pages), tsc 0 errors.
+
 ## 2026-06-03 · refactor(events): single carousel, past events grayed inline
 
 - Homepage Events is now ONE carousel (CardCarousel) instead of separate
