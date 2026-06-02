@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-03 · fix(analytics): correct Microsoft Clarity project to mmlkzcnd2z
+
+- Swapped Clarity project ID from `uv11b4d3ex` to `mmlkzcnd2z` in `components/Analytics.tsx`.
+- Verified: next build exit 0 (87 pages), tsc 0 errors.
+
 ## 2026-06-03 · fix(analytics): correct GA4 property to G-3THNVEDJK8
 
 - Swapped GA4 measurement ID from `G-3WDV2V65F5` (wrong property) to the correct

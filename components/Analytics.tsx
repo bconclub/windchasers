@@ -42,7 +42,7 @@ export default function Analytics() {
               c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
               t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
               y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-          })(window, document, "clarity", "script", "uv11b4d3ex");
+          })(window, document, "clarity", "script", "mmlkzcnd2z");
         `}
       </Script>
     </>
