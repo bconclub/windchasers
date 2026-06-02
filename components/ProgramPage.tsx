@@ -42,7 +42,7 @@ export type ProgramContent = {
   images?: string[];
   /** Show the reusable student testimonials reel. Default: true. */
   testimonials?: boolean;
-  /** Show the campus / facility gallery. Default: false. */
+  /** Show the "A look inside our campus" facility gallery. Default: true. Set false on legal pages. */
   campus?: boolean;
 };
 
@@ -349,11 +349,12 @@ export default function ProgramPage({ content, slug: slugProp }: { content: Prog
         );
       })}
 
-      {/* Leftover photos → gallery so every image gets used */}
-      {bandImages.slice(bandCursor).length >= 2 && (
+      {/* "A look inside" → always our real WindChasers Bengaluru campus photos,
+          not leftover stock/program images. */}
+      {content.campus !== false && (
         <section className={`py-20 md:py-28 px-6 md:px-12 ${nextBg()}`}>
           <BlockView
-            block={{ type: "gallery", kicker: "Gallery", title: "A look inside", images: bandImages.slice(bandCursor) }}
+            block={{ type: "gallery", kicker: "WindChasers", title: "A look inside our campus", images: campusImages }}
             index={98}
           />
         </section>
@@ -369,13 +370,6 @@ export default function ProgramPage({ content, slug: slugProp }: { content: Prog
             subtitle="Real students. Their own words."
             variant="stitch"
           />
-        </section>
-      )}
-
-      {/* Optional campus gallery */}
-      {content.campus && (
-        <section className={`py-20 md:py-28 px-6 md:px-12 ${nextBg()}`}>
-          <BlockView block={{ type: "gallery", kicker: "WindChasers", title: "Inside our Bengaluru campus", images: campusImages }} index={99} />
         </section>
       )}
 

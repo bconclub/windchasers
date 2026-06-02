@@ -8,6 +8,7 @@ const content: ProgramContent = {
     "How WindChasers collects, uses, and protects your information when you use our website and services.",
   metaTitle: "Privacy Policy | WindChasers Aviation Academy",
   testimonials: false,
+  campus: false,
   blocks: [
     {
       type: "richtext",
