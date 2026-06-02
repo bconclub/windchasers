@@ -275,6 +275,7 @@ export default function PilotTraining() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
   const [showDemoBtn, setShowDemoBtn] = useState(false);
+  const [heroVideoLoaded, setHeroVideoLoaded] = useState(false);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
@@ -295,12 +296,20 @@ export default function PilotTraining() {
     <div className={`${manrope.variable} bg-background text-on-surface`}>
       {/* Section 1: Hero */}
       <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-        <div
-          className="absolute inset-0 z-0 overflow-hidden bg-cover bg-center"
-          style={{ backgroundImage: "url(https://vumbnail.com/1191576047_large.jpg)" }}
-        >
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          {/* Cockpit poster — shows instantly, stays until the video has loaded */}
+          <Image
+            src="/hero/cockpit.webp"
+            alt="View from the cockpit"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          {/* Background video — fades in only once fully loaded */}
           <iframe
-            className="absolute top-1/2 left-1/2 w-[177.78vh] h-[100vh] min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 border-0 pointer-events-none scale-[1.15]"
+            onLoad={() => setHeroVideoLoaded(true)}
+            className={`absolute top-1/2 left-1/2 w-[177.78vh] h-[100vh] min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 border-0 pointer-events-none scale-[1.15] transition-opacity duration-1000 ${heroVideoLoaded ? "opacity-100" : "opacity-0"}`}
             src="https://player.vimeo.com/video/1191576047?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&controls=0&dnt=1&playsinline=1"
             title="Aviation Background"
             allow="autoplay; fullscreen"
