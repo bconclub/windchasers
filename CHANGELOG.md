@@ -2,6 +2,13 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-03 · fix(analytics): correct GA4 property to G-3THNVEDJK8
+
+- Swapped GA4 measurement ID from `G-3WDV2V65F5` (wrong property) to the correct
+  WindChasers property `G-3THNVEDJK8` in `components/Analytics.tsx` (loader + config).
+  Updated references in `lib/analytics.ts` comment and `app/gtm/page.tsx` label.
+- Verified: next build exit 0 (87 pages), tsc 0 errors.
+
 ## 2026-06-02 18:30 IST · feat: pre-launch batch — pixel swap, global web chat, OG, conversion + SEO
 
 - **Meta Pixel swapped** to the WindChasers aviation pixel `1097272771358425` (old `1431602295033185` removed). Single init in `MetaPixelInit.tsx`, so PageView + all Lead events route to the aviation pixel.

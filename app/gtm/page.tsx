@@ -119,7 +119,7 @@ const CATEGORIES: Category[] = [
     time: "1 hr",
     ownerHint: "Me",
     items: [
-      { id: "tr-1", label: "GA4 lead events firing on new pages (G-3WDV2V65F5 already wired)", owner: "me", mvp: true },
+      { id: "tr-1", label: "GA4 lead events firing on new pages (G-3THNVEDJK8 already wired)", owner: "me", mvp: true },
       { id: "tr-2", label: "Meta Pixel Lead event firing on new pages (Pixel already wired)", owner: "me", mvp: true },
       { id: "tr-3", label: "Google Ads conversion tag live (you supply AW- Conv. ID)", owner: "both", mvp: true },
       { id: "tr-4", label: "Test fire all events and verify in dashboards", owner: "both", mvp: true },
