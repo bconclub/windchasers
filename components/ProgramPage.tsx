@@ -6,7 +6,35 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Manrope } from "next/font/google";
-import { Check, ArrowRight, Sparkles } from "lucide-react";
+import {
+  Check, ArrowRight, Sparkles,
+  Plane, Compass, Radio, Wrench, CloudRain, Scale, GraduationCap, ShieldCheck,
+  BookOpen, Target, Globe, Award, Users, Briefcase, MapPin, Gauge, PlaneTakeoff,
+} from "lucide-react";
+
+// Rotating aviation icon set so card sections read like ATC / pilot-training
+// (icon-rich) instead of plain numbered boxes.
+const CARD_ICONS = [
+  Plane, Compass, Radio, Wrench, CloudRain, Scale, GraduationCap, ShieldCheck,
+  BookOpen, Target, Globe, Award, Users, Briefcase, MapPin, Gauge, PlaneTakeoff,
+];
+// Pick an icon by keyword first, else fall back to rotation by index.
+function pickIcon(text: string, i: number) {
+  const s = text.toLowerCase();
+  if (/navigat|compass|route/.test(s)) return Compass;
+  if (/radio|rtr|communicat|language|english/.test(s)) return Radio;
+  if (/tech|engine|aircraft|systems|maintenance/.test(s)) return Wrench;
+  if (/weather|meteor|climate/.test(s)) return CloudRain;
+  if (/regulation|law|rule|legal/.test(s)) return Scale;
+  if (/instructor|teach|ground|class|theory|exam|study/.test(s)) return GraduationCap;
+  if (/medical|safety|fitness|secure/.test(s)) return ShieldCheck;
+  if (/career|airline|placement|job|interview/.test(s)) return Briefcase;
+  if (/global|abroad|international|country|visa/.test(s)) return Globe;
+  if (/book|diploma|syllabus|curriculum/.test(s)) return BookOpen;
+  if (/cockpit|fly|flight|hours|simulator/.test(s)) return PlaneTakeoff;
+  if (/team|mentor|support|community/.test(s)) return Users;
+  return CARD_ICONS[i % CARD_ICONS.length];
+}
 import StudentsFlyingGallery from "@/components/StudentsFlyingGallery";
 import CardCarousel from "@/components/CardCarousel";
 import { testimonialGallery, campusImages } from "@/content/shared/galleries";
@@ -191,15 +219,21 @@ function BlockView({ block, photo, side }: { block: Block; photo?: string; side:
           <Header kicker={block.kicker} title={block.title} />
           {block.intro && <p className="text-on-surface-variant text-center max-w-3xl mx-auto -mt-8 mb-12 leading-relaxed">{block.intro}</p>}
           <CardCarousel cardWidthClass="w-[80%] sm:w-[60%] md:w-[42%] lg:w-[31%]">
-            {block.items.map((it, i) => (
-              <div key={i} className="group h-full bg-surface-container-low border border-outline-variant/20 rounded-3xl p-7 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30">
-                <div className="w-12 h-12 mb-5 flex items-center justify-center rounded-xl bg-primary/10 border border-primary/25 text-primary font-[family-name:var(--font-headline)] font-extrabold">
-                  {String(i + 1).padStart(2, "0")}
+            {block.items.map((it, i) => {
+              const Icon = pickIcon(it.title + " " + it.body, i);
+              return (
+                // The WindChasers signature card: gold top-stripe, floating gold
+                // badge pill, lucide icon, white title, 60% body (see ATC page).
+                <div key={i} className="group relative h-full bg-surface-container-low border-t-2 border-primary rounded-2xl p-8 pt-9 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30 transition-all duration-300">
+                  <span className="absolute -top-3 left-6 bg-primary text-on-primary text-[11px] font-bold px-3 py-1 rounded-full uppercase tracking-wide">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <Icon className="w-9 h-9 text-primary mb-5 mt-1" strokeWidth={1.5} />
+                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">{it.title}</h3>
+                  <p className="text-white/60 text-sm leading-relaxed">{it.body}</p>
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2 group-hover:text-primary transition-colors">{it.title}</h3>
-                <p className="text-on-surface-variant text-sm leading-relaxed">{it.body}</p>
-              </div>
-            ))}
+              );
+            })}
           </CardCarousel>
         </div>
       );
