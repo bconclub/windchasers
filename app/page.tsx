@@ -416,24 +416,25 @@ export default function Home() {
             </button>
           </motion.div>
 
-          {/* Trust Bar */}
+          {/* Trust Bar — pill badges (matches pilot-training style) */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-8 pt-8 border-t border-white/10"
+            className="mt-10 pt-8 border-t border-white/10 flex flex-wrap justify-center gap-3"
           >
-            <div className="grid grid-cols-3 gap-4 md:gap-8 text-center">
-              <div className="flex flex-col items-center">
-                <div className="text-gold font-semibold text-sm md:text-base">DGCA-aligned Curriculum</div>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="text-gold font-semibold text-sm md:text-base">Commercial Pilot Instructors</div>
-              </div>
-              <div className="flex flex-col items-center">
-                <div className="text-gold font-semibold text-sm md:text-base">Training Across 6 Countries</div>
-              </div>
-            </div>
+            {[
+              "DGCA-aligned Curriculum",
+              "Commercial Pilot Instructors",
+              "Training Across 6 Countries",
+            ].map((t) => (
+              <span
+                key={t}
+                className="bg-white/10 backdrop-blur-sm border border-gold/40 rounded-full px-4 py-1.5 text-xs md:text-sm font-bold text-gold tracking-wider"
+              >
+                {t}
+              </span>
+            ))}
           </motion.div>
         </div>
       </section>
