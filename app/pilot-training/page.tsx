@@ -30,6 +30,7 @@ import StudentsFlyingGallery, {
 } from "@/components/StudentsFlyingGallery";
 import VimeoReel from "@/components/VimeoReel";
 import CardCarousel from "@/components/CardCarousel";
+import UpcomingEvents from "@/components/UpcomingEvents";
 import { setLastVisitedProgram } from "@/lib/sessionStorage";
 
 const manrope = Manrope({
@@ -463,6 +464,9 @@ export default function PilotTraining() {
         isOpen={showAirplaneModal}
         onClose={() => setShowAirplaneModal(false)}
       />
+
+      {/* Upcoming Events — auto-hides when none are scheduled */}
+      <UpcomingEvents />
 
       {/* Chapter 3: The Honest Part */}
       <section className="py-24 md:py-32 bg-background relative overflow-hidden">
