@@ -126,18 +126,54 @@ export default function Navbar() {
                                     : "Hi WindChasers, I need more detail on pilot training"
           )}`;
 
-  const links = [
-    { href: "/commercial-pilot-license", label: "Commercial Pilot License" },
-    { href: "/private-pilot-license", label: "Private Pilot License" },
-    { href: "/dgca-ground-classes", label: "DGCA Ground Classes" },
-    { href: "/type-rating", label: "Type Ratings" },
-    { href: "/airline", label: "Cadet & Airline Track" },
-    { href: "/helicopter-training", label: "Helicopter Training" },
-    { href: "/pilot-training-in-india", label: "Train Abroad" },
-    { href: "/cabin-crew-program", label: "Cabin Crew" },
-    { href: "/blog", label: "Blog" },
-    { href: "/about", label: "About Us" },
-    { href: "/contact-us", label: "Contact Us" },
+  // Categorized slide-in menu — grouped by intent instead of a flat list.
+  const menuGroups: { heading: string; links: { href: string; label: string }[] }[] = [
+    {
+      heading: "Licenses & Ratings",
+      links: [
+        { href: "/commercial-pilot-license", label: "Commercial Pilot License" },
+        { href: "/private-pilot-license", label: "Private Pilot License" },
+        { href: "/airline-transport-pilot-license", label: "Airline Transport Pilot License" },
+        { href: "/instrument-rating", label: "Instrument Rating" },
+        { href: "/multi-engine-rating", label: "Multi-Engine Rating" },
+        { href: "/certified-flight-instructor", label: "Flight Instructor (CFI)" },
+        { href: "/type-rating", label: "Type Ratings" },
+      ],
+    },
+    {
+      heading: "Programs",
+      links: [
+        { href: "/dgca-ground-classes", label: "DGCA Ground Classes" },
+        { href: "/diploma-in-aviation", label: "Diploma in Aviation" },
+        { href: "/airline", label: "Cadet & Airline Track" },
+        { href: "/helicopter-training", label: "Helicopter Training" },
+        { href: "/cabin-crew-program", label: "Cabin Crew" },
+        { href: "/ielts-training-program", label: "IELTS Training" },
+      ],
+    },
+    {
+      heading: "Train Abroad",
+      links: [
+        { href: "/pilot-training-in-india", label: "India" },
+        { href: "/pilot-training-in-usa", label: "USA" },
+        { href: "/pilot-training-in-canada", label: "Canada" },
+        { href: "/pilot-training-in-australia", label: "Australia" },
+        { href: "/pilot-training-in-new-zealand", label: "New Zealand" },
+        { href: "/pilot-training-in-south-africa", label: "South Africa" },
+      ],
+    },
+    {
+      heading: "Company",
+      links: [
+        { href: "/about", label: "About Us" },
+        { href: "/windchasers-meet-the-team", label: "Meet the Team" },
+        { href: "/blog", label: "Blog" },
+        { href: "/contact-us", label: "Contact Us" },
+      ],
+    },
+  ];
+  // Primary CTAs pinned at the bottom of the menu.
+  const menuCtas = [
     { href: "/assessment", label: "Take Pilot Assessment" },
     { href: "/demo", label: "Book a Demo Session" },
   ];
@@ -276,35 +312,63 @@ export default function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "tween", duration: 0.3 }}
-              className="fixed top-0 right-0 h-full w-80 bg-dark border-l border-gold/30 z-50 shadow-2xl"
+              className="fixed top-0 right-0 h-full w-[88%] max-w-sm bg-dark border-l border-gold/30 z-50 shadow-2xl overflow-y-auto"
             >
               {/* Close Button */}
               <button
                 onClick={() => setIsOpen(false)}
-                className="absolute top-6 right-6 text-white/70 hover:text-gold transition-colors"
+                className="absolute top-6 right-6 text-white/70 hover:text-gold transition-colors z-10"
                 aria-label="Close menu"
               >
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
-              <div className="flex flex-col h-full pt-24 px-8">
-                {links.map((link, index) => (
+              <div className="flex flex-col min-h-full pt-24 pb-10 px-8">
+                {menuGroups.map((group, gi) => (
                   <motion.div
-                    key={link.href}
+                    key={group.heading}
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
+                    transition={{ delay: gi * 0.06 }}
+                    className="mb-7"
                   >
-                    <Link
-                      href={link.href}
-                      onClick={() => setIsOpen(false)}
-                      className="block py-4 text-lg font-medium text-white/70 hover:text-gold transition-colors border-b border-white/10"
-                    >
-                      {link.label}
-                    </Link>
+                    <h3 className="text-gold text-[11px] font-bold uppercase tracking-[0.18em] mb-2">
+                      {group.heading}
+                    </h3>
+                    <ul>
+                      {group.links.map((link) => (
+                        <li key={link.href}>
+                          <Link
+                            href={link.href}
+                            onClick={() => setIsOpen(false)}
+                            className="block py-2.5 text-base font-medium text-white/70 hover:text-gold transition-colors border-b border-white/5"
+                          >
+                            {link.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
                   </motion.div>
                 ))}
+
+                {/* Primary CTAs */}
+                <div className="mt-auto pt-4 flex flex-col gap-3">
+                  <Link
+                    href={menuCtas[0].href}
+                    onClick={() => setIsOpen(false)}
+                    className="block text-center py-3 rounded-lg border border-gold text-gold font-semibold hover:bg-gold hover:text-dark transition-colors"
+                  >
+                    {menuCtas[0].label}
+                  </Link>
+                  <Link
+                    href={menuCtas[1].href}
+                    onClick={() => setIsOpen(false)}
+                    className="block text-center py-3 rounded-lg bg-gold text-dark font-semibold hover:bg-gold/90 transition-colors"
+                  >
+                    {menuCtas[1].label}
+                  </Link>
+                </div>
               </div>
             </motion.div>
           </>
