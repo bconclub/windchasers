@@ -83,8 +83,8 @@ const content: ProgramContent = {
       title: "Inside the Programme",
       images: [
         "/migrated/helicopter-training/commercial-private-helicopter-pilot.webp",
-        "/migrated/helicopter-training/military-helicopter-render-3d-illustration-1024x576.webp",
-        "/migrated/helicopter-training/aircrew-member-flying-plane-from-cockpit-with-dashboard-command-control-panel-using-steering-wheel-control-panel-windscreen-navigation-woman-using-lever-fly-aircraft-1024x683.webp",
+        "/migrated/helicopter-training/HPL.webp",
+        "/migrated/helicopter-training/aircrew-member-flying-plane-from-cockpit-with-dashboard-command-control-panel-using-steering-wheel-control-panel-windscreen-navigation-woman-using-lever-fly-aircraft.webp",
         "/migrated/helicopter-training/pilot-20.webp",
         "/migrated/helicopter-training/pilot-21.webp",
         "/migrated/helicopter-training/pilot-22.webp",
