@@ -2,6 +2,14 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-03 · chore: hide homepage events; pilot-training sticky CTA always-on
+
+- Hidden the Events section from the homepage for now (commented out + import
+  removed; easy to re-enable). The slide-in menu already has no event pages.
+- /pilot-training sticky "Book a Demo Class" mobile button now shows whenever the
+  user is past the hero (scrollY > 300) instead of only on scroll-up.
+- Build exit 0 (86 pages), tsc 0 errors.
+
 ## 2026-06-03 · feat: close event registration; /cabin-crew canonical
 
 - Registration closed for now on all event pages: /webinar, /webinar/parents,
