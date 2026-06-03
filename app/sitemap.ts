@@ -43,7 +43,7 @@ const routes: string[] = [
   "/women-in-aviation",
   // Brand
   "/about",
-  "/windchasers-meet-the-team",
+  "/team",
   "/with-the-founder",
   "/contact-us",
   // Blog

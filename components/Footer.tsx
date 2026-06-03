@@ -65,7 +65,7 @@ export default function Footer() {
               <h4 className="font-semibold mb-4 mt-6 text-white">Company</h4>
               <ul className="space-y-2 text-sm text-white/60">
                 <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
-                <li><Link href="/windchasers-meet-the-team" className="hover:text-white transition-colors">Meet the Team</Link></li>
+                <li><Link href="/team" className="hover:text-white transition-colors">Meet the Team</Link></li>
                 <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
                 <li><Link href="/contact-us" className="hover:text-white transition-colors">Contact Us</Link></li>
               </ul>

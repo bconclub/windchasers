@@ -177,7 +177,7 @@ export default function Navbar() {
       heading: "Company",
       links: [
         { href: "/about", label: "About Us" },
-        { href: "/windchasers-meet-the-team", label: "Meet the Team" },
+        { href: "/team", label: "Meet the Team" },
         { href: "/blog", label: "Blog" },
         { href: "/contact-us", label: "Contact Us" },
       ],

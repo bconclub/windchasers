@@ -8,6 +8,8 @@ const nextConfig = {
 
       // --- windchasers.in migration: canonical + junk/duplicate cleanup ---
       { source: "/cabin-crew-program", destination: "/cabin-crew", permanent: true },
+      // single canonical team page — fold the legacy "Meet the Team" slug into /team
+      { source: "/windchasers-meet-the-team", destination: "/team", permanent: true },
       { source: "/about-us", destination: "/about", permanent: true },
       { source: "/privacy-policy-2", destination: "/privacy-policy", permanent: true },
       { source: "/some", destination: "/license-conversion-course", permanent: true },

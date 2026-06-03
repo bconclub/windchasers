@@ -78,7 +78,7 @@ const COLUMNS: MenuColumn[] = [
     heading: "Company",
     links: [
       { label: "About Us", href: "/about" },
-      { label: "Meet the Team", href: "/windchasers-meet-the-team" },
+      { label: "Meet the Team", href: "/team" },
       { label: "With the Founder", href: "/with-the-founder" },
       { label: "Blog", href: "/blog" },
       { label: "Contact Us", href: "/contact-us" },
