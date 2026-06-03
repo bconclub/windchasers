@@ -416,26 +416,22 @@ export default function Home() {
             </button>
           </motion.div>
 
-          {/* Trust Bar — pill badges (matches pilot-training style) */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-10 pt-8 border-t border-white/10 flex flex-wrap justify-center gap-3"
-          >
+        </div>
+
+        {/* Trust strip pinned to bottom of hero — matches pilot-training */}
+        <div className="absolute bottom-0 w-full bg-surface-container-low/80 backdrop-blur-sm border-t border-outline-variant/10 py-5 md:py-6 z-20">
+          <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex flex-nowrap md:flex-wrap items-center md:justify-center gap-6 md:gap-12 overflow-x-auto md:overflow-visible text-on-surface-variant text-[11px] md:text-sm font-bold tracking-[0.15em] uppercase [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {[
-              "DGCA-aligned Curriculum",
-              "Commercial Pilot Instructors",
-              "Training Across 6 Countries",
+              "DGCA-aligned ground training",
+              "Commercial pilot instructors",
+              "Training partners across 6 countries",
             ].map((t) => (
-              <span
-                key={t}
-                className="bg-white/10 backdrop-blur-sm border border-gold/40 rounded-full px-4 py-1.5 text-xs md:text-sm font-bold text-gold tracking-wider"
-              >
+              <span key={t} className="flex items-center gap-2 whitespace-nowrap flex-shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0" />
                 {t}
               </span>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
