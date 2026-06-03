@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Volume2, VolumeX, Play } from "lucide-react";
+import { track, EVENTS } from "@/lib/analytics/events";
 
 type ImageItem = { kind: "image"; src: string; alt?: string };
 type VideoItem = { kind: "video"; vimeoId: string; label?: string };
@@ -71,6 +72,8 @@ export default function StudentsFlyingGallery({
   const toggleMute = (index: number) => {
     const isUnmuting = unmutedId !== index;
     if (isUnmuting) {
+      // Unmuting a reel is an intentional video engagement.
+      track(EVENTS.VIDEO_PLAY, { source: "students_gallery", card_index: index });
       iframeRefs.current.forEach((ifr, i) => {
         if (ifr && i !== index) sendVimeoCommand(ifr, "setMuted", true);
       });
@@ -105,6 +108,10 @@ export default function StudentsFlyingGallery({
   const scrollByCards = (dir: 1 | -1) => {
     const el = scrollerRef.current;
     if (!el) return;
+    track(EVENTS.GALLERY_INTERACT, {
+      source: "students_gallery",
+      action: dir === 1 ? "next" : "prev",
+    });
     const card = el.querySelector<HTMLElement>("[data-gallery-card]");
     const step = card ? card.offsetWidth + 16 : el.clientWidth * 0.8;
     const target = Math.max(

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { getUTMParams } from "@/lib/tracking";
+import { track, trackLead, EVENTS } from "@/lib/analytics/events";
 
 export type LeadFormName =
   | "student_hero"
@@ -121,6 +122,13 @@ export default function StudentLeadForm({
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body?.error || "Submission failed. Please try again.");
+      }
+
+      // Unified lead conversion (GA4 lead_submit + generate_lead + Meta Lead).
+      trackLead({ form_name: formName, audience: "student" });
+      // class-12 "no" branch is an early-stage lead worth segmenting.
+      if (form.completed12th === "no") {
+        track(EVENTS.EARLY_STAGE_LEAD, { form_name: formName });
       }
 
       setStatus("success");

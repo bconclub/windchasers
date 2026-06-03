@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, User as UserIcon } from "lucide-react";
 import { trackMetaLead } from "@/lib/metaPixel";
+import { track, EVENTS } from "@/lib/analytics/events";
 import { getStoredAttribution } from "@/lib/attribution";
 import {
   getStoredUTMParamsFull,
@@ -201,6 +202,10 @@ export function WhatsAppCaptureModal({
       program: program || "WindChasers",
       page_path: pagePath,
     });
+
+    // GA4 lead events (Meta Lead already fired above with richer params).
+    track(EVENTS.LEAD_SUBMIT, { form_name: "whatsapp_capture", source: source || "" });
+    track(EVENTS.GENERATE_LEAD, { form_name: "whatsapp_capture", source: source || "" });
     if (!metaLeadSent) {
       console.warn("[wa-capture] Meta Pixel fbq unavailable; Lead event not fired");
     } else {

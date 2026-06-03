@@ -39,6 +39,7 @@ import {
   trackPilotLead,
   trackAssessmentStarted,
 } from "@/lib/analytics";
+import { track, trackLead, EVENTS } from "@/lib/analytics/events";
 import {
   getUserSessionData,
   saveUserSessionData,
@@ -145,6 +146,7 @@ export default function AssessmentForm() {
     if (phase === "questions" && !startedFiredRef.current) {
       startedFiredRef.current = true;
       trackAssessmentStarted({ audience: "student" });
+      track(EVENTS.ASSESSMENT_START, { audience: "student" });
     }
   }, [phase]);
 
@@ -466,6 +468,13 @@ export default function AssessmentForm() {
       );
 
       trackPilotLead(sourceFrom || "unknown", "assessment_completion");
+      track(EVENTS.ASSESSMENT_COMPLETE, {
+        audience: "student",
+        tier: finalTier,
+        score: finalTotal,
+        source: sourceFrom || "",
+      });
+      trackLead({ form_name: "assessment", audience: "student" });
       recordAssessmentSession(answersForScoring, finalTotal, finalTier);
 
       saveUserSessionData({

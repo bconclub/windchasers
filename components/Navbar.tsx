@@ -11,12 +11,23 @@ import {
   WEBINAR_STUDENT_WHATSAPP_GROUP_URL,
 } from "@/lib/webinar";
 import { WhatsAppCaptureModal } from "@/components/WhatsAppCaptureModal";
+import { track, trackMeta, EVENTS } from "@/lib/analytics/events";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [waCaptureOpen, setWaCaptureOpen] = useState(false);
   const pathname = usePathname();
-  
+
+  // Analytics — call + WhatsApp contact taps, menu open.
+  const onCallClick = () => {
+    track(EVENTS.CONTACT_CALL, { source_page: pathname || "" });
+    trackMeta("Contact", { method: "phone" });
+  };
+  const onWhatsAppClick = () => {
+    track(EVENTS.CONTACT_WHATSAPP, { source_page: pathname || "" });
+    trackMeta("Contact", { method: "whatsapp" });
+  };
+
   // Compact header (logo + call + WhatsApp) on selected pages
   const isSummerCamp = pathname === "/summercamp";
   const isOpenHouse = pathname === "/open-house";
@@ -209,15 +220,7 @@ export default function Navbar() {
               {/* Call */}
               <a
                 href="tel:+919591004043"
-                onClick={() => {
-                  if (typeof window === "undefined") return;
-                  if (typeof window.fbq === "function") {
-                    window.fbq("track", "Contact", { method: "phone", source_page: pathname });
-                  }
-                  if (typeof window.gtag === "function") {
-                    window.gtag("event", "contact_click", { method: "phone", source_page: pathname });
-                  }
-                }}
+                onClick={onCallClick}
                 className="flex items-center justify-center w-10 h-10 rounded-full bg-[#C5A572] text-black hover:bg-[#C5A572]/90 transition-colors"
                 aria-label="Call"
               >
@@ -232,13 +235,7 @@ export default function Navbar() {
                   type="button"
                   onClick={() => {
                     setWaCaptureOpen(true);
-                    if (typeof window === "undefined") return;
-                    if (typeof window.fbq === "function") {
-                      window.fbq("track", "Contact", { method: "whatsapp", source_page: pathname });
-                    }
-                    if (typeof window.gtag === "function") {
-                      window.gtag("event", "contact_click", { method: "whatsapp", source_page: pathname });
-                    }
+                    onWhatsAppClick();
                   }}
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-[#25D366] text-white hover:bg-[#128C7E] transition-colors"
                   aria-label="Chat on WhatsApp"
@@ -252,15 +249,7 @@ export default function Navbar() {
                   href={compactWhatsAppHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={() => {
-                    if (typeof window === "undefined") return;
-                    if (typeof window.fbq === "function") {
-                      window.fbq("track", "Contact", { method: "whatsapp", source_page: pathname });
-                    }
-                    if (typeof window.gtag === "function") {
-                      window.gtag("event", "contact_click", { method: "whatsapp", source_page: pathname });
-                    }
-                  }}
+                  onClick={onWhatsAppClick}
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-[#25D366] text-white hover:bg-[#128C7E] transition-colors"
                   aria-label={
                     isWebinarParent
@@ -278,7 +267,10 @@ export default function Navbar() {
 
               {/* Hamburger — on every page, including home (no dropdown). */}
               <button
-                onClick={() => setIsOpen(!isOpen)}
+                onClick={() => {
+                  if (!isOpen) track(EVENTS.MENU_OPEN, { source_page: pathname });
+                  setIsOpen(!isOpen);
+                }}
                 className="text-white z-[60] relative ml-1"
                 aria-label="Toggle menu"
               >
@@ -341,7 +333,14 @@ export default function Navbar() {
                         <li key={link.href}>
                           <Link
                             href={link.href}
-                            onClick={() => setIsOpen(false)}
+                            onClick={() => {
+                              track(EVENTS.NAV_CLICK, {
+                                link_label: link.label,
+                                link_url: link.href,
+                                source_page: pathname || "",
+                              });
+                              setIsOpen(false);
+                            }}
                             className="block py-2.5 text-base font-medium text-white/70 hover:text-gold transition-colors border-b border-white/5"
                           >
                             {link.label}
@@ -356,14 +355,28 @@ export default function Navbar() {
                 <div className="mt-auto pt-4 flex flex-col gap-3">
                   <Link
                     href={menuCtas[0].href}
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      track(EVENTS.CTA_CLICK, {
+                        cta_location: "menu",
+                        label: menuCtas[0].label,
+                        link_url: menuCtas[0].href,
+                      });
+                      setIsOpen(false);
+                    }}
                     className="block text-center py-3 rounded-lg border border-gold text-gold font-semibold hover:bg-gold hover:text-dark transition-colors"
                   >
                     {menuCtas[0].label}
                   </Link>
                   <Link
                     href={menuCtas[1].href}
-                    onClick={() => setIsOpen(false)}
+                    onClick={() => {
+                      track(EVENTS.CTA_CLICK, {
+                        cta_location: "menu",
+                        label: menuCtas[1].label,
+                        link_url: menuCtas[1].href,
+                      });
+                      setIsOpen(false);
+                    }}
                     className="block text-center py-3 rounded-lg bg-gold text-dark font-semibold hover:bg-gold/90 transition-colors"
                   >
                     {menuCtas[1].label}

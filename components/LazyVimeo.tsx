@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Play } from "lucide-react";
+import { track, EVENTS } from "@/lib/analytics/events";
 
 /**
  * Lazy Vimeo embed for mobile speed (Quality Score).
@@ -53,7 +54,14 @@ export default function LazyVimeo({
     <div
       ref={ref}
       className={`relative overflow-hidden ${className}`}
-      onClick={() => !active && setActive(true)}
+      onClick={() => {
+        if (!active) {
+          // Only a deliberate tap counts as a play; background autoplay-on-view
+          // (loadOnView) embeds are decorative and don't fire this.
+          track(EVENTS.VIDEO_PLAY, { video_id: vimeoId, video_title: title });
+          setActive(true);
+        }
+      }}
       role={active ? undefined : "button"}
       aria-label={active ? undefined : `Play ${title}`}
     >

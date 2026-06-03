@@ -26,6 +26,7 @@ import VimeoReel from "@/components/VimeoReel";
 import CardCarousel from "@/components/CardCarousel";
 import InlineLeadForm from "@/components/InlineLeadForm";
 import LazyVimeo from "@/components/LazyVimeo";
+import { track, trackMeta, EVENTS } from "@/lib/analytics/events";
 import { setLastVisitedProgram } from "@/lib/sessionStorage";
 
 const manrope = Manrope({
@@ -991,14 +992,8 @@ export default function PilotTraining() {
         <button
           type="button"
           onClick={() => {
-            if (typeof window !== "undefined") {
-              if (typeof window.fbq === "function") {
-                window.fbq("track", "InitiateCheckout", { content_name: "Sticky Demo CTA", source_page: "/pilot-training" });
-              }
-              if (typeof window.gtag === "function") {
-                window.gtag("event", "demo_cta_click", { cta_location: "sticky_pilot_training", source_page: "/pilot-training" });
-              }
-            }
+            track(EVENTS.STICKY_CTA_CLICK, { cta_location: "sticky_pilot_training", label: "Book a Demo Class" });
+            trackMeta("InitiateCheckout", { content_name: "Sticky Demo CTA" });
             const btn = document.querySelector<HTMLElement>('[id*="proxe"], [class*="proxe-launcher"], [class*="widget-launcher"]');
             if (btn) { btn.click(); } else { window.location.href = "/demo"; }
           }}

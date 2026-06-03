@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Loader2, CheckCircle2, AlertCircle, ArrowRight } from "lucide-react";
 import { getUTMParams } from "@/lib/tracking";
+import { trackLead, track, EVENTS } from "@/lib/analytics/events";
 
 /**
  * Lean 2-field lead capture (name + phone). Posts to the SAME endpoint the
@@ -24,6 +25,14 @@ export default function InlineLeadForm({
   const [phone, setPhone] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [started, setStarted] = useState(false);
+
+  const onFirstFocus = () => {
+    if (!started) {
+      setStarted(true);
+      track(EVENTS.FORM_START, { form_name: formName });
+    }
+  };
 
   const isValid = name.trim().length >= 2 && /^\d{10}$/.test(phone.replace(/\D/g, ""));
 
@@ -62,11 +71,8 @@ export default function InlineLeadForm({
         throw new Error(body?.message || body?.error || "Submission failed. Please try again.");
       }
 
-      // Fire Lead conversion (Meta + Google) — pixel swap pending old aviation ID.
-      if (typeof window !== "undefined") {
-        if (typeof window.fbq === "function") window.fbq("track", "Lead", { content_name: formName });
-        if (typeof window.gtag === "function") window.gtag("event", "generate_lead", { form_name: formName });
-      }
+      // Fire the unified lead conversion (GA4 lead_submit + generate_lead + Meta Lead).
+      trackLead({ form_name: formName, audience: "student" });
 
       // Stay on the page so the visitor can keep exploring. The form is
       // replaced by an inline success state below; no redirect.
@@ -109,6 +115,7 @@ export default function InlineLeadForm({
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+            onFocus={onFirstFocus}
             aria-label="Your name"
             placeholder="Your name"
             className="w-full bg-[#0D0D0D] border border-white/15 rounded-lg px-4 h-12 text-white placeholder-white/35 focus:border-primary focus:outline-none transition-colors"

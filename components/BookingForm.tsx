@@ -7,6 +7,7 @@ import { Calendar } from "lucide-react";
 import { trackFormSubmission, sendTrackingData, getStoredUTMParams, getLandingPage, getStoredReferrer, getStoredClickIds, deriveTrafficSource } from "@/lib/tracking";
 import { getUserSessionData, saveUserSessionData, markBookingCompleted } from "@/lib/sessionStorage";
 import { trackPilotLead } from "@/lib/analytics";
+import { track, trackLead, EVENTS } from "@/lib/analytics/events";
 import {
   isSlotInPast,
   getMinBookingDateIST,
@@ -62,6 +63,15 @@ export default function BookingForm() {
     preferredTime: "",
   });
   const [dateError, setDateError] = useState("");
+  const [formStarted, setFormStarted] = useState(false);
+
+  // Fire form_start the first time the visitor interacts with the form.
+  const onFormStart = () => {
+    if (!formStarted) {
+      setFormStarted(true);
+      track(EVENTS.FORM_START, { form_name: "booking" });
+    }
+  };
 
   const mapSourceToInterest = (source: string): InterestSource | null => {
     // Direct InterestSource values (from lastVisitedProgram)
@@ -221,6 +231,7 @@ export default function BookingForm() {
     }
     setDateError("");
     setSubmitStatus("idle");
+    track(EVENTS.FORM_STEP, { form_name: "booking", step: 2 });
     setCurrentStep(2);
   };
 
@@ -231,11 +242,13 @@ export default function BookingForm() {
     if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
       setSubmitStatus("error");
       setErrorMessage("Please enter a valid email address.");
+      track(EVENTS.FORM_ERROR, { form_name: "booking", field: "email" });
       return;
     }
     if (!formData.city.trim()) {
       setSubmitStatus("error");
       setErrorMessage("Please enter your city.");
+      track(EVENTS.FORM_ERROR, { form_name: "booking", field: "city" });
       return;
     }
 
@@ -307,8 +320,15 @@ export default function BookingForm() {
           finalSource = interestMap[formData.interest] || 'unknown';
         }
         
-        // Track pilot lead
+        // Track pilot lead (legacy helper) + unified registry events.
         trackPilotLead(finalSource, 'demo_booking');
+        track(EVENTS.DEMO_BOOK, {
+          form_name: "booking",
+          interest: formData.interest || "",
+          demo_type: formData.demoType,
+          source: finalSource || "",
+        });
+        trackLead({ form_name: "booking", audience: userType });
         
         // Send complete tracking data
         await sendTrackingData("/api/booking", {
@@ -420,6 +440,7 @@ export default function BookingForm() {
                 required
                 value={formData.interest}
                 onChange={(e) => {
+                  onFormStart();
                   const newValue = e.target.value as InterestSource;
                   setFormData({ ...formData, interest: newValue });
                   saveUserSessionData({ interest: newValue });

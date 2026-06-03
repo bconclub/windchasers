@@ -4,11 +4,8 @@
 // (GA4 ID G-3THNVEDJK8, Meta Pixel 1097272771358425 — WindChasers aviation pixel). These helpers no-op when
 // the globals are missing (SSR, blocked by ad blocker, etc).
 
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void;
-  }
-}
+// Window.gtag/fbq are declared globally in lib/analytics/events.ts.
+import { track, EVENTS } from "@/lib/analytics/events";
 
 // TODO: add Google Ads conversion ID + label when Marketing supplies them.
 // Format: "AW-XXXXXXXXXX/aBcDeFgHiJkLmNoPqRs". Until set, the conversion call
@@ -26,10 +23,13 @@ function gtagSafe(...args: unknown[]): void {
 // Generic helpers used across the site
 
 export const trackKeyPageView = (pageName: string) => {
+  // Legacy Title-Case event (kept for reporting history continuity).
   gtagSafe("event", "Key Page View", {
     page_title: pageName,
     page_location: typeof window !== "undefined" ? window.location.href : "",
   });
+  // Clean snake_case registry event going forward.
+  track(EVENTS.KEY_PAGE_VIEW, { page_title: pageName });
 };
 
 export const trackPilotLead = (source: string, formType: string) => {
