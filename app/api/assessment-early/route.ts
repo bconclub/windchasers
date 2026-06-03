@@ -131,83 +131,10 @@ export async function POST(request: Request) {
       }
     }
 
-    // Forward to PROXe via the unified /api/agent/leads/inbound endpoint as a
-    // `page` type. Direct fetch (not via /api/leads) because the VPS Node
-    // process can't reliably self-fetch its own public hostname through the
-    // nginx/SSL layer — same pattern /api/booking uses. Non-blocking: if
-    // PROXe is down we still return success because the sheet has the lead.
-    const proxeBaseUrl = (process.env.PROXE_BASE_URL ?? "").trim();
-    const proxeApiKey = (process.env.PROXE_INBOUND_API_KEY ?? "").trim();
-    if (proxeBaseUrl && proxeApiKey) {
-      const upstreamPayload = {
-        name: data.name.trim(),
-        phone: data.phone.trim(),
-        email: data.email || undefined,
-        source: "page",
-        campaign: data.utm_campaign || null,
-        city: data.city || undefined,
-        brand: "windchasers",
-        notes: "assessment_early",
-        custom_fields: {
-          form_type: "assessment_early",
-          audience,
-          page_url: data.landing_page || undefined,
-          landing_url: data.landing_page || undefined,
-          referrer: data.referrer || undefined,
-          channel,
-          traffic_source: data.traffic_source || undefined,
-          utm_source: data.utm_source || undefined,
-          utm_medium: data.utm_medium || undefined,
-          utm_campaign: data.utm_campaign || undefined,
-          utm_term: data.utm_term || undefined,
-          utm_content: data.utm_content || undefined,
-          gclid: data.gclid || undefined,
-          fbclid: data.fbclid || undefined,
-          msclkid: data.msclkid || undefined,
-          ttclid: data.ttclid || undefined,
-          li_fat_id: data.li_fat_id || undefined,
-          twclid: data.twclid || undefined,
-          wbraid: data.wbraid || undefined,
-          gbraid: data.gbraid || undefined,
-          has_click_id: hasClickId,
-        },
-      };
-      const upstreamUrl = `${proxeBaseUrl.replace(/\/+$/, "")}/api/agent/leads/inbound`;
-      // Fire-and-forget with a short timeout. If PROXe is sluggish or down,
-      // we still finish the request and rely on the sheet write.
-      try {
-        const controller = new AbortController();
-        const t = setTimeout(() => controller.abort(), 4000);
-        const res = await fetch(upstreamUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-api-key": proxeApiKey,
-          },
-          body: JSON.stringify(upstreamPayload),
-          signal: controller.signal,
-          cache: "no-store",
-        });
-        clearTimeout(t);
-        if (!res.ok) {
-          const txt = await res.text().catch(() => "");
-          console.warn(
-            "assessment-early → PROXe non-OK:",
-            res.status,
-            txt.slice(0, 200)
-          );
-        }
-      } catch (proxeErr) {
-        console.warn(
-          "assessment-early → PROXe fetch failed (sheet still wrote):",
-          proxeErr instanceof Error ? proxeErr.message : proxeErr
-        );
-      }
-    } else {
-      console.warn(
-        "assessment-early: PROXE_BASE_URL or PROXE_INBOUND_API_KEY not set, skipping PROXe forward"
-      );
-    }
+    // NOTE: Early-stage leads intentionally do NOT forward to PROXe. These are
+    // below-12th / not-yet-eligible enquiries — they're recorded in Sheets for
+    // nurture, and the user takes it from the thank-you page. Only the main
+    // landing-page lead forms + WhatsApp capture push into PROXe.
 
     if (sheetsError && !sheetsOk) {
       return NextResponse.json(

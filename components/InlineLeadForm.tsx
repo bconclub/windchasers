@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { Loader2, CheckCircle2, AlertCircle, ArrowRight } from "lucide-react";
-import { getUTMParams } from "@/lib/tracking";
+import {
+  getStoredUTMParams,
+  getStoredClickIds,
+  getLandingPage,
+  getStoredReferrer,
+  deriveTrafficSource,
+} from "@/lib/tracking";
 import { trackLead, track, EVENTS } from "@/lib/analytics/events";
 
 /**
@@ -43,7 +49,10 @@ export default function InlineLeadForm({
     setStatus("submitting");
     setErrorMessage("");
 
-    const utm = getUTMParams();
+    // First-touch UTMs + click IDs + landing URL + referrer + derived channel
+    // so PROXe attributes the lead to its real source instead of DIRECT.
+    const utm = getStoredUTMParams();
+    const clickIds = getStoredClickIds();
     const payload = {
       type: "page" as const,
       name: name.trim(),
@@ -57,6 +66,10 @@ export default function InlineLeadForm({
         term: utm.utm_term,
         content: utm.utm_content,
       },
+      click_ids: clickIds,
+      landing_url: getLandingPage(),
+      referrer: getStoredReferrer(),
+      traffic_source: deriveTrafficSource(),
       data: { form_name: formName },
     };
 

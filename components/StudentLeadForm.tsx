@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, CheckCircle2, AlertCircle } from "lucide-react";
-import { getUTMParams } from "@/lib/tracking";
+import {
+  getStoredUTMParams,
+  getStoredClickIds,
+  getLandingPage,
+  getStoredReferrer,
+  deriveTrafficSource,
+} from "@/lib/tracking";
 import { track, trackLead, EVENTS } from "@/lib/analytics/events";
 
 export type LeadFormName =
@@ -88,7 +94,12 @@ export default function StudentLeadForm({
     setStatus("submitting");
     setErrorMessage("");
 
-    const utm = getUTMParams();
+    // First-touch UTMs (survives in-tab nav + tab restart via localStorage),
+    // plus ad-network click IDs, the original landing URL, the first-touch
+    // referrer, and a derived channel — so PROXe never falls back to DIRECT
+    // when the visit actually came from an ad / referral.
+    const utm = getStoredUTMParams();
+    const clickIds = getStoredClickIds();
     const payload = {
       type: "page" as const,
       name: form.name.trim(),
@@ -104,6 +115,10 @@ export default function StudentLeadForm({
         term: utm.utm_term,
         content: utm.utm_content,
       },
+      click_ids: clickIds,
+      landing_url: getLandingPage(),
+      referrer: getStoredReferrer(),
+      traffic_source: deriveTrafficSource(),
       data: {
         form_name: formName,
         completed_12th: form.completed12th,

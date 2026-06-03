@@ -7,6 +7,7 @@ import ConditionalFooter from "@/components/ConditionalFooter";
 import Analytics from "@/components/Analytics";
 import TrackingProvider from "@/components/TrackingProvider";
 import MetaPixelInit from "@/components/MetaPixelInit";
+import StickyDemoCTA from "@/components/StickyDemoCTA";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -78,6 +79,7 @@ export default function RootLayout({
           <main className="min-h-screen">
             {children}
           </main>
+          <StickyDemoCTA />
           <ConditionalFooter />
         </TrackingProvider>
       </body>

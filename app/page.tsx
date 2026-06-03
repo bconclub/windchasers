@@ -25,7 +25,6 @@ import StudentsFlyingGallery, {
 import VimeoReel from "@/components/VimeoReel";
 import CardCarousel from "@/components/CardCarousel";
 import LazyVimeo from "@/components/LazyVimeo";
-import { track, trackMeta, EVENTS } from "@/lib/analytics/events";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -336,21 +335,8 @@ function ConversionCluster({ heading }: { heading: React.ReactNode }) {
 export default function Home() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
-  const [showDemoBtn, setShowDemoBtn] = useState(false);
-
   useEffect(() => {
     document.title = "Windchasers - India's Top Pilot Training Academy- Bangalore";
-  }, []);
-
-  useEffect(() => {
-    // Show the sticky "Book a Demo" button whenever we're past the hero
-    // (always visible, not only on scroll-up).
-    const onScroll = () => {
-      setShowDemoBtn(window.scrollY > 300);
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   const scrollToPathSelection = () => {
@@ -361,7 +347,7 @@ export default function Home() {
     <div className={`${manrope.variable} bg-background text-on-surface`}>
       {/* Hero — original homepage hero (kept). */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Vimeo Video Background */}
+        {/* Static cockpit hero image (video removed for speed / focus). */}
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
           <Image
             src="/hero/cockpit.webp"
@@ -370,14 +356,6 @@ export default function Home() {
             priority
             sizes="100vw"
             className="object-cover"
-          />
-          <iframe
-            className="absolute top-1/2 left-[70%] md:left-1/2 w-[150vw] h-[84.375vw] min-h-[150vh] min-w-[266.66vh] -translate-x-1/2 -translate-y-1/2 border-0"
-            src="https://player.vimeo.com/video/1160946921?autoplay=1&muted=1&controls=0&badge=0&byline=0&portrait=0&title=0&loop=1&background=1"
-            title="Aviation Background"
-            allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-            allowFullScreen
-            style={{ pointerEvents: "none" }}
           />
         </div>
 
@@ -979,28 +957,6 @@ export default function Home() {
       {/* Final CTA — reuses the conversion cluster */}
       <ConversionCluster heading={<>Two ways to <span className="text-primary italic">start.</span></>} />
 
-      {/* Scroll-up demo CTA */}
-      <div
-        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-40 transition-all duration-300 ${
-          showDemoBtn ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-4 pointer-events-none"
-        }`}
-      >
-        <button
-          type="button"
-          onClick={() => {
-            track(EVENTS.STICKY_CTA_CLICK, { cta_location: "sticky_home", label: "Book a Demo Class" });
-            trackMeta("InitiateCheckout", { content_name: "Sticky Demo CTA" });
-            const btn = document.querySelector<HTMLElement>('[id*="proxe"], [class*="proxe-launcher"], [class*="widget-launcher"]');
-            if (btn) { btn.click(); } else { window.location.href = "/demo"; }
-          }}
-          className="flex items-center whitespace-nowrap px-6 py-3 md:px-8 md:py-3.5 rounded-full bg-[#C5A572] text-black text-xs md:text-sm font-bold uppercase tracking-wider active:scale-95 transition-all hover:bg-[#d4b885]"
-          style={{
-            boxShadow: "0 4px 24px rgba(197,165,114,0.5)",
-          }}
-        >
-          Book a Demo Class
-        </button>
-      </div>
     </div>
   );
 }
