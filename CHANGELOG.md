@@ -2,6 +2,14 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-03 · fix(home): sticky "Book a Demo Class" CTA always visible past hero
+
+- The homepage (app/page.tsx) still had the old scroll-up-only logic for the
+  sticky "Book a Demo Class" button (it only appeared when scrolling UP). Changed
+  to `scrollY > 300` so it stays visible on mobile bottom once past the hero —
+  matching the pilot-training page.
+- Build exit 0 (86 pages), tsc 0 errors.
+
 ## 2026-06-03 · chore: hide homepage events; pilot-training sticky CTA always-on
 
 - Hidden the Events section from the homepage for now (commented out + import

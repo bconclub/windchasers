@@ -336,18 +336,18 @@ export default function Home() {
   const [showAirplaneModal, setShowAirplaneModal] = useState(false);
   const [showMapModal, setShowMapModal] = useState(false);
   const [showDemoBtn, setShowDemoBtn] = useState(false);
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
     document.title = "Windchasers - India's Top Pilot Training Academy- Bangalore";
   }, []);
 
   useEffect(() => {
+    // Show the sticky "Book a Demo" button whenever we're past the hero
+    // (always visible, not only on scroll-up).
     const onScroll = () => {
-      const y = window.scrollY;
-      setShowDemoBtn(y > 300 && y < lastScrollY.current);
-      lastScrollY.current = y;
+      setShowDemoBtn(window.scrollY > 300);
     };
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
