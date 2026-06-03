@@ -46,7 +46,7 @@ export default function Footer() {
                 <li><Link href="/diploma-in-aviation" className="hover:text-white transition-colors">Diploma in Aviation</Link></li>
                 <li><Link href="/airline" className="hover:text-white transition-colors">Cadet &amp; Airline Track</Link></li>
                 <li><Link href="/helicopter-training" className="hover:text-white transition-colors">Helicopter Training</Link></li>
-                <li><Link href="/cabin-crew-program" className="hover:text-white transition-colors">Cabin Crew Program</Link></li>
+                <li><Link href="/cabin-crew" className="hover:text-white transition-colors">Cabin Crew Program</Link></li>
                 <li><Link href="/ielts-training-program" className="hover:text-white transition-colors">IELTS Training</Link></li>
               </ul>
             </div>

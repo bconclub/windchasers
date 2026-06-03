@@ -2,6 +2,18 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-03 · feat: close event registration; /cabin-crew canonical
+
+- Registration closed for now on all event pages: /webinar, /webinar/parents,
+  /webinar/students, /open-house now show "Registration is not open yet" instead
+  of the register CTA / lead form. Forms preserved (gated off) for easy re-enable.
+- Homepage event cards: upcoming "Register Now" button → "Registration is not
+  open yet" label (new `registrationOpen` flag on events, default closed).
+- Cabin crew canonical URL is now /cabin-crew (was /cabin-crew-program).
+  /cabin-crew-program 301-redirects to /cabin-crew. Removed the duplicate route;
+  updated nav, footer, mega menu, sitemap, related links.
+- Build exit 0 (86 pages), tsc 0 errors.
+
 ## 2026-06-03 · seo(titles): add server-side meta titles to /dgca + /international
 
 - Audited every page's meta title against the old WordPress site (cached). All

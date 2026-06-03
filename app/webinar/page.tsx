@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, Plane } from "lucide-react";
-import { WEBINAR_ZOOM_REGISTER_URL } from "@/lib/webinar";
 
 export const metadata: Metadata = {
   title: "Live Webinars · WindChasers",
@@ -28,16 +27,14 @@ export default function WebinarIndexPage() {
         <p className="text-[#C5A572] text-xs uppercase tracking-[0.35em] mb-3">Upcoming</p>
         <h1 className="text-3xl sm:text-4xl font-bold text-white mb-4">WindChasers live webinars</h1>
         <p className="text-white/65 text-lg mb-6">
-          April 25, 2026 · Zoom · free registration
+          Online · Zoom
         </p>
-        <a
-          href={WEBINAR_ZOOM_REGISTER_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center justify-center rounded-full bg-[#C5A572] text-[#1A1A1A] px-8 py-3.5 font-semibold text-base hover:bg-[#C5A572]/90 transition-colors shadow-lg shadow-[#C5A572]/20"
-        >
-          Register for the webinar
-        </a>
+        <span className="inline-flex items-center justify-center rounded-full border border-white/20 text-white/70 px-8 py-3.5 font-semibold text-base cursor-default select-none">
+          Registration is not open yet
+        </span>
+        <p className="text-white/45 text-sm mt-4">
+          Check back soon — dates for the next webinar will be announced here.
+        </p>
       </div>
       <ul className="max-w-xl mx-auto space-y-4">
         {WEBINARS.map((w) => (

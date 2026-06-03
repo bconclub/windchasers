@@ -18,6 +18,9 @@ export type WindEvent = {
   image?: string;
   /** Where the "Register" / "Watch" button goes. */
   registerHref: string;
+  /** Registration open? When false (default for upcoming), the card shows a
+   *  "Registration is not open yet" label instead of a register link. */
+  registrationOpen?: boolean;
 };
 
 // --- EDIT THESE. Two upcoming + two past. ---

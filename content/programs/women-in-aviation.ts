@@ -57,7 +57,7 @@ const content: ProgramContent = {
   related: [
     { label: "Commercial Pilot License", href: "/commercial-pilot-license" },
     { label: "Private Pilot License", href: "/private-pilot-license" },
-    { label: "Cabin Crew Program", href: "/cabin-crew-program" },
+    { label: "Cabin Crew Program", href: "/cabin-crew" },
     { label: "Helicopter Training", href: "/helicopter-training" },
     { label: "DGCA Ground Classes", href: "/dgca-ground-classes" },
   ],

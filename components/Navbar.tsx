@@ -24,7 +24,7 @@ export default function Navbar() {
   const isHome = pathname === "/";
   const isPilotTraining = pathname?.startsWith("/pilot-training") ?? false;
   const isATC = pathname === "/atc";
-  const isCabinCrew = pathname === "/cabin-crew" || pathname === "/cabin-crew-program";
+  const isCabinCrew = pathname === "/cabin-crew";
   const isWebinar = pathname?.startsWith("/webinar") ?? false;
   const isWebinarParent = pathname === "/webinar/parents";
   const isWebinarStudents = pathname === "/webinar/students";
@@ -147,7 +147,7 @@ export default function Navbar() {
         { href: "/diploma-in-aviation", label: "Diploma in Aviation" },
         { href: "/airline", label: "Cadet & Airline Track" },
         { href: "/helicopter-training", label: "Helicopter Training" },
-        { href: "/cabin-crew-program", label: "Cabin Crew" },
+        { href: "/cabin-crew", label: "Cabin Crew" },
         { href: "/ielts-training-program", label: "IELTS Training" },
       ],
     },

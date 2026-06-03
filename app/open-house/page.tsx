@@ -563,7 +563,19 @@ export default function OpenHousePage() {
                 </p>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} noValidate className="space-y-5">
+              <div className="text-center py-10">
+                <p className="text-2xl font-bold text-white mb-3">Registration is not open yet</p>
+                <p className="text-white/60">Dates for the next open house will be announced here soon.</p>
+              </div>
+            )}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Registration intentionally closed for now. The full form is preserved
+          below (gated off) so it can be re-enabled later by flipping false→true. */}
+      {false && (
+        <form onSubmit={handleSubmit} noValidate className="space-y-5">
                 {/* Role selector */}
                 <div>
                   <label className="block text-sm text-gray-300 mb-2">
@@ -778,9 +790,6 @@ export default function OpenHousePage() {
                 </p>
               </form>
             )}
-          </motion.div>
-        </div>
-      </section>
 
       {/* Sticky mobile CTA */}
       {showStickyBar && !blocked && (

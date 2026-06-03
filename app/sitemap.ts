@@ -39,7 +39,7 @@ const routes: string[] = [
   "/pilot-training-in-south-africa",
   // Other training
   "/helicopter-training",
-  "/cabin-crew-program",
+  "/cabin-crew",
   "/women-in-aviation",
   // Brand
   "/about",

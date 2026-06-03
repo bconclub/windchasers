@@ -17,7 +17,6 @@ import WindChasersPastOpenHousesGallery from "@/components/marketing/WindChasers
 import WebinarCountdownVideoSection from "@/components/webinar/WebinarCountdownVideoSection";
 import WebinarHeroDetails from "@/components/webinar/WebinarHeroDetails";
 import {
-  WEBINAR_PARENT_ZOOM_REGISTER_URL,
   WEBINAR_START_ISO,
   formatWebinarDateDisplay,
   formatWebinarDateShortDisplay,
@@ -201,14 +200,11 @@ export default function WebinarParentsPage() {
               transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.5 }}
               className="text-center"
             >
-              <a
-                href={WEBINAR_PARENT_ZOOM_REGISTER_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex justify-center bg-[#C5A572] text-[#1A1A1A] px-8 md:px-10 py-4 rounded-full font-semibold text-base hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(197,165,114,0.4)] transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-black shadow-[0_10px_30px_rgba(197,165,114,0.3)] w-full md:w-auto"
+              <span
+                className="inline-flex justify-center bg-[#C5A572] text-[#1A1A1A] px-8 md:px-10 py-4 rounded-full font-semibold text-base shadow-[0_10px_30px_rgba(197,165,114,0.3)] w-full md:w-auto cursor-default select-none"
               >
-                Register for the parents webinar →
-              </a>
+                Registration is not open yet
+              </span>
             </motion.div>
           </motion.div>
         </div>
@@ -317,14 +313,11 @@ export default function WebinarParentsPage() {
 
       {showStickyBar && (
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-md border-t border-white/10 px-4 py-3">
-          <a
-            href={WEBINAR_PARENT_ZOOM_REGISTER_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex w-full items-center justify-center bg-[#C5A572] text-[#1A1A1A] py-3.5 rounded-full font-semibold text-sm shadow-[0_10px_30px_rgba(197,165,114,0.25)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/60"
+          <span
+            className="flex w-full items-center justify-center bg-[#C5A572] text-[#1A1A1A] py-3.5 rounded-full font-semibold text-sm shadow-[0_10px_30px_rgba(197,165,114,0.25)] cursor-default select-none"
           >
-            Register for the parents webinar →
-          </a>
+            Registration is not open yet
+          </span>
         </div>
       )}
     </>

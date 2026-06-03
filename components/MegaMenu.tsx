@@ -70,7 +70,7 @@ const COLUMNS: MenuColumn[] = [
     heading: "More Training",
     links: [
       { label: "Helicopter Training", href: "/helicopter-training" },
-      { label: "Cabin Crew Program", href: "/cabin-crew-program" },
+      { label: "Cabin Crew Program", href: "/cabin-crew" },
       { label: "Women in Aviation", href: "/women-in-aviation" },
     ],
   },
