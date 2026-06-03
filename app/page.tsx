@@ -369,7 +369,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight text-white"
           >
-            Your Career Path to the <span className="text-gold">Cockpit</span>
+            Your Aviation Career <span className="text-gold">Starts Here</span>
           </motion.h1>
 
           <motion.p
@@ -378,7 +378,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-xl md:text-2xl text-white/70 mb-12 max-w-3xl mx-auto"
           >
-            No false promises. Real costs. Real guidance. DGCA-aligned ground training with commercial pilot instructors.
+            Whatever your goal in the sky, we map a clear route to reach it. Real programs, real costs, real people behind you.
           </motion.p>
 
           <motion.div

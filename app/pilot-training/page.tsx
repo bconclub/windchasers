@@ -372,8 +372,8 @@ export default function PilotTraining() {
             transition={{ duration: 0.7 }}
             className="font-[family-name:var(--font-headline)] text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter text-white leading-[1.08] text-center"
           >
-            Pilot Training in <br />
-            <span className="text-primary italic">Bangalore.</span>
+            Your Path to <br />
+            <span className="text-primary italic">Becoming a Pilot.</span>
           </motion.h1>
 
           <motion.p
@@ -382,9 +382,9 @@ export default function PilotTraining() {
             transition={{ duration: 0.7, delay: 0.15 }}
             className="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light text-center"
           >
-            Your route from 12th to the cockpit. DGCA-aligned ground classes
-            in-house, with DGCA-approved partner FTOs for flight training. Real
-            costs, real guidance, no false promises.
+            DGCA-aligned ground classes in Bengaluru, flight training with
+            approved partners in India and abroad. We lay out the whole road
+            before you commit.
           </motion.p>
 
           {/* Inline lead capture — primary hero conversion action */}
