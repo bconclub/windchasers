@@ -2,6 +2,17 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-03 · seo(titles): add server-side meta titles to /dgca + /international
+
+- Audited every page's meta title against the old WordPress site (cached). All
+  ~40 content pages already have proper, SEO-improved server-side titles EXCEPT
+  /dgca and /international, which only set document.title client-side (weak for
+  crawlers/social).
+- Added app/dgca/layout.tsx and app/international/layout.tsx with proper
+  `metadata.title` + description so the <title> is in the server HTML.
+- Added docs/windchasers-meta-titles-audit.xlsx (old vs new title per page).
+- Build exit 0 (87 pages), tsc 0 errors.
+
 ## 2026-06-03 · refactor(home): move Events below the "Ready to start" conversion cluster
 
 - Homepage Events carousel moved from right-after-hero to after the "Ready to
