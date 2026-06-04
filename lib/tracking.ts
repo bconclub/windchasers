@@ -378,14 +378,13 @@ export function trackPageView(path: string, timeSpent?: number): void {
   trackingData.pageViews.push(pageView);
   sessionStorage.setItem(TRACKING_DATA_KEY, JSON.stringify(trackingData));
 
-  // Mirror into GA4 if gtag is present.
-  const gtag = (window as any).gtag;
-  if (typeof gtag === "function") {
-    gtag("event", "page_view", {
-      page_path: path,
-      session_id: trackingData.sessionId,
-    });
-  }
+  // NOTE: we deliberately do NOT send our own gtag('event','page_view') here.
+  // GA4 already counts page views automatically — once via gtag('config') on
+  // load, and once per SPA navigation via Enhanced Measurement's
+  // "page changes based on browser history events". Sending a manual page_view
+  // on top (and useTracking calls this on both page-enter and page-leave) was
+  // double/triple-counting every page view. This function now only records the
+  // visit into sessionStorage for the lead-tracking payload.
 }
 
 export function trackFormSubmission(
