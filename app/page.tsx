@@ -689,7 +689,7 @@ export default function Home() {
                     <h3 className="text-base md:text-lg font-bold text-primary mb-0.5 truncate">
                       {t.name}
                     </h3>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-white/60 truncate">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-white/60 leading-tight line-clamp-2">
                       {t.role}
                     </p>
                   </div>
