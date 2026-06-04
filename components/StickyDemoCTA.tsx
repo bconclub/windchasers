@@ -19,7 +19,7 @@ export default function StickyDemoCTA() {
   const hidden =
     pathname.startsWith("/admin") || pathname.startsWith("/thank-you");
 
-  const [show, setShow] = useState(isPilotTraining);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     if (hidden) {
@@ -27,9 +27,12 @@ export default function StickyDemoCTA() {
       return;
     }
     if (isPilotTraining) {
-      // Always visible on the lead page.
-      setShow(true);
-      return;
+      // Lead page: keep it prominent, but NOT in the hero (which already has the
+      // inline lead form). Reveal once scrolled past the hero, then stay visible.
+      const onScroll = () => setShow(window.scrollY > window.innerHeight * 0.85);
+      onScroll();
+      window.addEventListener("scroll", onScroll, { passive: true });
+      return () => window.removeEventListener("scroll", onScroll);
     }
 
     // All other pages: reveal on scroll-up, hide on scroll-down / near top.
