@@ -53,10 +53,9 @@ export default function StickyDemoCTA() {
   if (hidden) return null;
 
   const onClick = () => {
-    track(EVENTS.STICKY_CTA_CLICK, {
+    track(EVENTS.BOOK_DEMO_STICKY, {
       cta_location: isPilotTraining ? "sticky_pilot_training" : "sticky_global",
       source_page: pathname,
-      label: "Book a Demo Class",
     });
     trackMeta("InitiateCheckout", { content_name: "Sticky Demo CTA" });
     const btn = document.querySelector<HTMLElement>(

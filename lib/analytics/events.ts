@@ -34,8 +34,8 @@ export const EVENTS = {
   WHATSAPP_OPEN: "whatsapp_open",              // WhatsApp button tapped / capture opened
   CALL_CLICK: "call_click",                    // phone / call button tapped
   PAT_STARTED: "pat_started",                  // PAT assessment started
-  CTA_CLICK: "cta_click",                      // any primary CTA button click
-  STICKY_CTA_CLICK: "sticky_cta_click",        // the floating "Book a Demo" button
+  BOOK_DEMO_CLICK: "book_demo_click",          // "Book a Demo" tapped in the menu
+  BOOK_DEMO_STICKY: "book_demo_sticky",        // the floating sticky "Book a Demo" button
   MENU_OPEN: "menu_open",                       // slide-in nav menu opened
   NAV_CLICK: "nav_click",                       // a nav / menu link clicked
   VIDEO_PLAY: "video_play",                     // a Vimeo reel / gallery video played

@@ -332,7 +332,7 @@ export default function Navbar() {
                   <Link
                     href="/demo"
                     onClick={() => {
-                      track(EVENTS.CTA_CLICK, { cta_location: "menu", label: "Book a Demo", link_url: "/demo" });
+                      track(EVENTS.BOOK_DEMO_CLICK, { cta_location: "menu", link_url: "/demo" });
                       setIsOpen(false);
                     }}
                     className="block text-center py-3 rounded-lg bg-gold text-dark font-bold hover:bg-gold/90 transition-colors"
