@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { trackLead, EVENTS } from "@/lib/analytics/events";
 import {
   Briefcase,
   BookOpen,
@@ -279,6 +280,9 @@ export default function CabinCrewPageClient({
         city: formData.city.trim(),
         highestEducation: formData.highestEducation,
       };
+      // Lead conversion: cabin_crew_lead (GA4) + Meta Lead + Google Ads
+      // conversion (once a label is configured in lib/analytics/events.ts).
+      trackLead(EVENTS.CABIN_CREW_LEAD, { form_name: "cabin_crew", audience: "student" });
       setSubmitSuccess(true);
       setFormData({
         name: "",
