@@ -995,7 +995,7 @@ export default function NzSeminarPage() {
                 Get the early-stage roadmap →
               </a>
               <a
-                href="https://wa.me/919591004043?text=Hi%20WindChasers%2C%20I%27m%20still%20in%20school%20and%20interested%20in%20pilot%20training.%20Please%20guide%20me."
+                href="https://wa.me/919035098424?text=Hi%20WindChasers%2C%20I%27m%20still%20in%20school%20and%20interested%20in%20pilot%20training.%20Please%20guide%20me."
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full bg-[#25D366] text-white h-12 rounded-lg font-semibold text-base inline-flex items-center justify-center hover:bg-[#1ebe5d] transition-colors"

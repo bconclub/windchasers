@@ -35,10 +35,6 @@ import {
   deriveTrafficSource,
   recordAssessmentSession,
 } from "@/lib/tracking";
-import {
-  trackPilotLead,
-  trackAssessmentStarted,
-} from "@/lib/analytics";
 import { track, trackLead, EVENTS } from "@/lib/analytics/events";
 import {
   getUserSessionData,
@@ -145,8 +141,7 @@ export default function AssessmentForm() {
   useEffect(() => {
     if (phase === "questions" && !startedFiredRef.current) {
       startedFiredRef.current = true;
-      trackAssessmentStarted({ audience: "student" });
-      track(EVENTS.ASSESSMENT_START, { audience: "student" });
+      track(EVENTS.PAT_STARTED, { audience: "student" });
     }
   }, [phase]);
 
@@ -467,14 +462,14 @@ export default function AssessmentForm() {
         sourceFrom || undefined
       );
 
-      trackPilotLead(sourceFrom || "unknown", "assessment_completion");
-      track(EVENTS.ASSESSMENT_COMPLETE, {
+      // One clearly-named lead conversion: pat_completed (GA4) + Meta Lead.
+      trackLead(EVENTS.PAT_COMPLETED, {
+        form_name: "assessment",
         audience: "student",
         tier: finalTier,
         score: finalTotal,
         source: sourceFrom || "",
       });
-      trackLead({ form_name: "assessment", audience: "student" });
       recordAssessmentSession(answersForScoring, finalTotal, finalTier);
 
       saveUserSessionData({

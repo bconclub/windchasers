@@ -22,11 +22,13 @@ export default function Navbar() {
 
   // Analytics — call + WhatsApp contact taps, menu open.
   const onCallClick = () => {
-    track(EVENTS.CONTACT_CALL, { source_page: pathname || "" });
+    track(EVENTS.CALL_CLICK, { source_page: pathname || "" });
     trackMeta("Contact", { method: "phone" });
   };
   const onWhatsAppClick = () => {
-    track(EVENTS.CONTACT_WHATSAPP, { source_page: pathname || "" });
+    // Just opening WhatsApp / the capture modal — an engagement signal, NOT a
+    // confirmed lead. The actual lead fires whatsapp_lead on capture submit.
+    track(EVENTS.WHATSAPP_OPEN, { source_page: pathname || "" });
     trackMeta("Contact", { method: "whatsapp" });
   };
 
@@ -121,7 +123,7 @@ export default function Navbar() {
       ? WEBINAR_PARENT_WHATSAPP_GROUP_URL
       : isWebinarStudents
         ? WEBINAR_STUDENT_WHATSAPP_GROUP_URL
-        : `https://wa.me/${isPilotTraining ? '919035098424' : '919591004043'}?text=${encodeURIComponent(
+        : `https://wa.me/919035098424?text=${encodeURIComponent(
             isHome
               ? "Hi WindChasers, I need more detail on your pilot training programs"
               : isATC

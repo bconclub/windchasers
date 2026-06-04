@@ -203,9 +203,8 @@ export function WhatsAppCaptureModal({
       page_path: pagePath,
     });
 
-    // GA4 lead events (Meta Lead already fired above with richer params).
-    track(EVENTS.LEAD_SUBMIT, { form_name: "whatsapp_capture", source: source || "" });
-    track(EVENTS.GENERATE_LEAD, { form_name: "whatsapp_capture", source: source || "" });
+    // GA4 named lead event (Meta Lead already fired above with richer params).
+    track(EVENTS.WHATSAPP_LEAD, { form_name: "whatsapp_capture", source: source || "" });
     if (!metaLeadSent) {
       console.warn("[wa-capture] Meta Pixel fbq unavailable; Lead event not fired");
     } else {

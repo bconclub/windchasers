@@ -84,8 +84,8 @@ export default function InlineLeadForm({
         throw new Error(body?.message || body?.error || "Submission failed. Please try again.");
       }
 
-      // Fire the unified lead conversion (GA4 lead_submit + generate_lead + Meta Lead).
-      trackLead({ form_name: formName, audience: "student" });
+      // Named lead conversion (GA4 pilot_training_lead + Meta Lead).
+      trackLead(EVENTS.PILOT_TRAINING_LEAD, { form_name: formName, audience: "student" });
 
       // Stay on the page so the visitor can keep exploring. The form is
       // replaced by an inline success state below; no redirect.

@@ -139,11 +139,13 @@ export default function StudentLeadForm({
         throw new Error(body?.error || "Submission failed. Please try again.");
       }
 
-      // Unified lead conversion (GA4 lead_submit + generate_lead + Meta Lead).
-      trackLead({ form_name: formName, audience: "student" });
-      // class-12 "no" branch is an early-stage lead worth segmenting.
+      // Named lead conversion (GA4 student_lead + Meta Lead). The class-12
+      // "not completed" branch fires early_stage_lead instead so the two are
+      // separable in reporting.
       if (form.completed12th === "no") {
-        track(EVENTS.EARLY_STAGE_LEAD, { form_name: formName });
+        trackLead(EVENTS.EARLY_STAGE_LEAD, { form_name: formName, audience: "student" });
+      } else {
+        trackLead(EVENTS.STUDENT_LEAD, { form_name: formName, audience: "student" });
       }
 
       setStatus("success");

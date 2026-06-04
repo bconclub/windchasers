@@ -21,17 +21,19 @@ declare global {
  * If you add an event, add it here first, then fire it via track().
  */
 export const EVENTS = {
-  // ---- Leads & conversions (the money events) -----------------------------
-  LEAD_SUBMIT: "lead_submit",                 // any lead form submitted
-  DEMO_BOOK: "demo_book",                      // demo / counsellor session booked
-  ASSESSMENT_START: "assessment_start",        // PAT started
-  ASSESSMENT_COMPLETE: "assessment_complete",  // PAT finished (with tier/score)
-  EARLY_STAGE_LEAD: "early_stage_lead",        // class-12 "no" branch lead
-  CONTACT_CALL: "contact_call",                // tapped the phone/call button
-  CONTACT_WHATSAPP: "contact_whatsapp",        // tapped WhatsApp / opened WA capture
-  GENERATE_LEAD: "generate_lead",              // GA4 recommended alias for a lead
+  // ---- Leads & conversions (each named for its SOURCE, so the GA4 event
+  //      itself tells you what happened — no digging into params) -----------
+  DEMO_BOOKED: "demo_booked",                  // demo / counsellor session booked (/demo)
+  PAT_COMPLETED: "pat_completed",              // Pilot Aptitude Test finished (a lead)
+  WHATSAPP_LEAD: "whatsapp_lead",              // WhatsApp capture submitted (name + phone)
+  PILOT_TRAINING_LEAD: "pilot_training_lead",  // /pilot-training hero callback form
+  STUDENT_LEAD: "student_lead",                // student lead form
+  EARLY_STAGE_LEAD: "early_stage_lead",        // class-12 "not completed" branch
 
-  // ---- Engagement ---------------------------------------------------------
+  // ---- Engagement (intent signals, NOT confirmed leads) -------------------
+  WHATSAPP_OPEN: "whatsapp_open",              // WhatsApp button tapped / capture opened
+  CALL_CLICK: "call_click",                    // phone / call button tapped
+  PAT_STARTED: "pat_started",                  // PAT assessment started
   CTA_CLICK: "cta_click",                      // any primary CTA button click
   STICKY_CTA_CLICK: "sticky_cta_click",        // the floating "Book a Demo" button
   MENU_OPEN: "menu_open",                       // slide-in nav menu opened
@@ -84,11 +86,14 @@ export function trackMeta(event: string, params: Params = {}): void {
 }
 
 /**
- * Lead helper — fires GA4 lead_submit + generate_lead AND the Meta Lead event
- * in one call, so every lead form is consistent.
+ * Lead helper — fires ONE clearly-named GA4 lead event (pass the source event,
+ * e.g. EVENTS.DEMO_BOOKED) plus the Meta Pixel "Lead" event in one call. The
+ * GA4 event name says what kind of lead it is; no more generic lead_submit /
+ * generate_lead to dig through.
  */
-export function trackLead(params: { form_name: string; page?: string; audience?: string }): void {
-  track(EVENTS.LEAD_SUBMIT, params);
-  track(EVENTS.GENERATE_LEAD, params);
-  trackMeta("Lead", { content_name: params.form_name });
+export function trackLead(event: EventName, params: Params = {}): void {
+  track(event, params);
+  trackMeta("Lead", {
+    content_name: (params.form_name as string) || event,
+  });
 }

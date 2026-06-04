@@ -6,7 +6,6 @@ import { useSearchParams } from "next/navigation";
 import { Calendar } from "lucide-react";
 import { trackFormSubmission, sendTrackingData, getStoredUTMParams, getLandingPage, getStoredReferrer, getStoredClickIds, deriveTrafficSource } from "@/lib/tracking";
 import { getUserSessionData, saveUserSessionData, markBookingCompleted } from "@/lib/sessionStorage";
-import { trackPilotLead } from "@/lib/analytics";
 import { track, trackLead, EVENTS } from "@/lib/analytics/events";
 import {
   isSlotInPast,
@@ -320,15 +319,14 @@ export default function BookingForm() {
           finalSource = interestMap[formData.interest] || 'unknown';
         }
         
-        // Track pilot lead (legacy helper) + unified registry events.
-        trackPilotLead(finalSource, 'demo_booking');
-        track(EVENTS.DEMO_BOOK, {
+        // One clearly-named lead conversion: demo_booked (GA4) + Meta Lead.
+        trackLead(EVENTS.DEMO_BOOKED, {
           form_name: "booking",
+          audience: userType,
           interest: formData.interest || "",
           demo_type: formData.demoType,
           source: finalSource || "",
         });
-        trackLead({ form_name: "booking", audience: userType });
         
         // Send complete tracking data
         await sendTrackingData("/api/booking", {
