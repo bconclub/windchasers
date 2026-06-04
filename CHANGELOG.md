@@ -2,6 +2,18 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-04 14:49 IST · feat(og): use custom social-share image
+
+- Added `public/og-image.webp` (1915×857, the new "Windchasers OG" artwork).
+  Clean, space-free filename so link scrapers (WhatsApp, Twitter, LinkedIn)
+  resolve it reliably — the old `/WC HEro.webp` had a space in the URL.
+- `app/layout.tsx`: pointed both `openGraph.images` and `twitter.images` at
+  `/og-image.webp` (dimensions updated to 1915×857). `metadataBase` already set,
+  so the URL resolves absolute for scrapers.
+- User-facing: new image shown when windchasers.in is shared on social / chat.
+- Build exit 0, tsc 0 errors.
+- (`3fd8736`)
+
 ## 2026-06-03 · fix(home): sticky "Book a Demo Class" CTA always visible past hero
 
 - The homepage (app/page.tsx) still had the old scroll-up-only logic for the

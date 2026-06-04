@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     description: "DGCA-aligned ground classes and commercial pilot license (CPL) training. Real costs, real guidance, no false promises.",
     url: "https://windchasers.in",
     siteName: "WindChasers Aviation Academy",
-    images: [{ url: "/WC HEro.webp", width: 1200, height: 630, alt: "WindChasers Aviation Academy" }],
+    images: [{ url: "/og-image.webp", width: 1915, height: 857, alt: "WindChasers Aviation Academy" }],
     locale: "en_IN",
     type: "website",
   },
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Pilot Training in Bangalore | WindChasers Aviation Academy",
     description: "DGCA-aligned ground classes and commercial pilot license (CPL) training in Bangalore.",
-    images: ["/WC HEro.webp"],
+    images: ["/og-image.webp"],
   },
 };
 
