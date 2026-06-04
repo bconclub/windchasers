@@ -2,6 +2,24 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-04 15:05 IST · chore(og+favicon): new OG art + clean square favicons
+
+- OG image: replaced og-image.webp/.jpg with the updated artwork (now 1917×942)
+  and updated the declared dimensions in `app/layout.tsx`.
+- Favicon: Google was showing the generic-globe placeholder. Root causes: the
+  homepage `<head>` declared a non-square (272×259) secondary icon with a SPACE
+  in its filename (`/Windhcasers Icon.png`), and Google hadn't re-crawled since
+  the WP→Next migration. Generated clean square PNGs from the logo —
+  `icon-192.png` (48-multiple, Google's recommended), `icon-512.png`,
+  `apple-icon.png` (180) — and rewrote the `icons` metadata to reference only
+  clean, square, space-free files. The existing 256×256 `favicon.ico` is kept as
+  primary.
+- Still requires a Google re-crawl to appear in SERPs (request via GSC URL
+  Inspection → "Request indexing" on the homepage; favicons refresh on Google's
+  own schedule, days–weeks).
+- User-facing: correct logo favicon once Google recrawls; new OG art on shares.
+- (`2cfc7b0`)
+
 ## 2026-06-04 14:55 IST · fix(og): serve OG image as JPG for universal previews
 
 - Added `public/og-image.jpg` (1915×857, same artwork, flattened on white).

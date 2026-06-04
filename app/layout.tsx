@@ -20,16 +20,18 @@ export const metadata: Metadata = {
   description: "Pilot training in Bangalore after 12th. DGCA-aligned ground classes in-house and commercial pilot license (CPL) training with DGCA-approved partner FTOs. Real costs, real guidance, no false promises.",
   icons: {
     icon: [
-      { url: "/favicon.ico" },
-      { url: "/Windhcasers Icon.png", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icon-512.png", type: "image/png", sizes: "512x512" },
     ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
     title: "Pilot Training in Bangalore | WindChasers Aviation Academy",
     description: "DGCA-aligned ground classes and commercial pilot license (CPL) training. Real costs, real guidance, no false promises.",
     url: "https://windchasers.in",
     siteName: "WindChasers Aviation Academy",
-    images: [{ url: "/og-image.jpg", width: 1915, height: 857, alt: "WindChasers Aviation Academy" }],
+    images: [{ url: "/og-image.jpg", width: 1917, height: 942, alt: "WindChasers Aviation Academy" }],
     locale: "en_IN",
     type: "website",
   },
