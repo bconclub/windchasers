@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Phone, ChevronDown } from "lucide-react";
@@ -29,6 +29,18 @@ export default function Navbar() {
     track(EVENTS.CONTACT_WHATSAPP, { source_page: pathname || "" });
     trackMeta("Contact", { method: "whatsapp" });
   };
+
+  // The PROXe web-chat widget floats on top of everything (very high z-index),
+  // so it overlaps the slide-in menu. Hide its launcher while the menu is open.
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const widgets = document.querySelectorAll<HTMLElement>(
+      '[id*="proxe"],[class*="proxe"],[class*="widget-launcher"],[class*="chat-launcher"],iframe[src*="proxe.windchasers"]'
+    );
+    widgets.forEach((el) => {
+      el.style.visibility = isOpen ? "hidden" : "";
+    });
+  }, [isOpen]);
 
   // Compact header (logo + call + WhatsApp) on selected pages
   const isSummerCamp = pathname === "/summercamp";
@@ -396,17 +408,6 @@ export default function Navbar() {
                   })}
                 </nav>
 
-                {/* Secondary — assessment funnel kept accessible */}
-                <Link
-                  href="/assessment"
-                  onClick={() => {
-                    track(EVENTS.CTA_CLICK, { cta_location: "menu", label: "Take Pilot Assessment", link_url: "/assessment" });
-                    setIsOpen(false);
-                  }}
-                  className="mt-6 block text-center py-3 rounded-lg border border-gold/60 text-gold font-semibold hover:bg-gold hover:text-dark transition-colors"
-                >
-                  Take the Pilot Assessment
-                </Link>
               </div>
             </motion.div>
           </>
