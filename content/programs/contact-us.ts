@@ -11,13 +11,13 @@ const content: ProgramContent = {
   testimonials: false,
   blocks: [
     {
-      type: "facts",
+      type: "contact",
       kicker: "Reach Us",
       title: "Talk to an Aviation Advisor",
       items: [
-        { label: "Call", value: "+91 90350 98425" },
-        { label: "Call", value: "+91 95910 04043" },
-        { label: "Email", value: "aviators@windchasers.in" },
+        { label: "Call", value: "+91 90350 98425", href: "tel:+919035098425" },
+        { label: "Call", value: "+91 95910 04043", href: "tel:+919591004043" },
+        { label: "Email", value: "aviators@windchasers.in", href: "mailto:aviators@windchasers.in" },
         { label: "Visit", value: "Sat, 11am–4pm" },
       ],
     },

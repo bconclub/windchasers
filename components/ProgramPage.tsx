@@ -55,6 +55,7 @@ export type Block =
   | { type: "list"; kicker?: string; title?: string; intro?: string; items: string[] }
   | { type: "steps"; kicker?: string; title?: string; steps: { title: string; body?: string }[] }
   | { type: "facts"; kicker?: string; title?: string; items: { label: string; value: string }[] }
+  | { type: "contact"; kicker?: string; title?: string; items: { label: string; value: string; href?: string }[] }
   | { type: "gallery"; kicker?: string; title?: string; images: string[] };
 
 export type ProgramContent = {
@@ -274,6 +275,38 @@ function BlockView({ block, photo, side }: { block: Block; photo?: string; side:
                 <div className="text-on-surface-variant text-xs uppercase tracking-[0.15em]">{f.label}</div>
               </motion.div>
             ))}
+          </div>
+        </div>
+      );
+
+    case "contact":
+      return (
+        <div className="max-w-[1100px] mx-auto">
+          <Header kicker={block.kicker} title={block.title} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {block.items.map((c, i) => {
+              const inner = (
+                <>
+                  <div className="text-on-surface-variant text-[11px] uppercase tracking-[0.18em] mb-2">{c.label}</div>
+                  <div className="font-semibold text-primary text-base md:text-lg leading-snug break-words [overflow-wrap:anywhere]">
+                    {c.value}
+                  </div>
+                </>
+              );
+              const cardClass =
+                "h-full flex flex-col justify-center text-center p-6 rounded-2xl bg-gradient-to-b from-surface-container to-surface-container-low border border-outline-variant/25 transition-colors";
+              return (
+                <motion.div key={i} {...reveal} transition={{ duration: 0.45, delay: i * 0.05 }} className="h-full">
+                  {c.href ? (
+                    <a href={c.href} className={`${cardClass} hover:border-primary/50`}>
+                      {inner}
+                    </a>
+                  ) : (
+                    <div className={cardClass}>{inner}</div>
+                  )}
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       );
