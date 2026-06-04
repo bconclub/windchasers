@@ -2,6 +2,16 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-04 14:55 IST · fix(og): serve OG image as JPG for universal previews
+
+- Added `public/og-image.jpg` (1915×857, same artwork, flattened on white).
+  Switched `openGraph.images` + `twitter.images` in `app/layout.tsx` from the
+  `.webp` to the `.jpg`. WebP OG images silently fail to render on iMessage and
+  LinkedIn (and inconsistently elsewhere); JPG renders on every platform.
+- `og-image.webp` left in `/public` (harmless) but no longer referenced.
+- User-facing: link previews now show the artwork everywhere it's shared.
+- (`1fd4e96`)
+
 ## 2026-06-04 14:49 IST · feat(og): use custom social-share image
 
 - Added `public/og-image.webp` (1915×857, the new "Windchasers OG" artwork).
