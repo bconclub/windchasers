@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
   },
   openGraph: {
-    title: "Pilot Training in Bangalore | WindChasers Aviation Academy",
+    title: "WindChasers – India's Top Pilot Training Academy, Bangalore",
     description: "DGCA-aligned ground classes and commercial pilot license (CPL) training. Real costs, real guidance, no false promises.",
     url: "https://windchasers.in",
     siteName: "WindChasers Aviation Academy",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pilot Training in Bangalore | WindChasers Aviation Academy",
+    title: "WindChasers – India's Top Pilot Training Academy, Bangalore",
     description: "DGCA-aligned ground classes and commercial pilot license (CPL) training in Bangalore.",
     images: ["/og-image.jpg"],
   },
