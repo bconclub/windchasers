@@ -1,9 +1,13 @@
 name: Deploy to VPS
 
+# NOTE: Deploys now run ON THE VPS via a 1-minute pull cron
+# (/usr/local/bin/wc-deploy.sh — git fetch origin/main, and if changed:
+# reset --hard, npm ci, npm run build, pm2 restart windchasers, flock-guarded).
+# The push-triggered SSH deploy was removed because GitHub-hosted runners' SSH
+# to this VPS (Hostinger Mumbai) was intermittently dropped upstream, silently
+# leaving the old build running. Pushing to main now auto-deploys within ~1 min
+# via the VPS itself. Kept for manual/emergency use only (Run workflow button).
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
