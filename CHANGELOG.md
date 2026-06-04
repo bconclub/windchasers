@@ -2,6 +2,20 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-04 15:25 IST · fix(favicon+og): transparent jet icon + brand social title
+
+- Favicon: the source logo is gold jets on a SOLID black bg, so the favicon
+  rendered as a black square. Keyed out the black (luminance→alpha) and
+  regenerated `icon-192.png`, `icon-512.png`, `favicon.ico` as the icon itself —
+  transparent background, just the jets. Legible on light AND dark. `apple-icon`
+  kept solid (iOS renders transparency as black anyway).
+- Social title: shares were showing the SEO title. Set `openGraph.title` +
+  `twitter.title` to "WindChasers – India's Top Pilot Training Academy,
+  Bangalore". Google `<title>` left unchanged.
+- WhatsApp: tags verified correct; WhatsApp caches previews per-URL for days and
+  the OG image changed 3× today, so stale previews until its cache clears.
+- (`b7a3f84`)
+
 ## 2026-06-04 15:05 IST · chore(og+favicon): new OG art + clean square favicons
 
 - OG image: replaced og-image.webp/.jpg with the updated artwork (now 1917×942)
