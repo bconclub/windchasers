@@ -48,6 +48,17 @@ function requireAdminAuth(req: NextRequest): NextResponse | null {
 
 export function middleware(req: NextRequest) {
   const host = (req.headers.get("host") || "").toLowerCase().split(":")[0];
+
+  // pilot.windchasers.in was the cutover host and is no longer a destination.
+  // Send ALL of its traffic to the canonical homepage with a permanent (301)
+  // redirect, so anyone with an old pilot.* link lands on windchasers.in.
+  // (Note: the TLS cert must also cover pilot.windchasers.in or the browser
+  // shows a cert warning before this redirect can run — handled via certbot on
+  // the VPS.)
+  if (host === "pilot.windchasers.in") {
+    return NextResponse.redirect("https://windchasers.in/", 301);
+  }
+
   const isNoindexHost = NOINDEX_HOSTS.has(host);
   const path = req.nextUrl.pathname;
   const isAdmin = path === "/admin" || path.startsWith("/admin/");

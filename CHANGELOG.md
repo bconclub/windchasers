@@ -2,6 +2,20 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-05 12:05 IST · feat(redirect): pilot.windchasers.in → homepage (301)
+
+- `middleware.ts`: `pilot.windchasers.in` (the DNS-cutover host, served by this
+  same app) now 301-redirects ALL its traffic to `https://windchasers.in/`
+  instead of serving a noindexed duplicate.
+- NOTE (still needed on the VPS): the Let's Encrypt cert only covers
+  `windchasers.in` + `www`, NOT `pilot`. Until the cert is expanded
+  (`certbot --nginx --expand -d windchasers.in -d www.windchasers.in -d
+  pilot.windchasers.in`), browsers show a cert warning *before* this redirect
+  runs. pilot already resolves to the VPS, so the HTTP-01 challenge will pass.
+- User-facing: old pilot.* links land on the homepage (once cert is expanded,
+  with no SSL warning).
+- (`1973ce0`)
+
 ## 2026-06-04 15:25 IST · fix(favicon+og): transparent jet icon + brand social title
 
 - Favicon: the source logo is gold jets on a SOLID black bg, so the favicon
