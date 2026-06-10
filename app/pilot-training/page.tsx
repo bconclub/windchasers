@@ -153,6 +153,45 @@ const whyCards = [
   },
 ];
 
+// FAQ — written to cover the live ad keywords this page targets (DGCA ground
+// classes / exam coaching, CPL course, pilot training programs, "how to become
+// a pilot in India", aviation academy/institute). Answers use only facts stated
+// elsewhere on the page — no invented costs or durations.
+const FAQ_ITEMS = [
+  {
+    q: "How do I become a commercial pilot in India?",
+    a: "Five steps: clear Class 12 with Physics and Maths, get your DGCA Class 1 medical and Computer Number, pass the six DGCA ground (theory) exams, complete a minimum of 200 hours of flight training at a DGCA-approved FTO, then clear RTR(A), English Language Proficiency and the CPL flight test to earn your DGCA Commercial Pilot License.",
+  },
+  {
+    q: "What are the eligibility requirements for pilot training?",
+    a: "You must have passed Class 12 with Physics and Mathematics and hold a DGCA Class 1 medical. That medical and your DGCA Computer Number are the non-negotiable starting point before ground classes and flight training begin.",
+  },
+  {
+    q: "What do your DGCA ground classes cover?",
+    a: "Our in-house DGCA ground classes in Bengaluru are full DGCA exam coaching for all six theory papers — Air Navigation, Aviation Meteorology, Air Regulations, Aircraft Technical (General and Specific) and Radio Telephony (RTR) — preparing you for the DGCA CPL written exams.",
+  },
+  {
+    q: "How much does a Commercial Pilot License (CPL) course cost?",
+    a: "It depends on whether you do your flight training in India or abroad. We give you a full, honest cost breakdown upfront — DGCA ground classes, flight hours and licensing — with no surprise add-ons. Talk to a counsellor for a plan built around your budget.",
+  },
+  {
+    q: "How long does pilot training take?",
+    a: "It depends on your pace and where you fly. DGCA ground classes and the theory exams run alongside a minimum of 200 hours of flight training. We map out the full timeline for you before you commit, so there are no surprises.",
+  },
+  {
+    q: "What pilot training programs do you offer in Bangalore?",
+    a: "WindChasers is a Bangalore aviation academy offering pilot training programs from Private Pilot Licence (PPL) and Commercial Pilot License (CPL) to ATPL and type rating. Ground classes are taught in-house; flight training is with DGCA-approved partner FTOs in India and abroad.",
+  },
+  {
+    q: "Where will I do my flight training?",
+    a: "At DGCA-approved partner flight schools (FTOs). You can train in India or abroad — the USA, Canada, New Zealand or Australia, or a mix — completing a minimum of 200 flight hours.",
+  },
+  {
+    q: "Is WindChasers a DGCA-approved aviation academy?",
+    a: "WindChasers is a Bangalore-based aviation training institute. Our DGCA ground classes are taught in-house, and flight training is delivered through DGCA-approved partner FTOs in India and abroad.",
+  },
+];
+
 const team = [
   {
     name: "Sumaiya Ali",
@@ -532,13 +571,19 @@ export default function PilotTraining() {
             <div className="space-y-6 text-on-surface-variant text-lg leading-relaxed font-light">
               <p>Most academies sell you a dream. We give you a plan.</p>
               <p>
-                A pilot training academy in Bangalore for serious aspirants:
-                DGCA ground classes here in Bengaluru, and commercial pilot
-                license training at our partner FTOs in India or abroad. Class 1
-                medical first. DGCA theory exams next. Flight hours come after.{" "}
+                WindChasers is a Bangalore aviation academy for serious
+                aspirants: DGCA ground classes and DGCA exam coaching taught
+                in-house in Bengaluru, and Commercial Pilot License (CPL)
+                training at DGCA-approved partner FTOs in India or abroad. Class
+                1 medical first. DGCA theory exams next. Flight hours come
+                after.{" "}
                 <span className="text-white">
                   If you can do the work, we can show you the road.
                 </span>
+              </p>
+              <p>
+                Our pilot training programs run from PPL and CPL to ATPL and
+                type rating — with honest, upfront pricing on every step.
               </p>
             </div>
           </motion.div>
@@ -954,6 +999,52 @@ export default function PilotTraining() {
             </div>
           </motion.div>
         </div>
+      </section>
+
+      {/* FAQ — pilot training / DGCA ground classes. Crawlable <details> +
+          FAQPage schema so the page matches the ad keywords (Quality Score). */}
+      <section className="py-24 md:py-32 px-6 md:px-12 bg-background border-y border-outline-variant/10">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tighter mb-4 text-center">
+            Pilot training in Bangalore — your questions, answered.
+          </h2>
+          <p className="text-on-surface-variant text-center mb-12 md:mb-16 max-w-2xl mx-auto">
+            Straight answers on DGCA ground classes, the Commercial Pilot License
+            (CPL) course, eligibility, fees and timelines.
+          </p>
+          <div className="space-y-4">
+            {FAQ_ITEMS.map((item) => (
+              <details
+                key={item.q}
+                className="group bg-surface-container-low border border-outline-variant/20 rounded-2xl px-6 py-5 open:border-primary/40 transition-colors"
+              >
+                <summary className="flex items-center justify-between cursor-pointer list-none gap-4 text-white font-semibold text-lg">
+                  {item.q}
+                  <span className="text-primary text-2xl leading-none transition-transform group-open:rotate-45 flex-shrink-0">
+                    +
+                  </span>
+                </summary>
+                <p className="text-on-surface-variant leading-relaxed mt-4">
+                  {item.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: FAQ_ITEMS.map((item) => ({
+                "@type": "Question",
+                name: item.q,
+                acceptedAnswer: { "@type": "Answer", text: item.a },
+              })),
+            }),
+          }}
+        />
       </section>
 
       {/* Final CTA — reuses the conversion cluster */}

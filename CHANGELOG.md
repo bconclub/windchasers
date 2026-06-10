@@ -2,6 +2,26 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-05 13:10 IST · seo(pilot-training): match page to live ad keywords (Quality Score)
+
+- Both the DGCA and Pilot Training Google Ads groups point to /pilot-training,
+  and several high-spend keywords were "Rarely shown (low Quality Score)"
+  because the page didn't contain them. Wove the missing themes into the page:
+  - **Meta** (`layout.tsx`): title/description now include "aviation academy",
+    "pilot training programs", "DGCA exam coaching", "how to become a pilot in
+    India"; added canonical.
+  - **Intro copy** (`page.tsx`): "Bangalore aviation academy", "DGCA exam
+    coaching", "Commercial Pilot License (CPL)", "pilot training programs"
+    (PPL/CPL/ATPL/type rating).
+  - **New FAQ section** (8 Q&As) + FAQPage JSON-LD schema targeting the live
+    keywords (DGCA ground classes/exam coaching, CPL course cost, eligibility,
+    "how to become a commercial pilot in India", pilot training programs,
+    aviation academy/institute). Answers use only facts already on the page —
+    no invented fees or durations.
+- User-facing: richer FAQ on /pilot-training; eligible for Google FAQ snippets.
+  Should lift Quality Score on the low-QS keywords → lower CPC.
+- (`db84ab2`)
+
 ## 2026-06-05 12:05 IST · feat(redirect): pilot.windchasers.in → homepage (301)
 
 - `middleware.ts`: `pilot.windchasers.in` (the DNS-cutover host, served by this
