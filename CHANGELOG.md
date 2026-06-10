@@ -2,6 +2,15 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-10 · feat(flight-schools): open on the auto-rotating globe
+
+- /flight-schools now lands on the rotating 3D globe instead of the flat world
+  map, which showed gray "Map data not yet available" gutters either side at
+  world zoom. The 2D map still takes over after 1–2 zoom-in ticks (Leaflet
+  lazy-mounts on first handoff). Globe was already auto-rotating (0.35 speed).
+- User-facing: page opens on a slowly rotating globe; zoom in → 2D map.
+- (`bd0bbfd`)
+
 ## 2026-06-10 · fix(flight-schools): globe hands off to 2D map after ONE zoom-in
 
 - The globe (rest altitude 2.5) only switched to the flat map below altitude

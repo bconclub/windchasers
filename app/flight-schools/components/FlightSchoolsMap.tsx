@@ -50,10 +50,11 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
   const [selectedSchool, setSelectedSchool] = useState<FlightSchool | null>(null);
   const [showLeadModal, setShowLeadModal] = useState(false);
 
-  // Default to flat map (globe loader was breaking the page). World-centered
-  // so visitors see options across geographies; they filter to a country.
-  const [viewMode, setViewMode] = useState<"globe" | "map">("map");
-  const viewModeRef = useRef<"globe" | "map">("map");
+  // Open on the auto-rotating globe — the flat map at world zoom shows ugly
+  // "map data not available" gutters. The 2D map takes over on zoom-in
+  // (Leaflet lazy-mounts via the viewMode effect below).
+  const [viewMode, setViewMode] = useState<"globe" | "map">("globe");
+  const viewModeRef = useRef<"globe" | "map">("globe");
   useEffect(() => { viewModeRef.current = viewMode; }, [viewMode]);
   const transitionLockRef = useRef(false);
 
