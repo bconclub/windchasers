@@ -46,12 +46,13 @@ function FitBoundsTo({ target }: { target: { points: Array<[number, number]>; ke
     // leave it stale) before computing the zoom level for the new bounds.
     map.invalidateSize();
     if (target.points.length === 1) {
-      map.setView(target.points[0], 9, { animate: false });
+      // Single school: regional view, not street level — keep context visible.
+      map.setView(target.points[0], 6, { animate: false });
       return;
     }
     map.fitBounds(target.points, {
       padding: [60, 60],
-      maxZoom: 10,
+      maxZoom: 6,
       animate: false,
     });
   }, [target?.key, map]);

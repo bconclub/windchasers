@@ -33,8 +33,6 @@ type Props = {
   summary: Summary;
 };
 
-type AdminSection = "overview" | "flight-schools";
-
 const labels: Record<string, string> = {
   verified_school: "Verified",
   likely_school: "Likely",
@@ -62,151 +60,25 @@ function scoreTone(score = 0) {
 }
 
 export default function FlightSchoolsAdmin({ schools, summary }: Props) {
-  const [section, setSection] = useState<AdminSection>("overview");
-
-  const counts = useMemo(() => {
-    const verified = schools.filter((school) => school.wcClassification === "verified_school").length;
-    const likely = schools.filter((school) => school.wcClassification === "likely_school").length;
-    const review = schools.filter((school) => school.wcClassification === "possible_school" || school.wcClassification === "needs_review").length;
-    const partners = schools.filter((school) => school.isPartner).length;
-    return { verified, likely, review, partners };
-  }, [schools]);
-
+  // One page = one dimension: this page IS the flight-schools manager.
+  // Global navigation lives in the admin layout's left sidebar (AdminNav);
+  // the old internal rail + duplicate overview panel were removed.
   return (
-    <main className="min-h-screen bg-surface-container-lowest text-on-surface">
-      <AdminRail active={section} onSelect={setSection} />
-
-      <section className="min-h-screen pl-16">
-        <header className="flex h-16 items-center justify-between border-b border-outline-variant/20 bg-surface px-6">
-          <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.24em] text-primary">
-              Admin
-            </p>
-            <h1 className="text-lg font-semibold tracking-normal">
-              {section === "overview" ? "Overview" : "Flight schools"}
-            </h1>
-          </div>
-          <a
-            href="/flight-schools"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-9 items-center gap-2 rounded-lg bg-surface-container px-3 text-sm text-on-surface-variant transition-colors hover:text-primary"
-          >
-            View site
-            <ArrowUpRight className="h-4 w-4" />
-          </a>
-        </header>
-
-        {section === "overview" ? (
-          <OverviewPanel summary={summary} counts={counts} />
-        ) : (
-          <FlightSchoolsPanel schools={schools} summary={summary} />
-        )}
-      </section>
+    <main className="bg-surface-container-lowest text-on-surface">
+      <header className="flex h-14 items-center justify-between border-b border-outline-variant/20 px-1 mb-2">
+        <h1 className="text-lg font-semibold tracking-normal">Flight schools</h1>
+        <a
+          href="/flight-schools"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex h-9 items-center gap-2 rounded-lg bg-surface-container px-3 text-sm text-on-surface-variant transition-colors hover:text-primary"
+        >
+          View page
+          <ArrowUpRight className="h-4 w-4" />
+        </a>
+      </header>
+      <FlightSchoolsPanel schools={schools} summary={summary} />
     </main>
-  );
-}
-
-function AdminRail({
-  active,
-  onSelect,
-}: {
-  active: AdminSection;
-  onSelect: (section: AdminSection) => void;
-}) {
-  const nav = [
-    { key: "overview" as const, label: "Overview", icon: LayoutDashboard },
-    { key: "flight-schools" as const, label: "Flight schools", icon: Plane },
-  ];
-
-  return (
-    <aside className="group fixed inset-y-0 left-0 z-40 w-16 overflow-hidden border-r border-outline-variant/20 bg-surface transition-[width] duration-200 ease-out hover:w-60 focus-within:w-60">
-      <div className="flex h-16 items-center gap-3 px-4">
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-sm font-bold text-on-primary">
-          W
-        </div>
-        <div className="min-w-0 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
-          <p className="truncate text-sm font-semibold">WindChasers</p>
-          <p className="truncate text-xs text-on-surface-variant/62">Admin</p>
-        </div>
-      </div>
-
-      <nav className="space-y-1 px-2 py-3">
-        {nav.map((item) => {
-          const Icon = item.icon;
-          const selected = active === item.key;
-          return (
-            <button
-              key={item.key}
-              onClick={() => onSelect(item.key)}
-              className={`flex h-10 w-full items-center gap-3 rounded-lg px-3 text-sm transition-colors ${
-                selected
-                  ? "bg-primary text-on-primary"
-                  : "text-on-surface-variant hover:bg-surface-container hover:text-on-surface"
-              }`}
-              title={item.label}
-            >
-              <Icon className="h-4 w-4 shrink-0" />
-              <span className="truncate opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
-                {item.label}
-              </span>
-            </button>
-          );
-        })}
-      </nav>
-    </aside>
-  );
-}
-
-function OverviewPanel({
-  summary,
-  counts,
-}: {
-  summary: Summary;
-  counts: {
-    verified: number;
-    likely: number;
-    review: number;
-    partners: number;
-  };
-}) {
-  return (
-    <div className="mx-auto max-w-[1180px] px-6 py-8">
-      <div className="mb-8">
-        <p className="text-xs uppercase tracking-[0.22em] text-primary">Website</p>
-        <h2 className="mt-2 text-3xl font-semibold tracking-normal">Control room</h2>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-on-surface-variant/70">
-          A quiet place to monitor WindChasers content and data readiness. Use the rail to move into specific sections.
-        </p>
-      </div>
-
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        <Metric label="Schools" value={summary.total} />
-        <Metric label="Verified" value={counts.verified} />
-        <Metric label="Partners" value={counts.partners} />
-        <Metric label="Review" value={counts.review} />
-      </div>
-
-      <div className="mt-8 grid gap-4 lg:grid-cols-[1fr_360px]">
-        <section className="rounded-xl bg-surface p-5">
-          <h3 className="text-sm font-semibold">Directory readiness</h3>
-          <div className="mt-5 space-y-4">
-            <Readiness label="Public-ready candidates" value={summary.publicReady} total={summary.total} />
-            <Readiness label="Needs human review" value={summary.needsReview} total={summary.total} muted />
-          </div>
-        </section>
-
-        <section className="rounded-xl bg-surface p-5">
-          <h3 className="text-sm font-semibold">Latest import</h3>
-          <p className="mt-3 text-sm leading-6 text-on-surface-variant/70">
-            Generated {new Date(summary.generatedAt).toLocaleString()}.
-          </p>
-          <p className="mt-3 text-sm leading-6 text-on-surface-variant/70">
-            Scores are only triage signals until WindChasers verifies a school.
-          </p>
-        </section>
-      </div>
-    </div>
   );
 }
 

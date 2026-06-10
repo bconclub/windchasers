@@ -5,8 +5,8 @@ import dynamic from "next/dynamic";
 import { AnimatePresence } from "framer-motion";
 import { Search, X as XIcon } from "lucide-react";
 import { FlightSchool, SchoolFilters } from "@/types/flight-school";
-import FilterBar, { GLOBE_STYLES, GlobeStyleKey } from "./FilterBar";
-import { MapStyleKey } from "../lib/globe-config";
+import FilterBar from "./FilterBar";
+import { GLOBE_STYLES, MapStyleKey } from "../lib/globe-config";
 import SchoolDrawer from "./SchoolDrawer";
 import LeadFormModal from "./LeadFormModal";
 
@@ -56,10 +56,10 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
   const transitionLockRef = useRef(false);
 
   const [mapSeed, setMapSeed] = useState({ lat: 20, lng: 20, zoom: 3 });
-  const [mapStyle, setMapStyle] = useState<MapStyleKey>("satellite");
+  // Fixed styles — the style pickers were removed from the filter panel.
+  const mapStyle: MapStyleKey = "satellite";
   const [globeResetKey, setGlobeResetKey] = useState(0);
-  const [globeStyle, setGlobeStyle] = useState<GlobeStyleKey>("blue-marble");
-  const globeImageUrl = GLOBE_STYLES.find((s) => s.key === globeStyle)?.url ?? "/globe/earth-blue-marble.jpg";
+  const globeImageUrl = GLOBE_STYLES.find((s) => s.key === "blue-marble")?.url ?? "/globe/earth-blue-marble.jpg";
 
   // Search bar state
   const [searchQuery, setSearchQuery] = useState("");
@@ -178,7 +178,9 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
       if (viewModeRef.current !== "globe") return;
       if (transitionLockRef.current) return;
       if (altitude < ZOOM_IN_THRESHOLD) {
-        const zoom = Math.max(5, Math.min(9, Math.round(5 - Math.log2(Math.max(altitude, 0.1) / 1.5))));
+        // Land at a REGIONAL view (markers visible, room to zoom in yourself).
+        // Was clamped 5–9: zoom 9 is city-level and showed an empty map.
+        const zoom = Math.max(4, Math.min(5, Math.round(5 - Math.log2(Math.max(altitude, 0.1) / 1.5))));
         setMapSeed({ lat, lng, zoom });
         setViewMode("map");
         viewModeRef.current = "map";
@@ -363,10 +365,6 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
           certifications={certifications}
           viewMode={viewMode}
           onViewModeToggle={handleViewModeToggle}
-          globeStyle={globeStyle}
-          onGlobeStyleChange={setGlobeStyle}
-          mapStyle={mapStyle}
-          onMapStyleChange={setMapStyle}
         />
       </div>
 

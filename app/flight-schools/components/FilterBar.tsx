@@ -4,10 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown, X, Globe, Map, SlidersHorizontal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { SchoolFilters } from "@/types/flight-school";
-import { GLOBE_STYLES, GlobeStyleKey, MAP_STYLES, MapStyleKey } from "../lib/globe-config";
-
-export { GLOBE_STYLES, type GlobeStyleKey };
-
 interface Props {
   filters: SchoolFilters;
   onFiltersChange: (f: SchoolFilters) => void;
@@ -15,10 +11,6 @@ interface Props {
   certifications: string[];
   viewMode: "globe" | "map";
   onViewModeToggle: () => void;
-  globeStyle: GlobeStyleKey;
-  onGlobeStyleChange: (key: GlobeStyleKey) => void;
-  mapStyle: MapStyleKey;
-  onMapStyleChange: (key: MapStyleKey) => void;
 }
 
 export default function FilterBar({
@@ -28,10 +20,6 @@ export default function FilterBar({
   certifications,
   viewMode,
   onViewModeToggle,
-  globeStyle,
-  onGlobeStyleChange,
-  mapStyle,
-  onMapStyleChange,
 }: Props) {
   const [certOpen, setCertOpen] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
@@ -154,35 +142,6 @@ export default function FilterBar({
         />
         <span className="text-sm text-white/70">WC Partners only</span>
       </label>
-
-      {/* Style picker */}
-      <div className="bg-white/5 border border-white/20 rounded-lg px-3 py-2.5">
-        <p className="text-[10px] uppercase tracking-widest text-white/30 mb-2">
-          {viewMode === "globe" ? "Globe style" : "Map style"}
-        </p>
-        <div className="flex gap-1.5 flex-wrap">
-          {(viewMode === "globe" ? GLOBE_STYLES : MAP_STYLES).map((s) => {
-            const active = viewMode === "globe" ? globeStyle === s.key : mapStyle === s.key;
-            return (
-              <button
-                key={s.key}
-                onClick={() =>
-                  viewMode === "globe"
-                    ? onGlobeStyleChange(s.key as GlobeStyleKey)
-                    : onMapStyleChange(s.key as MapStyleKey)
-                }
-                className={`text-[11px] px-2.5 py-1 rounded-full border transition-all ${
-                  active
-                    ? "bg-[#C5A572] border-[#C5A572] text-black font-semibold"
-                    : "border-white/20 text-white/50 hover:border-white/40 hover:text-white/80"
-                }`}
-              >
-                {s.label}
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
       {/* Reset */}
       {hasFilters && (

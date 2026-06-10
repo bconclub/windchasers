@@ -2,6 +2,29 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-10 · feat(flight-schools): zoom fix, slimmer filters, dedicated leads sheet, admin sidebar
+
+- Map zoom: globe→map transition now lands at regional zoom 4–5 (was up to 9 —
+  city level with no markers visible); country/single-school jumps cap at zoom 6
+  (was 9–10). Verified: picking India lands with all 68 markers on screen.
+- Filter panel: removed the Globe style / Map style pickers (Blue Marble,
+  Day & Night, Satellite/Dark/Terrain/Light). Kept: Switch Globe↔Map, country,
+  certifications, WC Partners only. Globe fixed on blue-marble, map on satellite.
+- Leads: /api/flight-schools-lead now writes to the dedicated "Flight Training
+  Leads" spreadsheet (1ioFXsB7…, tab "Flight Schools Lead"), not the main leads
+  sheet. Headers A–K added to the sheet (bold). Env-overridable via
+  GOOGLE_SHEET_ID_FLIGHT_SCHOOLS.
+- Admin: left sidebar navigation (Overview / Flight Schools / Events / Payments
+  + View site) on desktop, top bar on mobile; content offset md:pl-56. The
+  flight-schools page is now self-contained — opens straight into the 925-row
+  manager; its internal rail + duplicate overview panel removed.
+- Also: supabase/migrations/0001_flight_schools_schema.sql — reconstructed
+  schema backup (tables, RLS, storage bucket) so the DB is reproducible after
+  the free-tier pause incident.
+- User-facing: usable map landing zoom, simpler filters, flight-school leads in
+  their own sheet, cleaner admin.
+- (`b1e0056`)
+
 ## 2026-06-05 13:10 IST · seo(pilot-training): match page to live ad keywords (Quality Score)
 
 - Both the DGCA and Pilot Training Google Ads groups point to /pilot-training,
