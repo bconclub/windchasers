@@ -29,7 +29,7 @@ function pointColor(d: object): string {
   return (d as FlightSchool).isPartner ? "#FFD584" : "#9FC5FF";
 }
 function pointRadius(d: object): number {
-  return (d as FlightSchool).isPartner ? 1.0 : 0.75;
+  return (d as FlightSchool).isPartner ? 0.8 : 0.6;
 }
 function pointLabel(d: object): string {
   const s = d as FlightSchool;
@@ -251,7 +251,7 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
             pointLng="lng"
             pointColor={pointColor}
             pointRadius={pointRadius}
-            pointAltitude={0.045}
+            pointAltitude={0.018}
             pointLabel={pointLabel}
             onAltitudeChange={handleAltitudeChange}
             paused={viewMode === "map"}

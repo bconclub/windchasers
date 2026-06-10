@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-11 · tweak(flight-schools): globe markers — keep bright, less tall
+
+- Feedback: the new pillars were too tall. Altitude 0.045 → 0.018, radius
+  0.8/0.6 (partner/regular). Colors stay bright (#FFD584 gold / #9FC5FF blue).
+- (`8fc62bf`)
+
 ## 2026-06-11 · fix(flight-schools): globe markers actually visible
 
 - The school points on the 3D globe were invisible specks — non-partners drawn
