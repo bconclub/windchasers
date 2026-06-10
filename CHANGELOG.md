@@ -2,6 +2,20 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-11 · feat(admin): on-site login page replaces the browser Basic-auth popup
+
+- /admin now redirects unauthenticated browsers to /admin-login — a styled
+  WindChasers sign-in form — instead of the native browser username/password
+  popup. Successful login sets a 30-day HttpOnly session cookie (SHA-256 of the
+  credentials; rotating ADMIN_PASSWORD invalidates all sessions).
+- New: lib/admin-auth.ts (shared Edge-safe helpers), /api/admin/login
+  (POST = sign in, DELETE = logout), app/admin-login (login page, noindexed).
+- HTTP Basic auth still accepted as a silent fallback so curl/scripts and
+  health checks keep working — but browsers are never challenged.
+- Credentials unchanged (env ADMIN_USER / ADMIN_PASSWORD; defaults still
+  admin / windchasers2024 — set a real password on the VPS).
+- (`54b440a`)
+
 ## 2026-06-11 · tweak(flight-schools): globe markers — keep bright, less tall
 
 - Feedback: the new pillars were too tall. Altitude 0.045 → 0.018, radius
