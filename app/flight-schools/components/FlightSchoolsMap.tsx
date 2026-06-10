@@ -22,11 +22,14 @@ const GlobeLoader = dynamic(() => import("./GlobeLoader"), {
 const LeafletMap = dynamic(() => import("./LeafletMap"), { ssr: false });
 
 /* ── Globe point helpers ─────────────────────────────────────────────── */
+// Bright + big on purpose: the old #666 / 0.38 / 0.015-altitude points were
+// invisible specks against the earth texture. Partners glow gold, the rest a
+// bright periwinkle matching the 2D map markers.
 function pointColor(d: object): string {
-  return (d as FlightSchool).isPartner ? "#C5A572" : "#666666";
+  return (d as FlightSchool).isPartner ? "#FFD584" : "#9FC5FF";
 }
 function pointRadius(d: object): number {
-  return (d as FlightSchool).isPartner ? 0.55 : 0.38;
+  return (d as FlightSchool).isPartner ? 1.0 : 0.75;
 }
 function pointLabel(d: object): string {
   const s = d as FlightSchool;
@@ -248,7 +251,7 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
             pointLng="lng"
             pointColor={pointColor}
             pointRadius={pointRadius}
-            pointAltitude={0.015}
+            pointAltitude={0.045}
             pointLabel={pointLabel}
             onAltitudeChange={handleAltitudeChange}
             paused={viewMode === "map"}

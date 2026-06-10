@@ -2,6 +2,15 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-11 · fix(flight-schools): globe markers actually visible
+
+- The school points on the 3D globe were invisible specks — non-partners drawn
+  dark gray (#666) at radius 0.38, altitude 0.015. Now: bright periwinkle
+  (#9FC5FF, matches the 2D map markers) radius 0.75; partners bright gold
+  (#FFD584) radius 1.0; point altitude 0.045 so they read as glowing pillars.
+- User-facing: you can SEE the school locations on the rotating globe.
+- (`9f54d44`)
+
 ## 2026-06-10 · feat(flight-schools): open on the auto-rotating globe
 
 - /flight-schools now lands on the rotating 3D globe instead of the flat world
