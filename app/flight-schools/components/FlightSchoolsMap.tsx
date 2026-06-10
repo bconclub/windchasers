@@ -33,9 +33,10 @@ function pointLabel(d: object): string {
   return `<div style="background:#1a1a1a;color:#fff;padding:5px 10px;border-radius:6px;font-size:12px;line-height:1.5;border:1px solid rgba(197,165,114,0.35);pointer-events:none"><strong>${s.name}</strong><br/><span style="color:#C5A572">${s.city}, ${s.country}</span></div>`;
 }
 
-// Globe rests at altitude 2.5. Hand off to the flat 2D map after ONE small
-// zoom-in — you shouldn't have to dive into a country to get the map.
-const ZOOM_IN_THRESHOLD = 2.2;
+// Globe rests at altitude 2.5 and loses ~5% per wheel tick. Hand off to the
+// flat 2D map after 1–2 small ticks (2.5 → ~2.37 → ~2.26) — you shouldn't
+// have to dive into a country to get the map.
+const ZOOM_IN_THRESHOLD = 2.35;
 
 export default function FlightSchoolsMap({ schools: publicSchools }: { schools: FlightSchool[] }) {
   const containerRef = useRef<HTMLDivElement>(null);

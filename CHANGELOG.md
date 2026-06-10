@@ -6,7 +6,7 @@ Batch-by-batch record of changes that ship via `git push` to `main`. Newest at t
 
 - The globe (rest altitude 2.5) only switched to the flat map below altitude
   1.5 — several deep scrolls into a country before anything changed. Threshold
-  raised to 2.2 so a single small zoom-in flips to the 2D map at regional zoom.
+  raised to 2.35 so 1-2 small zoom-in ticks flip to the 2D map at regional zoom.
   Existing 1200ms transition lock prevents flip-flop when returning to globe.
 - User-facing: zoom in once on the globe → 2D map appears.
 - (`e6dba19`)
