@@ -221,7 +221,16 @@ export async function appendToSheet(
     // confuse the table detector and new rows can land shifted to the right.
     insertDataOption: "INSERT_ROWS",
     requestBody: {
-      values: [values.map((v) => (v == null ? "" : String(v)))],
+      // USER_ENTERED parses cells like typed input, so a leading =, +, @ or -
+      // turns the cell into a formula — "+91 98765..." phones render #ERROR!.
+      // Prefix an apostrophe (not displayed by Sheets) to force plain text.
+      values: [
+        values.map((v) => {
+          if (v == null) return "";
+          const s = String(v);
+          return typeof v === "string" && /^[=+@-]/.test(s) ? `'${s}` : s;
+        }),
+      ],
     },
   });
 

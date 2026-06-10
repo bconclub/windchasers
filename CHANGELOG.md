@@ -2,6 +2,16 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-10 · fix(sheets): phones starting with "+" no longer corrupt to #ERROR!
+
+- End-to-end lead test caught it: appendToSheet uses USER_ENTERED, so any cell
+  starting with =, +, @ or - is parsed as a formula — "+91…" phone numbers
+  landed as #ERROR! in Sheets. Now apostrophe-prefixed (invisible in Sheets) to
+  force plain text. Global fix in lib/sheets.ts — protects EVERY form writing
+  to ANY sheet (booking, cabin crew, ATC, summercamp, NZ seminar, flight
+  schools, PAT backup).
+- (`2037330`)
+
 ## 2026-06-10 · feat(flight-schools): zoom fix, slimmer filters, dedicated leads sheet, admin sidebar
 
 - Map zoom: globe→map transition now lands at regional zoom 4–5 (was up to 9 —
