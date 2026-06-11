@@ -9,6 +9,8 @@ const content: ProgramContent = {
   metaTitle: "Privacy Policy | WindChasers Aviation Academy",
   testimonials: false,
   campus: false,
+  heroActions: false,
+  cta: false,
   blocks: [
     {
       type: "richtext",
@@ -70,6 +72,25 @@ const content: ProgramContent = {
       title: "What Rights You Have Over Your Data",
       paragraphs: [
         "If you have an account on this site, or have left comments, you can request to receive an exported file of the personal data we hold about you, including any data you have provided to us. You can also request that we erase any personal data we hold about you. This does not include any data we are obliged to keep for administrative, legal, or security purposes.",
+      ],
+    },
+    {
+      type: "richtext",
+      title: "Instagram, WhatsApp, Web Chat and PROXe",
+      paragraphs: [
+        "WindChasers uses PROXe to manage enquiries, conversations, lead follow-ups, and customer support across our website chat, WhatsApp, Instagram messages, and Instagram comments.",
+        "When you contact us through Instagram, WhatsApp, or our website, we may collect and process information such as your name, username or profile identifier, phone number, email address, message content, comments, enquiry details, timestamps, and related conversation history. This information is used only to respond to your enquiry, provide counselling or admission support, manage follow-ups, improve our services, and maintain accurate communication records.",
+        "For Instagram integrations, WindChasers may receive data through Meta APIs, including Instagram account identifiers, comments, direct messages, and messaging metadata, depending on the permissions granted to our app. We do not sell this data.",
+        "PROXe acts as a technology service provider for WindChasers and processes this data on behalf of WindChasers for CRM, automation, messaging, and support operations.",
+      ],
+    },
+    {
+      type: "richtext",
+      title: "User Data Deletion",
+      paragraphs: [
+        "You may request deletion of your personal data associated with WindChasers, including data received through Instagram, WhatsApp, website chat, or PROXe-powered systems.",
+        "To request deletion, email aviators@windchasers.in with the subject line \"Data Deletion Request\" and include the phone number, email address, Instagram username, or other identifier you used to contact WindChasers.",
+        "After verifying the request, we will delete or anonymize associated records from our active systems, subject to any legal, regulatory, security, or legitimate business record-retention requirements.",
       ],
     },
     {

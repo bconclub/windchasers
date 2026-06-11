@@ -70,6 +70,10 @@ export type ProgramContent = {
   ctaText?: string;
   related?: { label: string; href: string }[];
   metaTitle?: string;
+  /** Hide hero action buttons on legal/informational pages. */
+  heroActions?: boolean;
+  /** Hide the bottom conversion CTA band on legal/informational pages. */
+  cta?: boolean;
   /** Explicit photo list (overrides the slug→manifest lookup). */
   images?: string[];
   /** Show the reusable student testimonials reel. Default: true. */
@@ -367,14 +371,16 @@ export default function ProgramPage({ content, slug: slugProp }: { content: Prog
               {content.title} {content.accent && <span className="text-primary italic">{content.accent}</span>}
             </h1>
             <p className="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto lg:mx-0 leading-relaxed font-light">{content.intro}</p>
-            <div className="mt-9 flex flex-wrap gap-4 justify-center lg:justify-start">
-              <Link href="/demo" className="inline-flex items-center gap-2 bg-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:bg-primary-container transition-all" style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}>
-                Book a Demo Session <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link href="/contact-us" className="inline-flex items-center gap-2 border-2 border-primary text-primary px-8 py-4 rounded-lg font-bold hover:bg-primary hover:text-on-primary transition-all">
-                Talk to an Expert
-              </Link>
-            </div>
+            {content.heroActions !== false && (
+              <div className="mt-9 flex flex-wrap gap-4 justify-center lg:justify-start">
+                <Link href="/demo" className="inline-flex items-center gap-2 bg-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:bg-primary-container transition-all" style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}>
+                  Book a Demo Session <ArrowRight className="w-5 h-5" />
+                </Link>
+                <Link href="/contact-us" className="inline-flex items-center gap-2 border-2 border-primary text-primary px-8 py-4 rounded-lg font-bold hover:bg-primary hover:text-on-primary transition-all">
+                  Talk to an Expert
+                </Link>
+              </div>
+            )}
           </motion.div>
 
           {heroImage && (
@@ -455,23 +461,25 @@ export default function ProgramPage({ content, slug: slugProp }: { content: Prog
       )}
 
       {/* CTA band */}
-      <section className="py-20 md:py-28 px-6 md:px-12 bg-primary-container">
-        <div className="max-w-4xl mx-auto text-center">
-          <Sparkles className="w-10 h-10 text-on-primary-container/70 mx-auto mb-6" />
-          <h2 className="font-[family-name:var(--font-headline)] text-3xl md:text-5xl font-extrabold tracking-tighter text-on-primary-container mb-5">
-            {content.ctaTitle || "Ready to start your journey?"}
-          </h2>
-          {content.ctaText && <p className="text-on-primary-container/80 text-lg mb-8 max-w-2xl mx-auto">{content.ctaText}</p>}
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Link href="/demo" className="inline-flex items-center gap-2 bg-black text-white px-9 py-4 rounded-lg font-bold hover:-translate-y-0.5 transition-all">
-              Book a Demo Session <ArrowRight className="w-5 h-5" />
-            </Link>
-            <Link href="/assessment" className="inline-flex items-center gap-2 bg-transparent border-2 border-black text-black px-9 py-4 rounded-lg font-bold hover:bg-black hover:text-white transition-all">
-              Take the Assessment
-            </Link>
+      {content.cta !== false && (
+        <section className="py-20 md:py-28 px-6 md:px-12 bg-primary-container">
+          <div className="max-w-4xl mx-auto text-center">
+            <Sparkles className="w-10 h-10 text-on-primary-container/70 mx-auto mb-6" />
+            <h2 className="font-[family-name:var(--font-headline)] text-3xl md:text-5xl font-extrabold tracking-tighter text-on-primary-container mb-5">
+              {content.ctaTitle || "Ready to start your journey?"}
+            </h2>
+            {content.ctaText && <p className="text-on-primary-container/80 text-lg mb-8 max-w-2xl mx-auto">{content.ctaText}</p>}
+            <div className="flex flex-wrap gap-4 justify-center">
+              <Link href="/demo" className="inline-flex items-center gap-2 bg-black text-white px-9 py-4 rounded-lg font-bold hover:-translate-y-0.5 transition-all">
+                Book a Demo Session <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link href="/assessment" className="inline-flex items-center gap-2 bg-transparent border-2 border-black text-black px-9 py-4 rounded-lg font-bold hover:bg-black hover:text-white transition-all">
+                Take the Assessment
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 }
