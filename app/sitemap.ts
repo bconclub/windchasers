@@ -54,6 +54,7 @@ const routes: string[] = [
   "/best-online-aviation-courses-in-india-flexible-learning-for-future-flyers",
   // Legal
   "/privacy-policy",
+  "/data-deletion",
   "/refund-policy",
   "/terms-conditions",
   // Key conversion pages (existing app)
