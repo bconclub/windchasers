@@ -2,6 +2,23 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-11 · fix(flight-schools): globe→map handoff actually fires (click, search & wheel)
+
+- Root cause found by live debugging: the handoff relied on OrbitControls
+  "change" events, but (a) the click/search zoom tween moves the camera
+  directly and never fires them — users tunnelled deep inside the globe with
+  no 2D-map switch (the reported bug) — and (b) OrbitControls' wheel dolly was
+  also unreliable.
+- Fix in GlobeLoader:
+  1. rAF altitude watcher reports every actual camera-altitude change to the
+     parent (covers wheel, pinch, click tween, search tween).
+  2. Manual wheel zoom (capture-phase listener on a wrapper; ~13% altitude per
+     tick, autoRotate disabled first so the tween isn't overwritten);
+     OrbitControls' own zoom disabled so the two never fight.
+- One wheel tick in (2.5 → 2.17) crosses the 2.35 threshold → 2D map. Clicking
+  a country/marker descends through it too. Scroll-out → globe unchanged.
+- (`edb3871`)
+
 ## 2026-06-11 · feat(admin): on-site login page replaces the browser Basic-auth popup
 
 - /admin now redirects unauthenticated browsers to /admin-login — a styled
