@@ -2,6 +2,29 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-15 · feat(admin): curate flight schools — on/off toggle, verify modal, intent score
+
+- **Show on/off per school.** Each row + the detail modal has a live toggle that
+  controls whether the school appears on the public site. Writes via a new
+  admin-auth'd API (`/api/admin/flight-schools/visibility`, service role):
+  on → verification_status "verified"; off → "hidden" (+ clears is_partner so a
+  partner row truly hides). Optimistic UI with revert on failure.
+- **Verify modal.** Clicking a school opens a modal with its photos (eyeball
+  that it's a real flight school), "Website" and "Google Maps" buttons to check
+  it, certifications/focus, the on-site About write-up, ratings — and the on/off
+  switch. So they verify before going live.
+- **Internal intent/quality score** (`lib/flight-schools/intent.ts`, admin-only,
+  never shown publicly): weights real flight images, flight-training intent
+  (focus/type keywords), certifications, reviews/rating, and completeness.
+  Table sorts by it by default so the genuine, high-intent schools surface first
+  out of 925. Visibility filter (All / Live / Hidden) added.
+- **Admin chrome fixed.** The public navbar, sticky CTA and PROXe chat widget
+  were rendering on top of the admin — moved into `SiteChrome` that renders them
+  on public pages only (chat widget never loads on /admin). Left sidebar now
+  collapses to a 64px icon rail and expands on hover, so content gets full width.
+- Admin data load now also fetches photos.
+- (`cca0360`)
+
 ## 2026-06-14 · feat(flight-schools): "About" write-up in the school drawer
 
 - Each school's drawer now shows a short write-up: what they are (brand + certs

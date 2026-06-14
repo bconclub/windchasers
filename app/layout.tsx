@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
 import ConditionalFooter from "@/components/ConditionalFooter";
 import Analytics from "@/components/Analytics";
 import TrackingProvider from "@/components/TrackingProvider";
 import MetaPixelInit from "@/components/MetaPixelInit";
-import StickyDemoCTA from "@/components/StickyDemoCTA";
+import SiteChrome from "@/components/SiteChrome";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -69,19 +68,13 @@ export default function RootLayout({
           }}
         />
         <MetaPixelInit />
-        {/* PROXe web-chat widget — loaded globally so the chat launcher is
-            available on every page. */}
-        <Script
-          src="https://proxe.windchasers.in/api/widget/embed.js"
-          strategy="afterInteractive"
-        />
         <Analytics />
         <TrackingProvider>
-          <Navbar />
+          {/* Navbar + sticky CTA + PROXe chat widget — public pages only. */}
+          <SiteChrome />
           <main className="min-h-screen">
             {children}
           </main>
-          <StickyDemoCTA />
           <ConditionalFooter />
         </TrackingProvider>
       </body>

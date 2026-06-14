@@ -92,7 +92,7 @@ function summarize(schools: FlightSchool[]): Summary {
 async function loadAdminData(): Promise<{ schools: FlightSchool[]; summary: Summary }> {
   try {
     const supabase = getServiceClient();
-    const [schoolsRes, countriesRes] = await Promise.all([
+    const [schoolsRes, countriesRes, photosRes] = await Promise.all([
       supabase
         .from("flight_schools")
         .select(
@@ -107,13 +107,26 @@ async function loadAdminData(): Promise<{ schools: FlightSchool[]; summary: Summ
         .order("wc_score", { ascending: false, nullsFirst: false })
         .limit(2000),
       supabase.from("countries").select("code,name"),
+      supabase
+        .from("flight_school_photos")
+        .select("school_id,url,position")
+        .not("url", "is", null)
+        .order("position", { ascending: true }),
     ]);
     if (schoolsRes.error) throw schoolsRes.error;
     if (countriesRes.error) throw countriesRes.error;
     const countryName: Record<string, string> = {};
     for (const c of countriesRes.data ?? []) countryName[c.code] = c.name;
+    const photoMap: Record<string, string[]> = {};
+    for (const p of (photosRes.data ?? []) as Array<{ school_id: string; url: string }>) {
+      if (p.url) (photoMap[p.school_id] ||= []).push(p.url);
+    }
     const rows = (schoolsRes.data ?? []) as unknown as Array<Record<string, unknown>>;
-    const schools = rows.map((r) => rowToFlightSchool(r, countryName[r.country_code as string] ?? ""));
+    const schools = rows.map((r) => {
+      const s = rowToFlightSchool(r, countryName[r.country_code as string] ?? "");
+      s.images = photoMap[s.id] ?? [];
+      return s;
+    });
     return { schools, summary: summarize(schools) };
   } catch (err) {
     console.error("[/admin/flight-schools] Failed to load schools from Supabase:", err);
