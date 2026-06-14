@@ -2,6 +2,14 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-15 · tweak(admin): full-width content container
+
+- Admin content was capped at max-w-[1280px] and centred, leaving the table
+  cramped (Google column cut off). Now full-width (`w-full`) so the directory
+  table uses the whole screen. The left rail already auto-collapses to 64px on
+  mouse-out and expands on hover.
+- (`2005145`)
+
 ## 2026-06-15 · feat(admin): curate flight schools — on/off toggle, verify modal, intent score
 
 - **Show on/off per school.** Each row + the detail modal has a live toggle that
