@@ -2,6 +2,24 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-14 · feat(flight-schools): "About" write-up in the school drawer
+
+- Each school's drawer now shows a short write-up: what they are (brand + certs
+  + location), what they do (training focus), reputation (Google rating + a
+  review-derived theme), and who they're a good / poor fit for.
+- Source: the real Google review text + focus + certs + ratings already in
+  data/flight-schools.generated.json (874 schools have review text — it was
+  never seeded into Supabase, just lived in the JSON). New script
+  scripts/build-school-summaries.mjs generates the write-ups and stores them in
+  the existing-but-empty flight_schools.editorial_summary column (no schema
+  change; already wired through as `editorialSummary`). 925/925 written.
+  MFA Munich (the screenshot one) has a hand-written override for top quality.
+- SchoolDrawer renders editorialSummary as an "About" paragraph under the photos.
+- Deterministic (no LLM key in the repo). A future LLM pass could enrich the
+  per-review nuance if a key is added.
+- User-facing: open any school → a plain-English summary of the place.
+- (`f1e7951`)
+
 ## 2026-06-11 · fix(flight-schools): globe→map handoff actually fires (click, search & wheel)
 
 - Root cause found by live debugging: the handoff relied on OrbitControls

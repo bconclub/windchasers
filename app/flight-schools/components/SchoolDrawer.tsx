@@ -181,6 +181,13 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                 </div>
               )}
 
+              {/* About — generated write-up (what they are / do / fit) */}
+              {school.editorialSummary && (
+                <p className="text-white/70 text-[13px] leading-relaxed mb-5">
+                  {school.editorialSummary}
+                </p>
+              )}
+
               {/* Certifications */}
               {school.certifications.length > 0 && (
                 <div className="flex flex-wrap gap-1.5 mb-5">
