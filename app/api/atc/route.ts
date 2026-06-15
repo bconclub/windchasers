@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { appendToSheet, extractAttributionCells, resolveSpreadsheetId } from "@/lib/sheets";
+import { forwardLeadToProxe } from "@/lib/proxe";
 
 const ATC_TAB_FROM_ENV = process.env.GOOGLE_SHEET_TAB_ATC?.trim();
 
@@ -64,10 +65,18 @@ export async function POST(request: Request) {
       }
     }
 
-    // Note: dead build.goproxe.com webhook removed. PROXe is now reached via
-    // the unified /api/leads proxy. ATC is not yet wired to /api/leads (see
-    // GPFC scope - PAT-only first). Re-add a /api/leads "page" or "event" call
-    // here once that handover is approved.
+    // Forward to PROXe (Sheets above is the backup). Non-blocking.
+    const proxe = await forwardLeadToProxe({
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+      city: data.city,
+      source: "page",
+      formType: "atc",
+      data,
+      fields: { qualification: data.qualification },
+    });
+    if (!proxe.ok) console.error("ATC PROXe forward failed:", proxe.error);
 
     if (sheetsError) {
       return NextResponse.json(

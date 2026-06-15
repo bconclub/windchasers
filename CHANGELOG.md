@@ -2,6 +2,20 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-15 · feat(leads): route all lead inquiries to PROXe
+
+- Every lead-inquiry form now forwards to PROXe, not just PAT / inline / student
+  / WhatsApp / booking. Added PROXe forwarding to the four that were Sheets-only:
+  cabin-crew, ATC, flight-schools, and early-stage (assessment-early). New shared
+  helper `lib/proxe.ts` (forwardLeadToProxe) hits PROXe's inbound endpoint
+  directly with normalised attribution (utm/click/referrer across all field
+  shapes). Each route keeps its Sheets write as a backup; the PROXe forward is
+  non-blocking so an outage never breaks a submission.
+- Kept Sheets-only (events, per request): webinar, open-house, nz-seminar,
+  summercamp.
+- Early-stage leads now go to PROXe too (reversed the earlier Sheets-only rule).
+- (`ca97b01`)
+
 ## 2026-06-15 · feat(flight-schools): skeleton shimmer on school photos
 
 - School photos (large Supabase-storage images) were painting in visible strips

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { appendToSheet, resolveSpreadsheetId } from "@/lib/sheets";
+import { forwardLeadToProxe } from "@/lib/proxe";
 
 const EARLY_TAB_FROM_ENV = process.env.GOOGLE_SHEET_TAB_ASSESSMENT_EARLY?.trim();
 
@@ -131,10 +132,23 @@ export async function POST(request: Request) {
       }
     }
 
-    // NOTE: Early-stage leads intentionally do NOT forward to PROXe. These are
-    // below-12th / not-yet-eligible enquiries, they're recorded in Sheets for
-    // nurture, and the user takes it from the thank-you page. Only the main
-    // landing-page lead forms + WhatsApp capture push into PROXe.
+    // Early-stage leads now ALSO forward to PROXe (every lead inquiry goes to
+    // PROXe; Sheets above is the backup). Non-blocking.
+    const proxe = await forwardLeadToProxe({
+      name: data.name,
+      phone: data.phone,
+      email: data.email,
+      city: data.city,
+      source: "page",
+      formType: "early_stage",
+      data: data as unknown as Record<string, unknown>,
+      fields: {
+        audience: "early_stage",
+        eligibility: data.eligibility,
+        whatsapp: data.whatsapp || data.phone,
+      },
+    });
+    if (!proxe.ok) console.error("Early-stage PROXe forward failed:", proxe.error);
 
     if (sheetsError && !sheetsOk) {
       return NextResponse.json(
