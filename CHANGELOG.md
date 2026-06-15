@@ -2,6 +2,18 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-15 · feat(leads): header WhatsApp captures to PROXe on every page
+
+- The header WhatsApp button only opened the name+phone capture (which lands in
+  PROXe) on 5 funnel pages; every other page opened WhatsApp directly with no
+  capture. Now it captures on EVERY page (page-aware source for attribution).
+  Only exception: the webinar group-invite links (those join a WhatsApp group,
+  not a 1:1 chat) stay direct.
+- The remaining direct wa.me links are error-recovery fallbacks (cabin-crew /
+  ATC form-error, nz-seminar early-stage) and post-booking (thank-you), left
+  direct on purpose.
+- (`977297a`)
+
 ## 2026-06-15 · feat(leads): route all lead inquiries to PROXe
 
 - Every lead-inquiry form now forwards to PROXe, not just PAT / inline / student

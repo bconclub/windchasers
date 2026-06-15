@@ -71,8 +71,10 @@ export default function Navbar() {
   // Pages where we want to capture name + phone BEFORE the user leaves to
   // WhatsApp. Top-of-funnel program pages where a WA tap is the main
   // primary CTA.
-  const useWaCapture =
-    isHome || isPilotTraining || isDGCA || isHelicopter || isInternational;
+  // Capture name + phone before EVERY WhatsApp handoff so the lead reaches
+  // PROXe, on every page. The only exceptions are the webinar group-invite
+  // links (those open a WhatsApp GROUP, not a 1:1 chat).
+  const useWaCapture = !isWebinarParent && !isWebinarStudents;
 
   // Per-page WhatsApp number + pre-filled message body. The capture modal
   // prepends "Hi! I'm {name}, " to the message before opening wa.me.
@@ -111,11 +113,12 @@ export default function Navbar() {
               program: "International Flying",
             }
           : {
-              // isHome (default)
+              // Default for every other page, page-aware source so PROXe sees
+              // which page the WhatsApp lead came from.
               waNumber: MARKETING_WA_AGENT,
               message: "I'd like to know more about your programs.",
-              source: "navbar_home",
-              program: "Homepage",
+              source: `navbar_${(pathname || "/").replace(/^\/+|\/+$/g, "").replace(/\//g, "_") || "home"}`,
+              program: "WhatsApp Enquiry",
             };
 
   const compactWhatsAppHref =
