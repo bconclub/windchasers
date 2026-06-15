@@ -67,7 +67,7 @@ const team = [
     initials: "ZH",
     photo: "/team/Haseeb.webp",
     title: "Business Development Manager",
-    bio: "Mechanical Engineer with broad corporate sales and marketing experience — and an aspiring pilot actively training at Windchasers. Combines business acumen with genuine passion for aviation to guide every prospective student toward the right path.",
+    bio: "Mechanical Engineer with broad corporate sales and marketing experience, and an aspiring pilot actively training at Windchasers. Combines business acumen with genuine passion for aviation to guide every prospective student toward the right path.",
     expertise: ["Business Development", "Student Counselling", "Sales & Marketing", "Aviation Sector Growth"],
   },
 ];

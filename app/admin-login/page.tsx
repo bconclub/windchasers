@@ -3,7 +3,7 @@
 import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-// On-site admin sign-in — replaces the browser's native Basic-auth popup.
+// On-site admin sign-in, replaces the browser's native Basic-auth popup.
 // Posts to /api/admin/login which sets the session cookie the middleware
 // checks for everything under /admin.
 function LoginForm() {

@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       data.city || "",               // City (F)
       data.parentAttending || "",    // With Someone (G)
       data.status || "",             // Status (H)
-      ...extractAttributionCells(data), // I:W — utm/click/channel
+      ...extractAttributionCells(data), // I:W, utm/click/channel
     ], spreadsheetId);
 
     console.log("Open House Sheets API success:", JSON.stringify(result));

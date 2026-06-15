@@ -1,5 +1,5 @@
 // Server-component layout for /thank-you so we can mark the route segment as
-// dynamic. The page itself is "use client" (reads URL params) — Route Segment
+// dynamic. The page itself is "use client" (reads URL params), Route Segment
 // Config options can only live in server components or layouts.
 //
 // Why force-dynamic:

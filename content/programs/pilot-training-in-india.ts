@@ -14,7 +14,7 @@ const content: ProgramContent = {
       kicker: "Overview",
       title: "Why Train in India?",
       paragraphs: [
-        "Training in India offers a unique blend of affordability, familiarity, and direct alignment with DGCA regulations — the very authority that will license you to fly commercially in the country.",
+        "Training in India offers a unique blend of affordability, familiarity, and direct alignment with DGCA regulations, the very authority that will license you to fly commercially in the country.",
         "You stay close to family, avoid the cost of international living, and train in the same airspace and conditions you will eventually work in.",
       ],
     },
@@ -30,11 +30,11 @@ const content: ProgramContent = {
         },
         {
           title: "DGCA Alignment",
-          body: "Because you train under DGCA from day one, there is no need for licence conversion later. Your hours, exams, and ratings count directly towards the Indian CPL — saving you both time and money compared to converting a foreign licence.",
+          body: "Because you train under DGCA from day one, there is no need for licence conversion later. Your hours, exams, and ratings count directly towards the Indian CPL, saving you both time and money compared to converting a foreign licence.",
         },
         {
           title: "Climate & Diverse Terrain",
-          body: "India offers incredibly varied flying conditions — from the coastal weather of the south to the mountainous north. This diversity builds well-rounded airmanship and prepares you for the realities of flying across the subcontinent.",
+          body: "India offers incredibly varied flying conditions, from the coastal weather of the south to the mountainous north. This diversity builds well-rounded airmanship and prepares you for the realities of flying across the subcontinent.",
         },
       ],
     },

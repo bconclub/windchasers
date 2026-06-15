@@ -153,10 +153,10 @@ const whyCards = [
   },
 ];
 
-// FAQ — written to cover the live ad keywords this page targets (DGCA ground
+// FAQ, written to cover the live ad keywords this page targets (DGCA ground
 // classes / exam coaching, CPL course, pilot training programs, "how to become
 // a pilot in India", aviation academy/institute). Answers use only facts stated
-// elsewhere on the page — no invented costs or durations.
+// elsewhere on the page, no invented costs or durations.
 const FAQ_ITEMS = [
   {
     q: "How do I become a commercial pilot in India?",
@@ -168,11 +168,11 @@ const FAQ_ITEMS = [
   },
   {
     q: "What do your DGCA ground classes cover?",
-    a: "Our in-house DGCA ground classes in Bengaluru are full DGCA exam coaching for all six theory papers — Air Navigation, Aviation Meteorology, Air Regulations, Aircraft Technical (General and Specific) and Radio Telephony (RTR) — preparing you for the DGCA CPL written exams.",
+    a: "Our in-house DGCA ground classes in Bengaluru are full DGCA exam coaching for all six theory papers, Air Navigation, Aviation Meteorology, Air Regulations, Aircraft Technical (General and Specific) and Radio Telephony (RTR), preparing you for the DGCA CPL written exams.",
   },
   {
     q: "How much does a Commercial Pilot License (CPL) course cost?",
-    a: "It depends on whether you do your flight training in India or abroad. We give you a full, honest cost breakdown upfront — DGCA ground classes, flight hours and licensing — with no surprise add-ons. Talk to a counsellor for a plan built around your budget.",
+    a: "It depends on whether you do your flight training in India or abroad. We give you a full, honest cost breakdown upfront, DGCA ground classes, flight hours and licensing, with no surprise add-ons. Talk to a counsellor for a plan built around your budget.",
   },
   {
     q: "How long does pilot training take?",
@@ -184,7 +184,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Where will I do my flight training?",
-    a: "At DGCA-approved partner flight schools (FTOs). You can train in India or abroad — the USA, Canada, New Zealand or Australia, or a mix — completing a minimum of 200 flight hours.",
+    a: "At DGCA-approved partner flight schools (FTOs). You can train in India or abroad, the USA, Canada, New Zealand or Australia, or a mix, completing a minimum of 200 flight hours.",
   },
   {
     q: "Is WindChasers a DGCA-approved aviation academy?",
@@ -426,7 +426,7 @@ export default function PilotTraining() {
             before you commit.
           </motion.p>
 
-          {/* Inline lead capture — primary hero conversion action */}
+          {/* Inline lead capture, primary hero conversion action */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -457,7 +457,7 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* Section 2: Path Selection — Airplane / Helicopter (mirrors homepage) */}
+      {/* Section 2: Path Selection, Airplane / Helicopter (mirrors homepage) */}
       <section id="path-selection" className="relative min-h-screen flex flex-col md:flex-row">
         {/* Airplane Half */}
         <button
@@ -583,7 +583,7 @@ export default function PilotTraining() {
               </p>
               <p>
                 Our pilot training programs run from PPL and CPL to ATPL and
-                type rating — with honest, upfront pricing on every step.
+                type rating, with honest, upfront pricing on every step.
               </p>
             </div>
           </motion.div>
@@ -607,7 +607,7 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* Chapter 4: Students Flying Gallery (carousel — images + Vimeo) */}
+      {/* Chapter 4: Students Flying Gallery (carousel, images + Vimeo) */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-surface-container-lowest border-y border-outline-variant/10">
         <StudentsFlyingGallery
           items={flyingGallery}
@@ -688,7 +688,7 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* Primary conversion cluster — placed high, right after the 6-step process */}
+      {/* Primary conversion cluster, placed high, right after the 6-step process */}
       <ConversionCluster heading={<>Ready to start your <span className="text-primary italic">pilot training?</span></>} />
 
       {/* Chapter 6: The Captains of Your Career */}
@@ -1001,12 +1001,12 @@ export default function PilotTraining() {
         </div>
       </section>
 
-      {/* FAQ — pilot training / DGCA ground classes. Crawlable <details> +
+      {/* FAQ, pilot training / DGCA ground classes. Crawlable <details> +
           FAQPage schema so the page matches the ad keywords (Quality Score). */}
       <section className="py-24 md:py-32 px-6 md:px-12 bg-background border-y border-outline-variant/10">
         <div className="max-w-4xl mx-auto">
           <h2 className="font-[family-name:var(--font-headline)] text-4xl md:text-5xl lg:text-6xl font-extrabold text-white tracking-tighter mb-4 text-center">
-            Pilot training in Bangalore — your questions, answered.
+            Pilot training in Bangalore, your questions, answered.
           </h2>
           <p className="text-on-surface-variant text-center mb-12 md:mb-16 max-w-2xl mx-auto">
             Straight answers on DGCA ground classes, the Commercial Pilot License
@@ -1047,7 +1047,7 @@ export default function PilotTraining() {
         />
       </section>
 
-      {/* Final CTA — reuses the conversion cluster */}
+      {/* Final CTA, reuses the conversion cluster */}
       <ConversionCluster heading={<>Two ways to <span className="text-primary italic">start.</span></>} />
 
     </div>

@@ -49,7 +49,7 @@ function DemoPageContent() {
     >
       {/* Hero */}
       <section className="relative min-h-[600px] flex items-center justify-center pt-24 pb-16 overflow-hidden">
-        {/* Vimeo background — desktop only */}
+        {/* Vimeo background, desktop only */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <iframe
             src="https://player.vimeo.com/video/1191576047?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1"
@@ -77,7 +77,7 @@ function DemoPageContent() {
               <span className="text-[#C5A572] italic">first-hand.</span>
             </h1>
             <p className="text-white/60 text-lg md:text-xl max-w-xl mx-auto">
-              Visit the campus or join an online session — no commitment, no pressure.
+              Visit the campus or join an online session, no commitment, no pressure.
             </p>
           </motion.div>
         </div>

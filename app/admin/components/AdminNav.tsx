@@ -10,7 +10,7 @@ import {
   ExternalLink,
 } from "lucide-react";
 
-// Admin sections — one dimension per page; the page owns everything it needs.
+// Admin sections, one dimension per page; the page owns everything it needs.
 const SECTIONS = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
   { href: "/admin/flight-schools", label: "Flight Schools", icon: Plane },

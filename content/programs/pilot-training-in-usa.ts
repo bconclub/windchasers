@@ -15,7 +15,7 @@ const content: ProgramContent = {
       title: "Why Train in the USA?",
       paragraphs: [
         "The USA offers an unmatched density of flight schools, airports, and experienced instructors.",
-        "Training under the FAA — the world's most influential aviation regulator — gives your licence global recognition and credibility.",
+        "Training under the FAA, the world's most influential aviation regulator, gives your licence global recognition and credibility.",
       ],
     },
     {
@@ -30,7 +30,7 @@ const content: ProgramContent = {
         },
         {
           title: "World-Class Infrastructure",
-          body: "The USA has thousands of airports and a highly developed air traffic system. Training here exposes you to busy, controlled airspace and complex radio communication — invaluable experience for an airline career.",
+          body: "The USA has thousands of airports and a highly developed air traffic system. Training here exposes you to busy, controlled airspace and complex radio communication, invaluable experience for an airline career.",
         },
         {
           title: "Competitive Market",

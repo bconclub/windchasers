@@ -27,7 +27,7 @@ const content: ProgramContent = {
         "Air Regulations",
         "Aviation Meteorology",
         "Air Navigation",
-        "RTR(A) — Radio Telephony",
+        "RTR(A), Radio Telephony",
         "Aircraft Technical (General)",
       ],
     },

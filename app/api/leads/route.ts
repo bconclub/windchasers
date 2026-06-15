@@ -298,13 +298,13 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Resolve a coarse channel string used by PROXe's `source` column.
     // Order of preference (ordered most-to-least specific):
-    //   1. explicit utm_source — direct marketing signal the team set up
-    //   2. ad-network click IDs — Meta/Google auto-tag URLs with these
+    //   1. explicit utm_source, direct marketing signal the team set up
+    //   2. ad-network click IDs, Meta/Google auto-tag URLs with these
     //      INSTEAD of utm_*, so they win over referrer (a user clicking
     //      a Meta ad has both `fbclid` AND a `m.facebook.com` referrer;
     //      `fbclid` means "paid ad" while the referrer alone is ambiguous)
-    //   3. traffic_source — referrer-derived (organic social, organic search)
-    //   4. "direct" — typed URL / referrer stripped
+    //   3. traffic_source, referrer-derived (organic social, organic search)
+    //   4. "direct", typed URL / referrer stripped
     // Note: this is the marketing channel, NOT the submission surface.
     // The form/popup type lives in form_type / event_name, not here.
     const clickIds = body.click_ids ?? {};
@@ -337,7 +337,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           email: body.email,
           // Keep the high-level source as the form bucket so PROXe can group
           // PAT leads together. The actual marketing channel goes into
-          // utm_source / channel below — PROXe should be configured to read
+          // utm_source / channel below, PROXe should be configured to read
           // those for attribution columns.
           source: "pat",
           campaign: utm.campaign ?? null,

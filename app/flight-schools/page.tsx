@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function FlightSchoolsPage() {
-  // Don't fail the route if Supabase is briefly unreachable — render with
+  // Don't fail the route if Supabase is briefly unreachable, render with
   // an empty list and let the next revalidation backfill.
   let schools: Awaited<ReturnType<typeof getPublicFlightSchools>> = [];
   try {

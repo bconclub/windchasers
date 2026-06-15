@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import StickyDemoCTA from "@/components/StickyDemoCTA";
 
 /**
- * Public site chrome — the navbar, sticky CTA, and the PROXe chat widget.
+ * Public site chrome, the navbar, sticky CTA, and the PROXe chat widget.
  * Rendered on every public page but NEVER on the admin (/admin, /admin-login):
  * the admin has its own sidebar layout, and the public navbar + chat launcher
  * were bleeding on top of it. Not rendering the PROXe <Script> on admin means

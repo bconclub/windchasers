@@ -30,7 +30,7 @@ export interface WhatsAppCaptureModalProps {
 }
 
 /**
- * Lead capture gate in front of every WhatsApp redirect. Phone-only — the
+ * Lead capture gate in front of every WhatsApp redirect. Phone-only, the
  * name surfaces in the WhatsApp conversation itself. Visual language mirrors
  * the open-house glass hero: gold gradient top edge, L-shaped corner accents,
  * concierge-framed copy. Fires `/api/leads` (PROXe `type: event`) as
@@ -144,7 +144,7 @@ export function WhatsAppCaptureModal({
         event_name: "WhatsApp Prelaunch",
         touchpoint: source,
         // `submission_surface` is the user-facing context (which form). It
-        // is NEVER the marketing channel — channel is resolved server-side
+        // is NEVER the marketing channel, channel is resolved server-side
         // from utm_source / click-IDs / referrer. Keeping these separate
         // means a WA-popup lead from a Meta ad gets `channel="facebook_ads"`
         // (correct attribution) instead of being clobbered into "whatsapp".
@@ -157,7 +157,7 @@ export function WhatsAppCaptureModal({
 
     // Fire PROXe write; we DO await it briefly (max 2s) so we can log a
     // hard failure to console for debugging. But we still proceed to the
-    // WhatsApp redirect even on failure — the lead's worst case is they
+    // WhatsApp redirect even on failure, the lead's worst case is they
     // hit our team on WA without a CRM row, which is recoverable.
     try {
       const controller = new AbortController();
@@ -257,7 +257,7 @@ export function WhatsAppCaptureModal({
             transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
             className="relative w-full max-w-[480px] rounded-[20px] border border-[#C5A572]/30 bg-[#1F1F1F] px-7 py-8 sm:px-9 sm:py-9 shadow-[0_30px_70px_rgba(0,0,0,0.7),0_0_0_1px_rgba(197,165,114,0.04)]"
           >
-            {/* Top gradient border — signature open-house pattern */}
+            {/* Top gradient border, signature open-house pattern */}
             <div
               aria-hidden="true"
               className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#C5A572] to-transparent rounded-t-[20px]"
@@ -332,7 +332,7 @@ export function WhatsAppCaptureModal({
               />
             </div>
 
-            {/* Phone input — boarding-pass style with country code chip */}
+            {/* Phone input, boarding-pass style with country code chip */}
             <label htmlFor="wa-phone" className="sr-only">
               Phone number
             </label>

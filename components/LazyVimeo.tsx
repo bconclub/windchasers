@@ -65,7 +65,7 @@ export default function LazyVimeo({
       role={active ? undefined : "button"}
       aria-label={active ? undefined : `Play ${title}`}
     >
-      {/* Poster — always rendered underneath so there is never a blank frame */}
+      {/* Poster, always rendered underneath so there is never a blank frame */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${poster})` }}

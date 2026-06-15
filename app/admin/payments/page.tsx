@@ -75,7 +75,7 @@ export default function PaymentsAdmin() {
           </select>
         </Field>
         <Field label="Description (shown to customer)">
-          <input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className={inputCls} placeholder="Demo class fee — Sri" />
+          <input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className={inputCls} placeholder="Demo class fee, Sri" />
         </Field>
         <Field label="Amount">
           <input type="number" min="1" step="1" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} className={inputCls} placeholder="500" />
@@ -87,7 +87,7 @@ export default function PaymentsAdmin() {
           </select>
         </Field>
         <div className="sm:col-span-2">
-          <Field label="Customer (name / phone — optional)">
+          <Field label="Customer (name / phone, optional)">
             <input value={form.customer} onChange={(e) => setForm({ ...form, customer: e.target.value })} className={inputCls} placeholder="Sri · +91 96634 94784" />
           </Field>
         </div>
@@ -123,7 +123,7 @@ export default function PaymentsAdmin() {
                     {l.currency === "INR" ? "₹" : "$"}
                     {l.amount.toLocaleString()}
                   </td>
-                  <td className="px-4 py-3 text-white/70">{l.customer || "—"}</td>
+                  <td className="px-4 py-3 text-white/70">{l.customer || "-"}</td>
                   <td className="px-4 py-3">
                     <span className={`text-xs px-2 py-0.5 rounded-full ${
                       l.status === "paid" ? "bg-green-500/15 text-green-400"

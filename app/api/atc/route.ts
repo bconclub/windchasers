@@ -20,7 +20,7 @@ function atcRow(data: Record<string, unknown>) {
     "",
     "ATC",
     "",
-    ...extractAttributionCells(data), // J:X — utm/click/channel
+    ...extractAttributionCells(data), // J:X, utm/click/channel
   ];
 }
 

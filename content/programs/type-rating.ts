@@ -36,7 +36,7 @@ const content: ProgramContent = {
       items: [
         "Ground school covering the aircraft's systems, limitations, and operating procedures.",
         "Full-flight simulator sessions to practise normal, abnormal, and emergency scenarios.",
-        "MCC and JOC — multi-crew cooperation and jet orientation to work effectively as a flight crew.",
+        "MCC and JOC, multi-crew cooperation and jet orientation to work effectively as a flight crew.",
         "Base training on the actual aircraft to complete the rating.",
       ],
     },

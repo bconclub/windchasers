@@ -5,7 +5,7 @@ const content: ProgramContent = {
   title: "Certified Flight",
   accent: "Instructor.",
   intro:
-    "Earning a Certified Flight Instructor (CFI) certificate can be a pivotal step in your aviation career — letting you accumulate flight experience while sharing your knowledge with aspiring pilots.",
+    "Earning a Certified Flight Instructor (CFI) certificate can be a pivotal step in your aviation career, letting you accumulate flight experience while sharing your knowledge with aspiring pilots.",
   heroImage: "/migrated/certified-flight-instructor/gallery-27.webp",
   metaTitle: "Certified Flight Instructor (CFI) | WindChasers Aviation Academy",
   blocks: [
@@ -56,7 +56,7 @@ const content: ProgramContent = {
   ],
   ctaTitle: "Your skyward adventure awaits.",
   ctaText:
-    "Take the next step in your aviation career with WindChasers Aviation Academy — talk to us about batches, aircraft availability and fees.",
+    "Take the next step in your aviation career with WindChasers Aviation Academy, talk to us about batches, aircraft availability and fees.",
 };
 
 export default content;

@@ -46,7 +46,7 @@ function FitBoundsTo({ target }: { target: { points: Array<[number, number]>; ke
     // leave it stale) before computing the zoom level for the new bounds.
     map.invalidateSize();
     if (target.points.length === 1) {
-      // Single school: regional view, not street level — keep context visible.
+      // Single school: regional view, not street level, keep context visible.
       map.setView(target.points[0], 6, { animate: false });
       return;
     }
@@ -62,7 +62,7 @@ function FitBoundsTo({ target }: { target: { points: Array<[number, number]>; ke
 // Returns to globe when the user tries to zoom out beyond the world view.
 // Strategy: minZoom on the MapContainer is 2 so the flat map never shows
 // the empty-tile void around the edges. We then attach a native wheel
-// listener to the map's container — when the user scrolls "out" (deltaY > 0)
+// listener to the map's container, when the user scrolls "out" (deltaY > 0)
 // AND we're already at minZoom, that's the "I want to zoom out further"
 // intent, so hand off to the globe.
 function ZoomWatcher({ onZoomOut }: { onZoomOut: () => void }) {
@@ -150,7 +150,7 @@ export default function LeafletMap({
           noWrap
         />
       )}
-      {/* Zoom controls — bottom-right so they don't overlap the left drawer */}
+      {/* Zoom controls, bottom-right so they don't overlap the left drawer */}
       <ZoomControl position="bottomright" />
       <SizeInvalidator visible={visible} />
       <FlyToCenter lat={currentLat} lng={currentLng} zoom={currentZoom} />

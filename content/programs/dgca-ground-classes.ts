@@ -5,7 +5,7 @@ const content: ProgramContent = {
   title: "DGCA Ground",
   accent: "Classes.",
   intro:
-    "Earning your wings in India starts on the ground. Before any aspiring pilot takes to the skies, they must master the theoretical knowledge required by the Directorate General of Civil Aviation (DGCA) — the foundation for a Commercial Pilot License.",
+    "Earning your wings in India starts on the ground. Before any aspiring pilot takes to the skies, they must master the theoretical knowledge required by the Directorate General of Civil Aviation (DGCA), the foundation for a Commercial Pilot License.",
   heroImage: "/migrated/dgca-ground-classes/dgca-1536x769.webp",
   metaTitle: "DGCA Ground Classes | WindChasers Aviation Academy",
   blocks: [
@@ -18,7 +18,7 @@ const content: ProgramContent = {
       cols: 3,
       items: [
         { title: "Air Navigation", body: "Route planning, charts, instruments, and the principles of finding your way through the air." },
-        { title: "Aviation Meteorology", body: "Reading the weather — atmosphere, cloud formation, winds, and conditions that affect flight." },
+        { title: "Aviation Meteorology", body: "Reading the weather, atmosphere, cloud formation, winds, and conditions that affect flight." },
         { title: "Air Regulations", body: "The rules and laws that govern Indian airspace and pilot conduct." },
         { title: "Technical General", body: "Aircraft systems, aerodynamics, and the engineering fundamentals every pilot must know." },
         { title: "Technical Specific", body: "Type-specific aircraft knowledge applied to the aircraft you train and fly on." },

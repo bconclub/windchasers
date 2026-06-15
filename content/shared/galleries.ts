@@ -1,6 +1,6 @@
 import type { GalleryItem } from "@/components/StudentsFlyingGallery";
 
-// Reusable "students flying" reel — student photos + Vimeo clips.
+// Reusable "students flying" reel, student photos + Vimeo clips.
 export const flyingGallery: GalleryItem[] = [
   { kind: "image", src: "/students-flying/001.webp", alt: "WindChasers student" },
   { kind: "video", vimeoId: "1191450781" },
@@ -25,7 +25,7 @@ export const flyingGallery: GalleryItem[] = [
   { kind: "video", vimeoId: "1191483930" },
 ];
 
-// Reusable testimonial reel — all Vimeo student stories.
+// Reusable testimonial reel, all Vimeo student stories.
 export const testimonialGallery: GalleryItem[] = [
   { kind: "video", vimeoId: "1191521721" },
   { kind: "video", vimeoId: "1150072244" },

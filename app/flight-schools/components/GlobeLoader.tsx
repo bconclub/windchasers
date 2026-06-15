@@ -4,7 +4,7 @@ import { useRef, useCallback, useEffect } from "react";
 import Globe, { GlobeMethods } from "react-globe.gl";
 import type { ComponentProps } from "react";
 
-// Strip onGlobeClick and onPointClick — we handle them internally for zoom-to behaviour
+// Strip onGlobeClick and onPointClick, we handle them internally for zoom-to behaviour
 type Props = Omit<ComponentProps<typeof Globe>, "ref" | "onGlobeClick" | "onPointClick"> & {
   onAltitudeChange?: (altitude: number, lat: number, lng: number) => void;
   paused?: boolean;
@@ -16,7 +16,7 @@ export default function GlobeLoader({ onAltitudeChange, paused, resetKey, zoomTa
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const controlsRef = useRef<any>(null);
 
-  // Zoom camera to a lat/lng — altitude change listener will trigger flat-map switch
+  // Zoom camera to a lat/lng, altitude change listener will trigger flat-map switch
   const zoomTo = useCallback((lat: number, lng: number) => {
     const globe = globeRef.current;
     if (!globe) return;
@@ -54,12 +54,12 @@ export default function GlobeLoader({ onAltitudeChange, paused, resetKey, zoomTa
     controls.autoRotate = true;
     controls.autoRotateSpeed = 0.35;
     // Zoom is driven by our own wheel handler below (OrbitControls' wheel
-    // dolly is unreliable) — disable it so the two never fight.
+    // dolly is unreliable), disable it so the two never fight.
     controls.enableZoom = false;
     controlsRef.current = controls;
   }, []);
 
-  // Altitude watcher — drives the globe→map handoff. We deliberately do NOT
+  // Altitude watcher, drives the globe→map handoff. We deliberately do NOT
   // rely on OrbitControls "change" events: the click-to-zoom pointOfView tween
   // moves the camera directly without firing them, which left users tunnelled
   // deep inside the globe with no 2D-map switch. A rAF loop reporting every
@@ -116,7 +116,7 @@ export default function GlobeLoader({ onAltitudeChange, paused, resetKey, zoomTa
       const globe = globeRef.current;
       if (!globe) return;
       e.preventDefault();
-      // Stop auto-rotation first — its per-frame controls.update() would
+      // Stop auto-rotation first, its per-frame controls.update() would
       // overwrite the camera tween and the zoom would never apply.
       if (controlsRef.current) controlsRef.current.autoRotate = false;
       const pov = globe.pointOfView();

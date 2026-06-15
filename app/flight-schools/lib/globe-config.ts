@@ -7,7 +7,7 @@ export const GLOBE_STYLES = [
 
 export type GlobeStyleKey = (typeof GLOBE_STYLES)[number]["key"];
 
-// Flat map styles — independent from globe style.
+// Flat map styles, independent from globe style.
 // `labelsUrl` is an optional reference-only tile layer stacked on top of the
 // base imagery so country / city names show up. Set to null when the base
 // tile already includes labels.

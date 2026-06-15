@@ -16,17 +16,17 @@ import { track, trackMeta, EVENTS } from "@/lib/analytics/events";
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [waCaptureOpen, setWaCaptureOpen] = useState(false);
-  // Which slide-in category is expanded (accordion — one open at a time).
+  // Which slide-in category is expanded (accordion, one open at a time).
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   const pathname = usePathname();
 
-  // Analytics — call + WhatsApp contact taps, menu open.
+  // Analytics, call + WhatsApp contact taps, menu open.
   const onCallClick = () => {
     track(EVENTS.CALL_CLICK, { source_page: pathname || "" });
     trackMeta("Contact", { method: "phone" });
   };
   const onWhatsAppClick = () => {
-    // Just opening WhatsApp / the capture modal — an engagement signal, NOT a
+    // Just opening WhatsApp / the capture modal, an engagement signal, NOT a
     // confirmed lead. The actual lead fires whatsapp_lead on capture submit.
     track(EVENTS.WHATSAPP_OPEN, { source_page: pathname || "" });
     trackMeta("Contact", { method: "whatsapp" });
@@ -80,7 +80,7 @@ export default function Navbar() {
   // agent (+91 90350 98424). Other pages keep using the general support
   // number elsewhere on the site.
   const MARKETING_WA_AGENT = "919035098424";
-  // The modal prepends "Hi! I'm {name}, " — keep these templates as the
+  // The modal prepends "Hi! I'm {name}, ", keep these templates as the
   // sentence tail so we don't double-greet ("Hi! I'm X, Hi WindChasers, ...").
   const waCaptureConfig = isPilotTraining
     ? {
@@ -153,7 +153,7 @@ export default function Navbar() {
                                     : "Hi WindChasers, I need more detail on pilot training"
           )}`;
 
-  // Categorized slide-in menu — grouped by intent instead of a flat list.
+  // Categorized slide-in menu, grouped by intent instead of a flat list.
   const menuGroups: { heading: string; links: { href: string; label: string }[] }[] = [
     {
       heading: "Licenses & Ratings",
@@ -215,7 +215,7 @@ export default function Navbar() {
               />
             </Link>
 
-            {/* Right side actions — Call + WhatsApp + Hamburger on every page. */}
+            {/* Right side actions, Call + WhatsApp + Hamburger on every page. */}
             <div className="flex items-center gap-2">
               {(isHome || isPilotTraining) && (
                 <div className="hidden sm:flex items-center gap-2 mr-1">
@@ -237,7 +237,7 @@ export default function Navbar() {
                 <Phone className="w-5 h-5" />
               </a>
 
-              {/* WhatsApp — now on ALL pages. Funnel pages open the name+phone
+              {/* WhatsApp, now on ALL pages. Funnel pages open the name+phone
                   capture modal; webinar pages use their group-invite link;
                   every other page opens a plain wa.me chat. */}
               {useWaCapture ? (
@@ -275,7 +275,7 @@ export default function Navbar() {
                 </a>
               )}
 
-              {/* Hamburger — on every page, including home (no dropdown). */}
+              {/* Hamburger, on every page, including home (no dropdown). */}
               <button
                 onClick={() => {
                   if (!isOpen) track(EVENTS.MENU_OPEN, { source_page: pathname });
@@ -327,7 +327,7 @@ export default function Navbar() {
                 </svg>
               </button>
               <div className="flex flex-col min-h-full pt-20 pb-8 px-8">
-                {/* Categories — tap a heading to open its links (accordion) */}
+                {/* Categories, tap a heading to open its links (accordion) */}
                 <nav>
                   {menuGroups.map((group) => {
                     const expanded = openGroup === group.heading;
@@ -380,7 +380,7 @@ export default function Navbar() {
                   })}
                 </nav>
 
-                {/* Primary actions — below the menu list */}
+                {/* Primary actions, below the menu list */}
                 <div className="flex flex-col gap-3 mt-7">
                   <Link
                     href="/demo"
@@ -411,7 +411,7 @@ export default function Navbar() {
                   </button>
                 </div>
 
-                {/* Quick contact — call, address, map */}
+                {/* Quick contact, call, address, map */}
                 <div className="mt-7 pt-5 border-t border-white/10">
                   <a
                     href="tel:+919591004043"

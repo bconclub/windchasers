@@ -35,7 +35,7 @@ const content: ProgramContent = {
       title: "Why It Matters for Pilots",
       cols: 3,
       items: [
-        { title: "Global Recognition", body: "IELTS is recognised by thousands of organisations worldwide — aviation authorities, universities, employers, and immigration agencies." },
+        { title: "Global Recognition", body: "IELTS is recognised by thousands of organisations worldwide, aviation authorities, universities, employers, and immigration agencies." },
         { title: "Language Proficiency", body: "Pilots must demonstrate English proficiency to fly safely and communicate effectively with air traffic control and passengers." },
         { title: "Gateway to Opportunities", body: "A strong score opens doors to international pilot training, further education, career advancement, and immigration." },
       ],

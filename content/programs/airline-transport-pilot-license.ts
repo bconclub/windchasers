@@ -5,7 +5,7 @@ const content: ProgramContent = {
   title: "Airline Transport Pilot",
   accent: "License.",
   intro:
-    "Embarking on the journey to become an Airline Transport Pilot is a thrilling endeavour filled with determination and passion for the skies. The ATPL is the highest level of pilot certification — the licence to command large multi-crew airliners.",
+    "Embarking on the journey to become an Airline Transport Pilot is a thrilling endeavour filled with determination and passion for the skies. The ATPL is the highest level of pilot certification, the licence to command large multi-crew airliners.",
   heroImage: "/WC HEro.webp",
   metaTitle: "Airline Transport Pilot License (ATPL) | WindChasers Aviation Academy",
   blocks: [
@@ -18,7 +18,7 @@ const content: ProgramContent = {
         "Age of Aspiration: At least 21 years old.",
         "Flying Credentials: Holding a Multi-Crew Pilot License (MPL) or Commercial Pilot License (CPL).",
         "Health and Vitality: A Class 1 Medical Certificate.",
-        "Language Proficiency: Proficiency in reading, speaking, writing, and understanding English — the universal language of aviation.",
+        "Language Proficiency: Proficiency in reading, speaking, writing, and understanding English, the universal language of aviation.",
         "Academic Triumph: Clearing the ATPL theoretical knowledge exams.",
         "Flight Experience: Accumulating at least 1,500 hours of total flight time.",
       ],

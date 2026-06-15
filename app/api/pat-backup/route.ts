@@ -33,11 +33,11 @@ interface PatBackupBody {
   eligible_class_12_pass?: boolean;
   // Raw answers as JSON string (so they fit in a single cell)
   answers?: unknown;
-  // PROXe outcome — caller tells us whether the parallel /api/leads call
+  // PROXe outcome, caller tells us whether the parallel /api/leads call
   // succeeded, so we can flag rows that need manual reconciliation.
   proxe_status?: "success" | "failed" | "pending";
   proxe_lead_id?: string;
-  // Attribution — same shape as the sheet routes use
+  // Attribution, same shape as the sheet routes use
   utmParams?: Record<string, string>;
   utm_source?: string;
   utm_medium?: string;

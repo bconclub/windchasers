@@ -345,7 +345,7 @@ export default function Home() {
 
   return (
     <div className={`${manrope.variable} bg-background text-on-surface`}>
-      {/* Hero — original homepage hero (kept). */}
+      {/* Hero, original homepage hero (kept). */}
       <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Static cockpit hero image (video removed for speed / focus). */}
         <div className="absolute inset-0 w-full h-full overflow-hidden z-0">
@@ -396,7 +396,7 @@ export default function Home() {
 
         </div>
 
-        {/* Trust strip pinned to bottom of hero — matches pilot-training */}
+        {/* Trust strip pinned to bottom of hero, matches pilot-training */}
         <div className="absolute bottom-0 w-full bg-surface-container-low/80 backdrop-blur-sm border-t border-outline-variant/10 py-5 md:py-6 z-20">
           <div className="max-w-[1400px] mx-auto px-6 md:px-12 flex flex-nowrap md:flex-wrap items-center md:justify-center gap-6 md:gap-12 overflow-x-auto md:overflow-visible text-on-surface-variant text-[11px] md:text-sm font-bold tracking-[0.15em] uppercase [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
             {[
@@ -413,7 +413,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Path Selection — Airplane / Helicopter */}
+      {/* Path Selection, Airplane / Helicopter */}
       <section id="path-selection" className="relative min-h-screen flex flex-col md:flex-row">
         {/* Airplane Half */}
         <button
@@ -557,7 +557,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Chapter 4: Students Flying Gallery (carousel — images + Vimeo) */}
+      {/* Chapter 4: Students Flying Gallery (carousel, images + Vimeo) */}
       <section className="py-20 md:py-28 px-6 md:px-12 bg-surface-container-lowest border-y border-outline-variant/10">
         <StudentsFlyingGallery
           items={flyingGallery}
@@ -638,10 +638,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Primary conversion cluster — placed high, right after the 6-step process */}
+      {/* Primary conversion cluster, placed high, right after the 6-step process */}
       <ConversionCluster heading={<>Ready to start your <span className="text-primary italic">pilot training?</span></>} />
 
-      {/* Events — hidden for now. Re-enable by uncommenting when events are live.
+      {/* Events, hidden for now. Re-enable by uncommenting when events are live.
           <UpcomingEvents /> */}
 
       {/* Chapter 6: The Captains of Your Career */}
@@ -954,7 +954,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Final CTA — reuses the conversion cluster */}
+      {/* Final CTA, reuses the conversion cluster */}
       <ConversionCluster heading={<>Two ways to <span className="text-primary italic">start.</span></>} />
 
     </div>

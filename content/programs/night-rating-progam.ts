@@ -5,7 +5,7 @@ const content: ProgramContent = {
   title: "Night Rating",
   accent: "Program.",
   intro:
-    "The Night Rating course equips pilots with the skills to safely navigate and operate aircraft during night conditions under Visual Flight Rules (VFR) — essential for broadening your flying capabilities.",
+    "The Night Rating course equips pilots with the skills to safely navigate and operate aircraft during night conditions under Visual Flight Rules (VFR), essential for broadening your flying capabilities.",
   heroImage: "/migrated/night-rating-progam/gallery-29.webp",
   metaTitle: "Night Rating Program | WindChasers Aviation Academy",
   blocks: [
@@ -53,7 +53,7 @@ const content: ProgramContent = {
   ],
   ctaTitle: "Your skyward adventure awaits.",
   ctaText:
-    "Take the next step in your aviation career with WindChasers Aviation Academy — talk to us about batches, aircraft availability and fees.",
+    "Take the next step in your aviation career with WindChasers Aviation Academy, talk to us about batches, aircraft availability and fees.",
 };
 
 export default content;

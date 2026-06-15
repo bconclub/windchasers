@@ -5,7 +5,7 @@ const content: ProgramContent = {
   title: "Instrument",
   accent: "Rating.",
   intro:
-    "An instrument rating is the key that unlocks the skies even when the weather turns sour — equipping pilots to navigate safely through Instrument Meteorological Conditions (IMC).",
+    "An instrument rating is the key that unlocks the skies even when the weather turns sour, equipping pilots to navigate safely through Instrument Meteorological Conditions (IMC).",
   heroImage: "/migrated/instrument-rating/pilot-3.webp",
   metaTitle: "Instrument Rating (IR) | WindChasers Aviation Academy",
   blocks: [
@@ -15,7 +15,7 @@ const content: ProgramContent = {
       title: "What an Instrument Rating Gives You",
       paragraphs: [
         "An instrument rating is not just a qualification; it is a key that unlocks the skies even when the weather turns sour. Pilots with this rating are equipped to navigate through Instrument Meteorological Conditions (IMC), ensuring safe passage through adverse weather.",
-        "The instrument rating tests, available for both single and multi-engine aircraft, open up new horizons of exploration and adventure for pilots — granting them the freedom to soar even when the clouds loom dark and heavy.",
+        "The instrument rating tests, available for both single and multi-engine aircraft, open up new horizons of exploration and adventure for pilots, granting them the freedom to soar even when the clouds loom dark and heavy.",
       ],
     },
     {
@@ -50,7 +50,7 @@ const content: ProgramContent = {
   ],
   ctaTitle: "Your skyward adventure awaits.",
   ctaText:
-    "Take the next step in your aviation career with WindChasers Aviation Academy — talk to us about batches, aircraft availability and fees.",
+    "Take the next step in your aviation career with WindChasers Aviation Academy, talk to us about batches, aircraft availability and fees.",
 };
 
 export default content;

@@ -67,7 +67,7 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
 
   return (
     <>
-      {/* Backdrop — transparent on desktop (just catches outside clicks), dim on mobile */}
+      {/* Backdrop, transparent on desktop (just catches outside clicks), dim on mobile */}
       <AnimatePresence>
         {school && (
           <motion.div
@@ -181,7 +181,7 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                 </div>
               )}
 
-              {/* About — generated write-up (what they are / do / fit) */}
+              {/* About, generated write-up (what they are / do / fit) */}
               {school.editorialSummary && (
                 <p className="text-white/70 text-[13px] leading-relaxed mb-5">
                   {school.editorialSummary}
@@ -249,7 +249,7 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                 )}
               </div>
 
-              {/* Notes — only show when curated, not the auto-import boilerplate */}
+              {/* Notes, only show when curated, not the auto-import boilerplate */}
               {school.notes && !/^Imported from Google Places/i.test(school.notes) && (
                 <p className="text-white/60 text-sm leading-relaxed mb-6">
                   {school.notes}

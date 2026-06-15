@@ -73,7 +73,7 @@ const content: ProgramContent = {
         },
         {
           title: "Monitor and maintain onboard systems",
-          body: "Students learn to monitor vital onboard systems such as fuel levels, navigation instruments, and communication devices — crucial for safe operations on long or complex missions.",
+          body: "Students learn to monitor vital onboard systems such as fuel levels, navigation instruments, and communication devices, crucial for safe operations on long or complex missions.",
         },
       ],
     },

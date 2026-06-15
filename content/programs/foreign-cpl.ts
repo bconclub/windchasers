@@ -14,7 +14,7 @@ const content: ProgramContent = {
       kicker: "Overview",
       title: "Foreign CPL (Commercial Pilot License)",
       paragraphs: [
-        "Many Indian students complete their commercial pilot training abroad — where weather and aircraft availability allow faster hour-building — and then convert that licence to a DGCA CPL when they return home.",
+        "Many Indian students complete their commercial pilot training abroad, where weather and aircraft availability allow faster hour-building, and then convert that licence to a DGCA CPL when they return home.",
         "We guide you through every stage, from documentation to your Indian CPL, so your foreign licence and hours translate cleanly into an Indian one.",
       ],
     },
@@ -46,7 +46,7 @@ const content: ProgramContent = {
       kicker: "A Note on Conversion",
       title: "Plan Against Current Rules",
       paragraphs: [
-        "DGCA conversion requirements can change over time. We keep our guidance current so you always prepare against the latest rules — and there are no surprises when you return.",
+        "DGCA conversion requirements can change over time. We keep our guidance current so you always prepare against the latest rules, and there are no surprises when you return.",
       ],
     },
   ],

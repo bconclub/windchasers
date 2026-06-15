@@ -5,7 +5,7 @@ const content: ProgramContent = {
   title: "A mother’s mission,",
   accent: "now a runway for many.",
   intro:
-    "WindChasers began when one parent set out to help her daughter become a pilot — and ended up building a clear path for every aspiring aviator and their family.",
+    "WindChasers began when one parent set out to help her daughter become a pilot, and ended up building a clear path for every aspiring aviator and their family.",
   heroImage: "/migrated/about/5U2A3973-copy-1.webp",
   metaTitle: "About WindChasers Aviation Academy | Bangalore",
   blocks: [
@@ -14,9 +14,9 @@ const content: ProgramContent = {
       kicker: "Our Story",
       title: "How WindChasers started",
       paragraphs: [
-        "“Mom, I want to be a pilot.” When Rida said it, her eyes were gleaming. Her mother, Sumaiya Ali, felt pride — and then a wave of worry. What qualifications would Rida need? Where should she start? How could a parent guide a child through a world she knew so little about?",
+        "“Mom, I want to be a pilot.” When Rida said it, her eyes were gleaming. Her mother, Sumaiya Ali, felt pride, and then a wave of worry. What qualifications would Rida need? Where should she start? How could a parent guide a child through a world she knew so little about?",
         "That worry became a mission. Sumaiya spent hours researching, making calls, and trying to understand an aviation industry that felt unfamiliar and daunting. It did not take long to realise she was not alone: parents across the country were supporting children who wanted to touch the skies, unsure where to begin.",
-        "A thought took shape — what if this journey could be made easier? What if one place could empower not just her daughter, but every aspiring pilot and their parents with real guidance? And so WindChasers was born: a mother’s desire to pave the way for her daughter, grown into a mission to help young dreamers fly and families navigate an often-intimidating path.",
+        "A thought took shape, what if this journey could be made easier? What if one place could empower not just her daughter, but every aspiring pilot and their parents with real guidance? And so WindChasers was born: a mother’s desire to pave the way for her daughter, grown into a mission to help young dreamers fly and families navigate an often-intimidating path.",
         "This is not just one family’s story. It is the story of every parent, every dreamer, and every future pilot who refuses to give up.",
       ],
     },
@@ -30,7 +30,7 @@ const content: ProgramContent = {
       items: [
         {
           title: "Guidance every step of the way",
-          body: "From the moment you join us, we guide you through every stage — from fundamentals to achieving your Commercial Pilot License (CPL).",
+          body: "From the moment you join us, we guide you through every stage, from fundamentals to achieving your Commercial Pilot License (CPL).",
         },
         {
           title: "Making dreams achievable",
@@ -83,7 +83,7 @@ const content: ProgramContent = {
   ],
   ctaTitle: "Every pilot starts with a dream.",
   ctaText:
-    "Tell us where you are today and we will help you map the path from here to the cockpit — one flight at a time.",
+    "Tell us where you are today and we will help you map the path from here to the cockpit, one flight at a time.",
 };
 
 export default content;

@@ -5,7 +5,7 @@ const content: ProgramContent = {
   title: "Multi Engine",
   accent: "Rating.",
   intro:
-    "Multi-engine flying training to operate aircraft with more than one engine — building the skills needed for multi-engine operations and the prerequisites for a Type Rating on aircraft like the Airbus A320.",
+    "Multi-engine flying training to operate aircraft with more than one engine, building the skills needed for multi-engine operations and the prerequisites for a Type Rating on aircraft like the Airbus A320.",
   heroImage: "/migrated/multi-engine-rating/gallery-40.webp",
   metaTitle: "Multi Engine Rating (ME) | WindChasers Aviation Academy",
   blocks: [
@@ -16,7 +16,7 @@ const content: ProgramContent = {
       paragraphs: [
         "The Multi Engine Rating involves flying training to operate aircraft with more than one engine, enabling pilots to acquire the skills necessary for flying multi-engine aircraft and meeting the prerequisites for a Type Rating on aircraft like the Airbus A320 or similar models.",
         "The training follows the syllabus outlined by the DGCA, with the required flying time varying based on individual objectives. Typically, a minimum of 15 hours of multi-engine flying on the actual aircraft (plus 10 hours in a multi-engine simulator) is recommended to qualify for an A320 family aircraft Type Rating.",
-        "Throughout the training, participants cover topics such as one-engine performance requirements and handling asymmetric thrust — essential for commercial aviation operations.",
+        "Throughout the training, participants cover topics such as one-engine performance requirements and handling asymmetric thrust, essential for commercial aviation operations.",
       ],
     },
     {
@@ -70,7 +70,7 @@ const content: ProgramContent = {
   ],
   ctaTitle: "Your skyward adventure awaits.",
   ctaText:
-    "Take the next step in your aviation career with WindChasers Aviation Academy — talk to us about batches, aircraft availability and fees.",
+    "Take the next step in your aviation career with WindChasers Aviation Academy, talk to us about batches, aircraft availability and fees.",
 };
 
 export default content;

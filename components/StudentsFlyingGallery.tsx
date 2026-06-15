@@ -31,7 +31,7 @@ export default function StudentsFlyingGallery({
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
   const [unmutedId, setUnmutedId] = useState<number | null>(null);
-  // Video iframes mount lazily — only those scrolled into view (mobile speed).
+  // Video iframes mount lazily, only those scrolled into view (mobile speed).
   const [activeVideos, setActiveVideos] = useState<Set<number>>(new Set());
 
   useEffect(() => {
@@ -209,7 +209,7 @@ export default function StudentsFlyingGallery({
                   />
                 ) : (
                   <>
-                    {/* Thumbnail backdrop — always visible; iframe mounts lazily */}
+                    {/* Thumbnail backdrop, always visible; iframe mounts lazily */}
                     <div
                       className="absolute inset-0 bg-cover bg-center"
                       style={{ backgroundImage: `url(https://vumbnail.com/${item.vimeoId}_large.jpg)` }}

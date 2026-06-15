@@ -30,7 +30,7 @@ export async function POST(request: Request) {
       data.city || "",
       data.role || "",
       data.status || "",
-      ...extractAttributionCells(data), // J:X — utm/click/channel
+      ...extractAttributionCells(data), // J:X, utm/click/channel
     ], spreadsheetId);
 
     return NextResponse.json({ success: true, data: result });

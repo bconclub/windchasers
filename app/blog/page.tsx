@@ -24,7 +24,7 @@ const posts: Post[] = [
   {
     title: 'Best Aviation Academy in India for Pilot Training: A Career-Ready Curriculum',
     excerpt:
-      'How to choose the right flight school — a curriculum that goes beyond theory to prepare you to lead cockpits, from PPL and CPL to advanced ratings.',
+      'How to choose the right flight school, a curriculum that goes beyond theory to prepare you to lead cockpits, from PPL and CPL to advanced ratings.',
     date: 'June 8, 2025',
     href: '/best-aviation-academy-in-india-for-pilot-training-a-career-ready-curriculum',
     cover: '/migrated/best-aviation-academy-in-india-for-pilot-training-a-career-ready-curriculum/maxresdefault-22.webp',
@@ -33,7 +33,7 @@ const posts: Post[] = [
   {
     title: 'How to Start Your Helicopter Flight Training: A Step-by-Step Guide',
     excerpt:
-      'From basic requirements to choosing a school, ground school, solo hours and exams — every step of how to begin your helicopter flight training.',
+      'From basic requirements to choosing a school, ground school, solo hours and exams, every step of how to begin your helicopter flight training.',
     date: 'June 9, 2025',
     href: '/how-to-start-your-helicopter-flight-training-a-step-by-step-guide',
     cover: '/migrated/how-to-start-your-helicopter-flight-training-a-step-by-step-guide/obuka_helikopteri_gama_2_1648052846.webp',
@@ -42,7 +42,7 @@ const posts: Post[] = [
   {
     title: 'A Complete Guide to DGCA Ground Classes in India: Subjects, Duration, and Benefits',
     excerpt:
-      'Everything you need to know about DGCA ground classes — the core subjects, course duration, classroom vs online options, and key benefits.',
+      'Everything you need to know about DGCA ground classes, the core subjects, course duration, classroom vs online options, and key benefits.',
     date: 'June 7, 2025',
     href: '/a-complete-guide-to-dgca-ground-classes-in-india-subjects-duration-and-benefits',
     cover: '/migrated/a-complete-guide-to-dgca-ground-classes-in-india-subjects-duration-and-benefits/BAA-Training-students-Theory-class.webp',

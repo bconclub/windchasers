@@ -49,7 +49,7 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
                 </h2>
 
                 <div className="grid md:grid-cols-2 gap-3 md:gap-8 flex-1">
-                  {/* Starting Fresh — gold accent */}
+                  {/* Starting Fresh, gold accent */}
                   <Link
                     href="/dgca"
                     onClick={onClose}
@@ -81,7 +81,7 @@ export default function AirplanePathModal({ isOpen, onClose }: AirplanePathModal
                     </span>
                   </Link>
 
-                  {/* DGCA Completed — sky/blue accent */}
+                  {/* DGCA Completed, sky/blue accent */}
                   <Link
                     href="/international"
                     onClick={onClose}

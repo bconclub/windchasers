@@ -16,7 +16,7 @@ const content: ProgramContent = {
       paragraphs: [
         "Our Diploma in Aviation program for commercial pilots is built around an integrated curriculum that emphasises a forward-thinking approach to aviation education and a comprehensive understanding of aviation fundamentals.",
         "Throughout the program, students engage in intensive ground school sessions and immersive flight exercises, ensuring a learning experience that combines theoretical knowledge with hands-on practice.",
-        "Upon successful completion, graduates obtain a range of certifications — affirming their competency and readiness to excel in the dynamic aviation industry.",
+        "Upon successful completion, graduates obtain a range of certifications, affirming their competency and readiness to excel in the dynamic aviation industry.",
       ],
     },
     {

@@ -37,7 +37,7 @@ function pointLabel(d: object): string {
 }
 
 // Globe rests at altitude 2.5 and loses ~5% per wheel tick. Hand off to the
-// flat 2D map after 1–2 small ticks (2.5 → ~2.37 → ~2.26) — you shouldn't
+// flat 2D map after 1–2 small ticks (2.5 → ~2.37 → ~2.26), you shouldn't
 // have to dive into a country to get the map.
 const ZOOM_IN_THRESHOLD = 2.35;
 
@@ -53,7 +53,7 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
   const [selectedSchool, setSelectedSchool] = useState<FlightSchool | null>(null);
   const [showLeadModal, setShowLeadModal] = useState(false);
 
-  // Open on the auto-rotating globe — the flat map at world zoom shows ugly
+  // Open on the auto-rotating globe, the flat map at world zoom shows ugly
   // "map data not available" gutters. The 2D map takes over on zoom-in
   // (Leaflet lazy-mounts via the viewMode effect below).
   const [viewMode, setViewMode] = useState<"globe" | "map">("globe");
@@ -62,7 +62,7 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
   const transitionLockRef = useRef(false);
 
   const [mapSeed, setMapSeed] = useState({ lat: 20, lng: 20, zoom: 3 });
-  // Fixed styles — the style pickers were removed from the filter panel.
+  // Fixed styles, the style pickers were removed from the filter panel.
   const mapStyle: MapStyleKey = "satellite";
   const [globeResetKey, setGlobeResetKey] = useState(0);
   const globeImageUrl = GLOBE_STYLES.find((s) => s.key === "blue-marble")?.url ?? "/globe/earth-blue-marble.jpg";
@@ -294,7 +294,7 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
         )}
       </div>
 
-      {/* ── Country search bar — top-left ───────────────────────────── */}
+      {/* ── Country search bar, top-left ───────────────────────────── */}
       <div
         ref={searchRef}
         className="absolute top-4 left-4 z-[400]"
@@ -362,7 +362,7 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
         </div>
       </div>
 
-      {/* ── Filter bar — top-right ───────────────────────────────────── */}
+      {/* ── Filter bar, top-right ───────────────────────────────────── */}
       <div className="absolute top-4 right-4 z-[400]">
         <FilterBar
           filters={filters}

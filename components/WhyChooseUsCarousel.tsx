@@ -94,7 +94,7 @@ const features: Feature[] = [
 ];
 
 /**
- * "Why Choose Us" — responsive card grid (image + icon + title + copy).
+ * "Why Choose Us", responsive card grid (image + icon + title + copy).
  * Replaces the old drag-stack which stranded a single card in dead space on
  * desktop. Clean grid on all viewports, no overflow artifacts.
  */

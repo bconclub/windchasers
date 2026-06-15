@@ -15,14 +15,14 @@ const manrope = Manrope({ subsets: ["latin"], weight: ["700", "800"], variable: 
 
 const faqs = [
   { q: "Do I need 12th pass to join DGCA classes?", a: "Yes. Physics and Math required. If you don't have them, bridge courses available." },
-  { q: "What's the difference between 4 and 6 subject packages?", a: "4 subjects: Air Navigation, Air Regulations, Aviation Meteorology, and RTR. Good for helicopter pilots.\n6 subjects: Complete DGCA for airplane CPL — includes Technical General and Technical Specific in addition to the 4 subjects." },
+  { q: "What's the difference between 4 and 6 subject packages?", a: "4 subjects: Air Navigation, Air Regulations, Aviation Meteorology, and RTR. Good for helicopter pilots.\n6 subjects: Complete DGCA for airplane CPL, includes Technical General and Technical Specific in addition to the 4 subjects." },
   { q: "Can I pay in installments?", a: "Yes. ₹20,000 registration (non-refundable). Rest in installments. No refunds once paid." },
   { q: "What if I fail a subject?", a: "Free unlimited revision until you pass. No extra fees." },
   { q: "How tough are DGCA exams?", a: "6 papers, 100 marks each. Need 70% to pass. Our pass rate: 95%." },
   { q: "When can I attempt exams?", a: "Complete papers within 3 years from first attempt." },
   { q: "Do I need medical before DGCA?", a: "Class 2 medical recommended before starting. Class 1 needed before flying." },
   { q: "What after DGCA?", a: "Join flight school for CPL training (flying hours + license)." },
-  { q: "Online or offline — which is better?", a: "Both available. Offline recommended for complex subjects. Online for flexibility." },
+  { q: "Online or offline, which is better?", a: "Both available. Offline recommended for complex subjects. Online for flexibility." },
   { q: "Is job guaranteed after CPL?", a: "No guarantees. We provide airline prep, resume help, interview training. Rest depends on you." },
 ];
 

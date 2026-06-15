@@ -42,7 +42,7 @@ const content: ProgramContent = {
       title: "Send Us a Message",
       paragraphs: [
         "Email aviators@windchasers.in with your name, phone number, and the program you are interested in, and our team will get back to you within one business day.",
-        "For the fastest response, book a demo session or call us directly — we are happy to walk you through eligibility, costs, and the full path to your license.",
+        "For the fastest response, book a demo session or call us directly, we are happy to walk you through eligibility, costs, and the full path to your license.",
       ],
     },
   ],
@@ -54,7 +54,7 @@ const content: ProgramContent = {
     { label: "Pilot Training in India", href: "/pilot-training-in-india" },
   ],
   ctaTitle: "Ready when you are.",
-  ctaText: "Book a demo session or call us — let us map out your path to the cockpit.",
+  ctaText: "Book a demo session or call us, let us map out your path to the cockpit.",
 };
 
 export default content;

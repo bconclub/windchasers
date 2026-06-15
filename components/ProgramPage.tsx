@@ -356,7 +356,7 @@ export default function ProgramPage({ content, slug: slugProp }: { content: Prog
 
   return (
     <div className={`${manrope.variable} bg-background text-on-surface`}>
-      {/* Hero — two-column on desktop with a framed photo */}
+      {/* Hero, two-column on desktop with a framed photo */}
       <section className="relative overflow-hidden pt-28 pb-16 md:pb-24 px-6 md:px-12">
         {heroImage && (
           <div className="absolute inset-0">

@@ -1,15 +1,15 @@
 /**
  * Generate a short "About" write-up for each flight school and store it in the
  * flight_schools.editorial_summary column (already wired end-to-end as
- * `editorialSummary`, currently empty — so no schema change).
+ * `editorialSummary`, currently empty, so no schema change).
  *
  * Source: data/flight-schools.generated.json (has the real Google review text,
- * training focus, certifications, and ratings — the reviews were never seeded
+ * training focus, certifications, and ratings, the reviews were never seeded
  * into Supabase but live here).
  *
  * The write-up covers, per the brief: what they are (brand + certs + place),
  * what they do (training focus), reputation (rating + a review-derived theme),
- * and who they're a good / poor fit for. Deterministic — no LLM. A handful of
+ * and who they're a good / poor fit for. Deterministic, no LLM. A handful of
  * key schools get hand-written overrides for top quality.
  *
  *   node --env-file=.env.local scripts/build-school-summaries.mjs --dry-run    # print samples
@@ -115,11 +115,11 @@ function summarize(s) {
   const cert = certPhrase(s.certifications);
   const focus = joinList((s.trainingFocus || []).map(humanizeFocus));
 
-  // Sentence 1 — identity + what they do.
+  // Sentence 1, identity + what they do.
   let out = `${s.name} is ${/^[aeiou]/i.test(cert) ? "an" : "a"} ${cert} in ${place}`;
   out += focus ? `, offering ${focus}.` : ".";
 
-  // Sentence 2 — reputation + review theme.
+  // Sentence 2, reputation + review theme.
   const reviews = s.googleReviews || [];
   const theme = detectTheme(reviews);
   const rating = s.googleRating;
@@ -131,7 +131,7 @@ function summarize(s) {
     out += ` Reviewers frequently highlight ${theme}.`;
   }
 
-  // Sentence 3 — fit (+ optional pricey caveat).
+  // Sentence 3, fit (+ optional pricey caveat).
   out += " " + fitSentence(s.trainingFocus);
   if (detectPricey(reviews)) out += " Some reviewers note it can be on the pricier side.";
 
@@ -140,10 +140,10 @@ function summarize(s) {
 
 // ── Hand-written overrides for the most-seen schools ────────────────────────
 const OVERRIDES = {
-  // MFA Munich (München, 47 reviews) — the one in the screenshot.
+  // MFA Munich (München, 47 reviews), the one in the screenshot.
   __mfaMunich: (s) =>
     s.name.includes("MFA Munich") && s.city === "München"
-      ? "MFA Munich Flight Academy is an EASA-approved flight school in München, Germany, focused on ab-initio training and a structured path from theory to licence. Reviewers consistently describe the PPL ground-school as demanding but exceptionally well-organised, with instructors who make difficult theory manageable — it holds a 4.8/5 rating across 47 Google reviews. Best suited to students who want a disciplined, structured route to their first licence; less geared to experienced pilots looking only for quick hour-building or a standalone add-on."
+      ? "MFA Munich Flight Academy is an EASA-approved flight school in München, Germany, focused on ab-initio training and a structured path from theory to licence. Reviewers consistently describe the PPL ground-school as demanding but exceptionally well-organised, with instructors who make difficult theory manageable, it holds a 4.8/5 rating across 47 Google reviews. Best suited to students who want a disciplined, structured route to their first licence; less geared to experienced pilots looking only for quick hour-building or a standalone add-on."
       : null,
 };
 function override(s) {
@@ -168,7 +168,7 @@ if (DRY) {
     schools[200],
   ].filter(Boolean);
   for (const s of pick) {
-    console.log(`\n— ${s.name} (${s.city || ""}, ${s.country}) | ${(s.certifications || []).join("/")} | ${s.googleRating || "?"}★/${s.googleReviewCount || 0}`);
+    console.log(`\n- ${s.name} (${s.city || ""}, ${s.country}) | ${(s.certifications || []).join("/")} | ${s.googleRating || "?"}★/${s.googleReviewCount || 0}`);
     console.log(override(s) || summarize(s));
   }
   console.log(`\n[dry-run] ${rows.length} summaries generated (not written).`);
@@ -176,7 +176,7 @@ if (DRY) {
 }
 
 // Fetch the ids that actually exist in Supabase (JSON id scheme differs for
-// some rows). We only UPDATE existing rows — never insert phantoms.
+// some rows). We only UPDATE existing rows, never insert phantoms.
 const existing = new Set();
 for (let off = 0; ; off += 1000) {
   const res = await fetch(`${url}/rest/v1/flight_schools?select=id`, {

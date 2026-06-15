@@ -7,7 +7,7 @@ import {
 } from "@/lib/booking-time";
 
 // =============================================================================
-// POST /api/booking — Demo session booking
+// POST /api/booking, Demo session booking
 //
 // 1. Writes to the Booking spreadsheet (non-blocking; a Sheets failure no
 //    longer kills the booking).
@@ -94,13 +94,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Past-time guard — never trust the client. Same predicate the form uses
+    // Past-time guard, never trust the client. Same predicate the form uses
     // (lib/booking-time.ts → Asia/Kolkata + 60min buffer). Catches clever
     // users who edit the request, AND any race where a slot was valid at
     // form open but expired by the time submit landed.
     if (isSlotInPast(preferredDate, preferredTime)) {
       console.warn(
-        "Booking blocked — slot in past:",
+        "Booking blocked, slot in past:",
         preferredDate,
         preferredTime,
         "phone:",
@@ -307,7 +307,7 @@ export async function POST(request: NextRequest) {
     try {
       proxeJson = await proxeRes.json();
     } catch {
-      // Empty / non-JSON body — leave proxeJson null and fall through.
+      // Empty / non-JSON body, leave proxeJson null and fall through.
     }
 
     if (!proxeRes.ok) {

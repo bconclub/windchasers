@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       data.englishCommunication || "",
       data.age || "",
       data.joiningTimeline || "",
-      ...extractAttributionCells(data), // J:X — utm/click/channel
+      ...extractAttributionCells(data), // J:X, utm/click/channel
     ];
 
     let sheetsResult = null;

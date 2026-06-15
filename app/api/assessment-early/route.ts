@@ -91,7 +91,7 @@ export async function POST(request: Request) {
       data.gbraid
     );
 
-    // A:U — existing A:M layout preserved (no shifting old rows) plus 8
+    // A:U, existing A:M layout preserved (no shifting old rows) plus 8
     // new attribution columns appended at N:U so paid traffic can be
     // attributed without breaking historical rows.
     const row: (string | number)[] = [
@@ -132,7 +132,7 @@ export async function POST(request: Request) {
     }
 
     // NOTE: Early-stage leads intentionally do NOT forward to PROXe. These are
-    // below-12th / not-yet-eligible enquiries — they're recorded in Sheets for
+    // below-12th / not-yet-eligible enquiries, they're recorded in Sheets for
     // nurture, and the user takes it from the thank-you page. Only the main
     // landing-page lead forms + WhatsApp capture push into PROXe.
 

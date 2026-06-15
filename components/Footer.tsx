@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 pt-16 pb-12">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
 
-          {/* Nav columns — spans 3 of 5 */}
+          {/* Nav columns, spans 3 of 5 */}
           <div className="lg:col-span-3 grid grid-cols-2 sm:grid-cols-4 gap-8">
             {/* Logo + tagline spans full width */}
             <div className="col-span-2 sm:col-span-4 mb-2">
@@ -93,7 +93,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Map — spans 2 of 5 */}
+          {/* Map, spans 2 of 5 */}
           <div className="lg:col-span-2">
             <h4 className="font-semibold mb-4 text-white">Find Us</h4>
             <div className="rounded-xl overflow-hidden border border-white/10 h-56 lg:h-full min-h-[220px]">

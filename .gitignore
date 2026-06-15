@@ -47,3 +47,6 @@ next-env.d.ts
 
 # Excel lock files
 ~$*.xlsx
+
+# Local Codex config (contains secrets)
+.codex/

@@ -7,12 +7,12 @@ export const article: Article = {
   heroImage:
     '/migrated/how-to-start-your-helicopter-flight-training-a-step-by-step-guide/obuka_helikopteri_gama_2_1648052846.webp',
   intro:
-    'For many, flying a helicopter isn’t just a dream — it’s a career goal or a lifelong passion waiting to take flight.',
+    'For many, flying a helicopter isn’t just a dream, it’s a career goal or a lifelong passion waiting to take flight.',
   sections: [
     {
       paragraphs: [
         'Whether you are looking to become a commercial pilot, serve in search and rescue, or simply explore the skies for leisure, helicopter flight training is the first and most critical step on your journey. Helicopter pilots are in high demand across the globe, and the path to becoming one is more accessible than ever, thanks to quality helicopter classes and specialized aviation courses offered by certified flight schools.',
-        'In this guide, we’ll walk you through every step of how to start your helicopter flight training — from understanding the basic requirements to choosing the right school and preparing for your first flight.',
+        'In this guide, we’ll walk you through every step of how to start your helicopter flight training, from understanding the basic requirements to choosing the right school and preparing for your first flight.',
       ],
     },
     {
@@ -43,9 +43,9 @@ export const article: Article = {
       heading: '3. Decide on Your Aviation Goals',
       paragraphs: ['Are you aiming to become a commercial helicopter pilot, or pursuing it as a hobby? Your goals will determine the type of license and training path you’ll follow:'],
       bullets: [
-        'Private Pilot License (PPL-H) — Best for recreational flying',
-        'Commercial Pilot License (CPL-H) — Required for paid flying jobs',
-        'Certified Flight Instructor (CFI) — Allows you to teach other pilots',
+        'Private Pilot License (PPL-H), Best for recreational flying',
+        'Commercial Pilot License (CPL-H), Required for paid flying jobs',
+        'Certified Flight Instructor (CFI), Allows you to teach other pilots',
       ],
     },
     {
@@ -62,7 +62,7 @@ export const article: Article = {
     {
       heading: '5. Enroll in Ground School',
       paragraphs: [
-        'Before you ever lift off, you’ll start with ground school — the foundation of all pilot training. You’ll study topics such as air law and regulations, meteorology, navigation, helicopter systems, and human performance and limitations. This classroom-based portion is just as critical as actual flight hours.',
+        'Before you ever lift off, you’ll start with ground school, the foundation of all pilot training. You’ll study topics such as air law and regulations, meteorology, navigation, helicopter systems, and human performance and limitations. This classroom-based portion is just as critical as actual flight hours.',
       ],
     },
     {
@@ -74,7 +74,7 @@ export const article: Article = {
     {
       heading: '7. Log Solo Flight Hours',
       paragraphs: [
-        'After a few hours of dual instruction and passing a pre-solo evaluation, you’ll be cleared to fly solo — a major milestone and a huge confidence booster. You’ll begin logging hours required for your license, typically 40–45 hours for a PPL and 150–200+ hours for a CPL. Each flight builds your technical ability, decision-making, and situational awareness.',
+        'After a few hours of dual instruction and passing a pre-solo evaluation, you’ll be cleared to fly solo, a major milestone and a huge confidence booster. You’ll begin logging hours required for your license, typically 40–45 hours for a PPL and 150–200+ hours for a CPL. Each flight builds your technical ability, decision-making, and situational awareness.',
       ],
     },
     {
@@ -107,7 +107,7 @@ export const article: Article = {
       bullets: [
         'Experienced Instructors: Learn from industry veterans with thousands of flight hours.',
         'Modern Fleet: Train on state-of-the-art helicopters equipped with the latest tech.',
-        'Personalized Training: Flexible modules tailored to your goals — PPL, CPL, or instructor pathways.',
+        'Personalized Training: Flexible modules tailored to your goals, PPL, CPL, or instructor pathways.',
         'Student Support: From license processing to career counseling.',
         'Global Standards: Training aligned with DGCA and international aviation guidelines.',
       ],

@@ -431,7 +431,7 @@ export default function AssessmentForm() {
       );
     }
 
-    // If BOTH writes failed, we genuinely lost the lead — block the user so
+    // If BOTH writes failed, we genuinely lost the lead, block the user so
     // they can retry. Otherwise let them through to /thank-you.
     if (!proxeOutcome.ok && !sheetOutcome.ok) {
       console.error("Assessment submission failed: both writes failed");
@@ -500,11 +500,11 @@ export default function AssessmentForm() {
     } catch (err) {
       // Lead is already saved at this point (we returned early above if both
       // writes failed). This catch is for analytics tracking / redirect
-      // hiccups — the user still has their score, we just couldn't move them.
+      // hiccups, the user still has their score, we just couldn't move them.
       console.error("Assessment post-save error:", err);
       setError({
         message:
-          "Your assessment was saved. We hit a snag showing your results — please try again.",
+          "Your assessment was saved. We hit a snag showing your results, please try again.",
       });
       setPhase("error");
     }

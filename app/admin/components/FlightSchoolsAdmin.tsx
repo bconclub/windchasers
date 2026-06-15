@@ -184,7 +184,7 @@ function FlightSchoolsPanel({ schools, summary }: Props) {
                     </div>
                   </Td>
                   <Td>
-                    <div className="truncate">{s.city || "—"}</div>
+                    <div className="truncate">{s.city || "-"}</div>
                     <div className="text-xs text-on-surface-variant/52">{s.country}</div>
                   </Td>
                   <Td>
@@ -203,7 +203,7 @@ function FlightSchoolsPanel({ schools, summary }: Props) {
                   <Td>
                     <div className="flex items-center gap-1.5 whitespace-nowrap">
                       <Star className="h-3.5 w-3.5 text-primary" />
-                      <span>{s.googleRating ?? s.rating ?? "—"}</span>
+                      <span>{s.googleRating ?? s.rating ?? "-"}</span>
                       <span className="text-on-surface-variant/42">({s.googleReviewCount ?? 0})</span>
                     </div>
                   </Td>
@@ -235,7 +235,7 @@ function FlightSchoolsPanel({ schools, summary }: Props) {
   );
 }
 
-// ── Modal — verify a school before switching it on ──────────────────────────
+// ── Modal, verify a school before switching it on ──────────────────────────
 function SchoolModal({
   school,
   intent,
@@ -274,7 +274,7 @@ function SchoolModal({
           </button>
         </div>
 
-        {/* Photos — eyeball that it's a real flight school */}
+        {/* Photos, eyeball that it's a real flight school */}
         {school.images && school.images.length > 0 ? (
           <div className="-mx-6 mb-5 flex gap-2 overflow-x-auto px-6 pb-1">
             {school.images.map((src, i) => (
@@ -282,7 +282,7 @@ function SchoolModal({
             ))}
           </div>
         ) : (
-          <div className="mb-5 rounded-lg bg-surface-container px-4 py-6 text-center text-sm text-on-surface-variant/50">No photos — verify on the website / map before going live.</div>
+          <div className="mb-5 rounded-lg bg-surface-container px-4 py-6 text-center text-sm text-on-surface-variant/50">No photos, verify on the website / map before going live.</div>
         )}
 
         {/* Verify-out buttons */}
@@ -296,10 +296,10 @@ function SchoolModal({
         </div>
 
         <div className="mb-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
-          <Info label="Rating" value={`${school.googleRating ?? school.rating ?? "—"}/5`} />
+          <Info label="Rating" value={`${school.googleRating ?? school.rating ?? "-"}/5`} />
           <Info label="Reviews" value={String(school.googleReviewCount ?? 0)} />
           <Info label="Score (raw)" value={String(school.wcScore ?? 0)} />
-          <Info label="Phone" value={school.phone || "—"} />
+          <Info label="Phone" value={school.phone || "-"} />
         </div>
 
         {(school.certifications.length > 0 || (school.trainingFocus?.length ?? 0) > 0) && (
@@ -345,7 +345,7 @@ function Toggle({ on, busy, onToggle, large }: { on: boolean; busy?: boolean; on
       onClick={(e) => { e.stopPropagation(); onToggle(!on); }}
       className={`relative inline-flex shrink-0 items-center rounded-full transition-colors ${large ? "h-7 w-12" : "h-5 w-9"} ${on ? "bg-emerald-500" : "bg-white/15"} ${busy ? "opacity-50" : ""}`}
       aria-pressed={on}
-      title={on ? "Live on site — click to hide" : "Hidden — click to show"}
+      title={on ? "Live on site, click to hide" : "Hidden, click to show"}
     >
       <span className={`inline-block rounded-full bg-white transition-transform ${large ? "h-5 w-5" : "h-3.5 w-3.5"} ${on ? (large ? "translate-x-6" : "translate-x-[18px]") : "translate-x-1"}`} />
     </button>

@@ -33,7 +33,7 @@ export default function WebinarIndexPage() {
           Registration is not open yet
         </span>
         <p className="text-white/45 text-sm mt-4">
-          Check back soon — dates for the next webinar will be announced here.
+          Check back soon, dates for the next webinar will be announced here.
         </p>
       </div>
       <ul className="max-w-xl mx-auto space-y-4">

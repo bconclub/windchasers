@@ -5,16 +5,16 @@ const content: ProgramContent = {
   title: "One to one",
   accent: "with the founder.",
   intro:
-    "Sit down with Sumaiya Ali — the parent who built WindChasers — for an honest, no-pressure conversation about your pilot journey.",
+    "Sit down with Sumaiya Ali, the parent who built WindChasers, for an honest, no-pressure conversation about your pilot journey.",
   heroImage: "/WC HEro.webp",
-  metaTitle: "With the Founder — Sumaiya Ali | WindChasers Aviation Academy",
+  metaTitle: "With the Founder, Sumaiya Ali | WindChasers Aviation Academy",
   blocks: [
     {
       type: "richtext",
       kicker: "Why This Exists",
       title: "From one parent to another",
       paragraphs: [
-        "WindChasers started because Sumaiya Ali wanted to help her own daughter, Rida, become a pilot — and discovered how confusing the path can be for a family starting from zero.",
+        "WindChasers started because Sumaiya Ali wanted to help her own daughter, Rida, become a pilot, and discovered how confusing the path can be for a family starting from zero.",
         "These one-to-one sessions are her way of giving back that experience directly. Whether you are the aspiring pilot or the parent supporting one, you can ask the questions that keep you up at night and get straight answers.",
         "There is no script and no sales pressure. Just a conversation about where you are, where you want to go, and the most sensible next step to get there.",
       ],
@@ -27,7 +27,7 @@ const content: ProgramContent = {
         "Come with whatever is on your mind. These are the topics families raise most often.",
       items: [
         "Eligibility, medicals, and academic requirements",
-        "Training in India vs. abroad — and what suits you",
+        "Training in India vs. abroad, and what suits you",
         "Realistic timelines and what each stage involves",
         "Funding options and education loan support",
         "Visa, documentation, and accommodation support",

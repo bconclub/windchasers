@@ -8,19 +8,19 @@ const CARDS = [
   {
     href: "/admin/flight-schools",
     title: "Flight Schools",
-    desc: "The international flight-school directory powering /flight-schools — review, verify, mark partners, edit scores.",
+    desc: "Review, verify and pick which schools show on the site.",
     status: "Live",
   },
   {
     href: "/admin/events",
     title: "Events",
-    desc: "Manage the events shown on the homepage and the webinar/open-house pages — date, registration open/closed, clips.",
+    desc: "Manage events shown on the site.",
     status: "Scaffold",
   },
   {
     href: "/admin/payments",
     title: "Payments",
-    desc: "Create and share payment links (deposits, demo fees, program fees) and track their status.",
+    desc: "Create and share payment links.",
     status: "Scaffold",
   },
 ];
@@ -30,8 +30,7 @@ export default function AdminOverview() {
     <div>
       <h1 className="text-2xl font-bold mb-1">Overview</h1>
       <p className="text-white/55 text-sm mb-6">
-        Manage everything the public site runs on — leads, events, payments and the
-        flight-school directory.
+        Manage what the public site runs on.
       </p>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -55,19 +54,10 @@ export default function AdminOverview() {
             </div>
             <p className="text-sm text-white/55 leading-relaxed">{c.desc}</p>
             <span className="mt-3 inline-block text-sm text-gold group-hover:translate-x-0.5 transition-transform">
-              Open →
+              Open
             </span>
           </Link>
         ))}
-      </div>
-
-      <div className="mt-8 rounded-xl border border-white/10 bg-[#101010] p-5">
-        <h3 className="text-sm font-semibold text-white/80 mb-2">Roadmap / to wire up</h3>
-        <ul className="text-sm text-white/50 space-y-1.5 list-disc pl-5">
-          <li>Events: persist to a DB/API so edits don&apos;t require a code deploy.</li>
-          <li>Payments: connect a provider (Razorpay / Stripe payment links) + webhook to track paid status.</li>
-          <li>Leads: a read-only view of PROXe / Sheets submissions across all forms.</li>
-        </ul>
       </div>
     </div>
   );

@@ -50,7 +50,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.variable}>
       <body className="font-sans" style={{ color: '#ffffff', backgroundColor: '#1A1A1A' }}>
-        {/* Meta Pixel — queue setup only; init + PageView fired by MetaPixelInit */}
+        {/* Meta Pixel, queue setup only; init + PageView fired by MetaPixelInit */}
         <Script
           id="facebook-pixel"
           strategy="afterInteractive"
@@ -70,7 +70,7 @@ export default function RootLayout({
         <MetaPixelInit />
         <Analytics />
         <TrackingProvider>
-          {/* Navbar + sticky CTA + PROXe chat widget — public pages only. */}
+          {/* Navbar + sticky CTA + PROXe chat widget, public pages only. */}
           <SiteChrome />
           <main className="min-h-screen">
             {children}

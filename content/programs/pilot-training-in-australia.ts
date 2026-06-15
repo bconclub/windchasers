@@ -26,7 +26,7 @@ const content: ProgramContent = {
       items: [
         {
           title: "Ideal Flying Conditions",
-          body: "With clear skies for much of the year and wide, uncongested airspace, Australia is ideal for building hours efficiently. The varied terrain — from coastline to outback — develops strong navigation skills.",
+          body: "With clear skies for much of the year and wide, uncongested airspace, Australia is ideal for building hours efficiently. The varied terrain, from coastline to outback, develops strong navigation skills.",
         },
         {
           title: "Quality Training Environment",

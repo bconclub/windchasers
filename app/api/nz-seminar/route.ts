@@ -5,7 +5,7 @@ import {
   getNzSeminarSheetTab,
 } from "@/lib/sheets";
 
-// Event Data 2026 spreadsheet — same workbook as Open House. NZ leads drop
+// Event Data 2026 spreadsheet, same workbook as Open House. NZ leads drop
 // into the "29 NZ Webinar Confirms" tab. Override with an env var if the
 // sheet ever moves: GOOGLE_SHEET_ID_NZ_SEMINAR.
 const NZ_SEMINAR_SHEET_ID =
@@ -33,9 +33,9 @@ export async function POST(request: Request) {
       data.city || "",               // City (F)
       data.parentAttending || "",    // With +1 (G)
       data.status || "",             // Current Status (H)
-      "",                            // Stage (I) — filled manually by counsellor
-      "",                            // Remarks (J) — filled manually by counsellor
-      ...extractAttributionCells(data), // K:Y — utm/click/channel
+      "",                            // Stage (I), filled manually by counsellor
+      "",                            // Remarks (J), filled manually by counsellor
+      ...extractAttributionCells(data), // K:Y, utm/click/channel
     ], spreadsheetId);
 
     console.log("NZ Seminar Sheets API success:", JSON.stringify(result));

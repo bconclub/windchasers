@@ -5,7 +5,7 @@ const content: ProgramContent = {
   title: "Women in",
   accent: "Aviation.",
   intro:
-    "WindChasers hosted India's first aviation event dedicated exclusively to aspiring female pilots — an inspiring, empowering gathering for young women who aspire to soar in the aviation industry.",
+    "WindChasers hosted India's first aviation event dedicated exclusively to aspiring female pilots, an inspiring, empowering gathering for young women who aspire to soar in the aviation industry.",
   heroImage: "/facility/WC1.webp",
   metaTitle: "Women in Aviation | WindChasers Aviation Academy",
   blocks: [
@@ -15,7 +15,7 @@ const content: ProgramContent = {
       title: "India's First Event for Aspiring Female Pilots",
       paragraphs: [
         "On 15 August 2024, WindChasers HQ in Bengaluru hosted an inspiring and empowering event dedicated to encouraging and guiding young women who aspire to soar in the aviation industry.",
-        "Held at WindChasers HQ — Site No 1, 3rd Floor, New Airport Road, Hennur Bagalur Main Road, Kothanur, Bengaluru — from 11:00 am to 3:00 pm, the event brought together aspiring aviators, mentors, and accomplished female pilots.",
+        "Held at WindChasers HQ, Site No 1, 3rd Floor, New Airport Road, Hennur Bagalur Main Road, Kothanur, Bengaluru, from 11:00 am to 3:00 pm, the event brought together aspiring aviators, mentors, and accomplished female pilots.",
       ],
     },
     {

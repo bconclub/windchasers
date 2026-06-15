@@ -67,7 +67,7 @@ function EventCard({ ev, past }: { ev: WindEvent; past?: boolean }) {
 }
 
 /**
- * Homepage events — one carousel. Upcoming first, past events follow (grayed
+ * Homepage events, one carousel. Upcoming first, past events follow (grayed
  * out, still clickable to view highlights). Renders nothing if there are none.
  */
 export default function UpcomingEvents() {

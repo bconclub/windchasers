@@ -2,6 +2,17 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-15 · chore: remove em dashes everywhere + trim admin Overview
+
+- Admin Overview: removed the "Roadmap / to wire up" block; three lean cards
+  (Flight Schools / Events / Payments) with short one-line descriptions; status
+  badges kept.
+- Removed all em dashes (209 across 81 files in app/components/content) plus the
+  one live flight-school write-up that had one (MFA Munich, patched in Supabase).
+  Replaced spaced em dashes with commas, standalone with hyphens. Generator
+  script cleaned too. tsc + build clean.
+- (`0e8b8f2`)
+
 ## 2026-06-15 · tweak(admin): full-width content container
 
 - Admin content was capped at max-w-[1280px] and centred, leaving the table

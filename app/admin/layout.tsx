@@ -12,7 +12,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <AdminNav />
       {/* md+: offset for the collapsed icon rail (it expands over content on hover) */}
       <main className="md:pl-16">
-        {/* Full-width — admin tables want the whole screen, not a 1280 column */}
+        {/* Full-width, admin tables want the whole screen, not a 1280 column */}
         <div className="w-full px-4 md:px-6 py-6">{children}</div>
       </main>
     </div>

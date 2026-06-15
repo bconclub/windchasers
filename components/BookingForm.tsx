@@ -36,7 +36,7 @@ const isWeekday = (dateString: string): boolean => {
 };
 
 // Check if date is in the past relative to today in IST. Same comparison
-// the server-side guard uses — see lib/booking-time.ts.
+// the server-side guard uses, see lib/booking-time.ts.
 const isPastDate = (dateString: string): boolean => {
   if (!dateString) return false;
   return dateString < getMinBookingDateIST();
@@ -152,7 +152,7 @@ export default function BookingForm() {
           saveUserSessionData({ interest: mappedSource });
         }
       } else if (!source && !prefill) {
-        // No URL source — fall back to last visited program page from session
+        // No URL source, fall back to last visited program page from session
         const freshData = getUserSessionData();
         if (!freshData?.interest && freshData?.lastVisitedProgram) {
           const mapped = mapSourceToInterest(freshData.lastVisitedProgram);

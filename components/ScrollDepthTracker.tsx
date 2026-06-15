@@ -15,7 +15,7 @@ export default function ScrollDepthTracker() {
   const firedRef = useRef<Set<number>>(new Set());
 
   useEffect(() => {
-    // New page — clear the milestones already fired.
+    // New page, clear the milestones already fired.
     firedRef.current = new Set();
 
     let ticking = false;

@@ -50,7 +50,7 @@ export default function EventsAdmin() {
       <div className="mb-6 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200/90">
         <strong>Scaffold:</strong> events currently live in{" "}
         <code className="text-amber-100">content/shared/events.ts</code>. This
-        screen is read-only until it&apos;s wired to a DB/API — then Add / Edit /
+        screen is read-only until it&apos;s wired to a DB/API, then Add / Edit /
         toggle will persist without a code deploy.
       </div>
 
@@ -61,7 +61,7 @@ export default function EventsAdmin() {
             e.preventDefault();
             // TODO: POST to /api/admin/events once persistence is wired.
             alert(
-              "Not wired yet — this form is the scaffold. Connect it to an events API/DB to save."
+              "Not wired yet, this form is the scaffold. Connect it to an events API/DB to save."
             );
           }}
           className="mb-8 grid gap-4 rounded-xl border border-white/10 bg-[#141414] p-5 sm:grid-cols-2"

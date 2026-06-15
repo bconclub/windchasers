@@ -7,11 +7,11 @@ export const article: Article = {
   heroImage:
     '/migrated/best-aviation-academy-in-india-for-pilot-training-a-career-ready-curriculum/maxresdefault-22.webp',
   intro:
-    'Becoming a pilot isn’t just about learning to fly — it’s about mastering precision, decision-making, and responsibility at 30,000 feet.',
+    'Becoming a pilot isn’t just about learning to fly, it’s about mastering precision, decision-making, and responsibility at 30,000 feet.',
   sections: [
     {
       paragraphs: [
-        'As India’s aviation industry grows at an unprecedented rate, so does the demand for professionally trained pilots. But with so many institutions promising sky-high careers, how do you choose the right flight school? The answer lies in a curriculum that goes beyond theory — a curriculum that is career-ready.',
+        'As India’s aviation industry grows at an unprecedented rate, so does the demand for professionally trained pilots. But with so many institutions promising sky-high careers, how do you choose the right flight school? The answer lies in a curriculum that goes beyond theory, a curriculum that is career-ready.',
         'India is home to many prestigious flying schools, but to truly become a world-class pilot, it’s essential to learn from a program that blends technical knowledge, regulatory expertise, and hands-on flying experience in equal measure.',
       ],
     },
@@ -19,7 +19,7 @@ export const article: Article = {
       heading: 'Why a Career-Ready Curriculum Matters',
       paragraphs: [
         'Aviation is a field where learning never stops. Yet the foundation a pilot builds during their training years plays a pivotal role in their ability to handle pressure, communicate with crews, and make life-saving decisions. A robust curriculum ensures that the training is not just exam-oriented but also real-world relevant.',
-        'From in-depth DGCA classes to comprehensive simulator training and live flight hours, a well-structured syllabus focuses on every aspect of pilot performance — mental, technical, and tactical.',
+        'From in-depth DGCA classes to comprehensive simulator training and live flight hours, a well-structured syllabus focuses on every aspect of pilot performance, mental, technical, and tactical.',
       ],
     },
     {
@@ -29,7 +29,7 @@ export const article: Article = {
       ],
       bullets: [
         'Private Pilot License (PPL): Your first leap toward a flying career, building confidence with flight controls, airspace rules, and navigation.',
-        'Commercial Pilot License (CPL): Where flying becomes a profession — our training goes beyond the minimum flying hours with expert instructors and real-time scenario training.',
+        'Commercial Pilot License (CPL): Where flying becomes a profession, our training goes beyond the minimum flying hours with expert instructors and real-time scenario training.',
         'Instrument Rating (IR): Adds depth to your capabilities, enabling you to fly safely in low-visibility conditions using just the aircraft’s instruments.',
       ],
     },
@@ -46,7 +46,7 @@ export const article: Article = {
     {
       heading: 'Beyond Fixed-Wing: Helicopter Training',
       paragraphs: [
-        'Pilot dreams aren’t always limited to airplanes. We also offer Helicopter Training for those looking to explore aviation from a rotorcraft perspective — whether it’s tourism, search and rescue, or logistics. With certified instructors and tailored flight hours, our program prepares you for a thrilling rotary career.',
+        'Pilot dreams aren’t always limited to airplanes. We also offer Helicopter Training for those looking to explore aviation from a rotorcraft perspective, whether it’s tourism, search and rescue, or logistics. With certified instructors and tailored flight hours, our program prepares you for a thrilling rotary career.',
       ],
     },
     {
@@ -58,7 +58,7 @@ export const article: Article = {
     {
       heading: 'Ground Training That Elevates You Higher',
       paragraphs: [
-        'No pilot can fly without mastering the ground realities. Our DGCA classes are structured for maximum clarity and retention. Taught by seasoned professionals — including ex-Air Force officers and CAA-certified experts — we ensure our students grasp every topic with confidence. We cover all major DGCA subjects:',
+        'No pilot can fly without mastering the ground realities. Our DGCA classes are structured for maximum clarity and retention. Taught by seasoned professionals, including ex-Air Force officers and CAA-certified experts, we ensure our students grasp every topic with confidence. We cover all major DGCA subjects:',
       ],
       bullets: [
         'Air Navigation',
@@ -83,13 +83,13 @@ export const article: Article = {
     {
       heading: 'The WindChasers Experience',
       paragraphs: [
-        'At WindChasers, we aren’t just a flight school — we’re your aviation launchpad. We blend real aircraft experience with cutting-edge simulators, ensuring students are familiar with both classic and modern cockpit systems. With a low student-to-instructor ratio, mentorship is at the heart of everything we do. We also offer career counseling, airline interview prep, and personality development programs to round out your professional profile.',
+        'At WindChasers, we aren’t just a flight school, we’re your aviation launchpad. We blend real aircraft experience with cutting-edge simulators, ensuring students are familiar with both classic and modern cockpit systems. With a low student-to-instructor ratio, mentorship is at the heart of everything we do. We also offer career counseling, airline interview prep, and personality development programs to round out your professional profile.',
       ],
     },
     {
       heading: 'The Skies Are Waiting',
       paragraphs: [
-        'Choosing a flight school is more than checking off licenses — it’s about finding a place that aligns with your ambition and equips you with skills, confidence, and credibility. From foundational training to specialized programs, WindChasers offers everything you need to launch your aviation career with purpose. Join the WindChasers family and discover why we are trusted as one of the most respected aviation training institutions in the country.',
+        'Choosing a flight school is more than checking off licenses, it’s about finding a place that aligns with your ambition and equips you with skills, confidence, and credibility. From foundational training to specialized programs, WindChasers offers everything you need to launch your aviation career with purpose. Join the WindChasers family and discover why we are trusted as one of the most respected aviation training institutions in the country.',
       ],
     },
   ],

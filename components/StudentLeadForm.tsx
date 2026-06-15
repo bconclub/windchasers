@@ -96,7 +96,7 @@ export default function StudentLeadForm({
 
     // First-touch UTMs (survives in-tab nav + tab restart via localStorage),
     // plus ad-network click IDs, the original landing URL, the first-touch
-    // referrer, and a derived channel — so PROXe never falls back to DIRECT
+    // referrer, and a derived channel, so PROXe never falls back to DIRECT
     // when the visit actually came from an ad / referral.
     const utm = getStoredUTMParams();
     const clickIds = getStoredClickIds();

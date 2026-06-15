@@ -16,7 +16,7 @@ const content: ProgramContent = {
       items: [
         "Age: Minimum 18 years at the time of application.",
         "Educational Foundation: Completed 10+2 with Physics and Mathematics from a recognised educational board.",
-        "Physical Fitness: Must pass the Class 1 Medical examination — fit both physically and mentally to command an aircraft.",
+        "Physical Fitness: Must pass the Class 1 Medical examination, fit both physically and mentally to command an aircraft.",
         "Emotional Resilience: Determination, resilience in the face of challenges, and a genuine passion for aviation.",
       ],
     },

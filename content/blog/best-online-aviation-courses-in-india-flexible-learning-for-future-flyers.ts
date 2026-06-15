@@ -7,11 +7,11 @@ export const article: Article = {
   heroImage:
     '/migrated/best-online-aviation-courses-in-india-flexible-learning-for-future-flyers/skynews-pilot-uk-no-deal-brexit_4417331.webp',
   intro:
-    'Aviation is one of the most exciting and rewarding industries to be a part of — and online courses make it more accessible than ever.',
+    'Aviation is one of the most exciting and rewarding industries to be a part of, and online courses make it more accessible than ever.',
   sections: [
     {
       paragraphs: [
-        'With the aviation sector growing exponentially in India, there’s no better time to consider a career as a pilot or in another aviation-related field. But what if the traditional classroom setting isn’t quite your thing? Enter online aviation courses — a flexible and convenient way to take off on your aviation dreams while learning at your own pace.',
+        'With the aviation sector growing exponentially in India, there’s no better time to consider a career as a pilot or in another aviation-related field. But what if the traditional classroom setting isn’t quite your thing? Enter online aviation courses, a flexible and convenient way to take off on your aviation dreams while learning at your own pace.',
         'In this guide, we’ll explore the best online aviation courses in India, covering everything from aviation pilot training to pilot ground classes.',
       ],
     },
@@ -19,7 +19,7 @@ export const article: Article = {
       heading: 'The Rise of Online Aviation Courses',
       paragraphs: [
         'Gone are the days when you had to travel to a far-off location to get the training you need for a successful aviation career. The rise of online education has made it possible to pursue aviation courses from the comfort of your home, giving aspiring pilots and aviation professionals a chance to learn from industry experts at their convenience.',
-        'Online aviation courses are not only more accessible but also cost-effective. They offer flexible learning schedules, allowing you to balance your studies with other commitments — whether you are a working professional or a student.',
+        'Online aviation courses are not only more accessible but also cost-effective. They offer flexible learning schedules, allowing you to balance your studies with other commitments, whether you are a working professional or a student.',
       ],
     },
     {
@@ -50,7 +50,7 @@ export const article: Article = {
     },
     {
       paragraphs: [
-        'Thanks to online platforms, pilot ground classes are now available digitally. This flexibility allows students to learn without attending a physical classroom. One of the biggest benefits is the ability to revisit lessons whenever you need — whether you’re studying aerodynamics or preparing for an exam on airspace regulations.',
+        'Thanks to online platforms, pilot ground classes are now available digitally. This flexibility allows students to learn without attending a physical classroom. One of the biggest benefits is the ability to revisit lessons whenever you need, whether you’re studying aerodynamics or preparing for an exam on airspace regulations.',
       ],
     },
     {

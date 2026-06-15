@@ -30,7 +30,7 @@ const content: ProgramContent = {
         },
         {
           title: "Challenging, Diverse Terrain",
-          body: "From coastal plains to mountainous regions, New Zealand's geography trains pilots to handle a wide variety of conditions — building confidence and sharp decision-making skills.",
+          body: "From coastal plains to mountainous regions, New Zealand's geography trains pilots to handle a wide variety of conditions, building confidence and sharp decision-making skills.",
         },
         {
           title: "High Training Standards",

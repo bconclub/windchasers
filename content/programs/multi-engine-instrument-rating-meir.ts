@@ -14,7 +14,7 @@ const content: ProgramContent = {
       kicker: "Overview",
       title: "What is MEIR?",
       paragraphs: [
-        "The Multi-Engine Instrument Rating (MEIR) qualifies pilots to operate multi-engine aircraft under Instrument Flight Rules (IFR) — a crucial step for airline careers.",
+        "The Multi-Engine Instrument Rating (MEIR) qualifies pilots to operate multi-engine aircraft under Instrument Flight Rules (IFR), a crucial step for airline careers.",
       ],
     },
     {
@@ -50,7 +50,7 @@ const content: ProgramContent = {
   ],
   ctaTitle: "Take off with confidence.",
   ctaText:
-    "Begin your MEIR journey today. Let WindChasers Aviation Academy guide you toward your airline career — talk to us about batches and fees.",
+    "Begin your MEIR journey today. Let WindChasers Aviation Academy guide you toward your airline career, talk to us about batches and fees.",
 };
 
 export default content;

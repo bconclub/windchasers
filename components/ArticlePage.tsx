@@ -8,7 +8,7 @@ import { Manrope } from 'next/font/google';
 const manrope = Manrope({ subsets: ['latin'], weight: ['700', '800'], variable: '--font-headline' });
 
 /* ------------------------------------------------------------------ *
- * Article content model — blog posts are pure data; this component
+ * Article content model, blog posts are pure data; this component
  * renders them in the WindChasers design system (see ProgramPage.tsx).
  * ------------------------------------------------------------------ */
 export type ArticleSection = {

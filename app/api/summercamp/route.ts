@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
       formatBatch(batchPreference),       // G: Batch
       "New Lead",                         // H: Status
       "Web Lead",                         // I: Source
-      ...extractAttributionCells(body),   // J:X — utm/click/channel
+      ...extractAttributionCells(body),   // J:X, utm/click/channel
     ], spreadsheetId);
 
     console.log("Summer Camp Sheets API success:", JSON.stringify(result));
