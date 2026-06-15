@@ -2,6 +2,14 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-06-15 · feat(flight-schools): skeleton shimmer on school photos
+
+- School photos (large Supabase-storage images) were painting in visible strips
+  as they loaded. New `components/SchoolPhoto.tsx` shows a pulsing skeleton
+  placeholder until the image finishes loading, then fades it in. Wired into the
+  public school drawer and the admin verify modal.
+- (`acdc05e`)
+
 ## 2026-06-15 · chore: remove em dashes everywhere + trim admin Overview
 
 - Admin Overview: removed the "Roadmap / to wire up" block; three lean cards

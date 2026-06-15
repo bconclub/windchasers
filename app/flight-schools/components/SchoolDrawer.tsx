@@ -4,6 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowUpRight, MapPin } from "lucide-react";
 import { FlightSchool } from "@/types/flight-school";
+import SchoolPhoto from "@/components/SchoolPhoto";
 
 interface Props {
   school: FlightSchool | null;
@@ -165,17 +166,10 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
                   onMouseLeave={stopDrag}
                 >
                   {school.images.map((src, i) => (
-                    <img
+                    <SchoolPhoto
                       key={i}
                       src={src}
-                      alt=""
-                      draggable={false}
-                      loading="lazy"
-                      className="flex-shrink-0 w-[190px] h-[115px] rounded-lg object-cover pointer-events-none"
-                      onError={(e) => {
-                        const el = e.currentTarget;
-                        el.style.display = "none";
-                      }}
+                      className="flex-shrink-0 w-[190px] h-[115px] rounded-lg"
                     />
                   ))}
                 </div>

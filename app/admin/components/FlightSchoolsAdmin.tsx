@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import type { FlightSchool } from "@/types/flight-school";
 import { intentScore, intentTier, isVisible } from "@/lib/flight-schools/intent";
+import SchoolPhoto from "@/components/SchoolPhoto";
 
 type Summary = {
   generatedAt: string;
@@ -278,7 +279,7 @@ function SchoolModal({
         {school.images && school.images.length > 0 ? (
           <div className="-mx-6 mb-5 flex gap-2 overflow-x-auto px-6 pb-1">
             {school.images.map((src, i) => (
-              <img key={i} src={src} alt="" loading="lazy" className="h-32 w-48 flex-shrink-0 rounded-lg object-cover" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+              <SchoolPhoto key={i} src={src} className="h-32 w-48 flex-shrink-0 rounded-lg" />
             ))}
           </div>
         ) : (
