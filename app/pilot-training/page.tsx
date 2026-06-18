@@ -190,6 +190,18 @@ const FAQ_ITEMS = [
     q: "Is WindChasers a DGCA-approved aviation academy?",
     a: "WindChasers is a Bangalore-based aviation training institute. Our DGCA ground classes are taught in-house, and flight training is delivered through DGCA-approved partner FTOs in India and abroad.",
   },
+  {
+    q: "How much does pilot training cost in India?",
+    a: "Your total pilot training cost depends on whether you fly in India or abroad and how many hours you need. The main pilot course fees are DGCA ground classes, your 200+ flight hours and licensing. We give you a full, itemised cost breakdown upfront with no surprise add-ons, so you know exactly what you are paying for before you commit. Talk to a counsellor for a plan built around your budget.",
+  },
+  {
+    q: "What is the salary of a commercial pilot in India?",
+    a: "Commercial pilot salary in India varies by airline, aircraft type and seniority, and rises as you log hours and move from First Officer to Captain. We will not quote you an inflated number, in your counsellor call we walk you through realistic pilot salary expectations in India so you can weigh the investment against the airline career it leads to.",
+  },
+  {
+    q: "Is there a cadet pilot program or airline placement?",
+    a: "A cadet pilot program is an airline-linked route from flight training into a First Officer seat. We prepare you for cadet pilot program selection and airline interviews, and our end-to-end support includes interview and placement assistance to help you reach an airline pilot career after you earn your CPL. Talk to a counsellor about the current cadet and placement routes that fit your profile.",
+  },
 ];
 
 const team = [
@@ -421,9 +433,9 @@ export default function PilotTraining() {
             transition={{ duration: 0.7, delay: 0.15 }}
             className="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light text-center"
           >
-            DGCA-aligned ground classes in Bengaluru, flight training with
-            approved partners in India and abroad. We lay out the whole road
-            before you commit.
+            DGCA-aligned ground classes for your commercial pilot course in
+            Bengaluru, flight training with approved partners in India and
+            abroad. We lay out the whole road before you commit.
           </motion.p>
 
           {/* Inline lead capture, primary hero conversion action */}
@@ -583,7 +595,9 @@ export default function PilotTraining() {
               </p>
               <p>
                 Our pilot training programs run from PPL and CPL to ATPL and
-                type rating, with honest, upfront pricing on every step.
+                type rating, with honest, upfront pricing on every step. From
+                your first solo to an airline career, we map the full route,
+                including realistic pilot salary expectations in India.
               </p>
             </div>
           </motion.div>
