@@ -10,13 +10,17 @@ import {
   BookOpen,
   ChevronDown,
   CheckCircle2,
+  Clock,
+  GraduationCap,
   Globe,
+  ListChecks,
   MessageSquare,
   Plane,
   Shield,
   Sparkles,
   Star,
   User,
+  Wallet,
 } from "lucide-react";
 
 type TimelineOption =
@@ -83,7 +87,7 @@ const HIGHLIGHTS = [
   {
     icon: Briefcase,
     title: "Placement Assistance",
-    description: "Direct connections to airline recruiters. Mock interviews and career prep.",
+    description: "We prepare you for cabin crew interviews at airlines like IndiGo, Air India, Vistara, SpiceJet and Akasa Air, plus Gulf carriers such as Emirates and Qatar Airways. Mock interviews and career prep.",
   },
 ];
 
@@ -118,8 +122,73 @@ const CABIN_CREW_EXPERIENCE_CARDS = [
   },
   {
     title: "Affordable training",
-    text: "No debt required. Quality training at accessible fees.",
+    text: "Quality air hostess training at accessible cabin crew course fees. No debt required.",
     image: "/cabin%20crew/page%20images/Cabin%20Crew%203.png",
+  },
+];
+
+// "Course at a glance" block. Eligibility and inclusions are facts already on
+// the page. Duration and fees use honest counsellor-CTA copy (no invented
+// numbers) while still landing the "cabin crew course duration / fees" phrases.
+// Swap in exact figures once confirmed.
+const COURSE_GLANCE = [
+  {
+    icon: Clock,
+    label: "Course duration",
+    value:
+      "We map your cabin crew course duration in a quick counsellor call, based on your start date and pace.",
+  },
+  {
+    icon: Wallet,
+    label: "Course fees",
+    value:
+      "Affordable, transparent cabin crew course fees with no hidden add-ons. Get the exact fee in a counsellor call.",
+  },
+  {
+    icon: GraduationCap,
+    label: "Eligibility",
+    value: "18+, 12th pass in any stream, conversational English.",
+  },
+  {
+    icon: ListChecks,
+    label: "What's included",
+    value:
+      "Safety and survival training, mock flights, grooming and personality development, interview prep and placement assistance.",
+  },
+];
+
+const CABIN_CREW_FAQ = [
+  {
+    q: "How do I become an air hostess in India?",
+    a: "Complete Class 12 in any stream, then take a cabin crew / air hostess training course that covers safety, in-flight service, grooming and interview prep. After training you apply to airlines, clear their interview and medical, and start flying as cabin crew. Our cabin crew course in Bangalore prepares you end to end, from skills to the airline interview.",
+  },
+  {
+    q: "What is the eligibility for cabin crew after 12th?",
+    a: "You need to be 18 or above, have passed Class 12 in any stream (science is not required), and have conversational English. Good grooming and a customer-first attitude help. That is the full eligibility for our air hostess course after 12th, open to all genders.",
+  },
+  {
+    q: "How much does the cabin crew course cost in Bangalore?",
+    a: "Our cabin crew course fees in Bangalore are kept affordable and transparent, with no hidden add-ons. The exact fee depends on the batch and inclusions, so talk to a counsellor for the current cabin crew course fees and any payment options.",
+  },
+  {
+    q: "How long is the air hostess training?",
+    a: "Air hostess training is a focused, practical programme rather than a multi-year degree. The exact cabin crew course duration depends on your batch and pace, and we map the full timeline for you in your counsellor call before you commit.",
+  },
+  {
+    q: "What is the salary of cabin crew in India?",
+    a: "Cabin crew salary in India varies by airline, domestic or international routes, and seniority, and rises with experience and flying hours, plus layover and flying allowances on top of the base pay. We walk you through realistic air hostess salary expectations in India in your counsellor call so you can plan with clear numbers.",
+  },
+  {
+    q: "Which airlines hire freshers from Bangalore?",
+    a: "Indian carriers like IndiGo, Air India, Vistara, SpiceJet and Akasa Air regularly recruit fresher cabin crew, and Gulf carriers such as Emirates and Qatar Airways hire from India too. We prepare you for these airline interviews from our Bangalore campus.",
+  },
+  {
+    q: "Do you provide placement assistance?",
+    a: "Yes. Our cabin crew training includes placement assistance, mock interviews, grooming and career prep to get you airline-ready. We support you through the application and interview process, not just the classroom.",
+  },
+  {
+    q: "Is cabin crew a good career option?",
+    a: "For the right person, yes. Cabin crew is one of the fastest ways into a well-paid aviation career after 12th, with travel, growth and strong demand as airlines expand their fleets. If you enjoy people, presentation and travel, an air hostess or cabin crew career is a strong option.",
   },
 ];
 
@@ -335,12 +404,15 @@ export default function CabinCrewPageClient({
               </span>
               <span className="text-green-400 text-sm font-medium">Admissions Open</span>
             </div>
+            <p className="text-[#C5A572] text-sm md:text-base font-semibold tracking-wide uppercase mb-3">
+              Air hostess &amp; cabin crew training in Bangalore
+            </p>
             <h1 className="text-white text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-5">
               Your career at 35,000 feet starts here.
             </h1>
             <p className="text-white/75 text-lg leading-relaxed max-w-xl mb-8">
-              Cabin crew training designed to get you job-ready. Placement assistance. Airline
-              connections. Real mock flights.
+              Air hostess and cabin crew training designed to get you job-ready.
+              Placement assistance. Airline connections. Real mock flights.
             </p>
             <button
               type="button"
@@ -436,7 +508,8 @@ export default function CabinCrewPageClient({
         <div className="max-w-6xl mx-auto">
           <h2 className="text-center text-3xl md:text-4xl font-bold text-white mb-3">What you learn</h2>
           <p className="text-center text-white/60 max-w-2xl mx-auto mb-12">
-            Practical cabin crew skills taught through immersive sessions and real-world scenarios.
+            Our cabin crew course in Bangalore covers everything airlines look for
+            in an air hostess, taught through immersive sessions and real-world scenarios.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {HIGHLIGHTS.map(({ icon: Icon, title, description }, index) => (
@@ -462,7 +535,10 @@ export default function CabinCrewPageClient({
 
       <section className="py-20 px-6 lg:px-8 bg-[#1E1E1E]">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-center text-3xl md:text-4xl font-bold text-white mb-12">Who this is for</h2>
+          <h2 className="text-center text-3xl md:text-4xl font-bold text-white mb-3">Who this is for</h2>
+          <p className="text-center text-white/60 max-w-2xl mx-auto mb-12">
+            Eligibility for our air hostess course after 12th.
+          </p>
           <div className="grid md:grid-cols-3 gap-6">
             {ELIGIBILITY.map(({ icon: Icon, title, description }, index) => (
               <motion.article
@@ -477,6 +553,40 @@ export default function CabinCrewPageClient({
                 <h3 className="text-white text-lg font-semibold mb-2">{title}</h3>
                 <p className="text-white/70 text-sm">{description}</p>
               </motion.article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 px-6 lg:px-8 bg-[#161616]">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-center text-3xl md:text-4xl font-bold text-white mb-3">
+            Course at a glance
+          </h2>
+          <p className="text-center text-white/60 max-w-2xl mx-auto mb-12">
+            The cabin crew course in Bangalore, duration, fees, eligibility and
+            what is included.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+            {COURSE_GLANCE.map(({ icon: Icon, label, value }, index) => (
+              <motion.div
+                key={label}
+                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : index * 0.06 }}
+                className="flex gap-4 bg-[#1A1A1A] border border-[#C5A572]/25 rounded-xl p-5 md:p-6"
+              >
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl border border-[#C5A572]/35 bg-[#C5A572]/12">
+                  <Icon className="h-5 w-5 text-[#E3C795]" />
+                </div>
+                <div>
+                  <p className="text-[#C5A572] text-xs font-bold uppercase tracking-wide mb-1.5">
+                    {label}
+                  </p>
+                  <p className="text-white/80 text-sm leading-relaxed">{value}</p>
+                </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -525,6 +635,48 @@ export default function CabinCrewPageClient({
             </p>
           )}
         </div>
+      </section>
+
+      <section className="py-20 px-6 lg:px-8 bg-[#1A1A1A] border-y border-white/10">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-center text-3xl md:text-4xl font-bold text-white mb-3">
+            Air hostess &amp; cabin crew training, your questions answered.
+          </h2>
+          <p className="text-center text-white/60 max-w-2xl mx-auto mb-12">
+            Straight answers on eligibility, fees, duration, salary and placement
+            for cabin crew training in Bangalore.
+          </p>
+          <div className="space-y-4">
+            {CABIN_CREW_FAQ.map((item) => (
+              <details
+                key={item.q}
+                className="group bg-[#161616] border border-white/15 rounded-2xl px-6 py-5 open:border-[#C5A572]/40 transition-colors"
+              >
+                <summary className="flex items-center justify-between cursor-pointer list-none gap-4 text-white font-semibold text-lg">
+                  {item.q}
+                  <span className="text-[#C5A572] text-2xl leading-none transition-transform group-open:rotate-45 flex-shrink-0">
+                    +
+                  </span>
+                </summary>
+                <p className="text-white/70 leading-relaxed mt-4">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: CABIN_CREW_FAQ.map((item) => ({
+                "@type": "Question",
+                name: item.q,
+                acceptedAnswer: { "@type": "Answer", text: item.a },
+              })),
+            }),
+          }}
+        />
       </section>
 
       <section id="cabin-crew-form" className="py-20 px-6 lg:px-8 bg-[#1A1A1A] scroll-mt-24">

@@ -4,9 +4,16 @@ import path from "node:path";
 import CabinCrewPageClient from "./page.client";
 
 export const metadata: Metadata = {
-  title: "Cabin Crew Training Bangalore | WindChasers Aviation Academy",
+  title: "Air Hostess & Cabin Crew Training in Bangalore | WindChasers",
   description:
-    "Launch your cabin crew career with WindChasers. Affordable training, mock flights, placement assistance, and direct airline connections.",
+    "Air hostess and cabin crew training in Bangalore. Course after 12th, affordable fees, mock flights, placement assistance. Start your aviation career with WindChasers.",
+  alternates: { canonical: "https://windchasers.in/cabin-crew" },
+  openGraph: {
+    title: "Air Hostess & Cabin Crew Training in Bangalore | WindChasers",
+    description:
+      "Air hostess and cabin crew training in Bangalore. Course after 12th, affordable fees, mock flights, placement assistance. Start your aviation career with WindChasers.",
+    url: "https://windchasers.in/cabin-crew",
+  },
 };
 
 const IMAGE_EXTENSIONS = [".jpg", ".jpeg", ".png", ".webp"];
