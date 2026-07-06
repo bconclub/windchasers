@@ -2,6 +2,29 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-07-06 · feat(flight-schools): globe/map hero rework + directory curation
+
+- Rebuilt `/flight-schools` from a full-screen globe-only map into a complete
+  scrollable page: interactive hero (3D globe by default, toggle to a light
+  CARTO vector map) + Stats, Countries, Partner-schools grid, How-it-works,
+  FAQ, and CTA sections. Footer restored on the route.
+- Hero: lands on the dark blue-marble globe (gold markers, golden atmosphere).
+  Centered headline "The world is your training ground" fades on any
+  interaction. Map/Globe toggle docked in the header (logo-only header on this
+  page; call/WhatsApp/menu + PROXe chat + sticky CTA suppressed here for now).
+- Search: small pill that widens on focus, animated golden border, bare
+  scrollable country chips (fly-to). Tapping a marker opens the school detail
+  drawer directly. Full-screen hero with proximity scroll-snap so it holds.
+- Map stack: switched from raster satellite (black-void gutters) to MapLibre +
+  CARTO vector tiles; markers on canvas; removed tile attribution; lifted zoom
+  controls above the search bar.
+- User-facing: DATA CURATION on the flight-schools DB — live directory cut
+  857 → 665. Hid non-flight-schools (air-hostess/cabin-crew/ground-school/
+  coaching/management institutes + India generic "aviation academy" ground
+  schools). Kept only genuine aircraft-operating flight schools. India 207→20.
+  0 partners affected. Reversible (verification_status). Already live (dynamic).
+- (`HEAD`)
+
 ## 2026-06-15 · feat(leads): header WhatsApp captures to PROXe on every page
 
 - The header WhatsApp button only opened the name+phone capture (which lands in

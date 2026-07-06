@@ -68,6 +68,29 @@ export default function Navbar() {
     return null;
   }
 
+  // Flight-schools: stripped-back header, just the logo. Call/WhatsApp/menu
+  // are intentionally hidden here for now (map-first experience).
+  if (isFlightSchools) {
+    return (
+      <nav className="fixed top-0 w-full bg-dark/95 backdrop-blur-sm border-b border-white/10 z-50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center h-20">
+            <Link href="/" className="flex items-center">
+              <Image
+                src="/images/White transparent.png"
+                alt="WindChasers"
+                width={180}
+                height={60}
+                className="h-[3.45rem] md:h-12 w-auto"
+                priority
+              />
+            </Link>
+          </div>
+        </div>
+      </nav>
+    );
+  }
+
   // Pages where we want to capture name + phone BEFORE the user leaves to
   // WhatsApp. Top-of-funnel program pages where a WA tap is the main
   // primary CTA.

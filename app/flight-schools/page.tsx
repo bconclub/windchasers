@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/Navbar";
 import { getPublicFlightSchools } from "@/lib/flight-schools/queries";
-import FlightSchoolsClient from "./components/FlightSchoolsClient";
+import FlightSchoolsExperience from "./components/FlightSchoolsExperience";
 
 export const metadata: Metadata = {
   title: "International Flight Schools | WindChasers",
@@ -25,11 +24,8 @@ export default async function FlightSchoolsPage() {
   }
 
   return (
-    <main className="h-screen overflow-hidden bg-[#060b14]">
-      <Navbar />
-      <div className="pt-[80px] h-full">
-        <FlightSchoolsClient schools={schools} />
-      </div>
-    </main>
+    <div className="bg-[#060b14] pt-[80px]">
+      <FlightSchoolsExperience schools={schools} />
+    </div>
   );
 }

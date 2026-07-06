@@ -16,14 +16,21 @@ export default function SiteChrome() {
   const pathname = usePathname() || "/";
   if (pathname.startsWith("/admin")) return null; // covers /admin and /admin-login
 
+  // Flight-schools is a stripped-back, map-first page for now: logo-only header
+  // (handled in Navbar), no sticky CTA, no PROXe chat launcher. Bring them back
+  // later when the page is finalised.
+  const isFlightSchools = pathname === "/flight-schools";
+
   return (
     <>
       <Navbar />
-      <StickyDemoCTA />
-      <Script
-        src="https://proxe.windchasers.in/api/widget/embed.js"
-        strategy="afterInteractive"
-      />
+      {!isFlightSchools && <StickyDemoCTA />}
+      {!isFlightSchools && (
+        <Script
+          src="https://proxe.windchasers.in/api/widget/embed.js"
+          strategy="afterInteractive"
+        />
+      )}
     </>
   );
 }

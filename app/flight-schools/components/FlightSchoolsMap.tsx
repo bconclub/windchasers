@@ -19,7 +19,7 @@ const GlobeLoader = dynamic(() => import("./GlobeLoader"), {
   ),
 });
 
-const LeafletMap = dynamic(() => import("./LeafletMap"), { ssr: false });
+const MapLibreMap = dynamic(() => import("./MapLibreMap"), { ssr: false });
 
 /* ── Globe point helpers ─────────────────────────────────────────────── */
 // Bright + big on purpose: the old #666 / 0.38 / 0.015-altitude points were
@@ -55,7 +55,7 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
 
   // Open on the auto-rotating globe, the flat map at world zoom shows ugly
   // "map data not available" gutters. The 2D map takes over on zoom-in
-  // (Leaflet lazy-mounts via the viewMode effect below).
+  // (MapLibre lazy-mounts via the viewMode effect below).
   const [viewMode, setViewMode] = useState<"globe" | "map">("globe");
   const viewModeRef = useRef<"globe" | "map">("globe");
   useEffect(() => { viewModeRef.current = viewMode; }, [viewMode]);
@@ -146,11 +146,11 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
     }
   }
 
-  // Keep LeafletMap mounted once first shown
-  const [leafletMounted, setLeafletMounted] = useState(false);
+  // Keep MapLibre mounted once first shown.
+  const [flatMapMounted, setFlatMapMounted] = useState(false);
   useEffect(() => {
-    if (viewMode === "map" && !leafletMounted) setLeafletMounted(true);
-  }, [viewMode, leafletMounted]);
+    if (viewMode === "map" && !flatMapMounted) setFlatMapMounted(true);
+  }, [viewMode, flatMapMounted]);
 
   useEffect(() => {
     const update = () => {
@@ -210,11 +210,11 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
       setMapSeed((s) => ({ ...s, zoom: 4 }));
       setViewMode("map");
       viewModeRef.current = "map";
-      if (!leafletMounted) setLeafletMounted(true);
+      if (!flatMapMounted) setFlatMapMounted(true);
     } else {
       returnToGlobe();
     }
-  }, [leafletMounted, returnToGlobe]);
+  }, [flatMapMounted, returnToGlobe]);
 
   const hint =
     viewMode === "globe"
@@ -276,8 +276,8 @@ export default function FlightSchoolsMap({ schools: publicSchools }: { schools: 
           transition: "opacity 0.4s ease",
         }}
       >
-        {leafletMounted && (
-          <LeafletMap
+        {flatMapMounted && (
+          <MapLibreMap
             schools={filteredSchools}
             onSelectSchool={setSelectedSchool}
             onZoomOut={handleMapZoomOut}

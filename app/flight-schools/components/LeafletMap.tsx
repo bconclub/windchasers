@@ -123,6 +123,7 @@ export default function LeafletMap({
       minZoom={2}
       maxZoom={18}
       style={{ width: "100%", height: "100%" }}
+      preferCanvas
       zoomControl={false}
       worldCopyJump={false}
       maxBounds={[

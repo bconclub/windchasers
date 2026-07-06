@@ -164,3 +164,44 @@ html {
     }
   }
 }
+
+/* Flight-schools map: lift the zoom +/- controls above the bottom search bar
+   so they're never hidden underneath it, and hide the tile attribution chip. */
+.wc-map .maplibregl-ctrl-bottom-right {
+  bottom: 88px;
+  right: 8px;
+}
+.wc-map .maplibregl-ctrl-bottom-left,
+.wc-map .maplibregl-ctrl-attrib {
+  display: none;
+}
+
+/* Flight-schools: animated golden "beam" border for the search bar so it's
+   obvious and draws the eye (especially over the dark globe). */
+.wc-beam-wrap {
+  position: relative;
+  border-radius: 9999px;
+  padding: 1.5px;
+  overflow: hidden;
+}
+.wc-beam-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -150%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 55%,
+    rgba(197, 165, 114, 0.6) 70%,
+    #ffe3a3 82%,
+    rgba(197, 165, 114, 0.6) 92%,
+    transparent 100%
+  );
+  animation: wc-beam-spin 4s linear infinite;
+}
+@keyframes wc-beam-spin {
+  to { transform: rotate(360deg); }
+}
+.wc-beam-wrap > * { position: relative; z-index: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .wc-beam-wrap::before { animation: none; }
+}

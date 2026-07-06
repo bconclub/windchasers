@@ -50,3 +50,4 @@ next-env.d.ts
 
 # Local Codex config (contains secrets)
 .codex/
+.claude/state/

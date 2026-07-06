@@ -10,38 +10,51 @@ type Props = Omit<ComponentProps<typeof Globe>, "ref" | "onGlobeClick" | "onPoin
   paused?: boolean;
   resetKey?: number;
   zoomTarget?: { lat: number; lng: number; key: number };
+  // Hero mode: the globe is one section on a scrollable page. Clicking a
+  // marker opens its details (no tunnel-zoom), the mouse wheel scrolls the
+  // PAGE (we don't trap it), and "fly to" eases to a regional altitude on the
+  // globe surface rather than diving inside for a flat-map handoff.
+  heroMode?: boolean;
+  onPointSelect?: (point: object) => void;
 };
 
-export default function GlobeLoader({ onAltitudeChange, paused, resetKey, zoomTarget, ...props }: Props) {
+export default function GlobeLoader({ onAltitudeChange, paused, resetKey, zoomTarget, heroMode, onPointSelect, ...props }: Props) {
   const globeRef = useRef<GlobeMethods | undefined>(undefined);
   const controlsRef = useRef<any>(null);
 
-  // Zoom camera to a lat/lng, altitude change listener will trigger flat-map switch
+  // Ease the camera to a lat/lng. Hero mode stops at a regional altitude so the
+  // country stays visible on the globe; legacy mode dives in for the flat-map
+  // handoff the altitude watcher listens for.
   const zoomTo = useCallback((lat: number, lng: number) => {
     const globe = globeRef.current;
     if (!globe) return;
     if (controlsRef.current) controlsRef.current.autoRotate = false;
-    // Animate in close enough to cross ZOOM_IN_THRESHOLD (1.5) smoothly
-    globe.pointOfView({ lat, lng, altitude: 0.05 }, 1400);
-  }, []);
+    globe.pointOfView({ lat, lng, altitude: heroMode ? 1.1 : 0.05 }, 1400);
+  }, [heroMode]);
 
-  // Click anywhere on the globe surface → zoom there
+  // Click empty ocean/land: hero mode ignores it (drag spins, wheel scrolls);
+  // legacy mode zooms toward the click.
   const handleGlobeClick = useCallback(
     ({ lat, lng }: { lat: number; lng: number }) => {
+      if (heroMode) return;
       zoomTo(lat, lng);
     },
-    [zoomTo]
+    [zoomTo, heroMode]
   );
 
-  // Click a school point → zoom to that school's location
+  // Click a school marker: hero mode opens its details; legacy mode zooms to it.
   const handlePointClick = useCallback(
     (point: object) => {
+      if (heroMode) {
+        onPointSelect?.(point);
+        return;
+      }
       const p = point as any;
       const lat = typeof p.lat === "number" ? p.lat : 0;
       const lng = typeof p.lng === "number" ? p.lng : 0;
       zoomTo(lat, lng);
     },
-    [zoomTo]
+    [zoomTo, heroMode, onPointSelect]
   );
 
   const handleReady = useCallback(() => {
@@ -110,6 +123,9 @@ export default function GlobeLoader({ onAltitudeChange, paused, resetKey, zoomTa
   // altitude watcher above reports to the parent → map handoff on zoom-in.
   const wrapperRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    // Hero mode: never trap the wheel — the page must be able to scroll past
+    // the globe. Drag still spins it.
+    if (heroMode) return;
     const el = wrapperRef.current;
     if (!el || paused) return;
     const onWheel = (e: WheelEvent) => {
@@ -128,7 +144,7 @@ export default function GlobeLoader({ onAltitudeChange, paused, resetKey, zoomTa
     // so a bubble-phase listener up here never hears the event.
     el.addEventListener("wheel", onWheel, { passive: false, capture: true });
     return () => el.removeEventListener("wheel", onWheel, { capture: true });
-  }, [paused]);
+  }, [paused, heroMode]);
 
   return (
     <div ref={wrapperRef} className="w-full h-full">
