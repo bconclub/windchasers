@@ -2,6 +2,25 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-07-06 · feat(flight-schools): featured schools + hero polish
+
+- Added brand-curated "Featured Flight Schools in India" and "Featured Flight
+  Schools Abroad" sections right after the hero — 18 schools sourced from the
+  brand's list and enriched with photo, rating, and Maps URL via Google Places
+  (`scripts/enrich-featured-schools.mjs` → `featured-schools.ts`). Presented as
+  horizontal snap carousels (image-led cards, next-card peek, desktop arrows,
+  mobile swipe); "Read more" opens a full-text overlay so cards stay light.
+- Hero refinements: marker tap opens the left drawer directly (removed the
+  intermediate preview card); search chips float bare in one scrollable row (no
+  box); search bar lifted off the bottom edge; removed the dead filter/sliders
+  icon; animated golden search border now actually rotates (dropped the
+  reduced-motion guard that froze it) over a faint always-on gold ring.
+- Countries section: real flag images (flagcdn) instead of emoji flags that
+  render as letter codes on Windows. Stats "WindChasers partners" now counts the
+  curated featured list, not the stale directory `is_partner` flag.
+- User-facing: public directory already curated to genuine flight schools
+  (857 → 665 live) in a prior data pass; this batch is UI + featured content.
+
 ## 2026-07-06 · feat(flight-schools): globe/map hero rework + directory curation
 
 - Rebuilt `/flight-schools` from a full-screen globe-only map into a complete

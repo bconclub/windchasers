@@ -2,12 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
-import {
-  Search,
-  X as XIcon,
-  SlidersHorizontal,
-  Hand,
-} from "lucide-react";
+import { Search, X as XIcon, Hand } from "lucide-react";
 import type { FlightSchool } from "@/types/flight-school";
 import { GLOBE_STYLES } from "../lib/globe-config";
 
@@ -192,7 +187,7 @@ export default function GlobeHero({
 
       {/* Hint pill, bottom-left (hidden while searching) */}
       {!open && (
-        <div className="absolute bottom-[92px] left-4 md:left-8 z-[20] pointer-events-none">
+        <div className="absolute bottom-28 md:bottom-32 left-4 md:left-8 z-[20] pointer-events-none">
           <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs tracking-wide backdrop-blur-sm border ${light ? "bg-white/80 border-slate-200 text-slate-500" : "bg-black/40 border-white/10 text-white/60"}`}>
             <Hand className="w-3.5 h-3.5" />
             Tap marker for details · {light ? "Drag to explore" : "Drag to spin"}
@@ -203,7 +198,7 @@ export default function GlobeHero({
       {/* Search — pinned bottom. Small by default; widens on focus and floats
           quick country chips in a single scrollable row above the bar (no box). */}
       <div
-        className="absolute bottom-5 left-1/2 -translate-x-1/2 z-[30]"
+        className="absolute bottom-12 md:bottom-14 left-1/2 -translate-x-1/2 z-[30]"
         style={{ width: "92%", maxWidth: open ? 540 : 300, transition: "max-width 0.35s ease" }}
       >
         {/* Chips — bare, one scrollable line, as wide as the bar */}
@@ -246,13 +241,13 @@ export default function GlobeHero({
                 onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
                 onFocus={() => setOpen(true)}
                 onBlur={() => setTimeout(() => setOpen(false), 150)}
-                className={`w-full rounded-full pl-11 pr-11 py-3.5 text-sm outline-none ${
+                className={`w-full rounded-full pl-11 pr-10 py-3.5 text-sm outline-none ${
                   light
                     ? "bg-white text-slate-900 placeholder-slate-400"
                     : "bg-[#0b111c] text-white placeholder-white/50"
                 }`}
               />
-              {query ? (
+              {query && (
                 <button
                   onMouseDown={(e) => { e.preventDefault(); setQuery(""); onClearCountry(); }}
                   className={`absolute right-3.5 top-1/2 -translate-y-1/2 z-[2] transition-colors ${light ? "text-slate-400 hover:text-slate-700" : "text-white/50 hover:text-white/80"}`}
@@ -260,8 +255,6 @@ export default function GlobeHero({
                 >
                   <XIcon className="w-4 h-4" />
                 </button>
-              ) : (
-                <SlidersHorizontal className={`absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 z-[2] ${light ? "text-slate-300" : "text-white/30"}`} />
               )}
             </div>
           </div>

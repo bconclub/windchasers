@@ -11,16 +11,25 @@ import {
   ArrowRight,
 } from "lucide-react";
 import type { FlightSchool } from "@/types/flight-school";
+import { FEATURED_SCHOOLS } from "../lib/featured-schools";
 import SchoolCard from "./SchoolCard";
 
 /* ─── helpers ─────────────────────────────────────────────────────────── */
 
-// ISO 3166-1 alpha-2 → flag emoji via regional indicator symbols.
-function flagEmoji(code?: string): string {
-  if (!code || code.length !== 2) return "🏳️";
-  const cc = code.toUpperCase();
-  const A = 0x1f1e6;
-  return String.fromCodePoint(A + (cc.charCodeAt(0) - 65), A + (cc.charCodeAt(1) - 65));
+// Regional-indicator flag emoji render as plain letter codes on Windows
+// (Chrome ships no color-flag glyphs there), which reads as broken. A real
+// flag image works everywhere.
+function FlagIcon({ code, className = "" }: { code?: string; className?: string }) {
+  if (!code || code.length !== 2) return null;
+  return (
+    <img
+      src={`https://flagcdn.com/w40/${code.toLowerCase()}.png`}
+      srcSet={`https://flagcdn.com/w80/${code.toLowerCase()}.png 2x`}
+      alt=""
+      className={`inline-block object-cover rounded-[3px] ${className}`}
+      loading="lazy"
+    />
+  );
 }
 
 /* ─── Stats band ──────────────────────────────────────────────────────── */
@@ -28,7 +37,10 @@ function flagEmoji(code?: string): string {
 export function StatsBand({ schools }: { schools: FlightSchool[] }) {
   const stats = useMemo(() => {
     const countries = new Set(schools.map((s) => s.country)).size;
-    const partners = schools.filter((s) => s.isPartner).length;
+    // "Partners" = the schools the brand actually curates and vouches for
+    // (Featured Flight Schools), not the auto-imported directory's stale
+    // is_partner flag.
+    const partners = FEATURED_SCHOOLS.length;
     return [
       { value: schools.length ? `${schools.length}+` : "—", label: "Flight schools mapped" },
       { value: countries ? `${countries}` : "—", label: "Countries covered" },
@@ -107,7 +119,7 @@ export function PartnerCountries({
                     : "bg-[#0f1521] border-white/10 hover:border-[#C5A572]/40"
                 }`}
               >
-                <span className="text-2xl leading-none">{flagEmoji(c.code)}</span>
+                <FlagIcon code={c.code} className="w-7 h-5 flex-shrink-0" />
                 <span className="min-w-0">
                   <span className="block text-white text-sm font-medium truncate">{c.name}</span>
                   <span className="block text-white/40 text-xs">

@@ -5,6 +5,7 @@ import { AnimatePresence } from "framer-motion";
 import { Globe as GlobeIcon, Map as MapIcon } from "lucide-react";
 import type { FlightSchool } from "@/types/flight-school";
 import GlobeHero from "./GlobeHero";
+import FeaturedSchools from "./FeaturedSchools";
 import SchoolDrawer from "./SchoolDrawer";
 import LeadFormModal from "./LeadFormModal";
 import {
@@ -91,6 +92,8 @@ export default function FlightSchoolsExperience({ schools }: { schools: FlightSc
         onClearCountry={clearCountry}
         activeCountry={activeCountry}
       />
+
+      <FeaturedSchools />
 
       <StatsBand schools={schools} />
       <PartnerCountries

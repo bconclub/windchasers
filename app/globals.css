@@ -190,18 +190,26 @@ html {
   inset: -150%;
   background: conic-gradient(
     from 0deg,
-    transparent 0 55%,
-    rgba(197, 165, 114, 0.6) 70%,
-    #ffe3a3 82%,
-    rgba(197, 165, 114, 0.6) 92%,
-    transparent 100%
+    transparent 0deg 250deg,
+    rgba(197, 165, 114, 0.5) 300deg,
+    #ffe6a8 338deg,
+    #fff4d6 350deg,
+    #ffe6a8 360deg
   );
-  animation: wc-beam-spin 4s linear infinite;
+  animation: wc-beam-spin 3.2s linear infinite;
+  will-change: transform;
 }
 @keyframes wc-beam-spin {
+  from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-.wc-beam-wrap > * { position: relative; z-index: 1; }
-@media (prefers-reduced-motion: reduce) {
-  .wc-beam-wrap::before { animation: none; }
+/* Faint always-on gold ring beneath the beam so the border is never empty. */
+.wc-beam-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1px solid rgba(197, 165, 114, 0.3);
+  pointer-events: none;
 }
+.wc-beam-wrap > * { position: relative; z-index: 1; }
