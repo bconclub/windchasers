@@ -44,7 +44,7 @@ export function StatsBand({ schools }: { schools: FlightSchool[] }) {
     return [
       { value: schools.length ? `${schools.length}+` : "—", label: "Flight schools mapped" },
       { value: countries ? `${countries}` : "—", label: "Countries covered" },
-      { value: partners ? `${partners}` : "—", label: "WindChasers partners" },
+      { value: partners ? `${partners}` : "—", label: "Exclusive Partners" },
       { value: "1:1", label: "Counsellor guidance" },
     ];
   }, [schools]);
@@ -125,7 +125,7 @@ export function PartnerCountries({
                   <span className="block text-white/40 text-xs">
                     {c.count} school{c.count !== 1 ? "s" : ""}
                     {c.partners > 0 && (
-                      <span className="text-[#C5A572]"> · {c.partners} partner{c.partners !== 1 ? "s" : ""}</span>
+                      <span className="text-[#C5A572]"> · Partner country</span>
                     )}
                   </span>
                 </span>

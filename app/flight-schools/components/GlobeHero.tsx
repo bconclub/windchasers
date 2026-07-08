@@ -50,6 +50,8 @@ interface Props {
   onPickCountry: (country: string) => void;
   onClearCountry: () => void;
   activeCountry: string;
+  /** Bumped when the user clears the search — snaps the map/globe back out. */
+  resetKey: number;
 }
 
 export default function GlobeHero({
@@ -61,6 +63,7 @@ export default function GlobeHero({
   onPickCountry,
   onClearCountry,
   activeCountry,
+  resetKey,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -130,6 +133,7 @@ export default function GlobeHero({
           onSelectSchool={onSelectSchool}
           styleKey="voyager"
           flyTo={zoomTarget}
+          resetKey={resetKey}
         />
       </div>
       <div className="absolute inset-0" style={{ opacity: light ? 0 : 1, pointerEvents: light ? "none" : "auto" }}>
@@ -154,6 +158,7 @@ export default function GlobeHero({
             pointResolution={12}
             pointLabel={pointLabel}
             zoomTarget={view === "globe" ? zoomTarget : undefined}
+            resetKey={resetKey}
           />
         )}
       </div>

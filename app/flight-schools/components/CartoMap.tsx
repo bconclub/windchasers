@@ -56,9 +56,11 @@ interface Props {
   styleKey: CartoStyleKey;
   /** Fly to a lat/lng (country centroid) when key changes. */
   flyTo?: { lat: number; lng: number; key: number };
+  /** Bumped to reset the map back to the world view (search cleared). */
+  resetKey?: number;
 }
 
-export default function CartoMap({ schools, onSelectSchool, styleKey, flyTo }: Props) {
+export default function CartoMap({ schools, onSelectSchool, styleKey, flyTo, resetKey }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MapLibreInstance | null>(null);
   const popupRef = useRef<Popup | null>(null);
@@ -210,6 +212,13 @@ export default function CartoMap({ schools, onSelectSchool, styleKey, flyTo }: P
     if (!map || !flyTo) return;
     map.flyTo({ center: [flyTo.lng, flyTo.lat], zoom: 4.5, duration: 1400, essential: true });
   }, [flyTo?.key]);
+
+  // Reset back to the world view when the search is cleared.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !resetKey) return;
+    map.flyTo({ center: [30, 25], zoom: 1.4, duration: 1000, essential: true });
+  }, [resetKey]);
 
   return <div ref={containerRef} className="wc-map h-full w-full" />;
 }

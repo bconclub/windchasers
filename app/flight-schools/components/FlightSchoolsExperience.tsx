@@ -28,6 +28,8 @@ export default function FlightSchoolsExperience({ schools }: { schools: FlightSc
   const [zoomTarget, setZoomTarget] = useState<
     { lat: number; lng: number; key: number } | undefined
   >();
+  // Bumped when the search is cleared, to snap the map/globe back out.
+  const [resetKey, setResetKey] = useState(0);
 
   const countries = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -54,6 +56,9 @@ export default function FlightSchoolsExperience({ schools }: { schools: FlightSc
 
   function clearCountry() {
     setActiveCountry("");
+    setZoomTarget(undefined);
+    // Snap the globe/map back out to the world view.
+    setResetKey((k) => k + 1);
   }
 
   const isMap = view === "map";
@@ -91,6 +96,7 @@ export default function FlightSchoolsExperience({ schools }: { schools: FlightSc
         onPickCountry={pickCountry}
         onClearCountry={clearCountry}
         activeCountry={activeCountry}
+        resetKey={resetKey}
       />
 
       <FeaturedSchools />
