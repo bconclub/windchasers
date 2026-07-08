@@ -3,18 +3,25 @@
 import { useState } from "react";
 import { ArrowUpRight, MapPin, Star, Plane } from "lucide-react";
 import type { FeaturedSchool } from "../lib/featured-schools";
-import SchoolPhoto from "@/components/SchoolPhoto";
 
 export default function FeaturedSchoolCard({ school }: { school: FeaturedSchool }) {
   const [open, setOpen] = useState(false);
+  const [imgFailed, setImgFailed] = useState(false);
   const location = [school.place, school.country].filter(Boolean).join(", ");
+  const showImage = school.image && !imgFailed;
 
   return (
     <div className="h-full rounded-2xl overflow-hidden bg-[#0f1521] border border-white/10 hover:border-[#C5A572]/40 transition-colors flex flex-col">
       {/* Image-led — this is the card, not a text block */}
       <div className="relative h-40 w-full bg-[#0b111c]">
-        {school.image ? (
-          <SchoolPhoto src={school.image} className="h-full w-full" />
+        {showImage ? (
+          <img
+            src={school.image!}
+            alt={school.name}
+            loading="lazy"
+            onError={() => setImgFailed(true)}
+            className="h-full w-full object-cover"
+          />
         ) : (
           <div className="h-full w-full flex items-center justify-center text-white/15">
             <Plane className="w-7 h-7" />
