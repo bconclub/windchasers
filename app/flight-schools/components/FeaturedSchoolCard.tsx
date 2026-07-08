@@ -10,7 +10,7 @@ export default function FeaturedSchoolCard({ school }: { school: FeaturedSchool 
   const location = [school.place, school.country].filter(Boolean).join(", ");
 
   return (
-    <div className="rounded-2xl overflow-hidden bg-[#0f1521] border border-white/10 hover:border-[#C5A572]/40 transition-colors flex flex-col">
+    <div className="h-full rounded-2xl overflow-hidden bg-[#0f1521] border border-white/10 hover:border-[#C5A572]/40 transition-colors flex flex-col">
       {/* Image-led — this is the card, not a text block */}
       <div className="relative h-40 w-full bg-[#0b111c]">
         {school.image ? (
@@ -30,7 +30,7 @@ export default function FeaturedSchoolCard({ school }: { school: FeaturedSchool 
 
       <div className="p-4 flex flex-col flex-1">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="text-white font-semibold text-[14px] leading-snug">{school.name}</h3>
+          <h3 className="text-white font-semibold text-[14px] leading-snug line-clamp-2 min-h-[2.25rem]">{school.name}</h3>
           {school.website && (
             <a
               href={school.website}
@@ -51,19 +51,18 @@ export default function FeaturedSchoolCard({ school }: { school: FeaturedSchool 
           </p>
         )}
 
-        {school.about && (
-          <>
-            <p className="text-white/50 text-[12.5px] leading-relaxed mt-2 line-clamp-2">
-              {school.about}
-            </p>
-            <button
-              onClick={() => setOpen(true)}
-              className="mt-auto pt-3 self-start text-[#C5A572] text-xs font-medium hover:underline"
-            >
-              Read more
-            </button>
-          </>
-        )}
+        {/* Reserve the description area so every card matches, even when a
+            school has no about text yet. */}
+        <p className="text-white/50 text-[12.5px] leading-relaxed mt-2 line-clamp-2 min-h-[2.5rem]">
+          {school.about}
+        </p>
+        <button
+          onClick={() => school.about && setOpen(true)}
+          disabled={!school.about}
+          className="mt-auto pt-3 self-start text-[#C5A572] text-xs font-medium hover:underline disabled:opacity-0"
+        >
+          Read more
+        </button>
       </div>
 
       {/* Full-text overlay, opened from "Read more" — keeps the card itself light */}
