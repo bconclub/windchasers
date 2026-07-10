@@ -5,17 +5,19 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import {
   AlertTriangle,
+  ArrowRight,
   Award,
   Briefcase,
   GitCompare,
   GraduationCap,
   Route,
+  ShieldCheck,
   Users,
   Wallet,
 } from "lucide-react";
 import WindChasersPastOpenHousesGallery from "@/components/marketing/WindChasersPastOpenHousesGallery";
 import WebinarCountdownVideoSection from "@/components/webinar/WebinarCountdownVideoSection";
-import WebinarHeroDetails from "@/components/webinar/WebinarHeroDetails";
+import WebinarHeroDetails, { WebinarWingEmblem } from "@/components/webinar/WebinarHeroDetails";
 import { WebinarRegisterModal } from "@/components/webinar/WebinarRegisterModal";
 import {
   WEBINAR_START_ISO,
@@ -163,10 +165,12 @@ export default function WebinarParentsPage() {
               initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: transitionDuration ?? 0.6, delay: shouldReduceMotion ? 0 : 0.1 }}
-              className="text-[#C5A572] text-xs uppercase tracking-[3px] mb-6 text-center font-medium"
+              className="text-[#C5A572] text-xs uppercase tracking-[3px] text-center font-medium"
             >
-              {dateShortLine} · Live on Zoom · For parents
+              {dateShortLine.toUpperCase()} · LIVE ON ZOOM
             </motion.p>
+
+            <WebinarWingEmblem />
 
             <motion.h1
               initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
@@ -203,15 +207,24 @@ export default function WebinarParentsPage() {
               initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.5 }}
-              className="text-center"
+              className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5"
             >
               <button
                 type="button"
                 onClick={() => setRegisterOpen(true)}
-                className="inline-flex justify-center bg-[#C5A572] text-[#1A1A1A] px-8 md:px-10 py-4 rounded-full font-semibold text-base shadow-[0_10px_30px_rgba(197,165,114,0.3)] w-full md:w-auto transition-all duration-300 hover:bg-[#d4b789] hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(197,165,114,0.45)]"
+                className="group inline-flex items-center justify-center gap-2 bg-[#C5A572] text-[#1A1A1A] px-8 md:px-10 py-4 rounded-full font-semibold text-base shadow-[0_10px_30px_rgba(197,165,114,0.3)] w-full sm:w-auto transition-all duration-300 hover:bg-[#d4b789] hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(197,165,114,0.45)]"
               >
                 Reserve my free seat
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
+              <div className="flex items-start gap-2.5 text-left">
+                <ShieldCheck className="h-5 w-5 text-[#C5A572] shrink-0 mt-0.5" aria-hidden />
+                <p className="text-[12px] leading-snug text-gray-300">
+                  Expert guidance. Real answers.
+                  <br />
+                  Your 2026, planned right.
+                </p>
+              </div>
             </motion.div>
           </motion.div>
         </div>

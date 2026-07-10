@@ -6,37 +6,53 @@ import { Calendar, Clock, Video } from "lucide-react";
 type Props = {
   dateLine: string;
   timeLine: string;
-  /** When this is the default Zoom line, we show the two-line “Zoom / link” stack like mobile. */
+  /** Defaults to the two-line "Zoom / Link after registration" stack. */
   zoomLine?: string;
 };
 
 const DEFAULT_ZOOM = "Zoom (link after registration)";
 
-function Row({
+/**
+ * Small winged emblem flanked by thin gold lines — the hero divider between the
+ * date eyebrow and the headline (Option 3 design).
+ */
+export function WebinarWingEmblem() {
+  return (
+    <div className="flex items-center justify-center gap-3 my-5" aria-hidden>
+      <span className="h-px w-12 bg-gradient-to-r from-transparent to-[#C5A572]/60" />
+      <svg width="34" height="14" viewBox="0 0 34 14" fill="none" className="shrink-0">
+        <path d="M17 2.5 L15.5 7 L18.5 7 Z" fill="#C5A572" />
+        <path d="M15 6.5 C10 4 5 4.2 1 7 C6 6.2 11 6.8 14.5 8.6 Z" fill="#C5A572" opacity="0.9" />
+        <path d="M19 6.5 C24 4 29 4.2 33 7 C28 6.2 23 6.8 19.5 8.6 Z" fill="#C5A572" opacity="0.9" />
+      </svg>
+      <span className="h-px w-12 bg-gradient-to-l from-transparent to-[#C5A572]/60" />
+    </div>
+  );
+}
+
+function DetailCard({
   icon,
   label,
   children,
-  isLast,
 }: {
   icon: ReactNode;
   label: string;
   children: ReactNode;
-  isLast?: boolean;
 }) {
   return (
-    <div
-      className={`flex items-start gap-3 py-3 ${isLast ? "" : "border-b border-white/10"}`}
-    >
-      <span
-        className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-[#C5A572]/12 ring-1 ring-[#C5A572]/25"
-        aria-hidden
-      >
-        {icon}
-      </span>
-      <div className="min-w-0 flex-1 text-left">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#C5A572]/80">{label}</p>
-        <div className="mt-0.5 text-sm font-medium leading-snug text-white">{children}</div>
+    <div className="flex flex-col rounded-xl border border-white/10 bg-white/[0.03] px-3 py-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+      <div className="flex items-center gap-2">
+        <span
+          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#C5A572]/12 ring-1 ring-[#C5A572]/25"
+          aria-hidden
+        >
+          {icon}
+        </span>
+        <p className="text-[9.5px] font-semibold uppercase tracking-[0.18em] text-[#C5A572]/85">
+          {label}
+        </p>
       </div>
+      <div className="mt-2 text-[13px] font-medium leading-snug text-white">{children}</div>
     </div>
   );
 }
@@ -50,7 +66,7 @@ export default function WebinarHeroDetails({
     zoomLine === DEFAULT_ZOOM ? (
       <>
         <span className="font-medium">Zoom</span>
-        <span className="mt-0.5 block text-xs font-normal text-white/70 leading-snug">
+        <span className="mt-0.5 block text-[11px] font-normal leading-snug text-white/60">
           Link after registration
         </span>
       </>
@@ -59,23 +75,16 @@ export default function WebinarHeroDetails({
     );
 
   return (
-    <div
-      className="
-        mt-8 mb-10 w-full max-w-lg mx-auto
-        flex flex-col rounded-xl border border-white/10 bg-black/30 px-3.5 py-0.5
-        shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]
-        sm:max-w-xl
-      "
-    >
-      <Row icon={<Calendar className="h-4 w-4 text-[#C5A572]" />} label="Date">
+    <div className="mt-7 mb-8 grid w-full max-w-xl mx-auto grid-cols-3 gap-2.5 sm:gap-3">
+      <DetailCard icon={<Calendar className="h-3.5 w-3.5 text-[#C5A572]" />} label="Date">
         {dateLine}
-      </Row>
-      <Row icon={<Clock className="h-4 w-4 text-[#C5A572]" />} label="Time">
+      </DetailCard>
+      <DetailCard icon={<Clock className="h-3.5 w-3.5 text-[#C5A572]" />} label="Time">
         {timeLine}
-      </Row>
-      <Row icon={<Video className="h-4 w-4 text-[#C5A572]" />} label="Where" isLast>
+      </DetailCard>
+      <DetailCard icon={<Video className="h-3.5 w-3.5 text-[#C5A572]" />} label="Where">
         {zoomBody}
-      </Row>
+      </DetailCard>
     </div>
   );
 }

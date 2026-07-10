@@ -1,9 +1,10 @@
 /** Live webinar start - "2026 Pilot Career Blueprint", 18 July 2026 · 11:30 AM IST. */
 export const WEBINAR_START_ISO = "2026-07-18T11:30:00+05:30";
 
-/** Official Zoom registration page - attendees register here to receive the join link by email. */
+/** Official Zoom registration page - attendees register here to receive the join link by email.
+ *  2026 Pilot Career Blueprint, 18 Jul 2026 11:30 AM IST. */
 export const WEBINAR_ZOOM_REGISTER_URL =
-  "https://us06web.zoom.us/meeting/register/WjrhvFLgSCy4H7xQUZ2urg";
+  "https://us06web.zoom.us/meeting/register/JGMzDhBqTJC635lNAhxx5w";
 
 /**
  * Parents webinar CTA. Today this is the same session as the student roadmap webinar; point this
