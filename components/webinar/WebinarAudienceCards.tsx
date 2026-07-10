@@ -22,7 +22,7 @@ const CARDS: Card[] = [
     title: "For Aspiring Pilots",
     desc: "Get a clear roadmap, understand costs, top schools, and explore career routes.",
     chips: ["Clear roadmap", "Cost clarity", "Career options"],
-    image: "/unsplash/webinar-aspiring-AhteFvRl8uc.jpg",
+    image: "/webinar/audience-student.jpg",
     imageSide: "left",
   },
   {
@@ -31,7 +31,7 @@ const CARDS: Card[] = [
     title: "For Parents",
     desc: "Understand the investment, timelines, and realistic outcomes before your child commits.",
     chips: ["Honest insights", "Timeline clarity", "Real outcomes"],
-    image: "/unsplash/webinar-parents-tBYDY8CXMyY.jpg",
+    image: "/webinar/audience-parent.jpg",
     imageSide: "right",
   },
 ];
