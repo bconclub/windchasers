@@ -1,20 +1,22 @@
 "use client";
 
 import WebinarCountdown from "@/components/webinar/WebinarCountdown";
-import WebinarVimeoEmbed from "@/components/webinar/WebinarVimeoEmbed";
-import { WEBINAR_PROMO_VIMEO_ID } from "@/lib/webinar";
+import WebinarVideoEmbed from "@/components/webinar/WebinarVideoEmbed";
+
+/** Self-hosted square (1:1) promo clip. */
+const WEBINAR_PROMO_VIDEO = "/webinar/webinar-promo.mp4";
 
 /**
- * Two-column strip: countdown (left) + Vimeo preview (right) on large screens;
+ * Two-column strip: countdown (left) + promo video (right) on large screens;
  * stacks on small screens.
  */
 export default function WebinarCountdownVideoSection({
   targetIso,
-  vimeoId = WEBINAR_PROMO_VIMEO_ID,
+  videoSrc = WEBINAR_PROMO_VIDEO,
   countdownLabel,
 }: {
   targetIso: string;
-  vimeoId?: string;
+  videoSrc?: string;
   countdownLabel?: string;
 }) {
   return (
@@ -24,13 +26,10 @@ export default function WebinarCountdownVideoSection({
           <WebinarCountdown targetIso={targetIso} label={countdownLabel} />
         </div>
         <div className="min-w-0 flex flex-col justify-center items-center lg:items-end">
-          {/*
-            Full story (9:16): width drives height via aspect; cap width so height never exceeds
-            ~72vh/680px. No outer framed card (no border/shadow), so the column isn’t a wide empty box
-            around a narrow strip.
-          */}
-          <div className="relative w-full max-w-[min(100%,calc(min(72vh,680px)*(9/16)))] aspect-[9/16] bg-black overflow-hidden">
-            <WebinarVimeoEmbed vimeoId={vimeoId} />
+          {/* Portrait 9:16 clip (browser display ratio); cap height ~72vh/680px so
+              width follows. Rounded, subtle frame. */}
+          <div className="relative w-full max-w-[min(100%,calc(min(72vh,680px)*(9/16)))] aspect-[9/16] overflow-hidden rounded-2xl bg-black ring-1 ring-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.45)]">
+            <WebinarVideoEmbed src={videoSrc} />
           </div>
         </div>
       </div>
