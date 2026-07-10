@@ -34,6 +34,7 @@ export const EVENTS = {
   SUMMERCAMP_LEAD: "summercamp_lead",          // summer-camp enrolment form
   NZ_SEMINAR_LEAD: "nz_seminar_lead",          // NZ seminar registration
   FLIGHT_SCHOOL_LEAD: "flight_school_lead",    // flight-schools directory enquiry
+  WEBINAR_LEAD: "webinar_lead",                // webinar registration (parents / students)
 
   // ---- Engagement (intent signals, NOT confirmed leads) -------------------
   WHATSAPP_OPEN: "whatsapp_open",              // WhatsApp button tapped / capture opened

@@ -14,6 +14,21 @@ export const WEBINAR_PARENT_ZOOM_REGISTER_URL = WEBINAR_ZOOM_REGISTER_URL;
 /** Vimeo ID for the marketing preview next to the countdown (player embed). */
 export const WEBINAR_PROMO_VIMEO_ID = "1184303137";
 
+/**
+ * Webinar titles stored on the PROXe lead (unified_context.windchasers.webinar_name)
+ * and used in the WhatsApp confirmation/reminder copy. Parents & students are the
+ * SAME session today — the two names just distinguish which funnel registered them
+ * (different ads + different welcome message per audience). Update alongside the
+ * Zoom URL + date when a new session is scheduled.
+ */
+export const WEBINAR_NAME_PARENTS = `Parents Pilot-Career Webinar · ${formatWebinarDateShortDisplay()}`;
+export const WEBINAR_NAME_STUDENTS = `Pilot Roadmap Webinar · ${formatWebinarDateShortDisplay()}`;
+
+/** Combined "date · time" label passed to the register modal + stored on the lead. */
+export function webinarDateTimeLabel(): string {
+  return `${formatWebinarDateShortDisplay()} · ${formatWebinarTimeDisplay()}`;
+}
+
 /** Parents webinar landing - exclusive parents WhatsApp community. */
 export const WEBINAR_PARENT_WHATSAPP_GROUP_URL =
   "https://chat.whatsapp.com/ChCxl1miiSN1WS2S4oGpAZ";
