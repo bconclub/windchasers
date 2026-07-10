@@ -10,9 +10,11 @@ function pad(n: number) {
 export default function WebinarCountdown({
   targetIso,
   label = "Webinar starts in",
+  variant = "full",
 }: {
   targetIso: string;
   label?: string;
+  variant?: "full" | "compact";
 }) {
   const shouldReduceMotion = useReducedMotion();
   const [now, setNow] = useState(() => Date.now());
@@ -41,6 +43,35 @@ export default function WebinarCountdown({
       <span className="text-[10px] sm:text-xs uppercase tracking-[0.2em] text-white/50 mt-1">{u}</span>
     </div>
   );
+
+  if (variant === "compact") {
+    const units: [number, string][] = [
+      [days, "Days"],
+      [hours, "Hrs"],
+      [minutes, "Min"],
+      [seconds, "Sec"],
+    ];
+    return (
+      <div
+        className="inline-flex items-center gap-2.5 sm:gap-4 rounded-2xl border border-[#C5A572]/30 bg-black/50 px-4 py-3 sm:px-6 sm:py-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+        role="timer"
+        aria-live={shouldReduceMotion ? "off" : "polite"}
+        aria-label={live ? "Webinar is live" : `${label}: ${days}d ${hours}h ${minutes}m ${seconds}s`}
+      >
+        {units.map(([v, u], i) => (
+          <div key={u} className="flex items-center gap-2.5 sm:gap-4">
+            {i > 0 && <span className="-mt-2 text-xl font-bold text-[#C5A572]/45">:</span>}
+            <div className="flex flex-col items-center">
+              <span className="text-2xl sm:text-3xl font-bold tabular-nums text-white" suppressHydrationWarning>
+                {pad(v)}
+              </span>
+              <span className="mt-0.5 text-[9px] uppercase tracking-[0.15em] text-white/45">{u}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div

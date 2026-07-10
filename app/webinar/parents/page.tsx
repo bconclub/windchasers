@@ -1,22 +1,10 @@
 "use client";
 
-import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import {
-  AlertTriangle,
-  ArrowRight,
-  Award,
-  Briefcase,
-  GitCompare,
-  Route,
-  ShieldCheck,
-  Wallet,
-} from "lucide-react";
 import WindChasersPastOpenHousesGallery from "@/components/marketing/WindChasersPastOpenHousesGallery";
-import WebinarCountdownVideoSection from "@/components/webinar/WebinarCountdownVideoSection";
-import WebinarHeroDetails, { WebinarWingEmblem } from "@/components/webinar/WebinarHeroDetails";
 import WebinarAudienceCards from "@/components/webinar/WebinarAudienceCards";
+import WebinarCoverCards from "@/components/webinar/WebinarCoverCards";
+import WebinarHero from "@/components/webinar/WebinarHero";
 import { WebinarRegisterModal } from "@/components/webinar/WebinarRegisterModal";
 import {
   WEBINAR_START_ISO,
@@ -25,66 +13,11 @@ import {
   WEBINAR_NAME_PARENTS,
   WEBINAR_NAME_STUDENTS,
   webinarDateTimeLabel,
-  formatWebinarDateDisplay,
-  formatWebinarDateShortDisplay,
+  formatWebinarDayMonthDisplay,
   formatWebinarTimeDisplay,
 } from "@/lib/webinar";
 
-/** Same grid pattern as students webinar; bullets written for parents and guardians. */
-const WEBINAR_COVER_BLOCKS_PARENTS = [
-  {
-    badge: "Roadmap",
-    Icon: Route,
-    items: [
-      "What happens from Class 12 through CPL, in plain order",
-      "DGCA steps explained so you can coach and check progress with your child",
-    ],
-  },
-  {
-    badge: "After CPL",
-    Icon: Award,
-    items: [
-      "What graduates realistically do next, in timelines you can plan around",
-      "Expectations you and your child can align on before training starts",
-    ],
-  },
-  {
-    badge: "Careers",
-    Icon: Briefcase,
-    items: [
-      "Airlines, charters, cargo, instructing: what each path means for stability",
-      "The questions working parents usually ask first about job outcomes",
-    ],
-  },
-  {
-    badge: "Routes",
-    Icon: GitCompare,
-    items: [
-      "Cadet programme vs self-funded CPL: how families usually decide",
-      "How to weigh upfront cost, bond, and flexibility for your situation",
-    ],
-  },
-  {
-    badge: "Investment",
-    Icon: Wallet,
-    items: [
-      "Full cost picture: training, exams, medicals, and the extras that add up",
-      "A single grounded budget view you can take to your family or bank",
-    ],
-  },
-  {
-    badge: "Pitfalls",
-    Icon: AlertTriangle,
-    items: [
-      "Where families lose time or money in pilot training choices",
-      "What to verify before you pay deposits or sign long commitments",
-    ],
-  },
-] as const;
-
 export default function WebinarParentsPage() {
-  const shouldReduceMotion = useReducedMotion();
-  const transitionDuration = shouldReduceMotion ? 0 : undefined;
 
   const heroRegisterRef = useRef<HTMLDivElement>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
@@ -97,9 +30,8 @@ export default function WebinarParentsPage() {
     setRegisterOpen(true);
   };
 
-  const dateLine = formatWebinarDateDisplay();
-  const dateShortLine = formatWebinarDateShortDisplay();
   const timeLine = formatWebinarTimeDisplay();
+  const dateShort = formatWebinarDayMonthDisplay();
 
   useEffect(() => {
     const el = heroRegisterRef.current;
@@ -114,161 +46,17 @@ export default function WebinarParentsPage() {
 
   return (
     <>
-      <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden pt-20">
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/facility/WC1.webp"
-            alt=""
-            fill
-            className="object-cover object-center"
-            priority
-            sizes="100vw"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-dark/80 via-dark/90 to-dark" />
-        </div>
+      <WebinarHero
+        ref={heroRegisterRef}
+        targetIso={WEBINAR_START_ISO}
+        headlineTop="Your Child's Pilot Career"
+        headlineAccent="Starts Here"
+        dateShort={dateShort}
+        timeText={timeLine}
+        onReserve={() => openRegister('parent')}
+      />
 
-        <div className="relative z-10 w-full px-4 md:px-0 md:mx-auto md:max-w-[700px] pt-4 pb-12 sm:pt-6">
-          <motion.div
-            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: transitionDuration ?? 0.8 }}
-            className="relative bg-white/5 backdrop-blur-[20px] border border-white/10 rounded-[24px] p-8 md:p-12 lg:p-[48px_64px] shadow-[0_25px_50px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.1)]"
-          >
-            <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#C5A572] to-transparent rounded-t-[24px]" />
-            <div className="absolute top-5 left-5 w-5 h-5">
-              <div className="absolute top-0 left-0 w-5 h-[2px] bg-[#C5A572]" />
-              <div className="absolute top-0 left-0 w-[2px] h-5 bg-[#C5A572]" />
-            </div>
-            <div className="absolute bottom-5 right-5 w-5 h-5">
-              <div className="absolute bottom-0 right-0 w-5 h-[2px] bg-[#C5A572]" />
-              <div className="absolute bottom-0 right-0 w-[2px] h-5 bg-[#C5A572]" />
-            </div>
-
-            <motion.p
-              initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: transitionDuration ?? 0.6, delay: shouldReduceMotion ? 0 : 0.1 }}
-              className="text-[#C5A572] text-xs uppercase tracking-[3px] text-center font-medium"
-            >
-              {dateShortLine.toUpperCase()} · LIVE ON ZOOM
-            </motion.p>
-
-            <WebinarWingEmblem />
-
-            <motion.h1
-              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.2 }}
-              className="text-[26px] md:text-[44px] font-bold leading-[1.12] text-white text-center"
-              style={{ textShadow: "0 2px 20px rgba(0,0,0,0.5)" }}
-            >
-              <span className="block">Your child&apos;s pilot career</span>
-              <span className="block text-[#C5A572] mt-1">Clear answers for parents · 2026</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.3 }}
-              className="text-sm sm:text-base md:text-lg text-gray-300 font-normal text-center mt-5 max-w-xl mx-auto leading-relaxed"
-            >
-              Free live Zoom built for moms and dads: real costs, timelines, cadet vs CPL, and how to plan with your
-              child for 2026.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.4 }}
-              className="w-full"
-            >
-              <WebinarHeroDetails dateLine={dateLine} timeLine={timeLine} />
-            </motion.div>
-
-            <motion.div
-              ref={heroRegisterRef}
-              initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: transitionDuration ?? 0.8, delay: shouldReduceMotion ? 0 : 0.5 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-5"
-            >
-              <button
-                type="button"
-                onClick={() => openRegister('parent')}
-                className="group inline-flex items-center justify-center gap-2 bg-[#C5A572] text-[#1A1A1A] px-8 md:px-10 py-4 rounded-full font-semibold text-base shadow-[0_10px_30px_rgba(197,165,114,0.3)] w-full sm:w-auto transition-all duration-300 hover:bg-[#d4b789] hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(197,165,114,0.45)]"
-              >
-                Reserve my free seat
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </button>
-              <div className="flex items-start gap-2.5 text-left">
-                <ShieldCheck className="h-5 w-5 text-[#C5A572] shrink-0 mt-0.5" aria-hidden />
-                <p className="text-[12px] leading-snug text-gray-300">
-                  Expert guidance. Real answers.
-                  <br />
-                  Your 2026, planned right.
-                </p>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      <WebinarCountdownVideoSection targetIso={WEBINAR_START_ISO} />
-
-      <section
-        id="webinar-topics"
-        className="py-20 px-6 lg:px-8 bg-[#1A1A1A] border-t border-white/5 scroll-mt-24"
-      >
-        <div className="max-w-5xl mx-auto">
-          <motion.h2
-            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: transitionDuration ?? 0.6 }}
-            className="text-3xl md:text-4xl font-bold text-center mb-4 text-white"
-          >
-            What we&apos;ll cover for you as parents
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: shouldReduceMotion ? 1 : 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: transitionDuration ?? 0.6, delay: shouldReduceMotion ? 0 : 0.1 }}
-            className="text-gray-400 text-center mb-14 max-w-2xl mx-auto"
-          >
-            The same straight WindChasers depth you expect, framed for the decisions you are helping your child make.
-          </motion.p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {WEBINAR_COVER_BLOCKS_PARENTS.map(({ badge, Icon, items }, i) => (
-              <motion.div
-                key={badge}
-                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : i * 0.1 }}
-                className="group relative bg-[#1A1A1A] border-t-2 border-[#C5A572] rounded-xl p-8 min-h-[220px] hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 transition-all duration-300"
-              >
-                <div className="absolute -top-3 left-6">
-                  <span className="bg-[#C5A572] text-[#1A1A1A] text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-                    {badge}
-                  </span>
-                </div>
-                <div className="mb-5 mt-2">
-                  <Icon className="w-8 h-8 text-[#C5A572]" aria-hidden />
-                </div>
-                <ul className="space-y-3">
-                  {items.map((item) => (
-                    <li key={item} className="flex items-start gap-3 text-white/80 text-sm leading-relaxed">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#C5A572] mt-2 shrink-0" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <WebinarCoverCards onAgenda={() => openRegister('parent')} />
 
       <WebinarAudienceCards onSelect={openRegister} />
 

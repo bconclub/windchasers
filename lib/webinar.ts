@@ -58,6 +58,15 @@ export function formatWebinarDateDisplay(): string {
   }).format(new Date(WEBINAR_START_ISO));
 }
 
+/** Compact "18 July" (day + month, no year) for the hero meta row. */
+export function formatWebinarDayMonthDisplay(): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata",
+    day: "numeric",
+    month: "long",
+  }).format(new Date(WEBINAR_START_ISO));
+}
+
 export function formatWebinarTimeDisplay(): string {
   return new Intl.DateTimeFormat("en-IN", {
     timeZone: "Asia/Kolkata",
