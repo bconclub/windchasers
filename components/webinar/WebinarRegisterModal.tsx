@@ -266,7 +266,7 @@ export function WebinarRegisterModal({
               Register for the webinar
             </h2>
             <p className="text-white/55 text-center text-[13px] leading-relaxed mb-5 max-w-[360px] mx-auto">
-              {webinarDate} · we&apos;ll confirm on WhatsApp, then take you to Zoom for the join link.
+              {webinarDate} · Free, live on Zoom
             </p>
 
             {/* Audience toggle — pre-set from the section, switchable here. */}

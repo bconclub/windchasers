@@ -20,11 +20,14 @@ export default function SiteChrome() {
   // (handled in Navbar), no sticky CTA, no PROXe chat launcher. Bring them back
   // later when the page is finalised.
   const isFlightSchools = pathname === "/flight-schools";
+  // Webinar pages have their own "Reserve my seat" CTA — the global "Book a
+  // Demo Class" sticky competes with it, so hide it there (keep the chat widget).
+  const isWebinar = pathname.startsWith("/webinar");
 
   return (
     <>
       <Navbar />
-      {!isFlightSchools && <StickyDemoCTA />}
+      {!isFlightSchools && !isWebinar && <StickyDemoCTA />}
       {!isFlightSchools && (
         <Script
           src="https://proxe.windchasers.in/api/widget/embed.js"
