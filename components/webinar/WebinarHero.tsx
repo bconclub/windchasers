@@ -6,7 +6,6 @@ import { Video, Calendar, Clock, Gift, MessageCircle, Users, ArrowRight } from "
 import WebinarCountdown from "@/components/webinar/WebinarCountdown";
 import WebinarVideoEmbed from "@/components/webinar/WebinarVideoEmbed";
 
-const STEPS = ["Urgency", "Value", "Relevance", "Proof", "Registration"] as const;
 const WEBINAR_PROMO_VIDEO = "/webinar/webinar-promo.mp4";
 
 type Props = {
@@ -46,25 +45,6 @@ const WebinarHero = forwardRef<HTMLDivElement, Props>(function WebinarHero(
       </div>
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
-        {/* funnel step-strip */}
-        <div className="mb-9 hidden items-center gap-2.5 text-[11px] md:flex">
-          {STEPS.map((s, i) => (
-            <div key={s} className="flex items-center gap-2.5">
-              {i > 0 && <span className="h-px w-6 bg-white/12" />}
-              <span className={`inline-flex items-center gap-1.5 ${i === 0 ? "text-[#C5A572]" : "text-white/35"}`}>
-                <span
-                  className={`flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-bold ${
-                    i === 0 ? "bg-[#C5A572] text-black" : "bg-white/10 text-white/50"
-                  }`}
-                >
-                  {i + 1}
-                </span>
-                {s}
-              </span>
-            </div>
-          ))}
-        </div>
-
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12">
           {/* LEFT — content */}
           <div>
