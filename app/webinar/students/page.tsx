@@ -9,20 +9,21 @@ import {
   Award,
   Briefcase,
   GitCompare,
-  GraduationCap,
   Route,
   ShieldCheck,
-  Users,
   Wallet,
 } from "lucide-react";
 import WindChasersPastOpenHousesGallery from "@/components/marketing/WindChasersPastOpenHousesGallery";
 import WebinarHeroDetails, { WebinarWingEmblem } from "@/components/webinar/WebinarHeroDetails";
+import WebinarAudienceCards from "@/components/webinar/WebinarAudienceCards";
 import WebinarCountdownVideoSection from "@/components/webinar/WebinarCountdownVideoSection";
 import { WebinarRegisterModal } from "@/components/webinar/WebinarRegisterModal";
 import {
   WEBINAR_START_ISO,
   WEBINAR_ZOOM_REGISTER_URL,
+  WEBINAR_PARENT_ZOOM_REGISTER_URL,
   WEBINAR_NAME_STUDENTS,
+  WEBINAR_NAME_PARENTS,
   webinarDateTimeLabel,
   formatWebinarDateDisplay,
   formatWebinarDateShortDisplay,
@@ -81,21 +82,6 @@ const WEBINAR_COVER_BLOCKS = [
   },
 ] as const;
 
-const WHO_SHOULD_ATTEND = [
-  {
-    Icon: GraduationCap,
-    headline: "Students ready to fly",
-    subtext: "Completed 12th or in final year. Serious about CPL training and want a clear 2026 plan.",
-    bullets: ["Want a full roadmap after +2", "Need cost clarity", "Exploring cadet vs CPL routes"],
-  },
-  {
-    Icon: Users,
-    headline: "Parents supporting their child",
-    subtext: "Want to understand investment, timelines, and career outlook before your child commits.",
-    bullets: ["Honest cost picture", "Career stability context", "What to ask in the live Q&A"],
-  },
-];
-
 export default function WebinarStudentsPage() {
   const shouldReduceMotion = useReducedMotion();
   const transitionDuration = shouldReduceMotion ? 0 : undefined;
@@ -104,6 +90,13 @@ export default function WebinarStudentsPage() {
   const heroRegisterRef = useRef<HTMLDivElement>(null);
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
+  // Page defaults to the student audience; the audience cards let a visitor
+  // self-select, re-tagging the register flow.
+  const [registerAudience, setRegisterAudience] = useState<"student" | "parent">("student");
+  const openRegister = (aud: "student" | "parent") => {
+    setRegisterAudience(aud);
+    setRegisterOpen(true);
+  };
 
   const dateLine = formatWebinarDateDisplay();
   const dateShortLine = formatWebinarDateShortDisplay();
@@ -202,7 +195,7 @@ export default function WebinarStudentsPage() {
             >
               <button
                 type="button"
-                onClick={() => setRegisterOpen(true)}
+                onClick={() => openRegister('student')}
                 className="group inline-flex items-center justify-center gap-2 bg-[#C5A572] text-[#1A1A1A] px-8 md:px-10 py-4 rounded-full font-semibold text-base shadow-[0_10px_30px_rgba(197,165,114,0.3)] w-full sm:w-auto transition-all duration-300 hover:bg-[#d4b789] hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(197,165,114,0.45)]"
               >
                 Reserve my free seat
@@ -279,43 +272,7 @@ export default function WebinarStudentsPage() {
         </div>
       </section>
 
-      {/* Who should attend */}
-      <section className="py-20 px-6 lg:px-8 bg-[#1E1E1E]">
-        <div className="max-w-[1200px] mx-auto">
-          <motion.h2
-            initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 16 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-4xl md:text-5xl font-bold text-center mb-14 text-[#C5A572]"
-          >
-            Who should attend
-          </motion.h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {WHO_SHOULD_ATTEND.map(({ Icon, headline, subtext, bullets }, i) => (
-              <motion.div
-                key={headline}
-                initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: transitionDuration ?? 0.5, delay: shouldReduceMotion ? 0 : i * 0.07 }}
-                className="bg-[#252525] border-l-4 border-[#C5A572] rounded-r-lg p-8"
-              >
-                <Icon className="w-10 h-10 text-[#C5A572] mb-4" />
-                <h3 className="text-white font-semibold text-xl mb-2">{headline}</h3>
-                <p className="text-gray-400 text-sm mb-5 leading-relaxed">{subtext}</p>
-                <ul className="space-y-2">
-                  {bullets.map((b) => (
-                    <li key={b} className="flex items-start gap-2 text-gray-300 text-sm">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#C5A572] mt-1.5 shrink-0" />
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <WebinarAudienceCards onSelect={openRegister} />
 
       <WindChasersPastOpenHousesGallery
         id="windchasers-events"
@@ -328,7 +285,7 @@ export default function WebinarStudentsPage() {
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#1A1A1A]/90 backdrop-blur-md border-t border-white/10 px-4 py-3">
           <button
             type="button"
-            onClick={() => setRegisterOpen(true)}
+            onClick={() => openRegister('student')}
             className="flex w-full items-center justify-center bg-[#C5A572] text-[#1A1A1A] py-3.5 rounded-full font-semibold text-sm shadow-[0_10px_30px_rgba(197,165,114,0.25)] active:scale-[0.99] transition-transform"
           >
             Reserve my free seat
@@ -339,10 +296,10 @@ export default function WebinarStudentsPage() {
       <WebinarRegisterModal
         open={registerOpen}
         onClose={() => setRegisterOpen(false)}
-        audience="student"
-        webinarName={WEBINAR_NAME_STUDENTS}
+        audience={registerAudience}
+        webinarName={registerAudience === 'parent' ? WEBINAR_NAME_PARENTS : WEBINAR_NAME_STUDENTS}
         webinarDate={webinarDateTimeLabel()}
-        zoomUrl={WEBINAR_ZOOM_REGISTER_URL}
+        zoomUrl={registerAudience === 'parent' ? WEBINAR_PARENT_ZOOM_REGISTER_URL : WEBINAR_ZOOM_REGISTER_URL}
       />
     </>
   );
