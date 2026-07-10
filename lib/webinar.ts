@@ -1,5 +1,5 @@
-/** Shared live webinar start - April 25, 2026 · 4:00 PM IST (marketing site, 2026 cohort). */
-export const WEBINAR_START_ISO = "2026-04-25T16:00:00+05:30";
+/** Live webinar start - "2026 Pilot Career Blueprint", 18 July 2026 · 11:30 AM IST. */
+export const WEBINAR_START_ISO = "2026-07-18T11:30:00+05:30";
 
 /** Official Zoom registration page - attendees register here to receive the join link by email. */
 export const WEBINAR_ZOOM_REGISTER_URL =
@@ -21,8 +21,8 @@ export const WEBINAR_PROMO_VIMEO_ID = "1184303137";
  * (different ads + different welcome message per audience). Update alongside the
  * Zoom URL + date when a new session is scheduled.
  */
-export const WEBINAR_NAME_PARENTS = `Parents Pilot-Career Webinar · ${formatWebinarDateShortDisplay()}`;
-export const WEBINAR_NAME_STUDENTS = `Pilot Roadmap Webinar · ${formatWebinarDateShortDisplay()}`;
+export const WEBINAR_NAME_PARENTS = `2026 Pilot Career Blueprint (Parents) · ${formatWebinarDateShortDisplay()}`;
+export const WEBINAR_NAME_STUDENTS = `2026 Pilot Career Blueprint · ${formatWebinarDateShortDisplay()}`;
 
 /** Combined "date · time" label passed to the register modal + stored on the lead. */
 export function webinarDateTimeLabel(): string {
