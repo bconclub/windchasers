@@ -22,12 +22,22 @@ export const WEBINAR_PROMO_VIMEO_ID = "1184303137";
  * (different ads + different welcome message per audience). Update alongside the
  * Zoom URL + date when a new session is scheduled.
  */
-export const WEBINAR_NAME_PARENTS = `2026 Pilot Career Blueprint (Parents) · ${formatWebinarDateShortDisplay()}`;
-export const WEBINAR_NAME_STUDENTS = `2026 Pilot Career Blueprint · ${formatWebinarDateShortDisplay()}`;
+export const WEBINAR_NAME_PARENTS = "2026 Pilot Career Blueprint (Parents)";
+export const WEBINAR_NAME_STUDENTS = "2026 Pilot Career Blueprint";
 
-/** Combined "date · time" label passed to the register modal + stored on the lead. */
+/**
+ * Neat "18 July 2026 at 11:30 AM IST" label — stored on the lead + shown in the
+ * register modal. ASCII-only ("at", not a middle-dot) so it never mojibakes in
+ * the dashboard or WhatsApp.
+ */
 export function webinarDateTimeLabel(): string {
-  return `${formatWebinarDateShortDisplay()} · ${formatWebinarTimeDisplay()}`;
+  const date = new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(WEBINAR_START_ISO));
+  return `${date} at ${formatWebinarTimeDisplay()}`;
 }
 
 /** Parents webinar landing - exclusive parents WhatsApp community. */
