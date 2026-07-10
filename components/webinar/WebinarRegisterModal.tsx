@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, User as UserIcon, Mail } from "lucide-react";
+import { X, Send, User as UserIcon } from "lucide-react";
 import { trackMetaLead } from "@/lib/metaPixel";
 import { track, EVENTS } from "@/lib/analytics/events";
 import { getStoredAttribution } from "@/lib/attribution";
@@ -28,13 +28,13 @@ export interface WebinarRegisterModalProps {
 }
 
 /**
- * Webinar registration gate. Captures name + phone + email into PROXe (tagged
+ * Webinar registration gate. Captures name + phone into PROXe (tagged
  * lead_type='webinar' + audience so the counsellor agent picks them up for
  * WhatsApp confirm/reminders and calls), THEN redirects to the official Zoom
- * registration page for the confirmed seat. Capture-then-redirect means we get
- * the contact into the chat even if they abandon Zoom, and the audience tag
- * (parent vs student) rides on which page they registered from — Zoom's own
- * form can't carry that. Visual language mirrors WhatsAppCaptureModal.
+ * registration page — Zoom collects the email itself and sends the join link.
+ * Capture-then-redirect means we get the contact into the chat even if they
+ * abandon Zoom, and the audience tag (parent vs student) rides on which page
+ * they registered from. Visual language mirrors WhatsAppCaptureModal.
  */
 export function WebinarRegisterModal({
   open,
@@ -46,7 +46,6 @@ export function WebinarRegisterModal({
 }: WebinarRegisterModalProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -79,7 +78,6 @@ export function WebinarRegisterModal({
     if (submitting) return;
     const trimmedName = name.trim();
     const trimmedPhone = phone.trim();
-    const trimmedEmail = email.trim();
 
     if (!trimmedName) {
       setError("Please enter your name.");
@@ -87,11 +85,6 @@ export function WebinarRegisterModal({
     }
     if (trimmedPhone.replace(/\D/g, "").length < 10) {
       setError("Please enter a valid phone number.");
-      return;
-    }
-    // Zoom needs an email to send the join link, so it's required here.
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
-      setError("Please enter a valid email — Zoom sends the join link there.");
       return;
     }
 
@@ -118,7 +111,6 @@ export function WebinarRegisterModal({
       type: "event" as const,
       name: trimmedName,
       phone: trimmedPhone,
-      email: trimmedEmail,
       audience,
       page_url: pageUrl,
       landing_url: landingUrl || undefined,
@@ -286,7 +278,7 @@ export function WebinarRegisterModal({
             </div>
 
             <label htmlFor="webinar-phone" className="sr-only">Phone number</label>
-            <div className="relative flex items-stretch gap-0 bg-[#0D0D0D] border border-white/10 rounded-xl overflow-hidden focus-within:border-[#C5A572] focus-within:shadow-[0_0_0_3px_rgba(197,165,114,0.08)] transition-all duration-200 mb-3">
+            <div className="relative flex items-stretch gap-0 bg-[#0D0D0D] border border-white/10 rounded-xl overflow-hidden focus-within:border-[#C5A572] focus-within:shadow-[0_0_0_3px_rgba(197,165,114,0.08)] transition-all duration-200">
               <div className="flex items-center justify-center px-4 h-12 bg-[#1A1A1A] border-r border-white/10 text-white/80 text-[13px] font-medium tracking-wide select-none">
                 <span className="mr-1 text-[#C5A572]">+91</span>
                 <span className="text-white/30 text-[10px] uppercase tracking-wider">IN</span>
@@ -299,25 +291,8 @@ export function WebinarRegisterModal({
                 placeholder="98765 43210"
                 value={phone}
                 onChange={(e) => { setPhone(e.target.value); if (error) setError(null); }}
-                className="flex-1 min-w-0 bg-transparent px-4 h-12 text-white text-[15px] tracking-wide placeholder:text-white/25 focus:outline-none"
-              />
-            </div>
-
-            <label htmlFor="webinar-email" className="sr-only">Email</label>
-            <div className="relative flex items-stretch bg-[#0D0D0D] border border-white/10 rounded-xl overflow-hidden focus-within:border-[#C5A572] focus-within:shadow-[0_0_0_3px_rgba(197,165,114,0.08)] transition-all duration-200">
-              <div className="flex items-center justify-center pl-4 pr-3 h-12 text-[#C5A572] select-none">
-                <Mail className="w-4 h-4" />
-              </div>
-              <input
-                id="webinar-email"
-                type="email"
-                autoComplete="email"
-                inputMode="email"
-                placeholder="you@email.com"
-                value={email}
-                onChange={(e) => { setEmail(e.target.value); if (error) setError(null); }}
                 onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); }}
-                className="flex-1 min-w-0 bg-transparent pr-4 h-12 text-white text-[15px] tracking-wide placeholder:text-white/25 focus:outline-none"
+                className="flex-1 min-w-0 bg-transparent px-4 h-12 text-white text-[15px] tracking-wide placeholder:text-white/25 focus:outline-none"
               />
             </div>
 
