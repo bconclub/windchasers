@@ -82,8 +82,9 @@ export default function WebinarParentsPage() {
       <WebinarRegisterModal
         open={registerOpen}
         onClose={() => setRegisterOpen(false)}
-        audience={registerAudience}
-        webinarName={registerAudience === 'parent' ? WEBINAR_NAME_PARENTS : WEBINAR_NAME_STUDENTS}
+        initialAudience={registerAudience}
+        studentWebinarName={WEBINAR_NAME_STUDENTS}
+        parentWebinarName={WEBINAR_NAME_PARENTS}
         webinarDate={webinarDateTimeLabel()}
         zoomUrl={registerAudience === 'parent' ? WEBINAR_PARENT_ZOOM_REGISTER_URL : WEBINAR_ZOOM_REGISTER_URL}
       />

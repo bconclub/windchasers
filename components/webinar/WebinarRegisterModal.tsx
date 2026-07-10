@@ -17,10 +17,13 @@ import {
 export interface WebinarRegisterModalProps {
   open: boolean;
   onClose: () => void;
-  /** 'parent' or 'student' — drives which welcome sequence PROXe sends. */
-  audience: "parent" | "student";
-  /** Webinar title stored on the lead (e.g. "Pilot Roadmap Webinar — Apr 2026"). */
-  webinarName: string;
+  /** Pre-selected audience (from the page/card the user opened it from). The
+   *  in-modal toggle lets them change it before submitting. */
+  initialAudience: "parent" | "student";
+  /** Webinar title stored on a STUDENT lead. */
+  studentWebinarName: string;
+  /** Webinar title stored on a PARENT lead. */
+  parentWebinarName: string;
   /** Human date/time label stored on the lead + shown in confirmation copy. */
   webinarDate: string;
   /** Official Zoom registration URL — attendee is sent here after we capture them. */
@@ -39,13 +42,15 @@ export interface WebinarRegisterModalProps {
 export function WebinarRegisterModal({
   open,
   onClose,
-  audience,
-  webinarName,
+  initialAudience,
+  studentWebinarName,
+  parentWebinarName,
   webinarDate,
   zoomUrl,
 }: WebinarRegisterModalProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [audience, setAudience] = useState<"parent" | "student">(initialAudience);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,8 +58,12 @@ export function WebinarRegisterModal({
     if (open) {
       setError(null);
       setSubmitting(false);
+      // Re-seat the toggle to whichever section opened it.
+      setAudience(initialAudience);
     }
-  }, [open]);
+  }, [open, initialAudience]);
+
+  const webinarName = audience === "parent" ? parentWebinarName : studentWebinarName;
 
   useEffect(() => {
     if (!open) return;
@@ -256,9 +265,33 @@ export function WebinarRegisterModal({
             >
               Register for the webinar
             </h2>
-            <p className="text-white/55 text-center text-[13px] leading-relaxed mb-6 max-w-[360px] mx-auto">
+            <p className="text-white/55 text-center text-[13px] leading-relaxed mb-5 max-w-[360px] mx-auto">
               {webinarDate} · we&apos;ll confirm on WhatsApp, then take you to Zoom for the join link.
             </p>
+
+            {/* Audience toggle — pre-set from the section, switchable here. */}
+            <div className="mb-4">
+              <p className="mb-1.5 text-center text-[11px] uppercase tracking-[0.15em] text-white/40">
+                I&apos;m registering as
+              </p>
+              <div className="grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-[#0D0D0D] p-1">
+                {(["student", "parent"] as const).map((a) => (
+                  <button
+                    key={a}
+                    type="button"
+                    onClick={() => { setAudience(a); if (error) setError(null); }}
+                    aria-pressed={audience === a}
+                    className={`rounded-lg py-2 text-[13px] font-semibold transition-colors ${
+                      audience === a
+                        ? "bg-[#C5A572] text-[#1A1A1A]"
+                        : "text-white/60 hover:text-white/90"
+                    }`}
+                  >
+                    {a === "student" ? "Student / Aspirant" : "Parent"}
+                  </button>
+                ))}
+              </div>
+            </div>
 
             <label htmlFor="webinar-name" className="sr-only">Your name</label>
             <div className="relative flex items-stretch bg-[#0D0D0D] border border-white/10 rounded-xl overflow-hidden focus-within:border-[#C5A572] focus-within:shadow-[0_0_0_3px_rgba(197,165,114,0.08)] transition-all duration-200 mb-3">
