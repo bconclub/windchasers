@@ -284,7 +284,7 @@ export function WebinarRegisterModal({
                     className={`rounded-lg py-2 text-[13px] font-semibold transition-colors ${
                       audience === a
                         ? "bg-[#C5A572] text-[#1A1A1A]"
-                        : "text-white/60 hover:text-white/90"
+                        : "text-white/35 hover:text-white/70"
                     }`}
                   >
                     {a === "student" ? "Student / Aspirant" : "Parent"}
