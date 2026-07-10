@@ -36,7 +36,7 @@ const WebinarHero = forwardRef<HTMLDivElement, Props>(function WebinarHero(
   reserveRef,
 ) {
   return (
-    <section className="relative overflow-hidden bg-[#0B0B0D] pt-24 pb-16 sm:pb-20">
+    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-[#0B0B0D] pt-24 pb-16 sm:pb-20">
       {/* faint facility backdrop + directional scrims */}
       <div className="absolute inset-0 z-0" aria-hidden>
         <Image src="/facility/WC1.webp" alt="" fill priority sizes="100vw" className="object-cover opacity-25" />
