@@ -220,8 +220,8 @@ Zenith Aviation Academy places a strong emphasis on safety, personalized mentors
   },
   {
     id: "featured-13",
-    country: "Europe",
-    place: `Spain`,
+    country: "Spain",
+    place: `Barcelona`,
     name: `Barcelona flight School`,
     about: `Barcelona Flight School (BFS) is one of Spain's most established EASA-approved flight training organizations, with over 70 years of experience in developing professional pilots. Located at Sabadell Airport near Barcelona, the academy offers internationally recognized pilot training in a modern, multicultural environment. With a fleet of more than 40 aircraft, advanced training facilities, and highly experienced instructors, BFS is committed to delivering high-quality aviation education that meets European and global industry standards.
 
@@ -235,8 +235,8 @@ Barcelona Flight School also provides dedicated support for international studen
   },
   {
     id: "featured-14",
-    country: "Europe",
-    place: `Hungary`,
+    country: "Hungary",
+    place: `Debrecen`,
     name: `Pharma Flight School`,
     about: `PHARMAFLIGHT Aviation Academy is an innovative aviation education and research institution headquartered in Debrecen, Hungary. Recognized for its unique approach to aviation training, the academy integrates pilot education with advanced simulation, aviation medicine, and human performance research. Its vision, "Fly by Comfort," reflects its commitment to improving aviation safety by enhancing the physical, mental, and operational performance of flight crews.
 

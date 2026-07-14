@@ -65,6 +65,10 @@ export function StatsBand({ schools }: { schools: FlightSchool[] }) {
 
 /* ─── Partner countries ───────────────────────────────────────────────── */
 
+// Partner countries = the countries our curated Featured (partner) schools are
+// in — the single source of truth, not the directory's stale is_partner flag.
+const PARTNER_COUNTRIES = new Set(FEATURED_SCHOOLS.map((s) => s.country));
+
 export function PartnerCountries({
   schools,
   onPickCountry,
@@ -75,15 +79,15 @@ export function PartnerCountries({
   activeCountry: string;
 }) {
   const countries = useMemo(() => {
-    const map: Record<string, { name: string; code: string; count: number; partners: number }> = {};
+    const map: Record<string, { name: string; code: string; count: number; isPartner: boolean }> = {};
     for (const s of schools) {
       const key = s.country;
-      if (!map[key]) map[key] = { name: s.country, code: s.countryCode, count: 0, partners: 0 };
+      if (!map[key]) map[key] = { name: s.country, code: s.countryCode, count: 0, isPartner: PARTNER_COUNTRIES.has(s.country) };
       map[key].count += 1;
-      if (s.isPartner) map[key].partners += 1;
     }
     return Object.values(map).sort((a, b) => {
-      if (b.partners !== a.partners) return b.partners - a.partners;
+      // Partner countries first, then by school count.
+      if (a.isPartner !== b.isPartner) return a.isPartner ? -1 : 1;
       return b.count - a.count;
     });
   }, [schools]);
@@ -124,7 +128,7 @@ export function PartnerCountries({
                   <span className="block text-white text-sm font-medium truncate">{c.name}</span>
                   <span className="block text-white/40 text-xs">
                     {c.count} school{c.count !== 1 ? "s" : ""}
-                    {c.partners > 0 && (
+                    {c.isPartner && (
                       <span className="text-[#C5A572]"> · Partner country</span>
                     )}
                   </span>
