@@ -4,6 +4,7 @@ import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Manrope } from "next/font/google";
+import Image from "next/image";
 import { Monitor, Building2, CheckCircle } from "lucide-react";
 import BookingForm from "@/components/BookingForm";
 
@@ -49,15 +50,20 @@ function DemoPageContent() {
     >
       {/* Hero */}
       <section className="relative min-h-[600px] flex items-center justify-center pt-24 pb-16 overflow-hidden">
-        {/* Vimeo background, desktop only */}
+        {/* Static cockpit hero image (same as the homepage). The old Vimeo
+            background video was deleted, which showed a "video does not exist"
+            error, so it was swapped for the shared hero image. */}
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <iframe
-            src="https://player.vimeo.com/video/1191576047?background=1&autoplay=1&loop=1&muted=1&controls=0&title=0&byline=0&portrait=0&dnt=1&playsinline=1"
-            className="hidden md:block absolute w-full h-full scale-[1.15]"
-            style={{ border: 0, top: 0, left: 0 }}
-            allow="autoplay; fullscreen"
-            title="Demo hero background"
-          />
+          <div className="absolute inset-0 w-full h-full overflow-hidden">
+            <Image
+              src="/hero/cockpit.webp"
+              alt="View from the cockpit"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+          </div>
           <div className="absolute inset-0 bg-gradient-to-b from-[#131313]/60 via-[#131313]/50 to-[#131313]" />
         </div>
 
