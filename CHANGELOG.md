@@ -2,6 +2,16 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-07-19 · fix(flight-schools): capture ad attribution on the lead form
+
+- Flight-school `LeadFormModal` now forwards first-touch UTMs + ad-network click
+  IDs (fbclid/gclid/msclkid/etc), landing URL, referrer, and derived traffic
+  source to PROXe — mirroring `InlineLeadForm`. It previously read only `utm_*`
+  off the current URL, so Meta ad leads (tagged with `fbclid`, not UTM) reached
+  PROXe with no click ID and bucketed as **Direct**. Ready for ads to go live.
+- User-facing: none (attribution only). Reuses `lib/tracking.ts` helpers.
+- `(pending)`
+
 ## 2026-07-06 · feat(flight-schools): featured schools + hero polish
 
 - Added brand-curated "Featured Flight Schools in India" and "Featured Flight

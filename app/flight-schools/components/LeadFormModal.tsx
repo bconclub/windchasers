@@ -4,22 +4,17 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { FlightSchool } from "@/types/flight-school";
+import {
+  getStoredUTMParams,
+  getStoredClickIds,
+  getLandingPage,
+  getStoredReferrer,
+  deriveTrafficSource,
+} from "@/lib/tracking";
 
 interface Props {
   school: FlightSchool;
   onClose: () => void;
-}
-
-function getUtmParams() {
-  if (typeof window === "undefined") return {};
-  const p = new URLSearchParams(window.location.search);
-  return {
-    utmSource: p.get("utm_source") || "",
-    utmMedium: p.get("utm_medium") || "",
-    utmCampaign: p.get("utm_campaign") || "",
-    utmContent: p.get("utm_content") || "",
-    utmTerm: p.get("utm_term") || "",
-  };
 }
 
 export default function LeadFormModal({ school, onClose }: Props) {
@@ -32,6 +27,12 @@ export default function LeadFormModal({ school, onClose }: Props) {
     e.preventDefault();
     setStatus("loading");
     try {
+      // First-touch UTMs + ad-network click IDs (fbclid/gclid/etc) + landing URL
+      // + referrer + derived channel so PROXe attributes the lead to its real
+      // paid source instead of DIRECT. Meta tags with fbclid (not utm), so
+      // reading only utm_* off the URL bucketed every ad lead as Direct.
+      const utm = getStoredUTMParams();
+      const clickIds = getStoredClickIds();
       const res = await fetch("/api/flight-schools-lead", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -41,7 +42,18 @@ export default function LeadFormModal({ school, onClose }: Props) {
           email: form.email,
           schoolInterested: school.name,
           schoolCountry: school.country,
-          ...getUtmParams(),
+          // camelCase UTMs kept for the Flight Schools spreadsheet columns.
+          utmSource: utm.utm_source || "",
+          utmMedium: utm.utm_medium || "",
+          utmCampaign: utm.utm_campaign || "",
+          utmContent: utm.utm_content || "",
+          utmTerm: utm.utm_term || "",
+          // Attribution PROXe reads off `data` (proxe.ts resolves channel from
+          // these): click_ids → facebook_ads/google_ads, else traffic_source.
+          click_ids: clickIds,
+          landing_url: getLandingPage(),
+          referrer: getStoredReferrer(),
+          traffic_source: deriveTrafficSource(),
         }),
       });
       if (!res.ok) throw new Error("Failed");
