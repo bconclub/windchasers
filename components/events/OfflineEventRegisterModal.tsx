@@ -14,6 +14,14 @@ import {
   deriveTrafficSource,
 } from "@/lib/tracking";
 
+export interface OfflineEventSession {
+  id: string;
+  /** Short label, e.g. "27 July". */
+  label: string;
+  /** Full "27 July 2026 at 11:00 AM IST" label - what's actually submitted/shown. */
+  fullLabel: string;
+}
+
 export interface OfflineEventRegisterModalProps {
   open: boolean;
   onClose: () => void;
@@ -23,10 +31,16 @@ export interface OfflineEventRegisterModalProps {
   initialAudience: "parent" | "student";
   /** Event title stored on the lead + shown in the modal. */
   eventName: string;
-  /** Human date/time label, e.g. "2 August 2026 at 11:00 AM IST". */
+  /** Human date/time label, e.g. "2 August 2026 at 11:00 AM IST". Used as-is
+   *  when `sessions` isn't given (single fixed date). */
   eventDate: string;
   /** Venue - this is an in-person event, no join link. */
   eventLocation: string;
+  /** Optional - when the event runs as multiple single-day sessions (attendee
+   *  picks ONE, not a multi-day event), pass them here and a picker replaces
+   *  the static `eventDate` line. The picked session's fullLabel is what gets
+   *  submitted as the lead's offline_event_date. */
+  sessions?: OfflineEventSession[];
 }
 
 /**
@@ -45,14 +59,21 @@ export function OfflineEventRegisterModal({
   eventName,
   eventDate,
   eventLocation,
+  sessions,
 }: OfflineEventRegisterModalProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [audience, setAudience] = useState<"parent" | "student">(initialAudience);
   const [comingWith, setComingWith] = useState("");
+  const [sessionId, setSessionId] = useState<string>(sessions?.[0]?.id ?? "");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState(false);
+
+  // The date/time actually submitted + shown once picked: the chosen session's
+  // full label when sessions are offered, else the fixed eventDate prop.
+  const selectedSession = sessions?.find((s) => s.id === sessionId);
+  const resolvedEventDate = selectedSession?.fullLabel ?? eventDate;
 
   useEffect(() => {
     if (open) {
@@ -64,8 +85,9 @@ export function OfflineEventRegisterModal({
       setComingWith("");
       // Re-seat the toggle to whichever section opened it.
       setAudience(initialAudience);
+      setSessionId(sessions?.[0]?.id ?? "");
     }
-  }, [open, initialAudience]);
+  }, [open, initialAudience, sessions]);
 
   useEffect(() => {
     if (!open) return;
@@ -96,6 +118,10 @@ export function OfflineEventRegisterModal({
     }
     if (trimmedPhone.replace(/\D/g, "").length < 10) {
       setError("Please enter a valid phone number.");
+      return;
+    }
+    if (sessions && sessions.length > 0 && !sessionId) {
+      setError("Please pick which day you'll attend.");
       return;
     }
 
@@ -147,7 +173,7 @@ export function OfflineEventRegisterModal({
         // through as custom_fields (safeRestData) on the /api/leads event path.
         lead_type: "offline_event",
         offline_event_name: eventName,
-        offline_event_date: eventDate,
+        offline_event_date: resolvedEventDate,
         offline_event_location: eventLocation,
         // Who they're bringing (parent/friend/guest count, free text) - shown
         // to the counsellor on the lead so the venue knows headcount.
@@ -262,7 +288,7 @@ export function OfflineEventRegisterModal({
                 </div>
                 <h2 className="text-white text-[22px] font-semibold mb-2">You&apos;re registered</h2>
                 <p className="text-white/60 text-[13px] leading-relaxed mb-1">{eventName}</p>
-                <p className="text-white/60 text-[13px] leading-relaxed mb-1">{eventDate}</p>
+                <p className="text-white/60 text-[13px] leading-relaxed mb-1">{resolvedEventDate}</p>
                 <p className="text-white/45 text-[12px] leading-relaxed mb-5">{eventLocation}</p>
                 <p className="text-white/40 text-[11px] leading-relaxed">
                   Our team will confirm details on WhatsApp shortly.
@@ -293,6 +319,33 @@ export function OfflineEventRegisterModal({
                 <p className="text-white/45 text-center text-[12px] leading-relaxed mb-5 max-w-[360px] mx-auto">
                   {eventLocation}
                 </p>
+
+                {/* Day picker - only when the event runs as separate single-day
+                    sessions (attendee picks one, not a multi-day event). */}
+                {sessions && sessions.length > 0 && (
+                  <div className="mb-4">
+                    <p className="mb-1.5 text-center text-[11px] uppercase tracking-[0.15em] text-white/40">
+                      Which day will you attend?
+                    </p>
+                    <div className={`grid gap-1 rounded-xl border border-white/10 bg-[#0D0D0D] p-1`} style={{ gridTemplateColumns: `repeat(${sessions.length}, minmax(0, 1fr))` }}>
+                      {sessions.map((s) => (
+                        <button
+                          key={s.id}
+                          type="button"
+                          onClick={() => { setSessionId(s.id); if (error) setError(null); }}
+                          aria-pressed={sessionId === s.id}
+                          className={`rounded-lg py-2 text-[13px] font-semibold transition-colors ${
+                            sessionId === s.id
+                              ? "bg-[#C5A572] text-[#1A1A1A]"
+                              : "text-white/35 hover:text-white/70"
+                          }`}
+                        >
+                          {s.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Audience toggle - pre-set from the section, switchable here. */}
                 <div className="mb-4">

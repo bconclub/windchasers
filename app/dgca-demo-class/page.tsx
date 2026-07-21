@@ -11,10 +11,18 @@ import {
   DEMO_CLASS_START_ISO,
   DEMO_CLASS_NAME,
   DEMO_CLASS_LOCATION,
+  DEMO_CLASS_SESSIONS,
   demoClassDateTimeLabel,
+  demoClassSessionDateTimeLabel,
   formatDemoClassDayMonthDisplay,
   formatDemoClassTimeDisplay,
 } from "@/lib/offline-events";
+
+const MODAL_SESSIONS = DEMO_CLASS_SESSIONS.map((s) => ({
+  id: s.id,
+  label: s.label,
+  fullLabel: demoClassSessionDateTimeLabel(s.id),
+}));
 
 /**
  * PLACEHOLDER CONTENT - functional plumbing + full page structure, copy pending
@@ -103,6 +111,7 @@ export default function DemoClassPage() {
         eventName={DEMO_CLASS_NAME}
         eventDate={dateLabel}
         eventLocation={DEMO_CLASS_LOCATION}
+        sessions={MODAL_SESSIONS}
       />
     </>
   );
