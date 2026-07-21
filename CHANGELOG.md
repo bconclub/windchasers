@@ -2,6 +2,24 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-07-21 · feat(demo-class): DGCA demo class landing page
+
+- New in-person event landing page at `/dgca-demo-class`, structured like the
+  webinar pages (hero with live countdown + collage video, "What to expect"
+  cards, "Who should attend" student/parent split, past-events gallery,
+  sticky mobile CTA) instead of a single static section.
+- Registration modal (`OfflineEventRegisterModal`) captures name, phone, a
+  student/parent toggle, and an optional "who's coming with you" field, and
+  forwards to PROXe tagged `lead_type=offline_event` — segments into the
+  dashboard's new Offline Events tab the same way webinar registrants do.
+  No Zoom-style redirect: registration ends with an in-page confirmation
+  since this is a physical venue.
+- Hero video reuses the homepage's collage reel (same Vimeo ID) — plays on
+  loop continuously with a manual mute/unmute toggle.
+- Content is placeholder pending final event name/date/venue — only
+  `lib/offline-events.ts` needs updating once confirmed.
+- User-facing: new page live at the URL above once deployed on the host.
+
 ## 2026-07-19 · fix(flight-schools): capture ad attribution on the lead form
 
 - Flight-school `LeadFormModal` now forwards first-touch UTMs + ad-network click
