@@ -62,14 +62,15 @@ export default function DemoClassPage() {
     <>
       <Head>
         <title>{DEMO_CLASS_NAME} · WindChasers</title>
-        <meta name="description" content={`Join the ${DEMO_CLASS_NAME} at WindChasers. ${dateLabel}.`} />
+        <meta name="description" content="A free, in-person DGCA ground class at our Bengaluru campus. Real instructors, real simulator, honest answers. No pressure." />
       </Head>
 
       <OfflineEventHero
         ref={heroRegisterRef}
         targetIso={DEMO_CLASS_START_ISO}
-        headlineTop="Come See Training"
+        headlineTop="Come See Pilot Training"
         headlineAccent="In Person"
+        subheadline="Free, in-person DGCA ground class. Real instructors, real simulator, honest answers - no pressure."
         dateShort={dateShort}
         timeText={timeText}
         location={DEMO_CLASS_LOCATION}

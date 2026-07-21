@@ -16,6 +16,8 @@ type Props = {
   headlineTop: string;
   /** Gold second line of the headline. */
   headlineAccent: string;
+  /** One-line subtext under the headline. */
+  subheadline?: string;
   /** "2 August" */
   dateShort: string;
   /** "11:00 AM IST" */
@@ -36,7 +38,7 @@ type Props = {
  * "Live on Zoom" / "Mode: Online".
  */
 const OfflineEventHero = forwardRef<HTMLDivElement, Props>(function OfflineEventHero(
-  { targetIso, headlineTop, headlineAccent, dateShort, timeText, location, cardTitle, facilityImage = "/facility/WC1.webp", onReserve },
+  { targetIso, headlineTop, headlineAccent, subheadline, dateShort, timeText, location, cardTitle, facilityImage = "/facility/WC1.webp", onReserve },
   reserveRef,
 ) {
   return (
@@ -63,6 +65,10 @@ const OfflineEventHero = forwardRef<HTMLDivElement, Props>(function OfflineEvent
             <h1 className="mt-5 text-[34px] font-bold leading-[1.05] text-white sm:text-5xl lg:text-[54px]">
               {headlineTop} <span className="text-[#C5A572]">{headlineAccent}</span>
             </h1>
+
+            {subheadline && (
+              <p className="mt-4 text-base text-gray-300 max-w-lg">{subheadline}</p>
+            )}
 
             <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-300">
               <span className="inline-flex items-center gap-2">
