@@ -354,20 +354,28 @@ export function OfflineEventRegisterModal({
                   />
                 </div>
 
-                <label htmlFor="offline-event-coming-with" className="sr-only">Who's coming with you</label>
-                <div className="relative flex items-stretch bg-[#0D0D0D] border border-white/10 rounded-xl overflow-hidden focus-within:border-[#C5A572] focus-within:shadow-[0_0_0_3px_rgba(197,165,114,0.08)] transition-all duration-200 mt-3">
-                  <div className="flex items-center justify-center pl-4 pr-3 h-12 text-[#C5A572] select-none">
-                    <Users className="w-4 h-4" />
+                <div className="mt-3">
+                  <p className="mb-1.5 text-center text-[11px] uppercase tracking-[0.15em] text-white/40">
+                    Coming alone, or with someone?
+                  </p>
+                  <div className="grid grid-cols-2 gap-1 rounded-xl border border-white/10 bg-[#0D0D0D] p-1">
+                    {(["Coming alone", "Bringing someone"] as const).map((choice) => (
+                      <button
+                        key={choice}
+                        type="button"
+                        onClick={() => setComingWith(choice)}
+                        aria-pressed={comingWith === choice}
+                        className={`flex items-center justify-center gap-1.5 rounded-lg py-2 text-[13px] font-semibold transition-colors ${
+                          comingWith === choice
+                            ? "bg-[#C5A572] text-[#1A1A1A]"
+                            : "text-white/35 hover:text-white/70"
+                        }`}
+                      >
+                        <Users className="w-3.5 h-3.5" />
+                        {choice}
+                      </button>
+                    ))}
                   </div>
-                  <input
-                    id="offline-event-coming-with"
-                    type="text"
-                    placeholder="Coming alone, or with someone? (optional)"
-                    value={comingWith}
-                    onChange={(e) => setComingWith(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === "Enter") handleSubmit(); }}
-                    className="flex-1 min-w-0 bg-transparent pr-4 h-12 text-white text-[15px] tracking-wide placeholder:text-white/25 focus:outline-none"
-                  />
                 </div>
 
                 {error && (
