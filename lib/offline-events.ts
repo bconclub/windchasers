@@ -33,8 +33,12 @@ export const DEMO_CLASS_START_ISO =
  *  and shown in the register modal + confirmation. */
 export const DEMO_CLASS_NAME = "WindChasers Demo Class";
 
-/** Venue stored on the lead + shown in the modal. UPDATE once confirmed. */
-export const DEMO_CLASS_LOCATION = "WindChasers HQ, Bengaluru (venue to be confirmed)";
+/** Venue stored on the lead + shown in the modal - same campus address used
+ *  site-wide (Footer.tsx / Navbar.tsx / contact-us). */
+export const DEMO_CLASS_LOCATION = "WindChasers Aviation Academy, Kothanur, Bengaluru, Karnataka 560077";
+
+/** Google Maps link for the campus - same query used in Footer.tsx/Navbar.tsx. */
+export const DEMO_CLASS_MAPS_URL = "https://maps.google.com/maps?q=WindChasers+Aviation+Academy+Kothanur+Bengaluru";
 
 /** "11:00 AM IST" - same time both sessions - mirrors formatWebinarTimeDisplay. */
 export function formatDemoClassTimeDisplay(): string {
