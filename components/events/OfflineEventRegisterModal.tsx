@@ -22,6 +22,19 @@ export interface OfflineEventSession {
   fullLabel: string;
 }
 
+export interface OfflineEventScholarshipConfig {
+  /** Which programme they'd be applying to, e.g. Pilot / Cabin Crew. */
+  trackOptions: { id: string; label: string }[];
+  /** Anchor on the page holding the full terms, e.g. "#freedom-to-fly-terms". */
+  termsHref: string;
+  /** The exact eligibility sentence shown - stored verbatim as an audit trail. */
+  declarationText: string;
+  /** Bumped whenever the terms copy changes, so consent is traceable. */
+  termsVersion: string;
+  /** Programme name, e.g. "Freedom to Fly". */
+  name: string;
+}
+
 export interface OfflineEventRegisterModalProps {
   open: boolean;
   onClose: () => void;
@@ -41,7 +54,30 @@ export interface OfflineEventRegisterModalProps {
    *  the static `eventDate` line. The picked session's fullLabel is what gets
    *  submitted as the lead's offline_event_date. */
   sessions?: OfflineEventSession[];
+  /** Registry slug (e.g. "wings-of-freedom"). PROXe resolves the event's real
+   *  date/venue/landing URL from this, so the display strings above can never
+   *  corrupt reminder scheduling. Omit and PROXe falls back to matching on name. */
+  eventKey?: string;
+  /** Hide the student/parent toggle - for events where it doesn't apply (e.g.
+   *  a women-only cohort). Audience still submits as `initialAudience`. */
+  hideAudienceToggle?: boolean;
+  /** Opt-in scholarship application, revealed by a checkbox. Omit entirely and
+   *  the modal behaves exactly as before. */
+  scholarship?: OfflineEventScholarshipConfig;
+  /** Open with the scholarship block already expanded - set when the modal was
+   *  opened from an "Apply" CTA rather than a "Book" one. */
+  defaultApplying?: boolean;
 }
+
+const EDUCATION_OPTIONS = [
+  "In Class 11/12",
+  "Class 12 passed (PCM)",
+  "Class 12 passed (non-PCM)",
+  "Diploma / Undergraduate",
+  "Graduate",
+] as const;
+
+const AGE_BANDS = ["Under 17", "17-19", "20-22", "23-25", "26+"] as const;
 
 /**
  * Reusable registration gate for ANY offline (in-person) event - demo class,
@@ -60,6 +96,10 @@ export function OfflineEventRegisterModal({
   eventDate,
   eventLocation,
   sessions,
+  eventKey,
+  hideAudienceToggle = false,
+  scholarship,
+  defaultApplying = false,
 }: OfflineEventRegisterModalProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -69,6 +109,15 @@ export function OfflineEventRegisterModal({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmed, setConfirmed] = useState(false);
+  // Scholarship block - inert unless the `scholarship` prop is passed.
+  const [applying, setApplying] = useState(false);
+  // NOT `track` - that name is taken by the imported analytics helper.
+  const [scholarshipTrack, setScholarshipTrack] = useState("");
+  const [email, setEmail] = useState("");
+  const [education, setEducation] = useState("");
+  const [ageBand, setAgeBand] = useState("");
+  const [declared, setDeclared] = useState(false);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   // The date/time actually submitted + shown once picked: the chosen session's
   // full label when sessions are offered, else the fixed eventDate prop.
@@ -86,8 +135,15 @@ export function OfflineEventRegisterModal({
       // Re-seat the toggle to whichever section opened it.
       setAudience(initialAudience);
       setSessionId(sessions?.[0]?.id ?? "");
+      setApplying(!!scholarship && defaultApplying);
+      setScholarshipTrack(scholarship?.trackOptions[0]?.id ?? "");
+      setEmail("");
+      setEducation("");
+      setAgeBand("");
+      setDeclared(false);
+      setAcceptedTerms(false);
     }
-  }, [open, initialAudience, sessions]);
+  }, [open, initialAudience, sessions, scholarship, defaultApplying]);
 
   useEffect(() => {
     if (!open) return;
@@ -124,6 +180,18 @@ export function OfflineEventRegisterModal({
       setError("Please pick which day you'll attend.");
       return;
     }
+    const trimmedEmail = email.trim();
+    if (scholarship && applying) {
+      if (!scholarshipTrack) { setError("Please pick which scholarship you're applying for."); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+        setError("Please enter a valid email - we need it to reach shortlisted candidates.");
+        return;
+      }
+      if (!education) { setError("Please tell us your current education level."); return; }
+      if (!ageBand) { setError("Please pick your age range."); return; }
+      if (!declared) { setError("Please confirm you're eligible to apply."); return; }
+      if (!acceptedTerms) { setError("Please accept the scholarship terms to apply."); return; }
+    }
 
     setSubmitting(true);
     setError(null);
@@ -153,6 +221,9 @@ export function OfflineEventRegisterModal({
       // reads to set the lead's TYPE column (student/parent). Same shape as
       // WebinarRegisterModal.
       audience,
+      // Only sent when they're applying - the scholarship needs a way to reach
+      // shortlisted candidates; plain registration stays phone-only.
+      ...(scholarship && applying && trimmedEmail ? { email: trimmedEmail } : {}),
       page_url: pageUrl,
       landing_url: landingUrl || undefined,
       referrer: referrer || undefined,
@@ -178,7 +249,33 @@ export function OfflineEventRegisterModal({
         // Who they're bringing (parent/friend/guest count, free text) - shown
         // to the counsellor on the lead so the venue knows headcount.
         offline_event_coming_with: comingWith.trim() || undefined,
-        form_name: `offline_event_register_${audience}`,
+        // Stable registry slug - PROXe resolves the event's real date, venue
+        // and landing URL from this rather than trusting the strings above.
+        offline_event_key: eventKey || undefined,
+        // 'scholarship' is still a registration, just a stronger signal - the
+        // dashboard surfaces it and the counsellor picks up the application.
+        offline_event_intent: scholarship && applying ? "scholarship" : "register",
+        ...(scholarship && applying
+          ? {
+              scholarship_name: scholarship.name,
+              scholarship_track: scholarshipTrack,
+              scholarship_track_label:
+                scholarship.trackOptions.find((t) => t.id === scholarshipTrack)?.label || scholarshipTrack,
+              education_level: education,
+              age_band: ageBand,
+              // Store the boolean AND the exact wording agreed to, so consent
+              // stays auditable if the copy is ever reworded.
+              eligibility_declared: true,
+              eligibility_declaration_text: scholarship.declarationText,
+              terms_accepted: true,
+              terms_version: scholarship.termsVersion,
+              terms_accepted_at: new Date().toISOString(),
+            }
+          : {}),
+        form_name:
+          scholarship && applying
+            ? "offline_event_scholarship_apply"
+            : `offline_event_register_${audience}`,
         page: pagePath,
       },
     };
@@ -291,7 +388,9 @@ export function OfflineEventRegisterModal({
                 <p className="text-white/60 text-[13px] leading-relaxed mb-1">{resolvedEventDate}</p>
                 <p className="text-white/45 text-[12px] leading-relaxed mb-5">{eventLocation}</p>
                 <p className="text-white/40 text-[11px] leading-relaxed">
-                  Our team will confirm details on WhatsApp shortly.
+                  {scholarship && applying
+                    ? `Our team will confirm details on WhatsApp. We'll be in touch separately about your ${scholarship.name} application.`
+                    : "Our team will confirm details on WhatsApp shortly."}
                 </p>
               </div>
             ) : (
@@ -347,8 +446,9 @@ export function OfflineEventRegisterModal({
                   </div>
                 )}
 
-                {/* Audience toggle - pre-set from the section, switchable here. */}
-                <div className="mb-4">
+                {/* Audience toggle - pre-set from the section, switchable here.
+                    Hidden for events where student/parent doesn't apply. */}
+                <div className={`mb-4 ${hideAudienceToggle ? "hidden" : ""}`}>
                   <p className="mb-1.5 text-center text-[11px] uppercase tracking-[0.15em] text-white/40">
                     I&apos;m registering as
                   </p>
@@ -431,6 +531,125 @@ export function OfflineEventRegisterModal({
                   </div>
                 </div>
 
+                {/* Scholarship application - opt-in, collapsed by default so
+                    the 20-second registration stays a 20-second registration. */}
+                {scholarship && (
+                  <div className="mt-4 rounded-xl border border-[#C5A572]/25 bg-[#C5A572]/[0.04] p-3">
+                    <label className="flex cursor-pointer items-start gap-2.5">
+                      <input
+                        type="checkbox"
+                        checked={applying}
+                        onChange={(e) => { setApplying(e.target.checked); if (error) setError(null); }}
+                        className="mt-0.5 h-4 w-4 shrink-0 accent-[#C5A572]"
+                      />
+                      <span className="text-[13px] leading-snug text-white/80">
+                        I&apos;d also like to apply for the{" "}
+                        <span className="font-semibold text-[#E7D5B3]">{scholarship.name}</span> scholarship
+                      </span>
+                    </label>
+
+                    {applying && (
+                      <div className="mt-3 space-y-3 border-t border-white/10 pt-3">
+                        <div>
+                          <p className="mb-1.5 text-[11px] uppercase tracking-[0.15em] text-white/40">Applying for</p>
+                          <div className="grid gap-1 rounded-xl border border-white/10 bg-[#0D0D0D] p-1" style={{ gridTemplateColumns: `repeat(${scholarship.trackOptions.length}, minmax(0, 1fr))` }}>
+                            {scholarship.trackOptions.map((t) => (
+                              <button
+                                key={t.id}
+                                type="button"
+                                onClick={() => { setScholarshipTrack(t.id); if (error) setError(null); }}
+                                aria-pressed={scholarshipTrack === t.id}
+                                className={`rounded-lg px-2 py-2 text-[12.5px] font-semibold transition-colors ${
+                                  scholarshipTrack === t.id ? "bg-[#C5A572] text-[#1A1A1A]" : "text-white/35 hover:text-white/70"
+                                }`}
+                              >
+                                {t.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <label htmlFor="offline-event-email" className="sr-only">Email</label>
+                          <input
+                            id="offline-event-email"
+                            type="email"
+                            autoComplete="email"
+                            placeholder="Your email"
+                            value={email}
+                            onChange={(e) => { setEmail(e.target.value); if (error) setError(null); }}
+                            className="h-11 w-full rounded-xl border border-white/10 bg-[#0D0D0D] px-4 text-[14px] text-white placeholder:text-white/25 focus:border-[#C5A572] focus:outline-none"
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="offline-event-education" className="sr-only">Education level</label>
+                          <select
+                            id="offline-event-education"
+                            value={education}
+                            onChange={(e) => { setEducation(e.target.value); if (error) setError(null); }}
+                            style={{ colorScheme: "dark" }}
+                            className="h-11 w-full rounded-xl border border-white/10 bg-[#0D0D0D] px-4 text-[14px] text-white focus:border-[#C5A572] focus:outline-none"
+                          >
+                            <option value="">Current education</option>
+                            {EDUCATION_OPTIONS.map((o) => (<option key={o} value={o}>{o}</option>))}
+                          </select>
+                        </div>
+
+                        <div>
+                          <p className="mb-1.5 text-[11px] uppercase tracking-[0.15em] text-white/40">Age</p>
+                          <div className="grid grid-cols-5 gap-1 rounded-xl border border-white/10 bg-[#0D0D0D] p-1">
+                            {AGE_BANDS.map((a) => (
+                              <button
+                                key={a}
+                                type="button"
+                                onClick={() => { setAgeBand(a); if (error) setError(null); }}
+                                aria-pressed={ageBand === a}
+                                className={`rounded-lg py-1.5 text-[11px] font-semibold transition-colors ${
+                                  ageBand === a ? "bg-[#C5A572] text-[#1A1A1A]" : "text-white/35 hover:text-white/70"
+                                }`}
+                              >
+                                {a}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <label className="flex cursor-pointer items-start gap-2.5">
+                          <input
+                            type="checkbox"
+                            checked={declared}
+                            onChange={(e) => { setDeclared(e.target.checked); if (error) setError(null); }}
+                            className="mt-0.5 h-4 w-4 shrink-0 accent-[#C5A572]"
+                          />
+                          <span className="text-[12px] leading-snug text-white/65">{scholarship.declarationText}</span>
+                        </label>
+
+                        <label className="flex cursor-pointer items-start gap-2.5">
+                          <input
+                            type="checkbox"
+                            checked={acceptedTerms}
+                            onChange={(e) => { setAcceptedTerms(e.target.checked); if (error) setError(null); }}
+                            className="mt-0.5 h-4 w-4 shrink-0 accent-[#C5A572]"
+                          />
+                          <span className="text-[12px] leading-snug text-white/65">
+                            I have read and accept the{" "}
+                            <a href={scholarship.termsHref} onClick={onClose} className="text-[#C5A572] underline underline-offset-2">
+                              scholarship terms
+                            </a>
+                            .
+                          </span>
+                        </label>
+
+                        <p className="text-[11px] leading-snug text-white/35">
+                          Shortlisted candidates are contacted for an interview and counselling session.
+                          Any documents or essay are collected then - nothing else is needed now.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {error && (
                   <p className="text-red-400 text-xs mt-3 pl-1" role="alert">{error}</p>
                 )}
@@ -451,7 +670,7 @@ export function OfflineEventRegisterModal({
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        Reserve my spot
+                        {scholarship && applying ? "Reserve my spot & apply" : "Reserve my spot"}
                       </>
                     )}
                   </span>

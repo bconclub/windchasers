@@ -23,11 +23,17 @@ export default function SiteChrome() {
   // Webinar pages have their own "Reserve my seat" CTA — the global "Book a
   // Demo Class" sticky competes with it, so hide it there (keep the chat widget).
   const isWebinar = pathname.startsWith("/webinar");
+  // Event landing pages ship their own sticky CTA. Without this the global
+  // "Book a Demo Class" bar stacks on top of it on mobile, giving two
+  // competing primary actions. A set rather than another === so the next
+  // event page doesn't have to rediscover this.
+  const NO_STICKY_CTA_ROUTES = ["/wings-of-freedom", "/dgca-demo-class", "/dgca-demo-class-parents"];
+  const hasOwnStickyCta = NO_STICKY_CTA_ROUTES.includes(pathname);
 
   return (
     <>
       <Navbar />
-      {!isFlightSchools && !isWebinar && <StickyDemoCTA />}
+      {!isFlightSchools && !isWebinar && !hasOwnStickyCta && <StickyDemoCTA />}
       {!isFlightSchools && (
         <Script
           src="https://proxe.windchasers.in/api/widget/embed.js"

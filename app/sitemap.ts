@@ -61,6 +61,9 @@ const routes: string[] = [
   "/assessment",
   "/demo",
   "/open-house",
+  // Event landing pages
+  "/wings-of-freedom",
+  "/dgca-demo-class",
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
