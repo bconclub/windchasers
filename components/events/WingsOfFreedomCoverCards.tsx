@@ -26,7 +26,7 @@ export default function WingsOfFreedomCoverCards({
   onFullAgenda?: () => void;
 }) {
   return (
-    <section className="relative overflow-hidden border-t border-white/5 bg-[#0E0E10] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <section className="relative overflow-hidden border-t border-white/5 bg-[#171719] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-32 -top-24 h-[420px] w-[420px] rounded-full bg-[#C5A572]/8 blur-[120px]"

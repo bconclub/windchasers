@@ -33,6 +33,14 @@ export interface OfflineEventScholarshipConfig {
   termsVersion: string;
   /** Programme name, e.g. "Freedom to Fly". */
   name: string;
+  /** One line shown the moment the box is ticked - what applying actually
+   *  starts. Without it a tick-box reads as "I have a scholarship". */
+  processNote?: string;
+  /** What happens next, shown on the confirmation screen after applying. */
+  nextStepNote?: string;
+  /** WhatsApp group invite. The test link and shortlist dates go out there, so
+   *  joining is genuinely the next step, not a nice-to-have. */
+  groupUrl?: string;
 }
 
 export interface OfflineEventRegisterModalProps {
@@ -383,15 +391,38 @@ export function OfflineEventRegisterModal({
                 <div className="mx-auto mb-4 w-12 h-12 rounded-full flex items-center justify-center bg-[#C5A572]/15 border border-[#C5A572]/40">
                   <Check className="w-6 h-6 text-[#C5A572]" />
                 </div>
-                <h2 className="text-white text-[22px] font-semibold mb-2">You&apos;re registered</h2>
+                <h2 className="text-white text-[22px] font-semibold mb-2">
+                  {scholarship && applying ? "Application started" : "You're registered"}
+                </h2>
                 <p className="text-white/60 text-[13px] leading-relaxed mb-1">{eventName}</p>
                 <p className="text-white/60 text-[13px] leading-relaxed mb-1">{resolvedEventDate}</p>
                 <p className="text-white/45 text-[12px] leading-relaxed mb-5">{eventLocation}</p>
-                <p className="text-white/40 text-[11px] leading-relaxed">
-                  {scholarship && applying
-                    ? `Our team will confirm details on WhatsApp. We'll be in touch separately about your ${scholarship.name} application.`
-                    : "Our team will confirm details on WhatsApp shortly."}
-                </p>
+
+                {/* An applicant's next step is a real one (the aptitude test
+                    link goes out in the group), so it gets a button rather
+                    than a line of fine print promising someone will call. */}
+                {scholarship && applying ? (
+                  <>
+                    <p className="text-white/60 text-[12.5px] leading-relaxed mb-4">
+                      {scholarship.nextStepNote ||
+                        `Your seat is booked and your ${scholarship.name} application is open. It is not decided yet.`}
+                    </p>
+                    {scholarship.groupUrl && (
+                      <a
+                        href={scholarship.groupUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-2 rounded-full bg-[#C5A572] px-6 py-3 text-sm font-semibold text-[#1A1A1A] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#d4b789]"
+                      >
+                        Join the group
+                      </a>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-white/40 text-[11px] leading-relaxed">
+                    Our team will confirm details on WhatsApp shortly.
+                  </p>
+                )}
               </div>
             ) : (
               <>
@@ -543,13 +574,19 @@ export function OfflineEventRegisterModal({
                         className="mt-0.5 h-4 w-4 shrink-0 accent-[#C5A572]"
                       />
                       <span className="text-[13px] leading-snug text-white/80">
-                        I&apos;d also like to apply for the{" "}
+                        I&apos;d also like to start a{" "}
                         <span className="font-semibold text-[#E7D5B3]">{scholarship.name}</span> scholarship
+                        application
                       </span>
                     </label>
 
                     {applying && (
                       <div className="mt-3 space-y-3 border-t border-white/10 pt-3">
+                        {scholarship.processNote && (
+                          <p className="rounded-xl border border-[#C5A572]/25 bg-[#C5A572]/[0.06] px-3 py-2.5 text-[12px] leading-relaxed text-white/70">
+                            {scholarship.processNote}
+                          </p>
+                        )}
                         <div>
                           <p className="mb-1.5 text-[11px] uppercase tracking-[0.15em] text-white/40">Applying for</p>
                           <div className="grid gap-1 rounded-xl border border-white/10 bg-[#0D0D0D] p-1" style={{ gridTemplateColumns: `repeat(${scholarship.trackOptions.length}, minmax(0, 1fr))` }}>

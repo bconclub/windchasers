@@ -12,6 +12,7 @@ import WingsTeamStrip from "@/components/events/WingsTeamStrip";
 import WingsOfFreedomTrackCards, { type WingsTrack } from "@/components/events/WingsOfFreedomTrackCards";
 import FreedomToFlyScholarship from "@/components/events/FreedomToFlyScholarship";
 import FreedomToFlyDetail from "@/components/events/FreedomToFlyDetail";
+import FreedomToFlyProcess from "@/components/events/FreedomToFlyProcess";
 import FreedomToFlyTerms from "@/components/events/FreedomToFlyTerms";
 import WingsOfFreedomFaq from "@/components/events/WingsOfFreedomFaq";
 import { OfflineEventRegisterModal } from "@/components/events/OfflineEventRegisterModal";
@@ -24,7 +25,9 @@ import {
   WINGS_SCHOLARSHIP_NAME,
   WINGS_SCHOLARSHIP_TRACKS,
   WINGS_ELIGIBILITY_DECLARATION,
+  WINGS_SCHOLARSHIP_PROCESS_NOTE,
   WINGS_TERMS_VERSION,
+  WINGS_WHATSAPP_GROUP_URL,
   formatWingsDateFullDisplay,
   formatWingsTimeRangeDisplay,
   wingsDateTimeLabel,
@@ -39,6 +42,13 @@ const SCHOLARSHIP_CONFIG = {
   termsHref: "#freedom-to-fly-terms",
   declarationText: WINGS_ELIGIBILITY_DECLARATION,
   termsVersion: WINGS_TERMS_VERSION,
+  // Applying opens a process - an aptitude test, documents, an interview. Said
+  // at the tick-box and again on the confirmation, because a form that just
+  // says "you're registered" reads as "you have a scholarship".
+  processNote: WINGS_SCHOLARSHIP_PROCESS_NOTE,
+  nextStepNote:
+    "Your seat is booked and your application is open, not decided. Next up is the Pilot Aptitude Test - the link and your window go out in the WhatsApp group.",
+  groupUrl: WINGS_WHATSAPP_GROUP_URL,
 };
 
 /**
@@ -125,6 +135,10 @@ export default function WingsOfFreedomPage() {
       <WingsOfFreedomTrackCards onSelect={onTrackSelect} onViewScholarships={openScholarships} />
 
       <FreedomToFlyScholarship onViewScholarships={openScholarships} />
+
+      {/* Sits between the scholarship and the team: what you'd actually go
+          through, before any apply CTA further down the page. */}
+      <FreedomToFlyProcess onApply={openApply} />
 
       <WingsTeamStrip />
 

@@ -16,7 +16,7 @@ type Props = {
  */
 export default function WingsOfFreedomDualPath({ onReserve, onScholarship }: Props) {
   return (
-    <section className="relative overflow-hidden border-t border-white/5 bg-[#0E0E10] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <section className="relative overflow-hidden border-t border-white/5 bg-[#171719] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
       <div className="relative mx-auto max-w-6xl">
         <h2 className="text-3xl font-bold text-white md:text-4xl">Two ways to take part</h2>
         <span className="mt-3 block h-[3px] w-16 rounded-full bg-gradient-to-r from-[#C5A572] to-transparent" />

@@ -12,7 +12,7 @@ type Props = { id?: string };
  */
 export default function FreedomToFlyTerms({ id = "freedom-to-fly-terms" }: Props) {
   return (
-    <section id={id} className="relative border-t border-white/5 bg-[#0B0B0D] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <section id={id} className="relative border-t border-white/5 bg-[#141417] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
       <div className="mx-auto max-w-5xl">
         <h2 className="text-2xl font-bold text-white md:text-3xl">Eligibility &amp; terms</h2>
         <span className="mt-3 block h-[3px] w-16 rounded-full bg-gradient-to-r from-[#C5A572] to-transparent" />

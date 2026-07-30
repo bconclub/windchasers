@@ -22,7 +22,7 @@ export default function FreedomToFlyScholarship({ id = "freedom-to-fly", onViewS
   return (
     <section
       id={id}
-      className="relative overflow-hidden border-t border-white/5 bg-[#0E0E10] px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+      className="relative overflow-hidden border-t border-white/5 bg-[#171719] px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
     >
       <div
         aria-hidden

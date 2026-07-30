@@ -254,6 +254,54 @@ export const WINGS_SCHOLARSHIP_BENEFITS = [
   { icon: "mic", title: "Interview & career prep", desc: "Mock interviews and airline-standard preparation." },
 ] as const;
 
+/** The event's WhatsApp group. The aptitude test link, shortlist dates and
+ *  day-of updates all go out here, so it doubles as the applicant channel.
+ *  Kept in sync with core/src/configs/offline-events.ts on the PROXe side and
+ *  with the site's /join/wings-of-freedom redirect. */
+export const WINGS_WHATSAPP_GROUP_URL = "https://chat.whatsapp.com/BiPGKSg03CzETSljBUO9sa";
+
+/**
+ * How a scholarship is actually won.
+ *
+ * The form on this page starts an application - it does not award anything,
+ * and nothing on the page should imply a tick-box makes you eligible. These
+ * are the stages every applicant goes through, stated up front so the
+ * commitment is visible before anyone applies. Mirrors the "How to apply" and
+ * "How it's decided" clauses in WINGS_TERMS - change them together.
+ */
+export const WINGS_SCHOLARSHIP_STAGES = [
+  {
+    n: "01",
+    title: "Start your application",
+    desc: "Register for 15 August and tick the scholarship box. Takes a minute.",
+  },
+  {
+    n: "02",
+    title: "Pilot Aptitude Test",
+    desc: "A timed online test. The link and your window are shared in the WhatsApp group.",
+  },
+  {
+    n: "03",
+    title: "Documents & motivation",
+    desc: "Marksheets and ID, plus a short essay or video on why you want to fly, if we ask for one.",
+  },
+  {
+    n: "04",
+    title: "Interview & counselling",
+    desc: "Shortlisted candidates attend a personal interview and a counselling session with a parent or guardian.",
+  },
+  {
+    n: "05",
+    title: "Final selection",
+    desc: "Merit-based, on aptitude, motivation, interview and eligibility. The committee's decision is final.",
+  },
+] as const;
+
+/** One-liner the register modal shows the moment the scholarship box is
+ *  ticked, so nobody submits believing the tick is the whole application. */
+export const WINGS_SCHOLARSHIP_PROCESS_NOTE =
+  "This starts your application. Selection runs through the Pilot Aptitude Test, an interview and a counselling session.";
+
 /** The exact sentence shown next to the eligibility checkbox. Stored verbatim
  *  on the lead, so reword it and bump WINGS_TERMS_VERSION together. */
 export const WINGS_ELIGIBILITY_DECLARATION =

@@ -71,7 +71,10 @@ export default function Navbar() {
 
   // Flight-schools: stripped-back header, just the logo. Call/WhatsApp/menu
   // are intentionally hidden here for now (map-first experience).
-  if (isFlightSchools) {
+  // Event landing pages: logo only. The full nav (menu + call + WhatsApp
+  // buttons) crowded the logo on mobile, and a menu here just offers exits
+  // from a single-purpose page. The footer stays.
+  if (isFlightSchools || isWingsOfFreedom) {
     return (
       <nav className="fixed top-0 w-full bg-dark/95 backdrop-blur-sm border-b border-white/10 z-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">

@@ -11,7 +11,7 @@ type Props = { id?: string };
  */
 export default function WingsOfFreedomFaq({ id = "faq" }: Props) {
   return (
-    <section id={id} className="relative border-t border-white/5 bg-[#0E0E10] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+    <section id={id} className="relative border-t border-white/5 bg-[#171719] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
       <div className="mx-auto max-w-3xl">
         <h2 className="text-3xl font-bold text-white md:text-4xl">Questions</h2>
         <span className="mt-3 block h-[3px] w-16 rounded-full bg-gradient-to-r from-[#C5A572] to-transparent" />

@@ -46,7 +46,7 @@ export default function WingsOfFreedomLastTime({ id = "last-time" }: { id?: stri
   return (
     <section
       id={id}
-      className="relative border-t border-white/5 bg-[#0B0B0D] px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+      className="relative border-t border-white/5 bg-[#141417] px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
     >
       <div className="mx-auto max-w-6xl">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#E7D5B3]">

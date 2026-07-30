@@ -17,7 +17,7 @@ export default function WingsTeamStrip({ id = "team" }: { id?: string }) {
   return (
     <section
       id={id}
-      className="relative border-t border-white/5 bg-[#0E0E10] px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
+      className="relative border-t border-white/5 bg-[#171719] px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
     >
       <div className="mx-auto max-w-6xl">
         <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#E7D5B3]">
@@ -45,7 +45,7 @@ export default function WingsTeamStrip({ id = "team" }: { id?: string }) {
                 />
                 <span
                   aria-hidden
-                  className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#0E0E10] via-[#0E0E10]/70 to-transparent"
+                  className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-[#171719] via-[#171719]/70 to-transparent"
                 />
                 <div className="absolute inset-x-0 bottom-0 p-3">
                   <p className="truncate text-[13px] font-semibold text-[#E7D5B3]">{t.name}</p>

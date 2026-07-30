@@ -43,12 +43,14 @@ const WingsOfFreedomHero = forwardRef<HTMLDivElement, Props>(function WingsOfFre
   { targetIso, dateFull, timeText, venueShort, facilityImage = "/facility/WC1.webp", onReserve, onScholarship },
   reserveRef,
 ) {
+  // Lighter than the near-black the rest of the page sat on - the facility
+  // photo is now visible behind the copy rather than a flat dark field.
   return (
-    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-[#0B0B0D] pt-24 pb-16 sm:pb-20">
+    <section className="relative flex min-h-[100svh] items-center overflow-hidden bg-[#141417] pt-24 pb-16 sm:pb-20">
       <div className="absolute inset-0 z-0" aria-hidden>
-        <Image src={facilityImage} alt="" fill priority sizes="100vw" className="object-cover opacity-[0.18]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0B0B0D] via-[#0B0B0D]/94 to-[#0B0B0D]/75" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0B0B0D] via-transparent to-[#0B0B0D]/60" />
+        <Image src={facilityImage} alt="" fill priority sizes="100vw" className="object-cover opacity-[0.34]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#141417] via-[#141417]/85 to-[#141417]/55" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#141417] via-transparent to-[#141417]/45" />
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-6xl px-4 sm:px-6">
@@ -60,7 +62,7 @@ const WingsOfFreedomHero = forwardRef<HTMLDivElement, Props>(function WingsOfFre
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#C5A572] opacity-70" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-[#C5A572]" />
               </span>
-              Women-Only · Independence Day
+              Women in Aviation · 15 August
             </span>
 
             <h1 className="mt-6 text-[44px] font-bold leading-[1.02] tracking-tight text-white sm:text-[56px] lg:text-[64px]">
