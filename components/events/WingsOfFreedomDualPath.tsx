@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ArrowRight, Ticket, Award } from "lucide-react";
 
 type Props = {
@@ -25,13 +26,28 @@ export default function WingsOfFreedomDualPath({ onReserve, onScholarship }: Pro
         </p>
 
         <div className="mt-10 grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-colors hover:border-[#C5A572]/40 hover:bg-white/[0.04]">
+          {/* overflow-hidden + bottom-0 docks each cutout into the card's
+              bottom-right corner, so it reads as sitting on the card rather
+              than floating over the section above it. */}
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-colors hover:border-[#C5A572]/40 hover:bg-white/[0.04]">
+            <Image
+              src="/wings-of-freedom/cutout-classroom.webp"
+              alt=""
+              aria-hidden
+              width={936}
+              height={460}
+              priority={false}
+              className="pointer-events-none absolute bottom-0 right-0 w-[48%] max-w-[210px] select-none sm:w-[52%] sm:max-w-[310px]"
+            />
             <Ticket className="mb-3 h-6 w-6 text-[#C5A572]" aria-hidden />
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#E7D5B3]">
+            {/* Full-width copy on mobile: the cutout is short and bottom-
+                anchored there, so only the button row sits alongside it.
+                Constraining the text below sm squeezed it into four lines. */}
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#E7D5B3] sm:max-w-[60%]">
               Free · Open to all women
             </p>
-            <h3 className="mt-2 text-xl font-semibold text-white">Book your slot</h3>
-            <p className="mt-2 text-[14px] leading-relaxed text-gray-400">
+            <h3 className="mt-2 text-lg font-semibold text-white sm:max-w-[62%] sm:text-xl">Book your slot</h3>
+            <p className="mt-2 pr-2 text-[13px] leading-relaxed text-gray-400 sm:max-w-[52%] sm:pr-0">
               Reserve a seat for 15 August. Name and phone number, and you&apos;re done.
             </p>
             <button
@@ -42,20 +58,27 @@ export default function WingsOfFreedomDualPath({ onReserve, onScholarship }: Pro
               Book My Slot
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </button>
-            <p className="mt-4 text-[12px] text-gray-500">
-              You do not need to apply for a scholarship to attend.
-            </p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-colors hover:border-[#C5A572]/40 hover:bg-white/[0.04]">
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-colors hover:border-[#C5A572]/40 hover:bg-white/[0.04]">
+            <Image
+              src="/wings-of-freedom/cutout-student.webp"
+              alt=""
+              aria-hidden
+              width={642}
+              height={520}
+              priority={false}
+              className="pointer-events-none absolute bottom-0 right-0 w-[42%] max-w-[170px] select-none sm:w-[44%] sm:max-w-[240px]"
+            />
             <Award className="mb-3 h-6 w-6 text-[#C5A572]" aria-hidden />
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#E7D5B3]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#E7D5B3] sm:max-w-[60%]">
               Merit-based · Female applicants only
             </p>
-            <h3 className="mt-2 text-xl font-semibold text-white">Apply for a scholarship</h3>
-            <p className="mt-2 text-[14px] leading-relaxed text-gray-400">
-              Up to &#8377;2,35,000 off pilot training or &#8377;80,000 off cabin crew training.
-              Revealed live at the Grand Finale.
+            <h3 className="mt-2 text-lg font-semibold text-white sm:max-w-[62%] sm:text-xl">Apply for a scholarship</h3>
+            {/* Amounts intentionally omitted here - they live behind the
+                "View scholarships" CTA so the page doesn't lead with a figure. */}
+            <p className="mt-2 pr-2 text-[13px] leading-relaxed text-gray-400 sm:max-w-[56%] sm:pr-0">
+              Tuition waivers for pilot and cabin crew training, revealed live at the Grand Finale.
             </p>
             <button
               type="button"
@@ -65,9 +88,6 @@ export default function WingsOfFreedomDualPath({ onReserve, onScholarship }: Pro
               See the scholarship
               <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
             </button>
-            <p className="mt-4 text-[12px] text-gray-500">
-              Applying doesn&apos;t guarantee an award - shortlisted candidates are interviewed.
-            </p>
           </div>
         </div>
       </div>

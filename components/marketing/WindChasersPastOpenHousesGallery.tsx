@@ -38,8 +38,13 @@ function OpenHouseGalleryVimeoVideo({ vimeoId }: { vimeoId: string }) {
         className="relative h-full w-full rounded-lg overflow-hidden bg-black focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C5A572]/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black group"
         aria-label="Play video"
       >
+        {/* Poster is served locally. It used to come from vumbnail.com, a
+            third-party Vimeo-thumbnail service: the request hangs in the
+            browser (never completes, so the tile renders as a broken image)
+            even though the URL itself returns 200. Local file, no external
+            dependency on first paint. */}
         <img
-          src={`https://vumbnail.com/${vimeoId}.jpg`}
+          src={openHouseMediaUrl(`vimeo-${vimeoId}.jpg`)}
           alt=""
           className="h-full w-full object-cover transition-transform duration-[400ms] group-hover:scale-[1.05]"
           loading="lazy"

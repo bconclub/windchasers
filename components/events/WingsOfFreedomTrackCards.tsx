@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { ArrowRight, Plane, Sparkles } from "lucide-react";
 
 export type WingsTrack = "pilot" | "cabin_crew";
@@ -8,6 +9,8 @@ type Props = {
   heading?: string;
   subheading?: string;
   onSelect: (track: WingsTrack) => void;
+  /** Opens the scholarship breakdown - the amounts live there, not here. */
+  onViewScholarships: () => void;
 };
 
 const CARDS: {
@@ -15,7 +18,8 @@ const CARDS: {
   title: string;
   desc: string;
   chips: string[];
-  amountLabel: string;
+  image: string;
+  imageAlt: string;
   Icon: typeof Plane;
 }[] = [
   {
@@ -23,7 +27,10 @@ const CARDS: {
     title: "The Pilot Path",
     desc: "DGCA written exams, Class 1 and Class 2 medicals, and how to actually choose a flight school.",
     chips: ["DGCA written exams", "Class 1 & 2 medicals", "Flight school selection"],
-    amountLabel: "₹2,35,000 scholarship",
+    // From the pilot-training page. Chosen over /hero/cockpit.webp, which is
+    // two male pilots - the wrong image for a women-only cohort.
+    image: "/students-flying/001.webp",
+    imageAlt: "A WindChasers student on the wing of a training aircraft",
     Icon: Plane,
   },
   {
@@ -31,7 +38,9 @@ const CARDS: {
     title: "The Cabin Crew Path",
     desc: "Airline interviews, premium hospitality standards, and what life on the roster is really like.",
     chips: ["Airline interviews", "Premium hospitality", "Life on the roster"],
-    amountLabel: "₹80,000 scholarship",
+    // From the cabin-crew page.
+    image: "/cabin crew/page images/cabin crew 1.webp",
+    imageAlt: "Cabin crew walking through an airport terminal",
     Icon: Sparkles,
   },
 ];
@@ -48,6 +57,7 @@ export default function WingsOfFreedomTrackCards({
   heading = "Two paths. Pick yours.",
   subheading = "The masterclass and the scholarship both split into these two tracks.",
   onSelect,
+  onViewScholarships,
 }: Props) {
   return (
     <section className="relative border-t border-white/5 bg-[#111] px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
@@ -57,11 +67,26 @@ export default function WingsOfFreedomTrackCards({
         <p className="mt-3 max-w-2xl text-gray-400">{subheading}</p>
 
         <div className="mt-10 grid grid-cols-1 gap-4 sm:gap-5 md:grid-cols-2">
-          {CARDS.map(({ id, title, desc, chips, amountLabel, Icon }) => (
+          {CARDS.map(({ id, title, desc, chips, image, imageAlt, Icon }) => (
             <div
               key={id}
-              className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-colors hover:border-[#C5A572]/40 hover:bg-white/[0.04]"
+              className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] transition-colors hover:border-[#C5A572]/40 hover:bg-white/[0.04]"
             >
+              <div className="relative h-44 w-full overflow-hidden sm:h-52">
+                <Image
+                  src={image}
+                  alt={imageAlt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 560px"
+                  className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                />
+                <span
+                  aria-hidden
+                  className="absolute inset-0 bg-gradient-to-t from-[#0F0F11] via-[#0F0F11]/25 to-transparent"
+                />
+              </div>
+
+              <div className="p-6">
               <Icon className="mb-3 h-6 w-6 text-[#C5A572]" aria-hidden />
               <h3 className="text-xl font-semibold text-white">{title}</h3>
               <p className="mt-2 text-[14px] leading-relaxed text-gray-400">{desc}</p>
@@ -86,12 +111,14 @@ export default function WingsOfFreedomTrackCards({
                   Book my slot
                   <ArrowRight className="h-4 w-4" />
                 </button>
-                <a
-                  href="#freedom-to-fly"
+                <button
+                  type="button"
+                  onClick={onViewScholarships}
                   className="text-[13px] font-semibold text-[#C5A572] hover:text-[#d4b789]"
                 >
-                  {amountLabel} &rarr;
-                </a>
+                  View scholarships &rarr;
+                </button>
+              </div>
               </div>
             </div>
           ))}

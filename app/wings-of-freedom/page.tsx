@@ -3,11 +3,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import WindChasersPastOpenHousesGallery from "@/components/marketing/WindChasersPastOpenHousesGallery";
 import WingsOfFreedomHero from "@/components/events/WingsOfFreedomHero";
+import WingsOfFreedomLastTime from "@/components/events/WingsOfFreedomLastTime";
 import WingsOfFreedomDualPath from "@/components/events/WingsOfFreedomDualPath";
 import WingsOfFreedomCoverCards from "@/components/events/WingsOfFreedomCoverCards";
-import WingsOfFreedomAgenda from "@/components/events/WingsOfFreedomAgenda";
+import WingsAgendaTimeline from "@/components/events/WingsAgendaTimeline";
+import WingsModal from "@/components/events/WingsModal";
+import WingsTeamStrip from "@/components/events/WingsTeamStrip";
 import WingsOfFreedomTrackCards, { type WingsTrack } from "@/components/events/WingsOfFreedomTrackCards";
 import FreedomToFlyScholarship from "@/components/events/FreedomToFlyScholarship";
+import FreedomToFlyDetail from "@/components/events/FreedomToFlyDetail";
 import FreedomToFlyTerms from "@/components/events/FreedomToFlyTerms";
 import WingsOfFreedomFaq from "@/components/events/WingsOfFreedomFaq";
 import { OfflineEventRegisterModal } from "@/components/events/OfflineEventRegisterModal";
@@ -16,21 +20,22 @@ import {
   WINGS_EVENT_NAME,
   WINGS_START_ISO,
   WINGS_LOCATION,
+  WINGS_VENUE_SHORT,
   WINGS_SCHOLARSHIP_NAME,
   WINGS_SCHOLARSHIP_TRACKS,
   WINGS_ELIGIBILITY_DECLARATION,
   WINGS_TERMS_VERSION,
-  formatWingsDayMonthDisplay,
+  formatWingsDateFullDisplay,
   formatWingsTimeRangeDisplay,
   wingsDateTimeLabel,
 } from "@/lib/wings-of-freedom";
 
 const SCHOLARSHIP_CONFIG = {
   name: WINGS_SCHOLARSHIP_NAME,
-  trackOptions: WINGS_SCHOLARSHIP_TRACKS.map((t) => ({
-    id: t.id,
-    label: `${t.label} · ${t.amountLabel}`,
-  })),
+  // Just the track name - pairing it with the amount made the two toggle
+  // buttons wrap onto two lines, and the amounts are already stated in the
+  // scholarship section right above.
+  trackOptions: WINGS_SCHOLARSHIP_TRACKS.map((t) => ({ id: t.id, label: t.label })),
   termsHref: "#freedom-to-fly-terms",
   declarationText: WINGS_ELIGIBILITY_DECLARATION,
   termsVersion: WINGS_TERMS_VERSION,
@@ -51,8 +56,10 @@ export default function WingsOfFreedomPage() {
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
   const [applyIntent, setApplyIntent] = useState(false);
+  const [agendaOpen, setAgendaOpen] = useState(false);
+  const [scholarshipOpen, setScholarshipOpen] = useState(false);
 
-  const dateShort = formatWingsDayMonthDisplay();
+  const dateFull = formatWingsDateFullDisplay();
   const timeText = formatWingsTimeRangeDisplay();
   const dateLabel = wingsDateTimeLabel();
 
@@ -61,13 +68,19 @@ export default function WingsOfFreedomPage() {
     setRegisterOpen(true);
   }, []);
 
-  // The scholarship CTAs scroll rather than opening a modal, so nobody reaches
-  // the accept-terms checkbox without passing the tiers and the terms link.
+  // Hero/dual-path CTAs scroll to the section; the amounts and tiers sit one
+  // more click in, behind "View scholarships", so the page never leads with a
+  // figure.
   const scrollToScholarship = useCallback(() => {
     document.getElementById("freedom-to-fly")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
 
+  const openScholarships = useCallback(() => setScholarshipOpen(true), []);
+
+  // Applying is reached from inside the scholarship detail, so nobody hits the
+  // accept-terms checkbox without having passed the tiers and terms link.
   const openApply = useCallback(() => {
+    setScholarshipOpen(false);
     setApplyIntent(true);
     setRegisterOpen(true);
   }, []);
@@ -91,23 +104,29 @@ export default function WingsOfFreedomPage() {
       <WingsOfFreedomHero
         ref={heroCtaRef}
         targetIso={WINGS_START_ISO}
-        dateShort={dateShort}
+        dateFull={dateFull}
         timeText={timeText}
-        location={WINGS_LOCATION}
-        cardTitle={WINGS_EVENT_NAME}
+        venueShort={WINGS_VENUE_SHORT}
         onReserve={openRegister}
         onScholarship={scrollToScholarship}
       />
 
+      {/* Real footage first, then the explanation - seeing the room does more
+          than any copy can, and it earns the ask that follows. */}
+      <WingsOfFreedomLastTime />
+
       <WingsOfFreedomDualPath onReserve={openRegister} onScholarship={scrollToScholarship} />
 
-      <WingsOfFreedomCoverCards onAgenda={openRegister} />
+      {/* The six highlight cards summarise the day; the full run of show with
+          timings lives in a modal behind "See the full agenda", so the page
+          isn't two consecutive agenda sections. */}
+      <WingsOfFreedomCoverCards onAgenda={openRegister} onFullAgenda={() => setAgendaOpen(true)} />
 
-      <WingsOfFreedomAgenda onReserve={openRegister} />
+      <WingsOfFreedomTrackCards onSelect={onTrackSelect} onViewScholarships={openScholarships} />
 
-      <WingsOfFreedomTrackCards onSelect={onTrackSelect} />
+      <FreedomToFlyScholarship onViewScholarships={openScholarships} />
 
-      <FreedomToFlyScholarship onApply={openApply} />
+      <WingsTeamStrip />
 
       <FreedomToFlyTerms />
 
@@ -138,6 +157,24 @@ export default function WingsOfFreedomPage() {
           </button>
         </div>
       )}
+
+      <WingsModal
+        open={agendaOpen}
+        onClose={() => setAgendaOpen(false)}
+        eyebrow="15 August · 11:00 am - 3:30 pm IST"
+        title="The full run of show"
+      >
+        <WingsAgendaTimeline />
+      </WingsModal>
+
+      <WingsModal
+        open={scholarshipOpen}
+        onClose={() => setScholarshipOpen(false)}
+        eyebrow="Female applicants only"
+        title={WINGS_SCHOLARSHIP_NAME}
+      >
+        <FreedomToFlyDetail onApply={openApply} />
+      </WingsModal>
 
       <OfflineEventRegisterModal
         open={registerOpen}

@@ -27,6 +27,8 @@ export const WINGS_START_ISO = "2026-08-15T11:00:00+05:30";
 export const WINGS_END_ISO = "2026-08-15T15:30:00+05:30";
 
 export const WINGS_LOCATION = "WindChasers Aviation Academy, Kothanur, Bengaluru, Karnataka 560077";
+/** Short form for tight meta rows - the full address doesn't fit inline. */
+export const WINGS_VENUE_SHORT = "WindChasers HQ, Bangalore";
 export const WINGS_MAPS_URL = "https://maps.google.com/maps?q=WindChasers+Aviation+Academy+Kothanur+Bengaluru";
 
 /** Structured address for the Event JSON-LD block. */
@@ -44,6 +46,16 @@ export function formatWingsDayMonthDisplay(): string {
     timeZone: "Asia/Kolkata",
     day: "numeric",
     month: "long",
+  }).format(new Date(WINGS_START_ISO));
+}
+
+/** "15 August 2026" */
+export function formatWingsDateFullDisplay(): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    timeZone: "Asia/Kolkata",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   }).format(new Date(WINGS_START_ISO));
 }
 
@@ -76,6 +88,72 @@ export function wingsDateTimeLabel(): string {
   }).format(new Date(WINGS_START_ISO));
   return `${date} at ${time} IST`;
 }
+
+// ── Last year's event media ─────────────────────────────────────────────────
+
+/**
+ * Real footage and photos from the previous Wings of Freedom. Shown directly
+ * under the hero so a visitor sees what the day actually looks like before
+ * being asked to commit to anything.
+ *
+ * Files live in public/wings-of-freedom/. Add more by appending here - the
+ * carousel and its thumbnail strip are driven entirely off this list.
+ */
+export type WingsMediaItem =
+  | { kind: "video"; src: string; poster: string; caption: string; alt: string }
+  | { kind: "image"; src: string; caption: string; alt: string };
+
+export const WINGS_LAST_TIME_MEDIA: WingsMediaItem[] = [
+  {
+    kind: "video",
+    src: "/wings-of-freedom/recap.mp4",
+    poster: "/wings-of-freedom/recap-poster.jpg",
+    caption: "Inside last year's Wings of Freedom",
+    alt: "Highlights reel from the previous Wings of Freedom event",
+  },
+  {
+    kind: "image",
+    src: "/wings-of-freedom/flag-hoisting.jpg",
+    caption: "The Independence Day flag hoisting on campus",
+    alt: "Attendees and WindChasers cadets gathered around the Indian flag for the Independence Day ceremony",
+  },
+  {
+    kind: "image",
+    src: "/wings-of-freedom/masterclass.jpg",
+    caption: "The masterclass, front of the room",
+    alt: "Two women presenting the WindChasers admissions process to a seated audience",
+  },
+  {
+    kind: "image",
+    src: "/wings-of-freedom/workshop-build.jpg",
+    caption: "Building model aircraft, hands-on",
+    alt: "Attendees assembling wooden model aircraft around a long table",
+  },
+  {
+    kind: "image",
+    src: "/wings-of-freedom/workshop-gallery.jpg",
+    caption: "In the aviation gallery at the academy",
+    alt: "Attendees building model aircraft in a room lined with framed aircraft photographs",
+  },
+  {
+    kind: "image",
+    src: "/wings-of-freedom/simulator.jpg",
+    caption: "Taking the controls in the simulator",
+    alt: "An instructor guiding attendees at the flight simulator controls",
+  },
+  {
+    kind: "image",
+    src: "/wings-of-freedom/certificate.jpg",
+    caption: "Certificates at the end of the day",
+    alt: "An attendee receiving her participation certificate",
+  },
+  {
+    kind: "image",
+    src: "/wings-of-freedom/group-photo.jpg",
+    caption: "Everyone who showed up last year",
+    alt: "Group photograph of all attendees and WindChasers staff at the end of the event",
+  },
+];
 
 // ── Agenda ──────────────────────────────────────────────────────────────────
 
