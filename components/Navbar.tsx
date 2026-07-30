@@ -58,6 +58,7 @@ export default function Navbar() {
   const isStudents = pathname === "/students";
   const isParents = pathname === "/parents";
   const isFlightSchools = pathname === "/flight-schools";
+  const isWingsOfFreedom = pathname === "/wings-of-freedom";
   const isDGCA = pathname === "/dgca";
   const isHelicopter = pathname === "/helicopter";
   const isInternational = pathname === "/international";
@@ -107,7 +108,18 @@ export default function Navbar() {
   const MARKETING_WA_AGENT = "919035098424";
   // The modal prepends "Hi! I'm {name}, ", keep these templates as the
   // sentence tail so we don't double-greet ("Hi! I'm X, Hi WindChasers, ...").
-  const waCaptureConfig = isPilotTraining
+  const waCaptureConfig = isWingsOfFreedom
+    ? {
+        // Names the event explicitly so the WhatsApp agent opens with the
+        // right context instead of a generic programme enquiry, and so PROXe
+        // can attribute the lead to this event.
+        waNumber: MARKETING_WA_AGENT,
+        message:
+          "I'd like to know more about Wings of Freedom, the women-only aviation day on 15 August.",
+        source: "navbar_wings_of_freedom",
+        program: "Wings of Freedom",
+      }
+    : isPilotTraining
     ? {
         waNumber: MARKETING_WA_AGENT,
         message: "I'd like to know more about pilot training.",
@@ -150,7 +162,9 @@ export default function Navbar() {
       : isWebinarStudents
         ? WEBINAR_STUDENT_WHATSAPP_GROUP_URL
         : `https://wa.me/919035098424?text=${encodeURIComponent(
-            isHome
+            isWingsOfFreedom
+              ? "Hi WindChasers, I want to know more about Wings of Freedom, the women-only aviation day on 15 August."
+              : isHome
               ? "Hi WindChasers, I need more detail on your pilot training programs"
               : isATC
                 ? "Hi WindChasers, I want to know more about ATC at your academy"

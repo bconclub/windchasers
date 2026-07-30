@@ -27,10 +27,11 @@ const CARDS: {
     title: "The Pilot Path",
     desc: "DGCA written exams, Class 1 and Class 2 medicals, and how to actually choose a flight school.",
     chips: ["DGCA written exams", "Class 1 & 2 medicals", "Flight school selection"],
-    // From the pilot-training page. Chosen over /hero/cockpit.webp, which is
-    // two male pilots - the wrong image for a women-only cohort.
-    image: "/students-flying/001.webp",
-    imageAlt: "A WindChasers student on the wing of a training aircraft",
+    // Our own footage beats the pilot-training page's stock here: that page's
+    // cockpit shot is two male pilots, and its student shot crops to legs at
+    // this aspect. This is women actually flying the sim at last year's event.
+    image: "/wings-of-freedom/simulator.jpg",
+    imageAlt: "Attendees at the flight simulator controls with an instructor",
     Icon: Plane,
   },
   {
