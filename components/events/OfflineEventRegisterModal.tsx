@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, User as UserIcon, Users, Check } from "lucide-react";
+import { X, Send, User as UserIcon, Users, Check, ArrowRight } from "lucide-react";
 import { trackMetaLead } from "@/lib/metaPixel";
 import { track, EVENTS } from "@/lib/analytics/events";
 import { getStoredAttribution } from "@/lib/attribution";
@@ -126,9 +126,16 @@ export function OfflineEventRegisterModal({
   const [ageBand, setAgeBand] = useState("");
   const [declared, setDeclared] = useState(false);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
+  // Scholarship fields live on a SECOND step rather than expanding inline.
+  // Inline made the card ~1.6x the viewport on a laptop, pushing the submit
+  // button out of reach. 1 = register, 2 = scholarship details.
+  const [step, setStep] = useState<1 | 2>(1);
 
   // The date/time actually submitted + shown once picked: the chosen session's
   // full label when sessions are offered, else the fixed eventDate prop.
+  /** True while the scholarship half of the form is on screen. */
+  const onScholarshipStep = Boolean(scholarship) && applying && step === 2;
+
   const selectedSession = sessions?.find((s) => s.id === sessionId);
   const resolvedEventDate = selectedSession?.fullLabel ?? eventDate;
 
@@ -144,6 +151,7 @@ export function OfflineEventRegisterModal({
       setAudience(initialAudience);
       setSessionId(sessions?.[0]?.id ?? "");
       setApplying(!!scholarship && defaultApplying);
+      setStep(1);
       setScholarshipTrack(scholarship?.trackOptions[0]?.id ?? "");
       setEmail("");
       setEducation("");
@@ -171,21 +179,33 @@ export function OfflineEventRegisterModal({
     };
   }, [open]);
 
+  /** Step-1 fields, checked before advancing AND before submitting. */
+  function validateBasics(): string | null {
+    if (!name.trim()) return "Please enter your name.";
+    if (phone.trim().replace(/\D/g, "").length < 10) return "Please enter a valid phone number.";
+    if (sessions && sessions.length > 0 && !sessionId) return "Please pick which day you'll attend.";
+    return null;
+  }
+
+  /** "Continue" on step 1 when they've ticked the scholarship box. */
+  function handleContinue() {
+    const problem = validateBasics();
+    if (problem) { setError(problem); return; }
+    setError(null);
+    setStep(2);
+  }
+
   async function handleSubmit() {
     if (submitting) return;
     const trimmedName = name.trim();
     const trimmedPhone = phone.trim();
 
-    if (!trimmedName) {
-      setError("Please enter your name.");
-      return;
-    }
-    if (trimmedPhone.replace(/\D/g, "").length < 10) {
-      setError("Please enter a valid phone number.");
-      return;
-    }
-    if (sessions && sessions.length > 0 && !sessionId) {
-      setError("Please pick which day you'll attend.");
+    const basicsProblem = validateBasics();
+    if (basicsProblem) {
+      // Send them back to the field that's wrong rather than showing a step-1
+      // error under a step-2 form.
+      setStep(1);
+      setError(basicsProblem);
       return;
     }
     const trimmedEmail = email.trim();
@@ -337,7 +357,12 @@ export function OfflineEventRegisterModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.18 }}
-          className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md"
+          /* overflow-y-auto + min-h-full wrapper: when the card is taller than
+             the viewport (scholarship step on a short screen) the OVERLAY
+             scrolls. Previously nothing scrolled - body scroll is locked, the
+             card had no max height, so the submit button was simply
+             unreachable below the fold. */
+          className="fixed inset-0 z-[200] flex justify-center overflow-y-auto overscroll-contain bg-black/80 p-4 backdrop-blur-md sm:p-6"
           role="dialog"
           aria-modal="true"
           aria-labelledby="offline-event-register-title"
@@ -350,7 +375,7 @@ export function OfflineEventRegisterModal({
             animate={{ opacity: 0.35 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, delay: 0.08 }}
-            className="pointer-events-none absolute inset-0 flex items-center justify-center"
+            className="pointer-events-none fixed inset-0 flex items-center justify-center"
             aria-hidden="true"
           >
             <div className="w-[520px] h-[420px] rounded-full bg-[#C5A572]/8 blur-[100px]" />
@@ -362,7 +387,10 @@ export function OfflineEventRegisterModal({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 16, scale: 0.97 }}
             transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-            className="relative w-full max-w-[480px] rounded-[20px] border border-[#C5A572]/30 bg-[#1F1F1F] px-7 py-8 sm:px-9 sm:py-9 shadow-[0_30px_70px_rgba(0,0,0,0.7),0_0_0_1px_rgba(197,165,114,0.04)]"
+            /* my-auto (not items-center on the parent): auto margins centre the
+               card while it fits and collapse to 0 once it is taller than the
+               viewport, so the top never gets clipped out of reach. */
+            className="relative my-auto w-full max-w-[480px] rounded-[20px] border border-[#C5A572]/30 bg-[#1F1F1F] px-7 py-8 sm:px-9 sm:py-9 shadow-[0_30px_70px_rgba(0,0,0,0.7),0_0_0_1px_rgba(197,165,114,0.04)]"
           >
             <div
               aria-hidden="true"
@@ -432,7 +460,7 @@ export function OfflineEventRegisterModal({
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
                   </span>
                   <span className="text-[#C5A572] text-[10px] uppercase tracking-[3px] font-medium">
-                    Reserve your spot
+                    {onScholarshipStep ? "Step 2 of 2" : scholarship && applying ? "Step 1 of 2" : "Reserve your spot"}
                   </span>
                 </div>
 
@@ -441,15 +469,29 @@ export function OfflineEventRegisterModal({
                   className="text-white text-center text-[24px] sm:text-[26px] font-semibold leading-[1.15] mb-2"
                   style={{ textShadow: "0 2px 18px rgba(0,0,0,0.4)" }}
                 >
-                  Register for {eventName}
+                  {onScholarshipStep ? `Apply for ${scholarship!.name}` : `Register for ${eventName}`}
                 </h2>
-                <p className="text-white/55 text-center text-[13px] leading-relaxed mb-1 max-w-[360px] mx-auto">
-                  {eventDate}
-                </p>
-                <p className="text-white/45 text-center text-[12px] leading-relaxed mb-5 max-w-[360px] mx-auto">
-                  {eventLocation}
-                </p>
+                {onScholarshipStep ? (
+                  <p className="text-white/55 text-center text-[13px] leading-relaxed mb-5 max-w-[360px] mx-auto">
+                    {scholarship!.processNote ||
+                      "A few details so the selection committee can assess your application."}
+                  </p>
+                ) : (
+                  <>
+                    <p className="text-white/55 text-center text-[13px] leading-relaxed mb-1 max-w-[360px] mx-auto">
+                      {eventDate}
+                    </p>
+                    <p className="text-white/45 text-center text-[12px] leading-relaxed mb-5 max-w-[360px] mx-auto">
+                      {eventLocation}
+                    </p>
+                  </>
+                )}
 
+                {/* Everything below is step 1. Hidden (not unmounted-and-lost:
+                    the state lives in the parent) while the scholarship step
+                    is showing, so neither screen is longer than a viewport. */}
+                {!onScholarshipStep && (
+                <>
                 {/* Day picker - only when the event runs as separate single-day
                     sessions (attendee picks one, not a multi-day event). */}
                 {sessions && sessions.length > 0 && (
@@ -562,8 +604,8 @@ export function OfflineEventRegisterModal({
                   </div>
                 </div>
 
-                {/* Scholarship application - opt-in, collapsed by default so
-                    the 20-second registration stays a 20-second registration. */}
+                {/* Scholarship opt-in. Ticking it only sets the intent - the
+                    fields themselves are step 2, so step 1 stays short. */}
                 {scholarship && (
                   <div className="mt-4 rounded-xl border border-[#C5A572]/25 bg-[#C5A572]/[0.04] p-3">
                     <label className="flex cursor-pointer items-start gap-2.5">
@@ -579,14 +621,20 @@ export function OfflineEventRegisterModal({
                         application
                       </span>
                     </label>
+                    {applying && scholarship.processNote && (
+                      <p className="mt-3 border-t border-white/10 pt-3 text-[12px] leading-relaxed text-white/60">
+                        {scholarship.processNote}
+                      </p>
+                    )}
+                  </div>
+                )}
+                </>
+                )}
 
-                    {applying && (
-                      <div className="mt-3 space-y-3 border-t border-white/10 pt-3">
-                        {scholarship.processNote && (
-                          <p className="rounded-xl border border-[#C5A572]/25 bg-[#C5A572]/[0.06] px-3 py-2.5 text-[12px] leading-relaxed text-white/70">
-                            {scholarship.processNote}
-                          </p>
-                        )}
+                {/* Step 2 - the scholarship fields. */}
+                {onScholarshipStep && scholarship && (
+                  <div className="rounded-xl border border-[#C5A572]/25 bg-[#C5A572]/[0.04] p-3">
+                    <div className="space-y-3">
                         <div>
                           <p className="mb-1.5 text-[11px] uppercase tracking-[0.15em] text-white/40">Applying for</p>
                           <div className="grid gap-1 rounded-xl border border-white/10 bg-[#0D0D0D] p-1" style={{ gridTemplateColumns: `repeat(${scholarship.trackOptions.length}, minmax(0, 1fr))` }}>
@@ -682,8 +730,7 @@ export function OfflineEventRegisterModal({
                           Shortlisted candidates are contacted for an interview and counselling session.
                           Any documents or essay are collected then - nothing else is needed now.
                         </p>
-                      </div>
-                    )}
+                    </div>
                   </div>
                 )}
 
@@ -691,9 +738,11 @@ export function OfflineEventRegisterModal({
                   <p className="text-red-400 text-xs mt-3 pl-1" role="alert">{error}</p>
                 )}
 
+                {/* Step 1 with the box ticked advances instead of submitting,
+                    so nothing is sent until they've seen what applying means. */}
                 <button
                   type="button"
-                  onClick={handleSubmit}
+                  onClick={scholarship && applying && step === 1 ? handleContinue : handleSubmit}
                   disabled={submitting}
                   className="group relative w-full mt-5 h-12 rounded-xl bg-[#C5A572] text-[#1A1A1A] font-semibold text-[15px] overflow-hidden transition-all duration-300 hover:bg-[#d4b789] hover:-translate-y-0.5 hover:shadow-[0_15px_35px_rgba(197,165,114,0.35)] disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-none"
                 >
@@ -704,14 +753,29 @@ export function OfflineEventRegisterModal({
                         <span className="w-4 h-4 border-2 border-[#1A1A1A]/30 border-t-[#1A1A1A] rounded-full animate-spin" />
                         Reserving...
                       </>
+                    ) : scholarship && applying && step === 1 ? (
+                      <>
+                        Continue
+                        <ArrowRight className="w-4 h-4" />
+                      </>
                     ) : (
                       <>
                         <Send className="w-4 h-4" />
-                        {scholarship && applying ? "Reserve my spot & apply" : "Reserve my spot"}
+                        {onScholarshipStep ? "Reserve my spot & apply" : "Reserve my spot"}
                       </>
                     )}
                   </span>
                 </button>
+
+                {onScholarshipStep && !submitting && (
+                  <button
+                    type="button"
+                    onClick={() => { setError(null); setStep(1); }}
+                    className="mx-auto mt-3 block text-[12.5px] font-semibold text-white/45 transition-colors hover:text-white/80"
+                  >
+                    Back
+                  </button>
+                )}
 
                 <p className="text-white/35 text-center text-[11px] leading-relaxed mt-4">
                   We&apos;ll confirm your spot and share reminders on WhatsApp.
