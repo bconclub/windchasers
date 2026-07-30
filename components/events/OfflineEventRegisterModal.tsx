@@ -362,7 +362,7 @@ export function OfflineEventRegisterModal({
              scrolls. Previously nothing scrolled - body scroll is locked, the
              card had no max height, so the submit button was simply
              unreachable below the fold. */
-          className="fixed inset-0 z-[200] flex justify-center overflow-y-auto overscroll-contain bg-black/80 p-4 backdrop-blur-md sm:p-6"
+          className="fixed inset-0 z-[200] flex justify-center overflow-y-auto overscroll-contain bg-black/80 p-3 backdrop-blur-md sm:p-5"
           role="dialog"
           aria-modal="true"
           aria-labelledby="offline-event-register-title"
@@ -390,17 +390,17 @@ export function OfflineEventRegisterModal({
             /* my-auto (not items-center on the parent): auto margins centre the
                card while it fits and collapse to 0 once it is taller than the
                viewport, so the top never gets clipped out of reach. */
-            className="relative my-auto w-full max-w-[480px] rounded-[20px] border border-[#C5A572]/30 bg-[#1F1F1F] px-7 py-8 sm:px-9 sm:py-9 shadow-[0_30px_70px_rgba(0,0,0,0.7),0_0_0_1px_rgba(197,165,114,0.04)]"
+            className="relative my-auto w-full max-w-[560px] rounded-[20px] border border-[#C5A572]/30 bg-[#1F1F1F] px-5 py-6 sm:px-8 sm:py-7 shadow-[0_30px_70px_rgba(0,0,0,0.7),0_0_0_1px_rgba(197,165,114,0.04)]"
           >
             <div
               aria-hidden="true"
               className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#C5A572] to-transparent rounded-t-[20px]"
             />
-            <div aria-hidden="true" className="absolute top-5 left-5 w-5 h-5">
+            <div aria-hidden="true" className="absolute top-3.5 left-3.5 w-5 h-5">
               <div className="absolute top-0 left-0 w-5 h-[2px] bg-[#C5A572]" />
               <div className="absolute top-0 left-0 w-[2px] h-5 bg-[#C5A572]" />
             </div>
-            <div aria-hidden="true" className="absolute bottom-5 right-5 w-5 h-5">
+            <div aria-hidden="true" className="absolute bottom-3.5 right-3.5 w-5 h-5">
               <div className="absolute bottom-0 right-0 w-5 h-[2px] bg-[#C5A572]" />
               <div className="absolute bottom-0 right-0 w-[2px] h-5 bg-[#C5A572]" />
             </div>
@@ -454,7 +454,7 @@ export function OfflineEventRegisterModal({
               </div>
             ) : (
               <>
-                <div className="flex items-center justify-center gap-2 mb-4">
+                <div className="flex items-center justify-center gap-2 mb-3">
                   <span className="relative flex h-2 w-2">
                     <span className="absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75 animate-ping" />
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
@@ -466,7 +466,7 @@ export function OfflineEventRegisterModal({
 
                 <h2
                   id="offline-event-register-title"
-                  className="text-white text-center text-[24px] sm:text-[26px] font-semibold leading-[1.15] mb-2"
+                  className="text-white text-center text-[22px] sm:text-[25px] font-semibold leading-[1.15] mb-2"
                   style={{ textShadow: "0 2px 18px rgba(0,0,0,0.4)" }}
                 >
                   {onScholarshipStep ? `Apply for ${scholarship!.name}` : `Register for ${eventName}`}
@@ -481,7 +481,7 @@ export function OfflineEventRegisterModal({
                     <p className="text-white/55 text-center text-[13px] leading-relaxed mb-1 max-w-[360px] mx-auto">
                       {eventDate}
                     </p>
-                    <p className="text-white/45 text-center text-[12px] leading-relaxed mb-5 max-w-[360px] mx-auto">
+                    <p className="text-white/45 text-center text-[12px] leading-relaxed mb-4 max-w-[360px] mx-auto">
                       {eventLocation}
                     </p>
                   </>
