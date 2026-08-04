@@ -430,33 +430,44 @@ export function OfflineEventRegisterModal({
                 <p className="text-white/60 text-[13px] leading-relaxed mb-1">{resolvedEventDate}</p>
                 <p className="text-white/45 text-[12px] leading-relaxed mb-5">{eventLocation}</p>
 
-                {/* An applicant's next step is a real one (the aptitude test
-                    link goes out in the group), so it gets a button rather
-                    than a line of fine print promising someone will call. */}
-                {scholarship && applying ? (
+                {/* The group is for EVERYONE who registers, not just
+                    applicants. It carries the day-of updates and directions, so
+                    a plain registrant who only sees "our team will confirm
+                    shortly" has been given nothing to act on. Applicants get an
+                    extra CTA above it; nobody loses the group. */}
+                {scholarship && applying && (
+                  <p className="text-white/60 text-[12.5px] leading-relaxed mb-4">
+                    {scholarship.nextStepNote ||
+                      `Your seat is booked and your ${scholarship.name} application is open. It is not decided yet.`}
+                  </p>
+                )}
+
+                {scholarship && applying && scholarship.examPath && (
+                  <a
+                    href={`${scholarship.examPath}?p=${encodeURIComponent(phone.trim())}&n=${encodeURIComponent(name.trim())}`}
+                    className="mb-3 inline-flex items-center justify-center gap-2 rounded-full bg-[#C5A572] px-6 py-3 text-sm font-semibold text-[#1A1A1A] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#d4b789]"
+                  >
+                    Complete your application
+                  </a>
+                )}
+
+                {scholarship?.groupUrl ? (
                   <>
-                    <p className="text-white/60 text-[12.5px] leading-relaxed mb-4">
-                      {scholarship.nextStepNote ||
-                        `Your seat is booked and your ${scholarship.name} application is open. It is not decided yet.`}
+                    <a
+                      href={scholarship.groupUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={
+                        scholarship && applying
+                          ? "inline-flex items-center justify-center gap-2 rounded-full border border-[#C5A572]/40 bg-[#C5A572]/5 px-6 py-3 text-sm font-semibold text-[#E7D5B3] transition-all duration-300 hover:border-[#C5A572]/70 hover:bg-[#C5A572]/12"
+                          : "inline-flex items-center justify-center gap-2 rounded-full bg-[#C5A572] px-6 py-3 text-sm font-semibold text-[#1A1A1A] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#d4b789]"
+                      }
+                    >
+                      Join the WhatsApp group
+                    </a>
+                    <p className="text-white/40 text-[11px] leading-relaxed mt-3">
+                      Updates, directions and reminders all go out there.
                     </p>
-                    {scholarship.examPath && (
-                      <a
-                        href={`${scholarship.examPath}?p=${encodeURIComponent(phone.trim())}&n=${encodeURIComponent(name.trim())}`}
-                        className="mb-3 inline-flex items-center justify-center gap-2 rounded-full bg-[#C5A572] px-6 py-3 text-sm font-semibold text-[#1A1A1A] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#d4b789]"
-                      >
-                        Complete your application
-                      </a>
-                    )}
-                    {scholarship.groupUrl && (
-                      <a
-                        href={scholarship.groupUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 rounded-full border border-[#C5A572]/40 bg-[#C5A572]/5 px-6 py-3 text-sm font-semibold text-[#E7D5B3] transition-all duration-300 hover:border-[#C5A572]/70 hover:bg-[#C5A572]/12"
-                      >
-                        Join the group
-                      </a>
-                    )}
                   </>
                 ) : (
                   <p className="text-white/40 text-[11px] leading-relaxed">

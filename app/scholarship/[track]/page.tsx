@@ -23,7 +23,9 @@ export default function ScholarshipApplicationPage({ params }: { params: { track
   if (!config) notFound();
 
   return (
-    <main className="min-h-screen bg-[#141417] px-4 py-10 sm:px-6 sm:py-14">
+    // pt-24 clears the fixed navbar - without it the academy line and the
+    // title render underneath the header bar.
+    <main className="min-h-screen bg-[#141417] px-4 pb-14 pt-24 sm:px-6 sm:pt-28">
       <ScholarshipApplicationForm config={config} />
     </main>
   );
