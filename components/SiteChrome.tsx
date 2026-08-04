@@ -27,7 +27,7 @@ export default function SiteChrome() {
   // "Book a Demo Class" bar stacks on top of it on mobile, giving two
   // competing primary actions. A set rather than another === so the next
   // event page doesn't have to rediscover this.
-  const NO_STICKY_CTA_ROUTES = ["/wings-of-freedom", "/dgca-demo-class", "/dgca-demo-class-parents"];
+  const NO_STICKY_CTA_ROUTES = ["/wings-of-freedom", "/dgca-demo-class", "/dgca-demo-class-parents", "/scholarship/pilot", "/scholarship/cabin-crew"];
   const hasOwnStickyCta = NO_STICKY_CTA_ROUTES.includes(pathname);
 
   return (

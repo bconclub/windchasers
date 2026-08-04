@@ -41,6 +41,10 @@ export interface OfflineEventScholarshipConfig {
   /** WhatsApp group invite. The test link and shortlist dates go out there, so
    *  joining is genuinely the next step, not a nice-to-have. */
   groupUrl?: string;
+  /** Path to the aptitude test. Applicants are sent straight there from the
+   *  confirmation with their phone prefilled, so the result can be joined back
+   *  to this application instead of relying on them retyping the same number. */
+  examPath?: string;
 }
 
 export interface OfflineEventRegisterModalProps {
@@ -435,12 +439,20 @@ export function OfflineEventRegisterModal({
                       {scholarship.nextStepNote ||
                         `Your seat is booked and your ${scholarship.name} application is open. It is not decided yet.`}
                     </p>
+                    {scholarship.examPath && (
+                      <a
+                        href={`${scholarship.examPath}?p=${encodeURIComponent(phone.trim())}&n=${encodeURIComponent(name.trim())}`}
+                        className="mb-3 inline-flex items-center justify-center gap-2 rounded-full bg-[#C5A572] px-6 py-3 text-sm font-semibold text-[#1A1A1A] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#d4b789]"
+                      >
+                        Complete your application
+                      </a>
+                    )}
                     {scholarship.groupUrl && (
                       <a
                         href={scholarship.groupUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 rounded-full bg-[#C5A572] px-6 py-3 text-sm font-semibold text-[#1A1A1A] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#d4b789]"
+                        className="inline-flex items-center justify-center gap-2 rounded-full border border-[#C5A572]/40 bg-[#C5A572]/5 px-6 py-3 text-sm font-semibold text-[#E7D5B3] transition-all duration-300 hover:border-[#C5A572]/70 hover:bg-[#C5A572]/12"
                       >
                         Join the group
                       </a>

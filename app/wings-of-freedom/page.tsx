@@ -47,8 +47,9 @@ const SCHOLARSHIP_CONFIG = {
   // says "you're registered" reads as "you have a scholarship".
   processNote: WINGS_SCHOLARSHIP_PROCESS_NOTE,
   nextStepNote:
-    "Your seat is booked and your application is open, not decided. Next up is the Pilot Aptitude Test - the link and your window go out in the WhatsApp group.",
+    "Your seat is booked. The scholarship application itself is a separate form, and it is Stage 1 of three.",
   groupUrl: WINGS_WHATSAPP_GROUP_URL,
+  examPath: "/scholarship/pilot",
 };
 
 /**

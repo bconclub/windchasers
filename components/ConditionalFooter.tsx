@@ -11,6 +11,7 @@ export default function ConditionalFooter() {
   if (
     pathname === "/demo" ||
     pathname === "/assessment" ||
+    pathname.startsWith("/scholarship/") ||
     pathname === "/assessment/early" ||
     pathname === "/pricing" ||
     pathname === "/open-house" ||

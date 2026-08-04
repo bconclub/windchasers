@@ -278,7 +278,7 @@ export const WINGS_SCHOLARSHIP_STAGES = [
   {
     n: "02",
     title: "Pilot Aptitude Test",
-    desc: "A timed online test. The link and your window are shared in the WhatsApp group.",
+    desc: "A timed 20-minute online test, taken right after you apply.",
   },
   {
     n: "03",

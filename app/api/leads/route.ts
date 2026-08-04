@@ -20,7 +20,7 @@ import { NextRequest, NextResponse } from "next/server";
 // masked. API keys are NEVER logged.
 // =============================================================================
 
-type LeadType = "pat" | "page" | "event";
+type LeadType = "pat" | "page" | "event" | "scholarship_application";
 type Audience = "student" | "parent" | "early_stage";
 
 interface LeadRequest {
@@ -65,6 +65,7 @@ const VALID_TYPES: ReadonlySet<LeadType> = new Set<LeadType>([
   "pat",
   "page",
   "event",
+  "scholarship_application",
 ]);
 const VALID_AUDIENCES: ReadonlySet<Audience> = new Set<Audience>([
   "student",
@@ -358,6 +359,55 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             readiness_score: scores.readiness,
             eligible_class_12_pass: data.eligible_class_12_pass,
             answers: data.answers,
+            utm_source: utm.source,
+            utm_medium: utm.medium,
+            utm_campaign: utm.campaign,
+            utm_term: utm.term,
+            utm_content: utm.content,
+            gclid: clickIds.gclid,
+            fbclid: clickIds.fbclid,
+            msclkid: clickIds.msclkid,
+            ttclid: clickIds.ttclid,
+            li_fat_id: clickIds.li_fat_id,
+            twclid: clickIds.twclid,
+            wbraid: clickIds.wbraid,
+            gbraid: clickIds.gbraid,
+            has_click_id: hasAnyClickId,
+          },
+        };
+        break;
+      }
+
+      // Wind Chasers full-scholarship application, Stage 1 of the academy's
+      // own selection process. Two tracks with genuinely different forms
+      // (pilot vs cabin crew), both transcribed in lib/scholarship-forms.ts.
+      //
+      // Whitelisted, not passed through: this carries eight free-text answers
+      // and family financial details, so exactly what is forwarded should be
+      // explicit and reviewable in one place.
+      case "scholarship_application": {
+        upstreamPayload = {
+          name,
+          phone,
+          email: body.email,
+          source: "scholarship_application",
+          campaign: utm.campaign ?? null,
+          city: body.city,
+          brand: "windchasers",
+          custom_fields: {
+            form_type: "scholarship_application",
+            scholarship_track: data.scholarship_track,
+            scholarship_form_title: data.scholarship_form_title,
+            application_details: data.application_details,
+            application_answers: data.application_answers,
+            declaration_text: data.declaration_text,
+            declaration_accepted: data.declaration_accepted,
+            declaration_accepted_at: data.declaration_accepted_at,
+            page_url: body.page_url,
+            landing_url: body.landing_url,
+            referrer: body.referrer,
+            channel: channelFallback || "direct",
+            traffic_source: body.traffic_source,
             utm_source: utm.source,
             utm_medium: utm.medium,
             utm_campaign: utm.campaign,

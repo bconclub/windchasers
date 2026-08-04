@@ -59,6 +59,9 @@ export default function Navbar() {
   const isParents = pathname === "/parents";
   const isFlightSchools = pathname === "/flight-schools";
   const isWingsOfFreedom = pathname === "/wings-of-freedom";
+  // The scholarship exam is timed - a nav menu is an invitation to leave
+  // mid-paper, and the attempt only counts once.
+  const isScholarshipExam = pathname.startsWith("/scholarship/");
   const isDGCA = pathname === "/dgca";
   const isHelicopter = pathname === "/helicopter";
   const isInternational = pathname === "/international";
@@ -74,7 +77,7 @@ export default function Navbar() {
   // Event landing pages: logo only. The full nav (menu + call + WhatsApp
   // buttons) crowded the logo on mobile, and a menu here just offers exits
   // from a single-purpose page. The footer stays.
-  if (isFlightSchools || isWingsOfFreedom) {
+  if (isFlightSchools || isWingsOfFreedom || isScholarshipExam) {
     return (
       <nav className="fixed top-0 w-full bg-dark/95 backdrop-blur-sm border-b border-white/10 z-50">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
