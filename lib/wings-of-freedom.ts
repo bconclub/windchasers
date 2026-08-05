@@ -229,6 +229,9 @@ export const WINGS_SCHOLARSHIP_TRACKS = [
     amountLabel: "\u20b92,35,000",
     towards: "advanced flight training",
     waiverAppliesTo: "WindChasers DGCA Ground Classes",
+    // Stage 1 form for this track - the slugs are the academy's two separate
+    // application papers, see lib/scholarship-forms.ts.
+    applicationPath: "/scholarship/pilot",
   },
   {
     id: "cabin_crew",
@@ -236,6 +239,7 @@ export const WINGS_SCHOLARSHIP_TRACKS = [
     amountLabel: "\u20b980,000",
     towards: "cabin crew training",
     waiverAppliesTo: "the Cabin Crew Training Program",
+    applicationPath: "/scholarship/cabin-crew",
   },
 ] as const;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Check, Send, ChevronLeft, ChevronRight } from "lucide-react";
 import type { ScholarshipFormConfig } from "@/lib/scholarship-forms";
@@ -25,6 +25,13 @@ import {
  * caused them, and progress is visible. The final step carries the questions
  * and the declaration together, because the declaration covers the answers.
  */
+/** Nobody applying was born before this. */
+const DATE_MIN = "1950-01-01";
+
+/** Today in YYYY-MM-DD. Client-only: rendering "now" on a statically built page
+ *  would bake the build date into the HTML and mismatch on hydration. */
+const todayISO = () => new Date().toISOString().slice(0, 10);
+
 export default function ScholarshipApplicationForm({ config }: { config: ScholarshipFormConfig }) {
   const reduceMotion = useReducedMotion();
   const [values, setValues] = useState<Record<string, string>>({});
@@ -33,6 +40,7 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [step, setStep] = useState(0);
+  const [dateMax, setDateMax] = useState<string | undefined>(undefined);
 
   // Field blocks become steps, then one final step for the written answers.
   const steps = useMemo(
@@ -42,6 +50,23 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
   const lastStep = steps.length - 1;
   const allFields = useMemo(() => config.sections.flatMap((s) => s.fields), [config]);
 
+  // The event confirmation links here as ?n=<name>&p=<phone>, so the applicant
+  // doesn't retype what they just gave us, and the application joins back to
+  // the registration on the same number. Read off window rather than
+  // useSearchParams: both pages are statically generated, and useSearchParams
+  // would force the whole form into a Suspense boundary for two strings.
+  // Seeded once on mount, never overwriting anything already typed.
+  useEffect(() => {
+    setDateMax(todayISO());
+    const q = new URLSearchParams(window.location.search);
+    const seed: Record<string, string> = {};
+    const name = q.get("n")?.trim();
+    const phone = q.get("p")?.replace(/\D/g, "");
+    if (name) seed.full_name = name;
+    if (phone && phone.length >= 10) seed.mobile = phone;
+    if (Object.keys(seed).length) setValues((p) => ({ ...seed, ...p }));
+  }, []);
+
   const set = (name: string, v: string) => {
     setValues((p) => ({ ...p, [name]: v }));
     if (error) setError(null);
@@ -50,8 +75,20 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
   const focusField = (name: string) =>
     document.getElementById(`f-${name}`)?.scrollIntoView({ block: "center", behavior: "smooth" });
 
+  /** True once they've answered the gated field with something the programme
+   *  cannot accept. Blank is not ineligible, it's just unanswered. */
+  const gate = config.eligibility;
+  const gateValue = gate ? String(values[gate.field] || "").trim() : "";
+  const ineligible = Boolean(gate && gateValue && !gate.allowed.includes(gateValue));
+
   /** Validates only the step being left, so errors always point at what's on screen. */
   function validateStep(i: number): string | null {
+    // Backstop for the eligibility gate - the continue button is already
+    // replaced when it trips, but submit() re-runs every step.
+    if (ineligible && gate) {
+      focusField(gate.field);
+      return gate.message;
+    }
     if (i < config.sections.length) {
       for (const f of config.sections[i].fields) {
         if (f.required && !String(values[f.name] || "").trim()) {
@@ -65,6 +102,15 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
         if (f.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(values[f.name] || ""))) {
           focusField(f.name);
           return "Please enter a valid email address.";
+        }
+        // The date picker's year segment accepts six digits and future years,
+        // so the typed value is checked, not just the input's own bounds.
+        if (f.type === "date" && values[f.name]) {
+          const v = String(values[f.name]);
+          if (v < DATE_MIN || v > todayISO()) {
+            focusField(f.name);
+            return `Please enter a valid ${f.label.toLowerCase()}.`;
+          }
         }
       }
       return null;
@@ -237,6 +283,11 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
                   <div key={f.name} id={`f-${f.name}`} className={f.half ? "sm:col-span-1" : "sm:col-span-2"}>
                     <label htmlFor={f.name} className="mb-1.5 block text-[13px] text-white/70">
                       {f.label}
+                      {/* Unit in the label, not only inside the field: the
+                          browser's number spinner sits exactly where the in-field
+                          suffix renders and hides it once the field is focused,
+                          so "Height" alone would be a guess between cm and feet. */}
+                      {f.suffix && <span className="text-white/45"> ({f.suffix})</span>}
                       {f.required && <span className="text-[#C5A572]"> *</span>}
                     </label>
 
@@ -270,8 +321,18 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
                           value={values[f.name] || ""}
                           placeholder={f.placeholder}
                           onChange={(e) => set(f.name, e.target.value)}
+                          // A bare date input lets the year segment run to six
+                          // digits (typing gives you 111989), and accepts dates
+                          // in the future. Bounds cap the year picker at
+                          // something a person could be born in.
+                          min={f.type === "date" ? DATE_MIN : undefined}
+                          max={f.type === "date" ? dateMax : undefined}
                           style={f.type === "date" ? { colorScheme: "dark" } : undefined}
-                          className={inputCls}
+                          className={
+                            f.suffix
+                              ? `${inputCls} pr-12 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`
+                              : inputCls
+                          }
                         />
                         {f.suffix && (
                           <span className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[13px] text-white/35">
@@ -334,6 +395,25 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
 
       {error && <p className="mt-4 text-[13px] text-red-400" role="alert">{error}</p>}
 
+      {/* Ineligible: say so here, at the field that decided it, instead of
+          letting someone write eight essays for an application that cannot be
+          considered. The form stays on screen and the answer stays changeable
+          in case it was a mistap - only the way forward is closed. */}
+      {ineligible ? (
+        <div className="mt-6 rounded-2xl border border-[#C5A572]/30 bg-[#C5A572]/[0.05] p-5" role="alert">
+          <p className="text-[13.5px] leading-relaxed text-white/80">{config.eligibility!.message}</p>
+          <a
+            href={`https://wa.me/919035098424?text=${encodeURIComponent(
+              "Hi, I was looking at the Wind Chasers scholarship but it is women-only. What other courses do you have?",
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex h-11 items-center justify-center rounded-xl border border-[#C5A572]/40 bg-[#C5A572]/10 px-5 text-[14px] font-semibold text-[#E7D5B3] transition-colors hover:border-[#C5A572]/70 hover:bg-[#C5A572]/20"
+          >
+            Talk to us on WhatsApp
+          </a>
+        </div>
+      ) : (
       <div className="mt-6 flex items-center gap-3">
         {step > 0 && (
           <button
@@ -375,10 +455,13 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
           </button>
         )}
       </div>
+      )}
 
-      <p className="mt-3 pb-4 text-center text-[11px] text-white/35">
-        Step {step + 1} of {steps.length}. Our team will contact you about what follows.
-      </p>
+      {!ineligible && (
+        <p className="mt-3 pb-4 text-center text-[11px] text-white/35">
+          Step {step + 1} of {steps.length}. Our team will contact you about what follows.
+        </p>
+      )}
     </div>
   );
 }

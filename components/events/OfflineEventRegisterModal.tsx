@@ -23,8 +23,10 @@ export interface OfflineEventSession {
 }
 
 export interface OfflineEventScholarshipConfig {
-  /** Which programme they'd be applying to, e.g. Pilot / Cabin Crew. */
-  trackOptions: { id: string; label: string }[];
+  /** Which programme they'd be applying to, e.g. Pilot / Cabin Crew. Each track
+   *  can carry its own application form; `examPath` below is the fallback for
+   *  tracks that don't. */
+  trackOptions: { id: string; label: string; examPath?: string }[];
   /** Anchor on the page holding the full terms, e.g. "#freedom-to-fly-terms". */
   termsHref: string;
   /** The exact eligibility sentence shown - stored verbatim as an audit trail. */
@@ -41,9 +43,10 @@ export interface OfflineEventScholarshipConfig {
   /** WhatsApp group invite. The test link and shortlist dates go out there, so
    *  joining is genuinely the next step, not a nice-to-have. */
   groupUrl?: string;
-  /** Path to the aptitude test. Applicants are sent straight there from the
-   *  confirmation with their phone prefilled, so the result can be joined back
-   *  to this application instead of relying on them retyping the same number. */
+  /** Fallback application-form path, used when the picked track has none of its
+   *  own. Applicants are sent straight there from the confirmation with their
+   *  phone prefilled, so the application can be joined back to this
+   *  registration instead of relying on them retyping the same number. */
   examPath?: string;
 }
 
@@ -142,6 +145,12 @@ export function OfflineEventRegisterModal({
 
   const selectedSession = sessions?.find((s) => s.id === sessionId);
   const resolvedEventDate = selectedSession?.fullLabel ?? eventDate;
+
+  /** Where "Complete your application" sends them - the picked track's own form
+   *  if it has one, else the programme-wide fallback. */
+  const applicationPath =
+    scholarship?.trackOptions.find((t) => t.id === scholarshipTrack)?.examPath ??
+    scholarship?.examPath;
 
   useEffect(() => {
     if (open) {
@@ -442,9 +451,12 @@ export function OfflineEventRegisterModal({
                   </p>
                 )}
 
-                {scholarship && applying && scholarship.examPath && (
+                {/* The form is per-track: a cabin crew applicant must not land
+                    on the pilot paper. Track's own path wins, config-level
+                    examPath is the fallback for single-form programmes. */}
+                {scholarship && applying && applicationPath && (
                   <a
-                    href={`${scholarship.examPath}?p=${encodeURIComponent(phone.trim())}&n=${encodeURIComponent(name.trim())}`}
+                    href={`${applicationPath}?p=${encodeURIComponent(phone.trim())}&n=${encodeURIComponent(name.trim())}`}
                     className="mb-3 inline-flex items-center justify-center gap-2 rounded-full bg-[#C5A572] px-6 py-3 text-sm font-semibold text-[#1A1A1A] transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#d4b789]"
                   >
                     Complete your application

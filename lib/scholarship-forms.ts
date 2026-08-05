@@ -59,7 +59,26 @@ export interface ScholarshipFormConfig {
   questions: ScholarshipQuestion[];
   /** The declaration text, verbatim. Stored with the submission. */
   declaration: string;
+  /** Hard eligibility gate on one of the fields above. Both scholarships run
+   *  under Wings of Freedom, a women-only cohort, so an applicant who answers
+   *  Gender with anything but Female is stopped at that step rather than
+   *  writing eight essays for an application that cannot be considered. The
+   *  Gender field itself stays as the PDF prints it. */
+  eligibility?: {
+    field: string;
+    allowed: string[];
+    /** Shown in place of the step's continue button. Say why, not just no. */
+    message: string;
+  };
 }
+
+/** Both tracks are awarded under the women-only Wings of Freedom programme. */
+const WOMEN_ONLY: NonNullable<ScholarshipFormConfig["eligibility"]> = {
+  field: "gender",
+  allowed: ["Female"],
+  message:
+    "This scholarship is part of Wings of Freedom, a women-only programme, so we can only consider applications from women. Our other courses are open to everyone - talk to us on WhatsApp and we will take you through them.",
+};
 
 const ACADEMY = "Wind Chasers Aviation Academy";
 
@@ -136,6 +155,7 @@ export const PILOT_FORM: ScholarshipFormConfig = {
   ],
   declaration:
     "I declare that all the information provided in this application is true and correct to the best of my knowledge. I understand that providing false information may result in cancellation of my scholarship application.",
+  eligibility: WOMEN_ONLY,
 };
 
 export const CABIN_CREW_FORM: ScholarshipFormConfig = {
@@ -193,6 +213,7 @@ export const CABIN_CREW_FORM: ScholarshipFormConfig = {
     },
   ],
   declaration: "I declare that the information provided is true and correct.",
+  eligibility: WOMEN_ONLY,
 };
 
 export const SCHOLARSHIP_FORMS: Record<string, ScholarshipFormConfig> = {

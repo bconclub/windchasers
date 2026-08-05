@@ -38,7 +38,14 @@ const SCHOLARSHIP_CONFIG = {
   // Just the track name - pairing it with the amount made the two toggle
   // buttons wrap onto two lines, and the amounts are already stated in the
   // scholarship section right above.
-  trackOptions: WINGS_SCHOLARSHIP_TRACKS.map((t) => ({ id: t.id, label: t.label })),
+  trackOptions: WINGS_SCHOLARSHIP_TRACKS.map((t) => ({
+    id: t.id,
+    label: t.label,
+    // The two tracks have genuinely different application forms (see
+    // lib/scholarship-forms.ts), so the confirmation has to send each
+    // applicant to their own paper.
+    examPath: t.applicationPath,
+  })),
   termsHref: "#freedom-to-fly-terms",
   declarationText: WINGS_ELIGIBILITY_DECLARATION,
   termsVersion: WINGS_TERMS_VERSION,
@@ -49,7 +56,6 @@ const SCHOLARSHIP_CONFIG = {
   nextStepNote:
     "Your seat is booked. The scholarship application itself is a separate form, and it is Stage 1 of three.",
   groupUrl: WINGS_WHATSAPP_GROUP_URL,
-  examPath: "/scholarship/pilot",
 };
 
 /**
