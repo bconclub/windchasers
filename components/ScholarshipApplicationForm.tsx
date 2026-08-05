@@ -32,6 +32,101 @@ const DATE_MIN = "1950-01-01";
  *  would bake the build date into the HTML and mismatch on hydration. */
 const todayISO = () => new Date().toISOString().slice(0, 10);
 
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+/**
+ * Date of birth as three parts, not one native date input.
+ *
+ * A bare <input type="date"> renders in the BROWSER's locale, which on most
+ * machines here reads mm/dd/yyyy - so 03/04 is either 3 April or March 4th
+ * depending on who is filling it in, and a wrong DOB is not a typo you catch
+ * later. Its year segment also accepts six digits and future dates.
+ *
+ * Month spelled out removes the ambiguity completely, and day/year as plain
+ * numbers means no picker to fight on a phone. The value handed back is still
+ * YYYY-MM-DD, so nothing downstream knows the difference.
+ */
+function DateOfBirthField({
+  name,
+  value,
+  maxDate,
+  onChange,
+}: {
+  name: string;
+  value: string;
+  maxDate?: string;
+  onChange: (v: string) => void;
+}) {
+  // The three parts are held here, NOT derived from `value`: a half-filled
+  // date isn't a date, so `value` is empty until all three are in, and a part
+  // derived from it would erase itself the moment it was picked.
+  const [parts, setParts] = useState(() => {
+    const [yy = "", mm = "", dd = ""] = value ? value.split("-") : [];
+    return { y: yy, m: mm ? String(Number(mm)) : "", d: dd ? String(Number(dd)) : "" };
+  });
+  const maxYear = maxDate ? Number(maxDate.slice(0, 4)) : undefined;
+
+  /** Only emits a complete date upward - a half-filled one isn't a date yet. */
+  const emit = (next: { y: string; m: string; d: string }) => {
+    setParts(next);
+    const { y, m, d } = next;
+    onChange(y && m && d ? `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}` : "");
+  };
+  const { y, m, d } = parts;
+
+  const cls =
+    "h-11 w-full rounded-xl border border-white/10 bg-[#0D0D0D] px-3 text-[14px] text-white placeholder:text-white/25 focus:border-[#C5A572] focus:outline-none";
+
+  return (
+    <div className="grid grid-cols-[1fr_1.4fr_1fr] gap-2">
+      <select
+        id={name}
+        aria-label="Day of birth"
+        value={d}
+        onChange={(e) => emit({ ...parts, d: e.target.value })}
+        style={{ colorScheme: "dark" }}
+        className={cls}
+      >
+        <option value="">Day</option>
+        {Array.from({ length: 31 }, (_, i) => i + 1).map((n) => (
+          <option key={n} value={n}>{n}</option>
+        ))}
+      </select>
+
+      <select
+        aria-label="Month of birth"
+        value={m}
+        onChange={(e) => emit({ ...parts, m: e.target.value })}
+        style={{ colorScheme: "dark" }}
+        className={cls}
+      >
+        <option value="">Month</option>
+        {MONTHS.map((label, i) => (
+          <option key={label} value={i + 1}>{label}</option>
+        ))}
+      </select>
+
+      {/* Year as a number field, not a 70-option dropdown: four digits on a
+          numeric keypad beats scrolling to 1998. Bounded, and the assembled
+          date is re-checked on the way out of the step. */}
+      <input
+        aria-label="Year of birth"
+        type="number"
+        inputMode="numeric"
+        placeholder="Year"
+        value={y}
+        min={1950}
+        max={maxYear}
+        onChange={(e) => emit({ ...parts, y: e.target.value.replace(/\D/g, "").slice(0, 4) })}
+        className={`${cls} [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`}
+      />
+    </div>
+  );
+}
+
 export default function ScholarshipApplicationForm({ config }: { config: ScholarshipFormConfig }) {
   const reduceMotion = useReducedMotion();
   const [values, setValues] = useState<Record<string, string>>({});
@@ -103,11 +198,19 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
           focusField(f.name);
           return "Please enter a valid email address.";
         }
-        // The date picker's year segment accepts six digits and future years,
-        // so the typed value is checked, not just the input's own bounds.
+        // The three parts can assemble into a date that doesn't exist (31
+        // February) or one nobody was born on, so the assembled value is
+        // checked rather than trusting the inputs' own bounds.
         if (f.type === "date" && values[f.name]) {
           const v = String(values[f.name]);
-          if (v < DATE_MIN || v > todayISO()) {
+          // Built in UTC and compared part-by-part: parsing "2001-05-20" as
+          // local time and reading it back through toISOString() lands on the
+          // 19th from IST, which would reject perfectly good dates.
+          const [yy, mm, dd] = v.split("-").map(Number);
+          const real = new Date(Date.UTC(yy, mm - 1, dd));
+          const exists =
+            real.getUTCFullYear() === yy && real.getUTCMonth() === mm - 1 && real.getUTCDate() === dd;
+          if (!exists || v < DATE_MIN || v > todayISO()) {
             focusField(f.name);
             return `Please enter a valid ${f.label.toLowerCase()}.`;
           }
@@ -291,7 +394,14 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
                       {f.required && <span className="text-[#C5A572]"> *</span>}
                     </label>
 
-                    {f.type === "textarea" ? (
+                    {f.type === "date" ? (
+                      <DateOfBirthField
+                        name={f.name}
+                        value={values[f.name] || ""}
+                        maxDate={dateMax}
+                        onChange={(v) => set(f.name, v)}
+                      />
+                    ) : f.type === "textarea" ? (
                       <textarea
                         id={f.name}
                         rows={2}
@@ -321,13 +431,6 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
                           value={values[f.name] || ""}
                           placeholder={f.placeholder}
                           onChange={(e) => set(f.name, e.target.value)}
-                          // A bare date input lets the year segment run to six
-                          // digits (typing gives you 111989), and accepts dates
-                          // in the future. Bounds cap the year picker at
-                          // something a person could be born in.
-                          min={f.type === "date" ? DATE_MIN : undefined}
-                          max={f.type === "date" ? dateMax : undefined}
-                          style={f.type === "date" ? { colorScheme: "dark" } : undefined}
                           className={
                             f.suffix
                               ? `${inputCls} pr-12 [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none`
