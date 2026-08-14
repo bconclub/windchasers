@@ -222,6 +222,25 @@ export const WINGS_AGENDA: WingsAgendaBlock[] = [
 
 export const WINGS_SCHOLARSHIP_NAME = "Freedom to Fly";
 
+/**
+ * Applications are CLOSED.
+ *
+ * One switch, read by the chooser page, both application pages and the leads
+ * API. Turning it off in three places independently is how a form stays quietly
+ * open after everyone believes it is shut - the API gate matters most, because
+ * a page that no longer renders the form does not stop a direct POST.
+ *
+ * Closed 13 August 2026, two days before the event. Winners are announced live
+ * at Wings of Freedom.
+ */
+export const WINGS_SCHOLARSHIP_CLOSED = true;
+
+export const WINGS_SCHOLARSHIP_CLOSED_HEADLINE = "Applications are closed";
+
+export const WINGS_SCHOLARSHIP_CLOSED_BODY =
+  "Applications for the Freedom to Fly scholarship have closed. Every application received is being reviewed, and the results are announced live at Wings of Freedom on 15 August at WindChasers HQ, Kothanur, Bengaluru.";
+
+
 export const WINGS_SCHOLARSHIP_TRACKS = [
   {
     id: "pilot",

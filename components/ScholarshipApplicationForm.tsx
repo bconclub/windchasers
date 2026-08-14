@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Check, Send, ChevronLeft, ChevronRight } from "lucide-react";
 import type { ScholarshipFormConfig } from "@/lib/scholarship-forms";
+import ScholarshipClosedNotice from "@/components/ScholarshipClosedNotice";
 import {
   getStoredUTMParamsFull,
   getStoredClickIds,
@@ -134,6 +135,7 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
+  const [closedAfterSubmit, setClosedAfterSubmit] = useState(false);
   const [step, setStep] = useState(0);
   const [dateMax, setDateMax] = useState<string | undefined>(undefined);
 
@@ -266,8 +268,9 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
     const details: Record<string, string> = {};
     for (const f of allFields) details[f.name] = String(values[f.name] || "").trim();
 
+    let closed = false;
     try {
-      await fetch("/api/leads", {
+      const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         keepalive: true,
@@ -299,13 +302,25 @@ export default function ScholarshipApplicationForm({ config }: { config: Scholar
           },
         }),
       });
+      // 410 = applications have closed. A stale tab must not be told "thank
+      // you, we have your application" for something that was never accepted.
+      if (res.status === 410) closed = true;
     } catch {
       /* Never block the applicant on a network hiccup - the record is the ask. */
     }
 
     setSubmitting(false);
+    if (closed) {
+      setClosedAfterSubmit(true);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
     setDone(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  if (closedAfterSubmit) {
+    return <ScholarshipClosedNotice />;
   }
 
   if (done) {

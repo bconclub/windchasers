@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { WINGS_SCHOLARSHIP_CLOSED, WINGS_SCHOLARSHIP_CLOSED_BODY } from "@/lib/wings-of-freedom";
 
 // =============================================================================
 // PROXe leads proxy - single forwarding route for every website form capture.
@@ -386,6 +387,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       // and family financial details, so exactly what is forwarded should be
       // explicit and reviewable in one place.
       case "scholarship_application": {
+        // The real gate. A page that stops rendering the form does not stop a
+        // direct POST from a stale tab, a saved link or a bot, and a late
+        // application landing in the pile after the decisions are made is
+        // worse than a clear refusal.
+        if (WINGS_SCHOLARSHIP_CLOSED) {
+          return NextResponse.json(
+            { ok: false, closed: true, error: WINGS_SCHOLARSHIP_CLOSED_BODY },
+            { status: 410 },
+          );
+        }
         upstreamPayload = {
           name,
           phone,

@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SCHOLARSHIP_FORMS } from "@/lib/scholarship-forms";
-import { WINGS_SCHOLARSHIP_TRACKS, WINGS_SCHOLARSHIP_NAME } from "@/lib/wings-of-freedom";
+import { WINGS_SCHOLARSHIP_TRACKS, WINGS_SCHOLARSHIP_NAME, WINGS_SCHOLARSHIP_CLOSED } from "@/lib/wings-of-freedom";
+import ScholarshipClosedNotice from "@/components/ScholarshipClosedNotice";
 
 /**
  * Track chooser - the landing spot for the "Apply for scholarship" button.
@@ -30,6 +31,14 @@ export default function ScholarshipChooserPage({
   if (searchParams?.p) qs.set("p", searchParams.p);
   if (searchParams?.n) qs.set("n", searchParams.n);
   const suffix = qs.toString() ? `?${qs.toString()}` : "";
+
+  if (WINGS_SCHOLARSHIP_CLOSED) {
+    return (
+      <main className="min-h-screen bg-[#141417] px-4 pb-16 pt-24 sm:px-6 sm:pt-28">
+        <ScholarshipClosedNotice />
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-[#141417] px-4 pb-16 pt-24 sm:px-6 sm:pt-28">
