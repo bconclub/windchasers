@@ -1,0 +1,46 @@
+name: Deploy exams app to VPS
+
+# NOTE: Mirrors deploy.yml. Routine deploys ride the VPS 1-minute pull cron
+# (/usr/local/bin/wc-deploy.sh). That script must be extended to also build
+# exams/ and restart the windchasers-exams process, see exams/README.md.
+# This workflow is kept for manual and emergency use only (Run workflow button).
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy exams app to VPS via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_DEPLOY_KEY }}
+          port: 22
+          script_stop: true
+          script: |
+            cd /var/www/windchasers
+            git reset --hard origin/main
+            # Retry git pull with exponential backoff
+            for i in 1 2 3; do
+              if git pull origin main; then
+                break
+              fi
+              if [ $i -eq 3 ]; then
+                echo "Git pull failed after 3 attempts"
+                exit 1
+              fi
+              echo "Git pull failed, retrying in $((i*5)) seconds..."
+              sleep $((i*5))
+            done
+            cd /var/www/windchasers/exams
+            npm ci
+            rm -rf .next
+            npm run build
+            pm2 restart windchasers-exams || pm2 start ecosystem.config.js
+            pm2 save
