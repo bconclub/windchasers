@@ -300,7 +300,7 @@ export function ImportWizard() {
           />
         </label>
 
-        <div className="mt-4 rounded-md border border-dark-100 bg-dark-50 p-3 text-xs text-dark-500">
+        <div className="mt-4 rounded-md border border-line bg-dark-50 p-3 text-xs text-dark-500">
           <p className="font-medium text-dark">Notes</p>
           <ul className="mt-1 list-disc space-y-0.5 pl-4">
             <li>Missing subjects and topics are created automatically.</li>
@@ -376,7 +376,7 @@ export function ImportWizard() {
                     <input
                       value={row[column]}
                       onChange={(event) => updateCell(row.rowNumber, column, event.target.value)}
-                      className="w-full rounded border border-transparent bg-transparent px-1 py-0.5 text-sm hover:border-dark-100 focus:border-gold focus:bg-white focus:outline-none"
+                      className="w-full rounded border border-transparent bg-transparent px-1 py-0.5 text-sm hover:border-dark-100 focus:border-gold focus:bg-surface focus:outline-none"
                     />
                   </Td>
                 ))}

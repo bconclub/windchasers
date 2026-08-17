@@ -10,8 +10,9 @@ import {
 } from "lucide-react";
 import { getServerClient } from "@/lib/supabase/server";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { Card, CardHeader, StatCard } from "@/components/ui/Card";
+import { Card, CardHeader, SectionHeading, StatCard } from "@/components/ui/Card";
 import { Badge, StatusBadge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
 import { EmptyState, Table, Td, Th } from "@/components/ui/Table";
 import { AccuracyBar } from "@/components/charts/Charts";
 import { formatDateTime, formatMarks } from "@/lib/utils";
@@ -20,66 +21,112 @@ import type { DashboardExam, StudentDashboardPayload } from "@/lib/types";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Dashboard" };
 
-function ExamCard({ exam }: { exam: DashboardExam }) {
+/**
+ * The one thing a student logs in to do. A live exam gets the full dark panel
+ * and the only gold button on the screen, so sitting it is never a hunt.
+ */
+function NextExamPanel({ exam }: { exam: DashboardExam }) {
+  const attemptsLeft = exam.max_attempts - exam.attempts_used;
+  const resuming = Boolean(exam.in_progress_attempt_id);
+
+  return (
+    <section className="shell-dark animate-rise overflow-hidden rounded-2xl">
+      <div className="flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="min-w-0">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">
+            {resuming ? "Attempt in progress" : "Ready to sit"}
+          </p>
+          <h2 className="mt-2.5 text-[28px] font-semibold leading-tight tracking-display text-white">
+            {exam.title}
+          </h2>
+          {exam.description ? (
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-dark-200">
+              {exam.description}
+            </p>
+          ) : null}
+
+          <dl className="mt-5 flex flex-wrap items-center gap-x-7 gap-y-3">
+            <div>
+              <dt className="text-[11px] uppercase tracking-wider text-dark-300">Duration</dt>
+              <dd className="tnum mt-0.5 text-[15px] font-medium text-white">
+                {exam.duration_minutes} min
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[11px] uppercase tracking-wider text-dark-300">Total marks</dt>
+              <dd className="tnum mt-0.5 text-[15px] font-medium text-white">
+                {formatMarks(exam.total_marks)}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[11px] uppercase tracking-wider text-dark-300">Attempts left</dt>
+              <dd className="tnum mt-0.5 text-[15px] font-medium text-white">
+                {attemptsLeft} of {exam.max_attempts}
+              </dd>
+            </div>
+            {exam.closes_at ? (
+              <div>
+                <dt className="text-[11px] uppercase tracking-wider text-dark-300">Closes</dt>
+                <dd className="mt-0.5 text-[15px] font-medium text-white">
+                  {formatDateTime(exam.closes_at)}
+                </dd>
+              </div>
+            ) : null}
+          </dl>
+        </div>
+
+        <Link href={`/exam/${exam.id}`} className="shrink-0">
+          <Button size="lg" className="w-full lg:w-auto">
+            <PlayCircle className="h-5 w-5" />
+            {resuming ? "Resume attempt" : "Start exam"}
+          </Button>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+/** Compact row for exams that are not the immediate task. */
+function ExamRow({ exam }: { exam: DashboardExam }) {
   const attemptsLeft = exam.max_attempts - exam.attempts_used;
   const canStart = exam.phase === "live" && (attemptsLeft > 0 || exam.in_progress_attempt_id);
 
   return (
-    <div className="rounded-lg border border-dark-100 bg-white p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="text-sm font-semibold text-dark">{exam.title}</h3>
-          <p className="mt-0.5 text-xs capitalize text-dark-400">
-            {exam.type} - {exam.duration_minutes} min - {formatMarks(exam.total_marks)} marks
-          </p>
+    <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-line bg-surface px-5 py-4">
+      <div className="min-w-0">
+        <div className="flex items-center gap-2.5">
+          <h3 className="truncate text-[15px] font-medium text-dark">{exam.title}</h3>
+          {exam.in_progress_attempt_id ? (
+            <Badge tone="warning">In progress</Badge>
+          ) : (
+            <Badge tone={exam.phase === "live" ? "success" : "neutral"}>{exam.phase}</Badge>
+          )}
         </div>
-        {exam.in_progress_attempt_id ? (
-          <Badge tone="warning">In progress</Badge>
-        ) : (
-          <Badge tone={exam.phase === "live" ? "success" : "neutral"}>{exam.phase}</Badge>
-        )}
+        <p className="tnum mt-1 text-[13px] text-dark-400">
+          {exam.duration_minutes} min, {formatMarks(exam.total_marks)} marks,{" "}
+          {exam.attempts_used} of {exam.max_attempts} attempts used
+          {exam.opens_at && exam.phase === "upcoming"
+            ? `, opens ${formatDateTime(exam.opens_at)}`
+            : ""}
+        </p>
       </div>
 
-      <dl className="mt-3 grid grid-cols-2 gap-2 text-xs text-dark-400">
-        <div>
-          <dt className="inline">Opens </dt>
-          <dd className="inline text-dark">{formatDateTime(exam.opens_at)}</dd>
-        </div>
-        <div>
-          <dt className="inline">Closes </dt>
-          <dd className="inline text-dark">{formatDateTime(exam.closes_at)}</dd>
-        </div>
-        <div className="col-span-2">
-          <dt className="inline">Attempts </dt>
-          <dd className="inline text-dark">
-            {exam.attempts_used} of {exam.max_attempts} used
-          </dd>
-        </div>
-      </dl>
-
-      <div className="mt-4 flex items-center gap-2">
+      <div className="flex items-center gap-2">
         {canStart ? (
-          <Link
-            href={`/exam/${exam.id}`}
-            className="inline-flex items-center gap-1.5 rounded-md bg-gold px-3 py-1.5 text-sm font-medium text-dark hover:bg-gold-600"
-          >
-            <PlayCircle className="h-4 w-4" />
-            {exam.in_progress_attempt_id ? "Resume" : "Start"}
+          <Link href={`/exam/${exam.id}`}>
+            <Button size="sm">
+              <PlayCircle className="h-4 w-4" />
+              {exam.in_progress_attempt_id ? "Resume" : "Start"}
+            </Button>
           </Link>
         ) : null}
         {exam.last_attempt_id ? (
-          <Link
-            href={`/result/${exam.last_attempt_id}`}
-            className="inline-flex items-center gap-1.5 rounded-md border border-dark-100 px-3 py-1.5 text-sm text-dark hover:bg-dark-50"
-          >
-            <FileCheck2 className="h-4 w-4" />
-            View result
+          <Link href={`/result/${exam.last_attempt_id}`}>
+            <Button size="sm" variant="ghost">
+              <FileCheck2 className="h-4 w-4" />
+              Result
+            </Button>
           </Link>
-        ) : null}
-        {!canStart && !exam.last_attempt_id ? (
-          <span className="text-xs text-dark-400">
-            {exam.phase === "upcoming" ? "Opens later" : "No attempts left"}
-          </span>
         ) : null}
       </div>
     </div>
@@ -120,7 +167,32 @@ export default async function StudentDashboardPage() {
     <>
       <PageHeader title="Dashboard" subtitle="Your assigned exams and performance" />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {live.length > 0 ? (
+        <div className="mb-8 space-y-4">
+          <NextExamPanel exam={live[0]} />
+          {live.slice(1).map((exam) => (
+            <ExamRow key={exam.id} exam={exam} />
+          ))}
+        </div>
+      ) : (
+        <div className="mb-8">
+          <EmptyState
+            icon={<CalendarClock className="h-8 w-8" />}
+            title="No exam is open right now"
+            message="Assigned exams appear here the moment their window opens. You can keep sharpening in practice mode meanwhile."
+            action={
+              <Link href="/practice">
+                <Button variant="ghost">
+                  <Target className="h-4 w-4" />
+                  Go to practice
+                </Button>
+              </Link>
+            }
+          />
+        </div>
+      )}
+
+      <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
           label="Overall accuracy"
           value={`${payload.stats.accuracy}%`}
@@ -145,33 +217,12 @@ export default async function StudentDashboardPage() {
         />
       </div>
 
-      <section className="mt-8">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-dark-400">
-          Live now
-        </h2>
-        {live.length === 0 ? (
-          <EmptyState
-            icon={<CalendarClock className="h-8 w-8" />}
-            title="No live exams"
-            message="Assigned exams appear here when their window opens."
-          />
-        ) : (
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {live.map((exam) => (
-              <ExamCard key={exam.id} exam={exam} />
-            ))}
-          </div>
-        )}
-      </section>
-
       {upcoming.length > 0 ? (
         <section className="mt-8">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-dark-400">
-            Upcoming
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <SectionHeading title="Upcoming" subtitle="Scheduled but not open yet" />
+          <div className="space-y-3">
             {upcoming.map((exam) => (
-              <ExamCard key={exam.id} exam={exam} />
+              <ExamRow key={exam.id} exam={exam} />
             ))}
           </div>
         </section>
@@ -196,7 +247,7 @@ export default async function StudentDashboardPage() {
             </div>
           )}
 
-          <div className="mt-6 border-t border-dark-100 pt-5">
+          <div className="mt-6 border-t border-line pt-5">
             <h3 className="text-sm font-semibold text-dark">Three weakest topics</h3>
             {weakTopics.length === 0 ? (
               <p className="mt-2 text-sm text-dark-400">
@@ -276,9 +327,9 @@ export default async function StudentDashboardPage() {
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-dark-400">
             Completed and closed
           </h2>
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          <div className="space-y-3">
             {completed.map((exam) => (
-              <ExamCard key={exam.id} exam={exam} />
+              <ExamRow key={exam.id} exam={exam} />
             ))}
           </div>
         </section>

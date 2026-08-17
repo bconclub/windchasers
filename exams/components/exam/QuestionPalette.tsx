@@ -20,7 +20,7 @@ const styles: Record<string, string> = {
   "answered-marked": "bg-emerald-600 text-white ring-2 ring-gold",
   marked: "bg-gold text-dark",
   answered: "bg-emerald-600 text-white",
-  blank: "bg-white text-dark-500 border border-dark-100",
+  blank: "bg-surface text-dark-500 border border-line",
 };
 
 export function QuestionPalette({
@@ -36,7 +36,7 @@ export function QuestionPalette({
   const marked = entries.filter((entry) => entry.marked).length;
 
   return (
-    <div className="rounded-lg border border-dark-100 bg-white p-4">
+    <div className="rounded-xl border border-line bg-surface p-4">
       <p className="text-xs font-semibold uppercase tracking-wide text-dark-400">Questions</p>
 
       <div className="mt-3 grid grid-cols-6 gap-1.5 sm:grid-cols-8 lg:grid-cols-5">
@@ -70,7 +70,7 @@ export function QuestionPalette({
           <dd className="ml-auto font-medium text-dark">{marked}</dd>
         </div>
         <div className="flex items-center gap-2">
-          <span className="h-3 w-3 rounded border border-dark-100 bg-white" />
+          <span className="h-3 w-3 rounded border border-line bg-surface" />
           <dt>Not answered</dt>
           <dd className="ml-auto font-medium text-dark">{entries.length - answered}</dd>
         </div>

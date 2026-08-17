@@ -28,7 +28,7 @@ function Rule({
   value: string;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-md border border-dark-100 p-3">
+    <div className="flex items-start gap-3 rounded-md border border-line p-3">
       <span className="mt-0.5 text-gold">{icon}</span>
       <div>
         <p className="text-xs uppercase tracking-wide text-dark-400">{label}</p>
@@ -92,7 +92,7 @@ export function ExamGate({
         Back to dashboard
       </Link>
 
-      <div className="rounded-lg border border-dark-100 bg-white p-6">
+      <div className="rounded-xl border border-line bg-surface p-6">
         <h1 className="text-xl font-semibold text-dark">{exam.title}</h1>
         {exam.description ? (
           <p className="mt-2 text-sm text-dark-500">{exam.description}</p>

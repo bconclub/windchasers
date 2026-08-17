@@ -17,7 +17,7 @@ export default function SetPasswordPage() {
             Choose a password to finish setting up your account
           </p>
         </div>
-        <div className="rounded-lg bg-white p-6">
+        <div className="rounded-lg bg-surface p-6">
           <SetPasswordForm />
         </div>
       </div>

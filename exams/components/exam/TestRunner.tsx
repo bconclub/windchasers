@@ -277,7 +277,7 @@ export function TestRunner({
 
   return (
     <div className="no-select fixed inset-0 z-50 flex flex-col bg-dark-50">
-      <header className="border-b border-dark-100 bg-white">
+      <header className="border-b border-line bg-surface">
         <div className="mx-auto flex h-14 max-w-7xl items-center gap-3 px-4">
           <div className="min-w-0">
             <p className="truncate text-sm font-semibold text-dark">{exam.title}</p>
@@ -311,7 +311,7 @@ export function TestRunner({
 
       <div className="mx-auto flex w-full max-w-7xl flex-1 gap-6 overflow-hidden px-4 py-4">
         <div className="flex min-w-0 flex-1 flex-col">
-          <div className="flex-1 overflow-y-auto rounded-lg border border-dark-100 bg-white p-5">
+          <div className="flex-1 overflow-y-auto rounded-xl border border-line bg-surface p-5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="text-sm font-medium text-dark">
                 Question {index + 1} of {questions.length}
@@ -348,7 +348,7 @@ export function TestRunner({
                       "flex w-full items-start gap-3 rounded-md border px-4 py-3 text-left text-sm transition-colors",
                       active
                         ? "border-gold bg-gold-50 text-dark"
-                        : "border-dark-100 bg-white text-dark hover:border-gold-300 hover:bg-gold-50/40"
+                        : "border-dark-100 bg-surface text-dark hover:border-gold-300 hover:bg-gold-50/40"
                     )}
                   >
                     <span

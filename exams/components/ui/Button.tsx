@@ -4,20 +4,24 @@ import { forwardRef } from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-type Variant = "primary" | "secondary" | "ghost" | "danger";
+type Variant = "primary" | "secondary" | "ghost" | "danger" | "onDark";
 type Size = "sm" | "md" | "lg";
 
 const variants: Record<Variant, string> = {
-  primary: "bg-gold text-dark hover:bg-gold-600 disabled:bg-gold-200",
+  // Gold is the accent, so it belongs on the one action that matters per view.
+  primary:
+    "bg-gold text-dark-900 shadow-inset hover:bg-gold-400 active:bg-gold-600 disabled:bg-gold-200",
   secondary: "bg-dark text-white hover:bg-dark-700 disabled:bg-dark-300",
-  ghost: "bg-transparent text-dark border border-dark-100 hover:bg-dark-50",
-  danger: "bg-danger text-white hover:opacity-90",
+  ghost: "bg-surface text-dark-600 border border-line hover:bg-dark-50 hover:text-dark",
+  danger: "bg-danger text-white hover:bg-danger-ink",
+  // For use on the dark shell, where a light ghost button would disappear.
+  onDark: "bg-white/10 text-white hover:bg-white/20 active:bg-white/25",
 };
 
 const sizes: Record<Size, string> = {
-  sm: "h-8 px-3 text-sm",
+  sm: "h-8 gap-1.5 px-3 text-[13px]",
   md: "h-10 px-4 text-sm",
-  lg: "h-12 px-6 text-base",
+  lg: "h-12 px-6 text-[15px]",
 };
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -35,8 +39,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       disabled={disabled || loading}
       className={cn(
-        "inline-flex items-center justify-center gap-2 rounded-md font-medium transition-colors",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2",
+        "inline-flex items-center justify-center gap-2 rounded-lg font-medium",
+        "transition-colors duration-feedback ease-out",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold-600 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
         "disabled:cursor-not-allowed disabled:opacity-60",
         variants[variant],
         sizes[size],

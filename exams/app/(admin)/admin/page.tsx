@@ -7,14 +7,15 @@ import {
   Activity,
   Plus,
   Upload,
+  ArrowUpRight,
 } from "lucide-react";
 import { getServerClient } from "@/lib/supabase/server";
 import { PageHeader } from "@/components/ui/PageHeader";
-import { Card, CardHeader, StatCard } from "@/components/ui/Card";
+import { Card, CardHeader, Metric, MetricRibbon } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
 import { StatusBadge } from "@/components/ui/Badge";
 import { EmptyState, Table, Td, Th } from "@/components/ui/Table";
-import { SubjectBars } from "@/components/charts/Charts";
-import { formatDateTime, formatMarks } from "@/lib/utils";
+import { formatDateTime, formatMarks, percent } from "@/lib/utils";
 import type { AdminDashboardPayload } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,8 @@ export default async function AdminOverviewPage() {
   }
 
   const payload = data as AdminDashboardPayload;
+  const bankTotal = payload.questions_by_subject.reduce((sum, row) => sum + row.total, 0);
+  const largestSubject = Math.max(...payload.questions_by_subject.map((r) => r.total), 1);
 
   return (
     <>
@@ -43,105 +46,148 @@ export default async function AdminOverviewPage() {
         subtitle="Question bank and exam activity at a glance"
         action={
           <>
-            <Link
-              href="/admin/questions/new"
-              className="inline-flex items-center gap-1.5 rounded-md bg-gold px-3 py-2 text-sm font-medium text-dark hover:bg-gold-600"
-            >
-              <Plus className="h-4 w-4" />
-              New question
+            <Link href="/admin/questions/import">
+              <Button variant="ghost">
+                <Upload className="h-4 w-4" />
+                Import
+              </Button>
             </Link>
-            <Link
-              href="/admin/questions/import"
-              className="inline-flex items-center gap-1.5 rounded-md border border-dark-100 px-3 py-2 text-sm text-dark hover:bg-dark-50"
-            >
-              <Upload className="h-4 w-4" />
-              Import
+            <Link href="/admin/questions/new">
+              <Button>
+                <Plus className="h-4 w-4" />
+                New question
+              </Button>
             </Link>
           </>
         }
       />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <StatCard
-          label="Active students"
-          value={payload.total_students}
-          icon={<Users className="h-4 w-4" />}
-        />
-        <StatCard
-          label="Active batches"
-          value={payload.active_batches}
-          icon={<Layers className="h-4 w-4" />}
-        />
-        <StatCard
-          label="Active questions"
+      {/* One instrument cluster. Attempts this week is the live reading, so it
+          carries the accent and the rest stay quiet around it. */}
+      <MetricRibbon>
+        <Metric
+          label="Questions"
           value={payload.total_questions}
+          hint="active in the bank"
           icon={<FileQuestion className="h-4 w-4" />}
         />
-        <StatCard
-          label="Published exams"
+        <Metric
+          label="Exams"
           value={payload.published_exams}
+          hint="published"
           icon={<ClipboardList className="h-4 w-4" />}
         />
-        <StatCard
-          label="Attempts this week"
-          value={payload.attempts_this_week}
-          icon={<Activity className="h-4 w-4" />}
+        <Metric
+          label="Students"
+          value={payload.total_students}
+          hint="active accounts"
+          icon={<Users className="h-4 w-4" />}
         />
-      </div>
+        <Metric
+          label="Batches"
+          value={payload.active_batches}
+          hint="currently running"
+          icon={<Layers className="h-4 w-4" />}
+        />
+        <Metric
+          label="Attempts"
+          value={payload.attempts_this_week}
+          hint="in the last 7 days"
+          icon={<Activity className="h-4 w-4" />}
+          emphasis
+        />
+      </MetricRibbon>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2">
+      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,10fr)]">
         <Card>
           <CardHeader
-            title="Questions by subject"
-            subtitle="Active questions only"
+            title="Bank coverage"
+            subtitle={`${bankTotal} active questions across ${payload.questions_by_subject.length} subjects`}
             action={
-              <Link href="/admin/questions" className="text-sm text-gold-700 hover:underline">
+              <Link
+                href="/admin/questions"
+                className="inline-flex items-center gap-1 text-[13px] font-medium text-gold-700 hover:text-gold-800"
+              >
                 Manage
+                <ArrowUpRight className="h-3.5 w-3.5" />
               </Link>
             }
           />
-          <SubjectBars
-            items={payload.questions_by_subject.map((row) => ({
-              label: row.subject_name,
-              value: row.total,
-            }))}
-          />
+          {payload.questions_by_subject.length === 0 ? (
+            <p className="text-sm text-dark-400">No questions yet. Import a sheet to begin.</p>
+          ) : (
+            <ul className="space-y-3.5">
+              {payload.questions_by_subject.map((row) => (
+                <li key={row.subject_id}>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="truncate text-[13px] text-dark">{row.subject_name}</span>
+                    <span className="tnum shrink-0 text-[13px] font-medium text-dark-500">
+                      {row.total}
+                      <span className="ml-1.5 text-dark-300">
+                        {percent(row.total, bankTotal)}%
+                      </span>
+                    </span>
+                  </div>
+                  <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-dark-50">
+                    <div
+                      className="h-full rounded-full bg-gold transition-[width] duration-layout ease-out"
+                      style={{ width: `${Math.max(3, (row.total / largestSubject) * 100)}%` }}
+                    />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </Card>
 
-        <Card>
-          <CardHeader title="Recent activity" subtitle="Latest attempts across all exams" />
+        <Card padded={false}>
+          <div className="p-5">
+            <CardHeader title="Recent activity" subtitle="Latest attempts across all exams" />
+          </div>
           {payload.recent_attempts.length === 0 ? (
-            <p className="text-sm text-dark-400">No attempts yet.</p>
+            <p className="px-5 pb-5 text-sm text-dark-400">
+              No attempts yet. They appear here as students sit exams.
+            </p>
           ) : (
-            <Table>
-              <thead>
-                <tr>
-                  <Th>Student</Th>
-                  <Th>Exam</Th>
-                  <Th>Score</Th>
-                  <Th>Status</Th>
-                  <Th>Started</Th>
-                </tr>
-              </thead>
-              <tbody>
-                {payload.recent_attempts.map((row) => (
-                  <tr key={row.id}>
-                    <Td>{row.student_name}</Td>
-                    <Td>{row.exam_title}</Td>
-                    <Td className="whitespace-nowrap">
-                      {row.score === null
-                        ? "-"
-                        : `${formatMarks(row.score)} / ${formatMarks(row.total_marks)}`}
-                    </Td>
-                    <Td>
-                      <StatusBadge value={row.status} />
-                    </Td>
-                    <Td className="whitespace-nowrap text-dark-400">
-                      {formatDateTime(row.started_at)}
-                    </Td>
+            <Table bare>
+                <thead>
+                  <tr>
+                    <Th>Student</Th>
+                    <Th>Exam</Th>
+                    <Th>Score</Th>
+                    <Th>Status</Th>
+                    <Th>Started</Th>
                   </tr>
-                ))}
-              </tbody>
+                </thead>
+                <tbody>
+                  {payload.recent_attempts.map((row) => (
+                    <tr key={row.id}>
+                      <Td className="font-medium text-dark">{row.student_name}</Td>
+                      <Td className="text-dark-500">{row.exam_title}</Td>
+                      <Td className="tnum whitespace-nowrap">
+                        {row.score === null ? (
+                          <span className="text-dark-300">-</span>
+                        ) : (
+                          <>
+                            <span className="font-medium text-dark">
+                              {formatMarks(row.score)}
+                            </span>
+                            <span className="text-dark-300">
+                              {" "}
+                              / {formatMarks(row.total_marks)}
+                            </span>
+                          </>
+                        )}
+                      </Td>
+                      <Td>
+                        <StatusBadge value={row.status} />
+                      </Td>
+                      <Td className="whitespace-nowrap text-dark-400">
+                        {formatDateTime(row.started_at)}
+                      </Td>
+                    </tr>
+                  ))}
+                </tbody>
             </Table>
           )}
         </Card>

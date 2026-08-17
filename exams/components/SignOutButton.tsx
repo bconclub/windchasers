@@ -6,7 +6,7 @@ import { LogOut } from "lucide-react";
 import { getBrowserClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/Button";
 
-export function SignOutButton({ variant = "ghost" }: { variant?: "ghost" | "secondary" }) {
+export function SignOutButton({ variant = "onDark" }: { variant?: "ghost" | "secondary" | "onDark" }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 

@@ -31,7 +31,7 @@ function ReviewCard({ question, order }: { question: ReviewQuestion; order: numb
   ];
 
   return (
-    <div className="rounded-lg border border-dark-100 bg-white p-5">
+    <div className="rounded-xl border border-line bg-surface p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <p className="text-sm font-medium text-dark">Question {order}</p>
         <div className="flex items-center gap-2">

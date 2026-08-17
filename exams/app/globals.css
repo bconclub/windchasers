@@ -5,6 +5,8 @@
 :root {
   --brand-gold: #c5a572;
   --brand-dark: #1a1a1a;
+  --canvas: #f6f4f1;
+  --line: #e8e3dc;
 }
 
 html,
@@ -13,9 +15,12 @@ body {
 }
 
 body {
-  background-color: #ffffff;
+  /* Warm tinted ground, never a dead white next to the gold. */
+  background-color: var(--canvas);
   color: var(--brand-dark);
   -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "cv11", "ss01";
 }
 
 @layer base {
@@ -25,11 +30,40 @@ body {
   h4 {
     @apply font-semibold tracking-tight;
   }
+
+  /* Every figure that sits in a column lines up. */
+  table,
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+
+  ::selection {
+    background: rgba(197, 165, 114, 0.28);
+  }
 }
 
 @layer components {
   .focus-ring {
-    @apply outline-none ring-offset-2 focus-visible:ring-2 focus-visible:ring-gold;
+    outline: none;
+  }
+  .focus-ring:focus-visible {
+    box-shadow:
+      0 0 0 2px var(--canvas),
+      0 0 0 4px #ac8b52;
+  }
+
+  /* Dark chrome used by the app shell and the entry screens. */
+  .shell-dark {
+    background-color: #1a1a1a;
+    background-image:
+      radial-gradient(120% 140% at 12% -10%, rgba(197, 165, 114, 0.16), transparent 58%),
+      radial-gradient(90% 120% at 100% 0%, rgba(197, 165, 114, 0.08), transparent 60%);
+  }
+
+  /* Hairline that reads as a rule, not a border box. */
+  .rule {
+    border-bottom: 1px solid var(--line);
   }
 }
 
@@ -59,7 +93,7 @@ body {
 .stem-content code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.9em;
-  background: #f5f5f5;
+  background: #f0ece5;
   padding: 0.1em 0.3em;
   border-radius: 3px;
 }
@@ -72,9 +106,9 @@ body {
   font-size: 0.75em;
 }
 .stem-content blockquote {
-  border-left: 3px solid #e5e5e5;
+  border-left: 3px solid #e8e3dc;
   padding-left: 0.75rem;
-  color: #4a4a4a;
+  color: #57524b;
 }
 
 /* tiptap editor surface */
@@ -84,7 +118,7 @@ body {
 }
 .tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);
-  color: #a3a3a3;
+  color: #a39b90;
   float: left;
   height: 0;
   pointer-events: none;
@@ -100,5 +134,32 @@ body {
 @media print {
   .no-print {
     display: none;
+  }
+}
+
+/* One authored motion moment per surface, on the product easing curve. */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.animate-rise {
+  animation: rise 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 1ms !important;
   }
 }

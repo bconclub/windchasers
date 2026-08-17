@@ -33,12 +33,12 @@ export function Modal({
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-dark/50 p-4 sm:p-8">
       <div
-        className={`w-full ${width} rounded-lg bg-white shadow-xl`}
+        className={`w-full ${width} rounded-lg bg-surface shadow-xl`}
         role="dialog"
         aria-modal="true"
         aria-label={title}
       >
-        <div className="flex items-center justify-between border-b border-dark-100 px-5 py-3">
+        <div className="flex items-center justify-between border-b border-line px-5 py-3">
           <h2 className="text-base font-semibold text-dark">{title}</h2>
           <button
             type="button"
@@ -51,7 +51,7 @@ export function Modal({
         </div>
         <div className="px-5 py-4">{children}</div>
         {footer ? (
-          <div className="flex justify-end gap-2 border-t border-dark-100 px-5 py-3">{footer}</div>
+          <div className="flex justify-end gap-2 border-t border-line px-5 py-3">{footer}</div>
         ) : null}
       </div>
     </div>

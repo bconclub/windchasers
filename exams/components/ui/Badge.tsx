@@ -2,12 +2,13 @@ import { cn } from "@/lib/utils";
 
 type Tone = "neutral" | "gold" | "success" | "danger" | "warning" | "dark";
 
+// Semantic fills tinted from their own hue, never gray text on a colour.
 const tones: Record<Tone, string> = {
-  neutral: "bg-dark-50 text-dark-500 border-dark-100",
+  neutral: "bg-dark-50 text-dark-500 border-line",
   gold: "bg-gold-50 text-gold-700 border-gold-200",
-  success: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  danger: "bg-red-50 text-red-700 border-red-200",
-  warning: "bg-amber-50 text-amber-800 border-amber-200",
+  success: "bg-success-soft text-success-ink border-success/20",
+  danger: "bg-danger-soft text-danger-ink border-danger/20",
+  warning: "bg-warning-soft text-warning-ink border-warning/25",
   dark: "bg-dark text-white border-dark",
 };
 
@@ -23,7 +24,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-md border px-2 py-0.5 text-[11px] font-medium capitalize",
         tones[tone],
         className
       )}

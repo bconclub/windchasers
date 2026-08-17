@@ -3,10 +3,14 @@
 import { forwardRef, useId } from "react";
 import { cn } from "@/lib/utils";
 
+// 40px tall so it pairs with the md Button, and a focus treatment strong
+// enough to see against the warm canvas.
 const fieldBase =
-  "w-full rounded-md border border-dark-100 bg-white px-3 py-2 text-sm text-dark " +
-  "placeholder:text-dark-300 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold " +
-  "disabled:bg-dark-50 disabled:text-dark-400";
+  "w-full rounded-lg border border-dark-200 bg-surface px-3.5 py-2.5 text-sm text-dark " +
+  "transition-colors duration-feedback ease-out " +
+  "placeholder:text-dark-300 " +
+  "focus:border-gold-600 focus:outline-none focus:ring-2 focus:ring-gold-600/25 " +
+  "disabled:cursor-not-allowed disabled:bg-dark-50 disabled:text-dark-400";
 
 export interface FieldProps {
   label?: string;
@@ -25,9 +29,9 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const generatedId = useId();
   const inputId = id ?? generatedId;
   return (
-    <div className="space-y-1">
+    <div className="space-y-1.5">
       {label ? (
-        <label htmlFor={inputId} className="block text-sm font-medium text-dark">
+        <label htmlFor={inputId} className="block text-[13px] font-medium text-dark-600">
           {label}
         </label>
       ) : null}
@@ -37,7 +41,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
         className={cn(fieldBase, error && "border-danger focus:border-danger focus:ring-danger", className)}
         {...rest}
       />
-      {error ? <p className="text-xs text-danger">{error}</p> : null}
+      {error ? <p className="text-xs font-medium text-danger-ink">{error}</p> : null}
       {!error && hint ? <p className="text-xs text-dark-400">{hint}</p> : null}
     </div>
   );
@@ -54,9 +58,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
   const generatedId = useId();
   const inputId = id ?? generatedId;
   return (
-    <div className="space-y-1">
+    <div className="space-y-1.5">
       {label ? (
-        <label htmlFor={inputId} className="block text-sm font-medium text-dark">
+        <label htmlFor={inputId} className="block text-[13px] font-medium text-dark-600">
           {label}
         </label>
       ) : null}
@@ -66,7 +70,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
         className={cn(fieldBase, "min-h-[5rem]", error && "border-danger", className)}
         {...rest}
       />
-      {error ? <p className="text-xs text-danger">{error}</p> : null}
+      {error ? <p className="text-xs font-medium text-danger-ink">{error}</p> : null}
       {!error && hint ? <p className="text-xs text-dark-400">{hint}</p> : null}
     </div>
   );
@@ -83,21 +87,21 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
   const generatedId = useId();
   const inputId = id ?? generatedId;
   return (
-    <div className="space-y-1">
+    <div className="space-y-1.5">
       {label ? (
-        <label htmlFor={inputId} className="block text-sm font-medium text-dark">
+        <label htmlFor={inputId} className="block text-[13px] font-medium text-dark-600">
           {label}
         </label>
       ) : null}
       <select
         ref={ref}
         id={inputId}
-        className={cn(fieldBase, "appearance-none bg-white pr-8", error && "border-danger", className)}
+        className={cn(fieldBase, "appearance-none bg-surface pr-8", error && "border-danger", className)}
         {...rest}
       >
         {children}
       </select>
-      {error ? <p className="text-xs text-danger">{error}</p> : null}
+      {error ? <p className="text-xs font-medium text-danger-ink">{error}</p> : null}
       {!error && hint ? <p className="text-xs text-dark-400">{hint}</p> : null}
     </div>
   );

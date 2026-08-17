@@ -253,14 +253,14 @@ export function ExamsTable({ rows }: { rows: ExamRow[] }) {
                   ) : null}
                   <Link
                     href={`/admin/exams/${row.id}/assign`}
-                    className="inline-flex items-center gap-1 rounded border border-dark-100 px-2 py-1 text-xs text-dark hover:bg-dark-50"
+                    className="inline-flex items-center gap-1 rounded border border-line px-2 py-1 text-xs text-dark hover:bg-dark-50"
                   >
                     <Users className="h-3.5 w-3.5" />
                     Assign
                   </Link>
                   <Link
                     href={`/admin/exams/${row.id}/results`}
-                    className="inline-flex items-center gap-1 rounded border border-dark-100 px-2 py-1 text-xs text-dark hover:bg-dark-50"
+                    className="inline-flex items-center gap-1 rounded border border-line px-2 py-1 text-xs text-dark hover:bg-dark-50"
                   >
                     <BarChart3 className="h-3.5 w-3.5" />
                     Results

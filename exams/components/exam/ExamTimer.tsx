@@ -48,7 +48,7 @@ export function ExamTimer({
           ? "border-red-200 bg-red-50 text-danger"
           : warning
             ? "border-amber-200 bg-amber-50 text-amber-800"
-            : "border-dark-100 bg-white text-dark"
+            : "border-dark-100 bg-surface text-dark"
       )}
       aria-live="off"
     >

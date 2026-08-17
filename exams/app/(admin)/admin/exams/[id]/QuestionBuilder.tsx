@@ -280,7 +280,7 @@ export function QuestionBuilder({
             : "Pick questions manually, or set rules and let the system draw them"
         }
         action={
-          <div className="flex rounded-md border border-dark-100 p-0.5">
+          <div className="flex rounded-md border border-line p-0.5">
             {(["manual", "auto"] as const).map((option) => (
               <button
                 key={option}
@@ -424,7 +424,7 @@ export function QuestionBuilder({
                 {chosen.map((row, index) => (
                   <span
                     key={row.id}
-                    className="inline-flex items-center gap-1 rounded-full border border-dark-100 bg-white px-2 py-0.5 text-xs text-dark"
+                    className="inline-flex items-center gap-1 rounded-full border border-line bg-surface px-2 py-0.5 text-xs text-dark"
                   >
                     {index + 1}. {truncate(stripHtml(row.stem), 40)}
                     {!locked ? (
@@ -486,7 +486,7 @@ export function QuestionBuilder({
                         onChange={(event) =>
                           updateRule(draft.key, { subject_id: event.target.value, topic_id: "" })
                         }
-                        className="w-full rounded border border-dark-100 px-2 py-1 text-sm"
+                        className="w-full rounded border border-line px-2 py-1 text-sm"
                       >
                         {subjects.map((subject) => (
                           <option key={subject.id} value={subject.id}>
@@ -500,7 +500,7 @@ export function QuestionBuilder({
                         value={draft.topic_id}
                         disabled={locked}
                         onChange={(event) => updateRule(draft.key, { topic_id: event.target.value })}
-                        className="w-full rounded border border-dark-100 px-2 py-1 text-sm"
+                        className="w-full rounded border border-line px-2 py-1 text-sm"
                       >
                         <option value="">Any topic</option>
                         {topics
@@ -519,7 +519,7 @@ export function QuestionBuilder({
                         onChange={(event) =>
                           updateRule(draft.key, { difficulty: event.target.value })
                         }
-                        className="w-full rounded border border-dark-100 px-2 py-1 text-sm"
+                        className="w-full rounded border border-line px-2 py-1 text-sm"
                       >
                         <option value="">Any level</option>
                         <option value="easy">Easy</option>
@@ -538,7 +538,7 @@ export function QuestionBuilder({
                             question_count: Math.max(1, Number(event.target.value)),
                           })
                         }
-                        className="w-full rounded border border-dark-100 px-2 py-1 text-sm"
+                        className="w-full rounded border border-line px-2 py-1 text-sm"
                       />
                     </Td>
                     <Td>

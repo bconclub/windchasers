@@ -36,6 +36,7 @@ const db = createClient(url, serviceKey, {
 });
 
 const SOURCE = "demo-seed";
+const EXAM_TITLE = "DGCA Mock Test 1";
 const BATCH_CODE = "DEMO-2026-A";
 const LETTERS = ["A", "B", "C", "D"];
 
@@ -68,7 +69,7 @@ function fail(step, error) {
 
 async function purge() {
   console.log("Purging previous demo data");
-  const { data: exams } = await db.from("exams").select("id").eq("description", SOURCE);
+  const { data: exams } = await db.from("exams").select("id").eq("title", EXAM_TITLE);
   for (const exam of exams ?? []) await db.from("exams").delete().eq("id", exam.id);
   await db.from("questions").delete().eq("source", SOURCE);
   const { data: batch } = await db.from("batches").select("id").eq("code", BATCH_CODE).maybeSingle();
@@ -84,6 +85,22 @@ async function seedTopicsAndQuestions() {
   const { data: subjects, error } = await db.from("subjects").select("id, code, name");
   fail("Loading subjects", error);
   const byCode = new Map(subjects.map((s) => [s.code, s]));
+
+  // There is deliberately no unique constraint on stem_hash, because the spec
+  // wants near duplicates flagged on import but still accepted. That means a
+  // rerun of this script would insert a second copy of every question, so
+  // already seeded stems are filtered out here instead.
+  const existing = new Set();
+  for (let from = 0; ; from += 1000) {
+    const { data: page } = await db
+      .from("questions")
+      .select("stem")
+      .eq("source", SOURCE)
+      .range(from, from + 999);
+    for (const row of page ?? []) existing.add(row.stem);
+    if (!page || page.length < 1000) break;
+  }
+  if (existing.size > 0) console.log(`  ${existing.size} questions already seeded, skipping those`);
 
   let topicCount = 0;
   let questionCount = 0;
@@ -130,12 +147,13 @@ async function seedTopicsAndQuestions() {
         };
       });
 
-      const { error: insertError } = await db.from("questions").insert(payload);
-      // A rerun without --purge hits the stem hash trigger, which is fine.
-      if (insertError && !/duplicate|unique/i.test(insertError.message)) {
+      const fresh = payload.filter((row) => !existing.has(row.stem));
+      if (fresh.length > 0) {
+        const { error: insertError } = await db.from("questions").insert(fresh);
         fail(`Inserting questions for ${topicName}`, insertError);
+        for (const row of fresh) existing.add(row.stem);
       }
-      questionCount += payload.length;
+      questionCount += fresh.length;
     }
   }
   console.log(`  topics: ${topicCount}, questions: ${questionCount}`);
@@ -194,7 +212,7 @@ async function seedExam(batchId) {
   const { data: existing } = await db
     .from("exams")
     .select("id")
-    .eq("title", "DGCA Mock Test 1")
+    .eq("title", EXAM_TITLE)
     .maybeSingle();
   if (existing) await db.from("exams").delete().eq("id", existing.id);
 
@@ -204,8 +222,9 @@ async function seedExam(batchId) {
   const { data: exam, error } = await db
     .from("exams")
     .insert({
-      title: "DGCA Mock Test 1",
-      description: SOURCE,
+      title: EXAM_TITLE,
+      description:
+        "Twenty questions drawn across Navigation, Meteorology, Regulations and Radio Telephony. Negative marking applies.",
       type: "mock",
       duration_minutes: 30,
       marks_per_question: 1,
@@ -272,7 +291,7 @@ async function seedExam(batchId) {
 
   await db.from("exams").update({ total_marks: orderIndex }).eq("id", exam.id);
 
-  console.log(`  exam "DGCA Mock Test 1" published, ${orderIndex} questions drawn, assigned to the batch`);
+  console.log(`  exam "${EXAM_TITLE}" published, ${orderIndex} questions drawn, assigned to the batch`);
   return exam.id;
 }
 

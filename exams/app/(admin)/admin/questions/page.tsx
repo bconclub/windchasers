@@ -24,7 +24,7 @@ export default async function QuestionsPage() {
           <>
             <Link
               href="/admin/questions/import"
-              className="inline-flex items-center gap-1.5 rounded-md border border-dark-100 px-3 py-2 text-sm text-dark hover:bg-dark-50"
+              className="inline-flex items-center gap-1.5 rounded-md border border-line px-3 py-2 text-sm text-dark hover:bg-dark-50"
             >
               <Upload className="h-4 w-4" />
               Import

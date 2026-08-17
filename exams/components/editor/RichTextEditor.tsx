@@ -116,11 +116,11 @@ export function RichTextEditor({
       {label ? <span className="block text-sm font-medium text-dark">{label}</span> : null}
       <div
         className={cn(
-          "tiptap-editor rounded-md border bg-white",
+          "tiptap-editor rounded-md border bg-surface",
           error ? "border-danger" : "border-dark-100"
         )}
       >
-        <div className="flex flex-wrap items-center gap-1 border-b border-dark-100 px-2 py-1">
+        <div className="flex flex-wrap items-center gap-1 border-b border-line px-2 py-1">
           {actions.map((action) => (
             <button
               key={action.label}

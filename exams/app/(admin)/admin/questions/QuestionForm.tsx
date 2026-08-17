@@ -294,7 +294,7 @@ export function QuestionForm({
           <CardHeader title="Figure" subtitle="Optional diagram or chart" />
           {form.image_url ? (
             <div className="space-y-3">
-              <div className="relative h-40 w-full rounded border border-dark-100">
+              <div className="relative h-40 w-full rounded border border-line">
                 <Image
                   src={form.image_url}
                   alt="Question figure"

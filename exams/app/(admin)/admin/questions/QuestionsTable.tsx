@@ -465,7 +465,7 @@ export function QuestionsTable({
                               correct_option: event.target.value as OptionLetter,
                             })
                           }
-                          className="rounded border border-dark-100 px-1 py-0.5 text-sm"
+                          className="rounded border border-line px-1 py-0.5 text-sm"
                         >
                           {["A", "B", "C", "D"].map((letter) => (
                             <option key={letter} value={letter}>
@@ -487,7 +487,7 @@ export function QuestionsTable({
                               difficulty: event.target.value as QuestionDifficulty,
                             })
                           }
-                          className="rounded border border-dark-100 px-1 py-0.5 text-sm"
+                          className="rounded border border-line px-1 py-0.5 text-sm"
                         >
                           <option value="easy">easy</option>
                           <option value="medium">medium</option>
@@ -507,7 +507,7 @@ export function QuestionsTable({
                               status: event.target.value as QuestionStatus,
                             })
                           }
-                          className="rounded border border-dark-100 px-1 py-0.5 text-sm"
+                          className="rounded border border-line px-1 py-0.5 text-sm"
                         >
                           <option value="draft">draft</option>
                           <option value="active">active</option>
