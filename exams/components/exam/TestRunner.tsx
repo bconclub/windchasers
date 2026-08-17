@@ -322,7 +322,7 @@ export function TestRunner({
               </p>
             </div>
 
-            <StemView html={current.stem} className="mt-4 text-[15px] leading-relaxed text-dark" />
+            <StemView html={current.stem} className="mt-4 text-[0.9375rem] leading-relaxed text-dark" />
 
             {current.image_url ? (
               <div className="relative mt-4 h-64 w-full max-w-xl">

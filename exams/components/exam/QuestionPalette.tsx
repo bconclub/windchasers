@@ -48,7 +48,7 @@ export function QuestionPalette({
             aria-label={`Question ${index + 1}`}
             aria-current={index === currentIndex}
             className={cn(
-              "h-9 rounded text-sm font-medium transition-colors",
+              "h-11 min-w-[2.75rem] rounded-lg text-sm font-medium transition-colors",
               styles[stateOf(entry)],
               index === currentIndex && "outline outline-2 outline-offset-1 outline-dark"
             )}

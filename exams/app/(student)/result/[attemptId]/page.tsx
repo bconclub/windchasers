@@ -49,7 +49,7 @@ function ReviewCard({ question, order }: { question: ReviewQuestion; order: numb
         </div>
       </div>
 
-      <StemView html={question.stem} className="mt-3 text-[15px] leading-relaxed text-dark" />
+      <StemView html={question.stem} className="mt-3 text-[0.9375rem] leading-relaxed text-dark" />
 
       <div className="mt-4 space-y-2">
         {options.map((option) => {

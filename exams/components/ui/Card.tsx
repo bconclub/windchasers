@@ -42,7 +42,7 @@ export function CardHeader({
   return (
     <div className="mb-5 flex items-start justify-between gap-4">
       <div>
-        <h2 className="text-[15px] font-semibold leading-tight text-dark">{title}</h2>
+        <h2 className="text-[0.9375rem] font-semibold leading-tight text-dark">{title}</h2>
         {subtitle ? <p className="mt-1 text-sm text-dark-400">{subtitle}</p> : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}
@@ -85,11 +85,11 @@ export function Metric({
             {icon}
           </span>
         ) : null}
-        <p className="text-[13px] font-medium text-dark-500">{label}</p>
+        <p className="text-[0.8125rem] font-medium text-dark-500">{label}</p>
       </div>
       <p
         className={cn(
-          "tnum mt-2 text-[28px] font-semibold leading-none tracking-display",
+          "tnum mt-2 text-[1.75rem] font-semibold leading-none tracking-display",
           emphasis ? "text-gold-700" : "text-dark"
         )}
       >
@@ -116,9 +116,9 @@ export function StatCard({
     <div className="rounded-xl border border-line bg-surface p-5">
       <div className="flex items-center gap-2">
         {icon ? <span className="shrink-0 text-dark-300">{icon}</span> : null}
-        <p className="text-[13px] font-medium text-dark-500">{label}</p>
+        <p className="text-[0.8125rem] font-medium text-dark-500">{label}</p>
       </div>
-      <p className="tnum mt-2 text-[28px] font-semibold leading-none tracking-display text-dark">
+      <p className="tnum mt-2 text-[1.75rem] font-semibold leading-none tracking-display text-dark">
         {value}
       </p>
       {hint ? <p className="mt-2 text-xs leading-snug text-dark-400">{hint}</p> : null}
@@ -142,7 +142,7 @@ export function SectionHeading({
   return (
     <div className="mb-4 mt-10 flex items-end justify-between gap-4 first:mt-0">
       <div>
-        <h2 className="text-[15px] font-semibold leading-tight text-dark">{title}</h2>
+        <h2 className="text-[0.9375rem] font-semibold leading-tight text-dark">{title}</h2>
         {subtitle ? <p className="mt-1 text-sm text-dark-400">{subtitle}</p> : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}

@@ -33,10 +33,10 @@ function NextExamPanel({ exam }: { exam: DashboardExam }) {
     <section className="shell-dark animate-rise overflow-hidden rounded-2xl">
       <div className="flex flex-col gap-6 p-6 sm:p-8 lg:flex-row lg:items-end lg:justify-between">
         <div className="min-w-0">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.2em] text-gold">
             {resuming ? "Attempt in progress" : "Ready to sit"}
           </p>
-          <h2 className="mt-2.5 text-[28px] font-semibold leading-tight tracking-display text-white">
+          <h2 className="mt-2.5 text-[1.75rem] font-semibold leading-tight tracking-display text-white">
             {exam.title}
           </h2>
           {exam.description ? (
@@ -47,27 +47,27 @@ function NextExamPanel({ exam }: { exam: DashboardExam }) {
 
           <dl className="mt-5 flex flex-wrap items-center gap-x-7 gap-y-3">
             <div>
-              <dt className="text-[11px] uppercase tracking-wider text-dark-300">Duration</dt>
-              <dd className="tnum mt-0.5 text-[15px] font-medium text-white">
+              <dt className="text-[0.6875rem] uppercase tracking-wider text-dark-300">Duration</dt>
+              <dd className="tnum mt-0.5 text-[0.9375rem] font-medium text-white">
                 {exam.duration_minutes} min
               </dd>
             </div>
             <div>
-              <dt className="text-[11px] uppercase tracking-wider text-dark-300">Total marks</dt>
-              <dd className="tnum mt-0.5 text-[15px] font-medium text-white">
+              <dt className="text-[0.6875rem] uppercase tracking-wider text-dark-300">Total marks</dt>
+              <dd className="tnum mt-0.5 text-[0.9375rem] font-medium text-white">
                 {formatMarks(exam.total_marks)}
               </dd>
             </div>
             <div>
-              <dt className="text-[11px] uppercase tracking-wider text-dark-300">Attempts left</dt>
-              <dd className="tnum mt-0.5 text-[15px] font-medium text-white">
+              <dt className="text-[0.6875rem] uppercase tracking-wider text-dark-300">Attempts left</dt>
+              <dd className="tnum mt-0.5 text-[0.9375rem] font-medium text-white">
                 {attemptsLeft} of {exam.max_attempts}
               </dd>
             </div>
             {exam.closes_at ? (
               <div>
-                <dt className="text-[11px] uppercase tracking-wider text-dark-300">Closes</dt>
-                <dd className="mt-0.5 text-[15px] font-medium text-white">
+                <dt className="text-[0.6875rem] uppercase tracking-wider text-dark-300">Closes</dt>
+                <dd className="mt-0.5 text-[0.9375rem] font-medium text-white">
                   {formatDateTime(exam.closes_at)}
                 </dd>
               </div>
@@ -95,14 +95,14 @@ function ExamRow({ exam }: { exam: DashboardExam }) {
     <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-line bg-surface px-5 py-4">
       <div className="min-w-0">
         <div className="flex items-center gap-2.5">
-          <h3 className="truncate text-[15px] font-medium text-dark">{exam.title}</h3>
+          <h3 className="truncate text-[0.9375rem] font-medium text-dark">{exam.title}</h3>
           {exam.in_progress_attempt_id ? (
             <Badge tone="warning">In progress</Badge>
           ) : (
             <Badge tone={exam.phase === "live" ? "success" : "neutral"}>{exam.phase}</Badge>
           )}
         </div>
-        <p className="tnum mt-1 text-[13px] text-dark-400">
+        <p className="tnum mt-1 text-[0.8125rem] text-dark-400">
           {exam.duration_minutes} min, {formatMarks(exam.total_marks)} marks,{" "}
           {exam.attempts_used} of {exam.max_attempts} attempts used
           {exam.opens_at && exam.phase === "upcoming"

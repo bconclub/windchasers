@@ -31,16 +31,16 @@ export default function LoginPage() {
     <main className="grid min-h-screen lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
       {/* Brand side. Hidden on small screens, where the form is the whole job. */}
       <section className="shell-dark relative hidden flex-col justify-between p-10 lg:flex xl:p-14">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-gold">
+        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.24em] text-gold">
           WindChasers Aviation Academy
         </p>
 
         <div className="max-w-lg">
-          <h1 className="text-[42px] font-semibold leading-[1.08] tracking-display text-white xl:text-[52px]">
+          <h1 className="text-[2.625rem] font-semibold leading-[1.08] tracking-display text-white xl:text-[3.25rem]">
             Ground school testing,
             <span className="block text-gold">measured properly.</span>
           </h1>
-          <p className="mt-5 max-w-md text-[15px] leading-relaxed text-dark-200">
+          <p className="mt-5 max-w-md text-[0.9375rem] leading-relaxed text-dark-200">
             The internal examination and question bank platform for DGCA ground school.
             Timed papers, automatic scoring, and reporting down to the topic.
           </p>
@@ -51,14 +51,14 @@ export default function LoginPage() {
                 <point.icon className="mt-0.5 h-[18px] w-[18px] shrink-0 text-gold" />
                 <div>
                   <p className="text-sm font-medium text-white">{point.title}</p>
-                  <p className="mt-0.5 text-[13px] leading-relaxed text-dark-300">{point.body}</p>
+                  <p className="mt-0.5 text-[0.8125rem] leading-relaxed text-dark-300">{point.body}</p>
                 </div>
               </li>
             ))}
           </ul>
         </div>
 
-        <p className="text-[11px] text-dark-400">
+        <p className="text-[0.6875rem] text-dark-300">
           Internal use only. Accounts are created by an administrator.
         </p>
       </section>
@@ -67,12 +67,12 @@ export default function LoginPage() {
       <section className="flex items-center justify-center bg-canvas px-5 py-12 sm:px-10">
         <div className="w-full max-w-sm">
           <div className="mb-8 lg:hidden">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold-700">
+            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.22em] text-gold-700">
               WindChasers Aviation Academy
             </p>
           </div>
 
-          <h2 className="text-[24px] font-semibold tracking-display text-dark">Sign in</h2>
+          <h2 className="text-[1.5rem] font-semibold tracking-display text-dark">Sign in</h2>
           <p className="mt-1.5 text-sm text-dark-400">
             Use the email your instructor registered for you.
           </p>
@@ -83,7 +83,7 @@ export default function LoginPage() {
             </Suspense>
           </div>
 
-          <p className="mt-8 text-[13px] leading-relaxed text-dark-400">
+          <p className="mt-8 text-[0.8125rem] leading-relaxed text-dark-400">
             Cannot sign in? Contact your instructor. There is no public sign up.
           </p>
         </div>

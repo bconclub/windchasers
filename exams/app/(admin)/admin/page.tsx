@@ -106,7 +106,7 @@ export default async function AdminOverviewPage() {
             action={
               <Link
                 href="/admin/questions"
-                className="inline-flex items-center gap-1 text-[13px] font-medium text-gold-700 hover:text-gold-800"
+                className="inline-flex items-center gap-1 text-[0.8125rem] font-medium text-gold-700 hover:text-gold-800"
               >
                 Manage
                 <ArrowUpRight className="h-3.5 w-3.5" />
@@ -120,8 +120,8 @@ export default async function AdminOverviewPage() {
               {payload.questions_by_subject.map((row) => (
                 <li key={row.subject_id}>
                   <div className="flex items-baseline justify-between gap-3">
-                    <span className="truncate text-[13px] text-dark">{row.subject_name}</span>
-                    <span className="tnum shrink-0 text-[13px] font-medium text-dark-500">
+                    <span className="truncate text-[0.8125rem] text-dark">{row.subject_name}</span>
+                    <span className="tnum shrink-0 text-[0.8125rem] font-medium text-dark-500">
                       {row.total}
                       <span className="ml-1.5 text-dark-300">
                         {percent(row.total, bankTotal)}%

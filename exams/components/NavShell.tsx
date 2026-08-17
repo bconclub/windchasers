@@ -57,10 +57,10 @@ export function NavShell({
           </button>
 
           <Link href={items[0]?.href ?? "/"} className="group flex items-baseline gap-2">
-            <span className="text-[15px] font-semibold tracking-tight text-white">
+            <span className="text-[0.9375rem] font-semibold tracking-tight text-white">
               WindChasers
             </span>
-            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-gold">
+            <span className="text-[0.625rem] font-semibold uppercase tracking-[0.22em] text-gold">
               Exams
             </span>
           </Link>
@@ -74,7 +74,7 @@ export function NavShell({
                   href={item.href}
                   aria-current={current ? "page" : undefined}
                   className={cn(
-                    "relative flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] transition-colors duration-feedback ease-out",
+                    "relative flex items-center gap-2 rounded-lg px-3 py-2 text-[0.8125rem] transition-colors duration-feedback ease-out",
                     current
                       ? "bg-white/10 font-medium text-white"
                       : "text-dark-200 hover:bg-white/5 hover:text-white"
@@ -92,12 +92,12 @@ export function NavShell({
 
           <div className="ml-auto flex items-center gap-3">
             <div className="hidden items-center gap-2.5 sm:flex">
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-gold/15 text-[11px] font-semibold text-gold">
+              <span className="grid h-8 w-8 place-items-center rounded-full bg-gold/15 text-[0.6875rem] font-semibold text-gold">
                 {initials || "WC"}
               </span>
               <span className="leading-tight">
-                <span className="block text-[13px] font-medium text-white">{userName}</span>
-                <span className="block text-[11px] capitalize text-dark-300">{userRole}</span>
+                <span className="block text-[0.8125rem] font-medium text-white">{userName}</span>
+                <span className="block text-[0.6875rem] capitalize text-dark-300">{userRole}</span>
               </span>
             </div>
             <SignOutButton />

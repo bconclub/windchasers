@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const fieldBase =
   "w-full rounded-lg border border-dark-200 bg-surface px-3.5 py-2.5 text-sm text-dark " +
   "transition-colors duration-feedback ease-out " +
-  "placeholder:text-dark-300 " +
+  "placeholder:text-dark-400 " +
   "focus:border-gold-600 focus:outline-none focus:ring-2 focus:ring-gold-600/25 " +
   "disabled:cursor-not-allowed disabled:bg-dark-50 disabled:text-dark-400";
 
@@ -31,7 +31,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   return (
     <div className="space-y-1.5">
       {label ? (
-        <label htmlFor={inputId} className="block text-[13px] font-medium text-dark-600">
+        <label htmlFor={inputId} className="block text-[0.8125rem] font-medium text-dark-600">
           {label}
         </label>
       ) : null}
@@ -60,7 +60,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
   return (
     <div className="space-y-1.5">
       {label ? (
-        <label htmlFor={inputId} className="block text-[13px] font-medium text-dark-600">
+        <label htmlFor={inputId} className="block text-[0.8125rem] font-medium text-dark-600">
           {label}
         </label>
       ) : null}
@@ -89,7 +89,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select
   return (
     <div className="space-y-1.5">
       {label ? (
-        <label htmlFor={inputId} className="block text-[13px] font-medium text-dark-600">
+        <label htmlFor={inputId} className="block text-[0.8125rem] font-medium text-dark-600">
           {label}
         </label>
       ) : null}

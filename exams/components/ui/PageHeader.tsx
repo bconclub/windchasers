@@ -10,7 +10,7 @@ export function PageHeader({
   return (
     <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-[26px] font-semibold leading-tight tracking-display text-dark">
+        <h1 className="text-[1.625rem] font-semibold leading-tight tracking-display text-dark">
           {title}
         </h1>
         {subtitle ? <p className="mt-1.5 text-sm text-dark-400">{subtitle}</p> : null}
