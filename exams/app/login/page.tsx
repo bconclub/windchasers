@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { ShieldCheck, Timer, BarChart3, GraduationCap, Users } from "lucide-react";
+import Image from "next/image";
+import { GraduationCap, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LoginForm } from "./LoginForm";
 
@@ -11,133 +12,72 @@ export const metadata = { title: "Sign in" };
 /**
  * Two front doors, one door frame.
  *
- * Students and staff see their own heading and their own supporting points,
- * but both submit to the same Supabase session and the route middleware sends
- * each person to their real home based on their profile role. That means a
- * student who follows the instructor link still lands on their dashboard
- * rather than hitting a wrong door error, and there is no second auth path to
- * keep secure.
+ * Both submit the same Supabase session and the route middleware sends each
+ * person to their real home from their profile role, so a student who follows
+ * the instructor link still lands on their dashboard rather than hitting a
+ * wrong door error. There is no second auth path to keep secure.
+ *
+ * The brand side is deliberately bare. This is an internal tool for people who
+ * already know what it is, so it states who the door is for and nothing else.
  */
 type Door = "student" | "staff";
 
-const DOORS: Record<
-  Door,
-  {
-    label: string;
-    icon: typeof GraduationCap;
-    heading: string;
-    accent: string;
-    blurb: string;
-    hint: string;
-    points: Array<{ icon: typeof ShieldCheck; title: string; body: string }>;
-  }
-> = {
+const DOORS: Record<Door, { label: string; icon: typeof GraduationCap; forWhom: string; hint: string; footer: string }> = {
   student: {
     label: "Student",
     icon: GraduationCap,
-    heading: "Find the gap",
-    accent: "before the examiner does.",
-    blurb:
-      "Sit your assigned papers under exam conditions, then see exactly which topics cost you marks.",
+    forWhom: "for students",
     hint: "Use the email your instructor registered for you.",
-    points: [
-      {
-        icon: Timer,
-        title: "The clock is the server's",
-        body: "Your remaining time is unaffected by your device, and a dropped connection does not cost you the paper.",
-      },
-      {
-        icon: BarChart3,
-        title: "Named weak topics",
-        body: "Not just a score. The three topics costing you the most marks, by name.",
-      },
-      {
-        icon: ShieldCheck,
-        title: "Answers stay sealed",
-        body: "The key never reaches your device until you submit.",
-      },
-    ],
+    footer: "Cannot sign in? Contact your instructor. There is no public sign up.",
   },
   staff: {
     label: "Instructor",
     icon: Users,
-    heading: "Every mark,",
-    accent: "accounted for.",
-    blurb:
-      "Build papers from the bank, assign them to a batch, and read the result down to the individual question.",
+    forWhom: "for instructors",
     hint: "Use your academy email address.",
-    points: [
-      {
-        icon: BarChart3,
-        title: "Question level analytics",
-        body: "Percent correct and the most picked wrong option, so a bad question surfaces before the next batch sits it.",
-      },
-      {
-        icon: Timer,
-        title: "Papers in minutes",
-        body: "Write a blueprint by subject and difficulty, and let the bank fill it.",
-      },
-      {
-        icon: ShieldCheck,
-        title: "Scoring you can defend",
-        body: "Marking happens in the database. A tampered client cannot produce a false score.",
-      },
-    ],
+    footer: "Instructor and admin accounts are created by an administrator.",
   },
 };
 
-export default function LoginPage({
-  searchParams,
-}: {
-  searchParams: { as?: string };
-}) {
+export default function LoginPage({ searchParams }: { searchParams: { as?: string } }) {
   const door: Door = searchParams.as === "staff" ? "staff" : "student";
   const copy = DOORS[door];
 
   return (
-    <main className="grid min-h-screen lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)]">
-      <section className="shell-dark relative hidden flex-col justify-between p-10 lg:flex xl:p-14">
-        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.24em] text-gold">
-          WindChasers Aviation Academy
-        </p>
-
-        <div className="max-w-lg">
-          <h1 className="text-[2.625rem] font-semibold leading-[1.06] tracking-display text-white xl:text-[3.25rem]">
-            {copy.heading}
-            <span className="block text-gold">{copy.accent}</span>
-          </h1>
-          <p className="mt-5 max-w-md text-[0.9375rem] leading-relaxed text-dark-200">
-            {copy.blurb}
+    <main className="grid min-h-screen lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)]">
+      {/* Brand side: the mark, and who the door is for. Nothing else. */}
+      <section className="shell-dark relative hidden items-center justify-center p-12 lg:flex">
+        <div className="w-full max-w-xl">
+          <Image
+            src="/brand/windchasers-logo.png"
+            alt="WindChasers Aviation Academy"
+            width={500}
+            height={134}
+            className="h-auto w-full max-w-[30rem]"
+            priority
+          />
+          <p className="mt-8 text-[1.75rem] font-light leading-none tracking-display text-dark-200">
+            {copy.forWhom}
           </p>
-
-          <ul className="mt-10 space-y-5">
-            {copy.points.map((point) => (
-              <li key={point.title} className="flex gap-3.5">
-                <point.icon className="mt-0.5 h-[1.125rem] w-[1.125rem] shrink-0 text-gold" />
-                <div>
-                  <p className="text-sm font-medium text-white">{point.title}</p>
-                  <p className="mt-0.5 text-[0.8125rem] leading-relaxed text-dark-300">
-                    {point.body}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
         </div>
 
-        <p className="text-[0.6875rem] text-dark-300">
+        <p className="absolute inset-x-12 bottom-10 text-[0.6875rem] text-dark-300">
           Internal use only. Accounts are created by an administrator.
         </p>
       </section>
 
+      {/* Form side */}
       <section className="flex items-center justify-center bg-canvas px-5 py-12 sm:px-10">
         <div className="w-full max-w-sm">
-          <p className="mb-7 text-[0.6875rem] font-semibold uppercase tracking-[0.22em] text-gold-700 lg:hidden">
-            WindChasers Aviation Academy
-          </p>
+          <Image
+            src="/brand/windchasers-logo.png"
+            alt="WindChasers Aviation Academy"
+            width={500}
+            height={134}
+            className="mb-8 h-9 w-auto lg:hidden"
+            priority
+          />
 
-          {/* Both doors reach the same session. The label sets expectations, it
-              does not gate anything. */}
           <div
             role="tablist"
             aria-label="Who is signing in"
@@ -154,9 +94,7 @@ export default function LoginPage({
                   aria-selected={active}
                   className={cn(
                     "flex h-11 items-center justify-center gap-2 rounded-lg text-[0.8125rem] font-medium transition-colors duration-feedback ease-out",
-                    active
-                      ? "bg-surface text-dark shadow-card"
-                      : "text-dark-500 hover:text-dark"
+                    active ? "bg-surface text-dark shadow-card" : "text-dark-500 hover:text-dark"
                   )}
                 >
                   <item.icon className="h-4 w-4" />
@@ -166,9 +104,9 @@ export default function LoginPage({
             })}
           </div>
 
-          <h2 className="text-[1.5rem] font-semibold tracking-display text-dark">
+          <h1 className="text-[1.5rem] font-semibold tracking-display text-dark">
             {door === "staff" ? "Instructor sign in" : "Student sign in"}
-          </h2>
+          </h1>
           <p className="mt-1.5 text-sm text-dark-400">{copy.hint}</p>
 
           <div className="mt-7">
@@ -177,11 +115,7 @@ export default function LoginPage({
             </Suspense>
           </div>
 
-          <p className="mt-8 text-[0.8125rem] leading-relaxed text-dark-400">
-            {door === "staff"
-              ? "Instructor and admin accounts are created by an administrator."
-              : "Cannot sign in? Contact your instructor. There is no public sign up."}
-          </p>
+          <p className="mt-8 text-[0.8125rem] leading-relaxed text-dark-400">{copy.footer}</p>
         </div>
       </section>
     </main>
