@@ -74,17 +74,17 @@ export function NavShell({
       <div
         className={cn(
           "flex h-16 shrink-0 items-center border-b border-white/10",
-          collapsed ? "justify-center px-2" : "px-5"
+          collapsed ? "justify-center px-2" : "gap-2 pl-5 pr-2"
         )}
       >
-        <Link href={home} className="flex items-center" aria-label="WindChasers Exams home">
+        <Link href={home} className="flex min-w-0 items-center" aria-label="WindChasers Exams home">
           {collapsed ? (
             <Image
               src="/brand/windchasers-mark.png"
               alt="WindChasers"
-              width={34}
-              height={32}
-              className="h-8 w-auto"
+              width={228}
+              height={214}
+              className="h-7 w-auto"
               priority
             />
           ) : (
@@ -98,7 +98,29 @@ export function NavShell({
             />
           )}
         </Link>
+
+        {!collapsed ? (
+          <button
+            type="button"
+            onClick={() => setCollapsed(true)}
+            aria-label="Collapse sidebar"
+            className="ml-auto hidden h-8 w-8 shrink-0 place-items-center rounded-md text-dark-300 transition-colors duration-feedback ease-out hover:bg-white/10 hover:text-white lg:grid"
+          >
+            <PanelLeftClose className="h-4 w-4" />
+          </button>
+        ) : null}
       </div>
+
+      {collapsed ? (
+        <button
+          type="button"
+          onClick={() => setCollapsed(false)}
+          aria-label="Expand sidebar"
+          className="mx-auto mt-3 hidden h-8 w-8 place-items-center rounded-md text-dark-300 transition-colors duration-feedback ease-out hover:bg-white/10 hover:text-white lg:grid"
+        >
+          <PanelLeftOpen className="h-4 w-4" />
+        </button>
+      ) : null}
 
       {/* Sections */}
       <nav className="flex-1 overflow-y-auto px-3 py-4">
@@ -171,18 +193,6 @@ export function NavShell({
         )}
       >
         {rail}
-        <button
-          type="button"
-          onClick={() => setCollapsed((prev) => !prev)}
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className="absolute -right-3 top-20 grid h-6 w-6 place-items-center rounded-full border border-line bg-surface text-dark-400 shadow-card transition-colors duration-feedback ease-out hover:text-dark"
-        >
-          {collapsed ? (
-            <PanelLeftOpen className="h-3.5 w-3.5" />
-          ) : (
-            <PanelLeftClose className="h-3.5 w-3.5" />
-          )}
-        </button>
       </aside>
 
       {/* Mobile drawer */}
