@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
 import { getBrowserClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
 
-export function SignOutButton({ variant = "onDark" }: { variant?: "ghost" | "secondary" | "onDark" }) {
+export function SignOutButton({ collapsed = false }: { collapsed?: boolean }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -18,15 +18,21 @@ export function SignOutButton({ variant = "onDark" }: { variant?: "ghost" | "sec
   }
 
   return (
-    <Button
-      variant={variant}
-      size="sm"
+    <button
+      type="button"
       onClick={handleSignOut}
-      loading={loading}
-      className="h-11 sm:h-8"
+      disabled={loading}
+      title={collapsed ? "Sign out" : undefined}
+      aria-label="Sign out"
+      className={cn(
+        "flex h-11 w-full items-center rounded-lg text-[0.8125rem] text-dark-200",
+        "transition-colors duration-feedback ease-out hover:bg-white/10 hover:text-white",
+        "disabled:cursor-not-allowed disabled:opacity-60",
+        collapsed ? "justify-center px-0" : "gap-3 px-3"
+      )}
     >
-      <LogOut className="h-4 w-4" />
-      Sign out
-    </Button>
+      <LogOut className="h-4 w-4 shrink-0" />
+      {!collapsed ? <span>{loading ? "Signing out" : "Sign out"}</span> : null}
+    </button>
   );
 }
