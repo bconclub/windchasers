@@ -307,7 +307,9 @@ create trigger exams_touch_updated_at
   for each row execute function exam_touch_updated_at();
 
 -- A user editing their own profile cannot change their role or reactivate a
--- deactivated account. Staff edits pass through untouched.
+-- deactivated account. Only admins are exempt: exempting all staff would let an
+-- instructor set its own role to admin through profiles_update_self, which is
+-- precisely the escalation the instructor role exists to prevent.
 create or replace function exam_guard_profile_update()
 returns trigger
 language plpgsql
@@ -315,7 +317,7 @@ security definer
 set search_path = public
 as $$
 begin
-  if auth.uid() is null or exam_is_staff() then
+  if auth.uid() is null or exam_is_admin() then
     return new;
   end if;
   if new.id = auth.uid() then
