@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { Badge } from "@/components/ui/Badge";
-import { ConfirmDialog, Modal } from "@/components/ui/Modal";
+import { ConfirmDialog } from "@/components/ui/Modal";
+import { SidePanel } from "@/components/ui/SidePanel";
 import { EmptyState } from "@/components/ui/Table";
 import { useToast } from "@/components/ui/Toast";
 import { cn, errorMessage, slugCode } from "@/lib/utils";
@@ -260,53 +261,51 @@ export function SubjectsPanel({
                 </button>
               </div>
 
-              <div className="mt-4 space-y-1.5 border-l border-dark-100 pl-4">
+              {/* Topics read as chips. A subject with twenty topics is a wall
+                  as a stacked list, but scans in two lines as chips. Click a
+                  chip to edit it in the right panel, drag to reorder. */}
+              <div className="mt-4 flex flex-wrap gap-2">
                 {subjectTopics.map((topic) => (
-                  <div
+                  <button
                     key={topic.id}
+                    type="button"
                     draggable
                     onDragStart={() => setDragging({ kind: "topic", id: topic.id })}
                     onDragOver={(event) => event.preventDefault()}
                     onDrop={() => onDropTopic(topic.id, subject.id)}
+                    onClick={() =>
+                      setTopicDraft({ id: topic.id, subject_id: subject.id, name: topic.name })
+                    }
+                    title={`${topicCounts[topic.id] ?? 0} questions. Click to edit, drag to reorder.`}
                     className={cn(
-                      "flex items-center gap-2 rounded-md px-2 py-1.5 text-sm hover:bg-dark-50",
+                      "group inline-flex h-9 cursor-grab items-center gap-2 rounded-full border border-line bg-surface pl-3.5 pr-2.5 text-[0.8125rem] text-dark",
+                      "transition-colors duration-feedback ease-out hover:border-gold-300 hover:bg-gold-50",
                       dragging?.kind === "topic" && dragging.id === topic.id && "opacity-50"
                     )}
                   >
-                    <GripVertical className="h-3.5 w-3.5 shrink-0 cursor-grab text-dark-300" />
-                    <span className="flex-1 text-dark">{topic.name}</span>
-                    <span className="text-xs text-dark-400">
-                      {topicCounts[topic.id] ?? 0} questions
+                    <span className="max-w-[14rem] truncate">{topic.name}</span>
+                    <span className="tnum rounded-full bg-dark-50 px-1.5 py-0.5 text-[0.6875rem] font-medium text-dark-400 group-hover:bg-surface">
+                      {topicCounts[topic.id] ?? 0}
                     </span>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setTopicDraft({
-                          id: topic.id,
-                          subject_id: subject.id,
-                          name: topic.name,
-                        })
-                      }
-                      className="rounded p-1 text-dark-400 hover:text-dark"
-                      aria-label="Edit topic"
+                    <span
+                      role="button"
+                      tabIndex={-1}
+                      aria-label={`Delete ${topic.name}`}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        setDeleting({ kind: "topic", id: topic.id, name: topic.name });
+                      }}
+                      className="grid h-5 w-5 place-items-center rounded-full text-dark-300 hover:bg-danger-soft hover:text-danger-ink"
                     >
-                      <Pencil className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setDeleting({ kind: "topic", id: topic.id, name: topic.name })}
-                      className="rounded p-1 text-dark-400 hover:text-danger"
-                      aria-label="Delete topic"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </button>
-                  </div>
+                      <Trash2 className="h-3 w-3" />
+                    </span>
+                  </button>
                 ))}
 
                 <button
                   type="button"
                   onClick={() => setTopicDraft({ id: null, subject_id: subject.id, name: "" })}
-                  className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-dark-400 hover:bg-dark-50 hover:text-dark"
+                  className="inline-flex h-9 items-center gap-1.5 rounded-full border border-dashed border-dark-200 px-3.5 text-[0.8125rem] text-dark-400 transition-colors duration-feedback ease-out hover:border-gold-300 hover:text-dark"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Add topic
@@ -317,7 +316,7 @@ export function SubjectsPanel({
         })}
       </div>
 
-      <Modal
+      <SidePanel
         open={subjectDraft !== null}
         onClose={() => setSubjectDraft(null)}
         title={subjectDraft?.id ? "Edit subject" : "New subject"}
@@ -349,9 +348,9 @@ export function SubjectsPanel({
             />
           </div>
         ) : null}
-      </Modal>
+      </SidePanel>
 
-      <Modal
+      <SidePanel
         open={topicDraft !== null}
         onClose={() => setTopicDraft(null)}
         title={topicDraft?.id ? "Edit topic" : "New topic"}
@@ -374,7 +373,7 @@ export function SubjectsPanel({
             placeholder="Great Circle and Rhumb Line"
           />
         ) : null}
-      </Modal>
+      </SidePanel>
 
       <ConfirmDialog
         open={deleting !== null}
