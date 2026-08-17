@@ -48,7 +48,7 @@ export function NavShell({
         <div className="mx-auto flex h-16 max-w-7xl items-center gap-5 px-4 sm:px-6">
           <button
             type="button"
-            className="-ml-1 rounded-md p-1.5 text-dark-200 transition-colors duration-feedback ease-out hover:text-white lg:hidden"
+            className="-ml-2 grid h-11 w-11 place-items-center rounded-lg text-dark-200 transition-colors duration-feedback ease-out hover:bg-white/10 hover:text-white lg:hidden"
             onClick={() => setOpen((prev) => !prev)}
             aria-label="Toggle navigation"
             aria-expanded={open}

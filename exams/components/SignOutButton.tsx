@@ -18,7 +18,13 @@ export function SignOutButton({ variant = "onDark" }: { variant?: "ghost" | "sec
   }
 
   return (
-    <Button variant={variant} size="sm" onClick={handleSignOut} loading={loading}>
+    <Button
+      variant={variant}
+      size="sm"
+      onClick={handleSignOut}
+      loading={loading}
+      className="h-11 sm:h-8"
+    >
       <LogOut className="h-4 w-4" />
       Sign out
     </Button>
