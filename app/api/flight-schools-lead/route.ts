@@ -47,8 +47,17 @@ export async function POST(request: Request) {
       formType: "flight_school",
       data,
       fields: {
+        // COURSE column must read "Flight School" (not Pilot/CPL) so the team
+        // instantly sees these are flight-school directory leads. Send it on
+        // every key the PROXe inbound mapper reads.
+        course_interest: "Flight School",
+        course: "Flight School",
+        interest: "Flight School",
         school_interested: data.schoolInterested,
         school_country: data.schoolCountry,
+        message: data.schoolInterested
+          ? `Enquiry about ${data.schoolInterested}${data.schoolCountry ? `, ${data.schoolCountry}` : ""} (flight school)`
+          : "Flight school enquiry",
       },
     });
     if (!proxe.ok) console.error("Flight schools lead PROXe forward failed:", proxe.error);

@@ -13,7 +13,13 @@ import {
 } from "@/lib/tracking";
 
 interface Props {
-  school: FlightSchool;
+  /**
+   * The school the visitor tapped, when there is one. The map markers are
+   * drawn in WebGL and are not reachable by keyboard or screen reader, so the
+   * page also opens this modal from a plain button with no school attached.
+   * Everything below therefore has to work with school undefined.
+   */
+  school?: FlightSchool | null;
   onClose: () => void;
 }
 
@@ -40,8 +46,8 @@ export default function LeadFormModal({ school, onClose }: Props) {
           name: form.name,
           phone: form.phone,
           email: form.email,
-          schoolInterested: school.name,
-          schoolCountry: school.country,
+          schoolInterested: school?.name ?? "",
+          schoolCountry: school?.country ?? "",
           // camelCase UTMs kept for the Flight Schools spreadsheet columns.
           utmSource: utm.utm_source || "",
           utmMedium: utm.utm_medium || "",
@@ -81,8 +87,14 @@ export default function LeadFormModal({ school, onClose }: Props) {
         <div className="flex items-start justify-between mb-5">
           <div>
             <p className="text-[#C5A572] text-xs font-medium tracking-wider uppercase mb-1">Get Details</p>
-            <h3 className="text-xl font-bold text-white leading-tight">{school.name}</h3>
-            <p className="text-white/40 text-sm mt-0.5">{school.city}, {school.country}</p>
+            <h3 className="text-xl font-bold text-white leading-tight">
+              {school ? school.name : "Talk to a counsellor"}
+            </h3>
+            <p className="text-white/40 text-sm mt-0.5">
+              {school
+                ? `${school.city}, ${school.country}`
+                : "Tell us where you want to train and we will call you back"}
+            </p>
           </div>
           <button
             onClick={onClose}
