@@ -122,6 +122,10 @@ export default function GlobeHero({
   return (
     <section
       ref={containerRef}
+      // The floating enquiry bar watches for this to know when to stay out of
+      // the way - the hero has its own search and its own CTAs, so a bar
+      // parked over them is covering the very thing it is asking people to use.
+      data-globe-hero=""
       onPointerDownCapture={() => setDismissed(true)}
       style={{ scrollSnapAlign: "start", scrollSnapStop: "always" }}
       className={`relative w-full h-[calc(100vh-80px)] min-h-[520px] overflow-hidden ${light ? "bg-[#eef1f5]" : "bg-[#060b14]"}`}
