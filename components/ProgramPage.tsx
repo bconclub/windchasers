@@ -376,9 +376,26 @@ export default function ProgramPage({ content, slug: slugProp }: { content: Prog
                 <Link href="/demo" className="inline-flex items-center gap-2 bg-primary text-on-primary px-8 py-4 rounded-lg font-bold hover:bg-primary-container transition-all" style={{ boxShadow: "0 0 20px rgba(197,165,114,0.2)" }}>
                   Book a Demo Session <ArrowRight className="w-5 h-5" />
                 </Link>
-                <Link href="/contact-us" className="inline-flex items-center gap-2 border-2 border-primary text-primary px-8 py-4 rounded-lg font-bold hover:bg-primary hover:text-on-primary transition-all">
-                  Talk to an Expert
-                </Link>
+                {/* On every other page this sends you to contact-us. ON
+                    contact-us that is a link back to the page you are already
+                    reading, which is exactly why it looked like it went
+                    nowhere - so there it opens WhatsApp instead. "Talk to an
+                    expert" should reach a person, and the demo button beside
+                    it already covers booking. */}
+                {slug === "contact-us" ? (
+                  <a
+                    href={`https://wa.me/919035098424?text=${encodeURIComponent("Hi WindChasers, I would like to talk to an expert about pilot training.")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 border-2 border-primary text-primary px-8 py-4 rounded-lg font-bold hover:bg-primary hover:text-on-primary transition-all"
+                  >
+                    Talk to an Expert
+                  </a>
+                ) : (
+                  <Link href="/contact-us" className="inline-flex items-center gap-2 border-2 border-primary text-primary px-8 py-4 rounded-lg font-bold hover:bg-primary hover:text-on-primary transition-all">
+                    Talk to an Expert
+                  </Link>
+                )}
               </div>
             )}
           </motion.div>

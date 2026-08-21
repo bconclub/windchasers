@@ -2,6 +2,16 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-08-18 · flight-schools page review pass + contact CTA
+
+- **One featured rail, not two.** "Featured in India" and "Featured Abroad" were separate carousels, which framed them as rival choices and buried whichever sat second. They are the same shortlist and every card already names its country, so the split cost a scroll and bought nothing. India sorts first.
+- **Ratings removed everywhere on this page** - featured card, school card, map preview card and the school drawer. They were Google's numbers presented as ours.
+- **The floating WhatsApp / Request a callback bar is gone.** It was fixed to the bottom of the viewport, so on the opening screen it sat on top of the "Search a country" field, and further down it covered the school cards. The component file is deleted, not just unmounted.
+- **Partner countries are a star, not a sentence.** "· Partner country" wrapped every partner card onto a second line and shouted louder than the country it labelled.
+- **Countries section leads with partners.** The 8 partner countries show by default; a "See all 41 countries" toggle reveals the rest. Partners are where we can actually place a student, so they should not be lost in a wall of 41 flags.
+- **"How it works" reads as a sequence.** The old version put a ghosted numeral in the corner of four floating blocks, so nothing said these happen in order - the only thing the section is for. Steps are now numbered nodes threaded on a connector line, vertical on mobile and horizontal from lg up, marked up as an ordered list.
+- **User-facing:** on /contact-us, "Talk to an Expert" linked to /contact-us - the page you were already reading, which is why it appeared to do nothing. It now opens WhatsApp. Every other page still routes it to contact-us.
+
 ## 2026-07-21 · feat(demo-class): DGCA demo class landing page
 
 - New in-person event landing page at `/dgca-demo-class`, structured like the

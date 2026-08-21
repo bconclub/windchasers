@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowUpRight, MapPin, Star, Plane } from "lucide-react";
+import { ArrowUpRight, MapPin, Plane } from "lucide-react";
 import type { FeaturedSchool } from "../lib/featured-schools";
 
 export default function FeaturedSchoolCard({ school }: { school: FeaturedSchool }) {
@@ -26,12 +26,6 @@ export default function FeaturedSchoolCard({ school }: { school: FeaturedSchool 
           <div className="h-full w-full flex items-center justify-center text-white/15">
             <Plane className="w-7 h-7" />
           </div>
-        )}
-        {school.rating != null && (
-          <span className="absolute top-2.5 right-2.5 flex items-center gap-1 px-2 py-0.5 bg-black/60 backdrop-blur-sm text-white text-[11px] rounded">
-            <Star className="w-3 h-3 text-[#C5A572] fill-[#C5A572]" />
-            {school.rating}
-          </span>
         )}
       </div>
 

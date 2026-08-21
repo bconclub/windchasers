@@ -8,7 +8,6 @@ import GlobeHero from "./GlobeHero";
 import FeaturedSchools from "./FeaturedSchools";
 import SchoolDrawer from "./SchoolDrawer";
 import LeadFormModal from "./LeadFormModal";
-import { EnquiryBar } from "./EnquiryBar";
 import {
   StatsBand,
   PartnerCountries,
@@ -132,8 +131,6 @@ export default function FlightSchoolsExperience({ schools }: { schools: FlightSc
           />
         )}
       </AnimatePresence>
-      {/* Always reachable enquiry, since the markers are WebGL only. */}
-      <EnquiryBar school={selectedSchool} />
     </>
   );
 }

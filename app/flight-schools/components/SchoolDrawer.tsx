@@ -214,17 +214,6 @@ export default function SchoolDrawer({ school, onClose, onConsult }: Props) {
 
               {/* Key stats */}
               <div className="grid grid-cols-2 gap-3 mb-5">
-                {school.googleRating !== null && (
-                  <div className="bg-white/5 rounded-lg p-3">
-                    <p className="text-white/40 text-xs mb-1">Google rating</p>
-                    <p className="text-white font-semibold text-sm">
-                      {school.googleRating} / 5
-                      {school.googleReviewCount ? (
-                        <span className="text-white/40 font-normal"> ({school.googleReviewCount.toLocaleString()})</span>
-                      ) : null}
-                    </p>
-                  </div>
-                )}
                 {school.durationMonths !== null && (
                   <div className="bg-white/5 rounded-lg p-3">
                     <p className="text-white/40 text-xs mb-1">Duration</p>

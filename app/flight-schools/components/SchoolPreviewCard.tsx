@@ -1,6 +1,6 @@
 "use client";
 
-import { Plane, Star, ChevronRight, X as XIcon } from "lucide-react";
+import { Plane, ChevronRight, X as XIcon } from "lucide-react";
 import type { FlightSchool } from "@/types/flight-school";
 
 interface Props {
@@ -13,7 +13,6 @@ interface Props {
 // Compact map card that pops up when a marker is tapped. The chevron opens the
 // full details drawer.
 export default function SchoolPreviewCard({ school, light, onOpen, onClose }: Props) {
-  const rating = school.googleRating ?? school.rating;
   const certs = school.certifications.slice(0, 4).join(", ");
   const location = [school.city, school.country].filter(Boolean).join(", ");
 
@@ -37,13 +36,6 @@ export default function SchoolPreviewCard({ school, light, onOpen, onClose }: Pr
           <p className="text-[#B4863B] text-xs mt-0.5 truncate">{location}</p>
         )}
         <p className={`text-[11px] mt-1 truncate flex items-center gap-1 ${light ? "text-slate-500" : "text-white/50"}`}>
-          {rating != null && (
-            <span className="inline-flex items-center gap-0.5">
-              <Star className="w-3 h-3 text-[#C5A572] fill-[#C5A572]" />
-              {rating}
-            </span>
-          )}
-          {rating != null && certs && <span className="opacity-50">·</span>}
           {certs && <span className="truncate">{certs}</span>}
         </p>
       </button>

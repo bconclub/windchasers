@@ -1,6 +1,6 @@
 "use client";
 
-import { Star, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
 import type { FlightSchool } from "@/types/flight-school";
 import SchoolPhoto from "@/components/SchoolPhoto";
 
@@ -11,7 +11,6 @@ export default function SchoolCard({
   school: FlightSchool;
   onSelect: (s: FlightSchool) => void;
 }) {
-  const rating = school.googleRating ?? school.rating;
   return (
     <button
       onClick={() => onSelect(school)}
@@ -31,12 +30,6 @@ export default function SchoolCard({
         {school.isPartner && (
           <span className="absolute top-3 left-3 px-2 py-0.5 bg-[#C5A572] text-black text-[11px] font-semibold rounded">
             WC Partner
-          </span>
-        )}
-        {rating != null && (
-          <span className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 bg-black/60 backdrop-blur-sm text-white text-[11px] rounded">
-            <Star className="w-3 h-3 text-[#C5A572] fill-[#C5A572]" />
-            {rating}
           </span>
         )}
       </div>

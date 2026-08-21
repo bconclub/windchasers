@@ -9,6 +9,7 @@ import {
   Plane,
   ChevronDown,
   ArrowRight,
+  Star,
 } from "lucide-react";
 import type { FlightSchool } from "@/types/flight-school";
 import { FEATURED_SCHOOLS } from "../lib/featured-schools";
@@ -78,6 +79,7 @@ export function PartnerCountries({
   onPickCountry: (country: string) => void;
   activeCountry: string;
 }) {
+  const [showAllCountries, setShowAllCountries] = useState(false);
   const countries = useMemo(() => {
     const map: Record<string, { name: string; code: string; count: number; isPartner: boolean }> = {};
     for (const s of schools) {
@@ -93,6 +95,12 @@ export function PartnerCountries({
   }, [schools]);
 
   if (countries.length === 0) return null;
+
+  // Partners are the point of this section - they are where we can actually
+  // place a student - so they are shown, not buried in an alphabetical wall of
+  // 41 flags. The rest are still one tap away for anyone browsing.
+  const partners = countries.filter((c) => c.isPartner);
+  const others = countries.filter((c) => !c.isPartner);
 
   return (
     <section className="bg-[#080d17]">
@@ -111,7 +119,7 @@ export function PartnerCountries({
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {countries.map((c) => {
+          {(showAllCountries ? countries : partners).map((c) => {
             const active = activeCountry === c.name;
             return (
               <button
@@ -124,19 +132,43 @@ export function PartnerCountries({
                 }`}
               >
                 <FlagIcon code={c.code} className="w-7 h-5 flex-shrink-0" />
-                <span className="min-w-0">
-                  <span className="block text-white text-sm font-medium truncate">{c.name}</span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-white text-sm font-medium truncate">{c.name}</span>
+                    {/* A star, not a sentence. "· Partner country" wrapped every
+                        partner card onto a second line and shouted louder than
+                        the country it was labelling. */}
+                    {c.isPartner && (
+                      <Star
+                        className="w-3.5 h-3.5 flex-shrink-0 text-[#C5A572] fill-[#C5A572]"
+                        aria-label="Partner country"
+                      />
+                    )}
+                  </span>
                   <span className="block text-white/40 text-xs">
                     {c.count} school{c.count !== 1 ? "s" : ""}
-                    {c.isPartner && (
-                      <span className="text-[#C5A572]"> · Partner country</span>
-                    )}
                   </span>
                 </span>
               </button>
             );
           })}
         </div>
+
+        {others.length > 0 && (
+          <button
+            type="button"
+            onClick={() => setShowAllCountries((v) => !v)}
+            aria-expanded={showAllCountries}
+            className="mt-5 inline-flex items-center gap-2 rounded-xl border border-white/12 px-4 py-2.5 text-sm font-medium text-white/70 transition-colors hover:border-[#C5A572]/50 hover:text-white"
+          >
+            {showAllCountries
+              ? "Show partner countries only"
+              : `See all ${countries.length} countries`}
+            <ChevronDown
+              className={`w-4 h-4 transition-transform ${showAllCountries ? "rotate-180" : ""}`}
+            />
+          </button>
+        )}
       </div>
     </section>
   );
@@ -247,20 +279,40 @@ export function HowItWorks() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* A journey, not four unrelated cards.
+            The old version put a ghosted numeral in the far corner of each
+            block and left the blocks floating apart, so nothing said "these
+            happen in order" - which is the only thing this section is for.
+            Now every step is a numbered node threaded onto one line: vertical
+            on mobile, horizontal from lg up, with the connector stopping at
+            the last node so the sequence ends where the journey does. */}
+        <ol className="relative lg:grid lg:grid-cols-4 lg:gap-6">
           {steps.map((s, i) => (
-            <div key={s.title} className="relative">
-              <div className="w-12 h-12 rounded-xl bg-[#C5A572]/12 border border-[#C5A572]/25 flex items-center justify-center mb-4">
-                <s.icon className="w-5 h-5 text-[#C5A572]" />
-              </div>
-              <span className="absolute top-0 right-0 text-white/8 text-5xl font-bold leading-none">
+            <li key={s.title} className="relative pl-14 pb-9 last:pb-0 lg:pl-0 lg:pb-0">
+              {/* connector */}
+              {i < steps.length - 1 && (
+                <span
+                  aria-hidden="true"
+                  className="absolute left-[19px] top-11 bottom-1 w-px bg-gradient-to-b from-[#C5A572]/45 to-[#C5A572]/5 lg:left-auto lg:top-[19px] lg:bottom-auto lg:h-px lg:w-full lg:translate-x-10 lg:bg-gradient-to-r lg:from-[#C5A572]/45 lg:to-[#C5A572]/5"
+                />
+              )}
+
+              {/* the node: number and icon together, so the order is the first
+                  thing you read rather than a decorative afterthought */}
+              <span className="absolute left-0 top-0 flex h-10 w-10 items-center justify-center rounded-full border border-[#C5A572]/40 bg-[#C5A572]/12 text-sm font-bold text-[#C5A572] lg:static lg:mb-5 lg:flex">
                 {i + 1}
               </span>
-              <h3 className="text-white font-semibold text-base mb-2">{s.title}</h3>
-              <p className="text-white/50 text-sm leading-relaxed">{s.body}</p>
-            </div>
+
+              <div className="lg:pr-4">
+                <div className="mb-2 flex items-center gap-2">
+                  <s.icon className="h-4 w-4 flex-shrink-0 text-[#C5A572]" />
+                  <h3 className="text-base font-semibold text-white">{s.title}</h3>
+                </div>
+                <p className="text-sm leading-relaxed text-white/50">{s.body}</p>
+              </div>
+            </li>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );
