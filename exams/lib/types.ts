@@ -69,7 +69,7 @@ export interface Question {
   option_a: string;
   option_b: string;
   option_c: string;
-  option_d: string;
+  option_d: string | null;
   correct_option: OptionLetter;
   explanation: string | null;
   difficulty: QuestionDifficulty;
@@ -152,7 +152,7 @@ export interface RunnerQuestion {
   option_a: string;
   option_b: string;
   option_c: string;
-  option_d: string;
+  option_d: string | null;
   image_url: string | null;
   subject_id: string;
   subject_name: string;
@@ -439,7 +439,7 @@ export interface PracticeQuestion {
   option_a: string;
   option_b: string;
   option_c: string;
-  option_d: string;
+  option_d: string | null;
   image_url: string | null;
   subject_name: string;
   topic_name: string | null;

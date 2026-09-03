@@ -28,7 +28,10 @@ function ReviewCard({ question, order }: { question: ReviewQuestion; order: numb
     { letter: "B", text: question.option_b },
     { letter: "C", text: question.option_c },
     { letter: "D", text: question.option_d },
-  ];
+  ].filter(
+    (option): option is { letter: OptionLetter; text: string } =>
+      typeof option.text === "string" && option.text.trim().length > 0
+  );
 
   return (
     <div className="rounded-xl border border-line bg-surface p-5">

@@ -236,7 +236,10 @@ export function PracticeSession({
     { letter: "B", text: current.option_b },
     { letter: "C", text: current.option_c },
     { letter: "D", text: current.option_d },
-  ];
+  ].filter(
+    (option): option is { letter: OptionLetter; text: string } =>
+      typeof option.text === "string" && option.text.trim().length > 0
+  );
 
   return (
     <div className="max-w-3xl">

@@ -46,7 +46,10 @@ function optionsOf(question: RunnerQuestion): DisplayOption[] {
     { letter: "B", text: question.option_b },
     { letter: "C", text: question.option_c },
     { letter: "D", text: question.option_d },
-  ];
+  ].filter(
+    (option): option is { letter: OptionLetter; text: string } =>
+      typeof option.text === "string" && option.text.trim().length > 0
+  );
 }
 
 export function TestRunner({
