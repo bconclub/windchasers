@@ -2,6 +2,14 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-09-01 · flight-schools: featured list verified, names corrected, order randomised
+
+- **Every featured school was checked against the web.** 17 of 18 are real, licensed schools with the certifications they imply. The one exception is AARNA FLYING SCHOOL: no website, no description, not on the DGCA FTO list, not in our own 925-school dataset, not in the Google Places import, and no search results anywhere. Left in place pending a decision, flagged as unverifiable.
+- **Four names were wrong on the card.** "Airdmore" → Ardmore Flying School. "Royhale flying school" → Royhle Aviation Academy. "American Aviation Academy" → American Aviation Flight Academy (the stored link, flyaafa.com, was already that school). "Asia Pacific flight training school" → Asia Pacific Flight Training Academy. Barcelona Flight School recapitalised.
+- **Pharma Flight linked to the wrong site.** It pointed at pharmaflightindia.in, an India-facing site whose ownership is not stated anywhere on it. Now links to pharmaflight.hu, the academy's own domain.
+- **Featured order is now a weighted shuffle per visit.** The page is force-dynamic, so each request draws a fresh order. Schools outside India with a photo come first, then those with one of the two, then the rest; random within each tier. India no longer leads by default.
+- **User-facing:** "Typically responded to within 24 hours" removed from the Get Details form - a promise the team should not be making in a template.
+
 ## 2026-08-18 · flight-schools page review pass + contact CTA
 
 - **One featured rail, not two.** "Featured in India" and "Featured Abroad" were separate carousels, which framed them as rival choices and buried whichever sat second. They are the same shortlist and every card already names its country, so the split cost a scroll and bought nothing. India sorts first.

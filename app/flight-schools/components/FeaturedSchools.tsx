@@ -2,20 +2,39 @@ import { FEATURED_SCHOOLS } from "../lib/featured-schools";
 import FeaturedCarousel from "./FeaturedCarousel";
 
 /**
- * One featured rail, not two.
+ * One featured rail, freshly ordered on every visit.
  *
- * India and abroad were split into separate carousels, which framed them as
- * rival choices and buried whichever sat second. They are the same shortlist -
- * schools we vouch for - and the country is already on every card, so the
- * split cost a scroll and bought nothing. India leads because most of this
- * traffic starts there.
+ * The page is force-dynamic, so this runs per request and the shuffle is real -
+ * two visitors see two orders. That matters because whatever sits first gets
+ * most of the attention, and a fixed list quietly turns three schools into
+ * "the" schools.
+ *
+ * It is a WEIGHTED shuffle, not a coin toss. Two things earn a place in the
+ * front tier: a photo, because a card without one is a grey box nobody clicks,
+ * and being outside India, because this page exists to show training abroad
+ * and the Indian schools are already reachable everywhere else on the site.
+ * Within a tier the order is random.
  */
+type Featured = (typeof FEATURED_SCHOOLS)[number];
+
+function shuffle<T>(arr: T[]): T[] {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 export default function FeaturedSchools() {
-  const schools = [...FEATURED_SCHOOLS].sort((a, b) => {
-    const aIndia = a.country === "India" ? 0 : 1;
-    const bIndia = b.country === "India" ? 0 : 1;
-    return aIndia - bIndia;
-  });
+  const hasImage = (s: Featured) => typeof s.image === "string" && s.image.startsWith("http");
+  const abroad = (s: Featured) => s.country !== "India";
+
+  const tier1 = FEATURED_SCHOOLS.filter((s) => abroad(s) && hasImage(s));
+  const tier2 = FEATURED_SCHOOLS.filter((s) => abroad(s) !== hasImage(s)); // exactly one of the two
+  const tier3 = FEATURED_SCHOOLS.filter((s) => !abroad(s) && !hasImage(s));
+
+  const schools = [...shuffle(tier1), ...shuffle(tier2), ...shuffle(tier3)];
 
   return (
     <section className="bg-[#060b14]">

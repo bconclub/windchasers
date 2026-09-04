@@ -94,7 +94,7 @@ Graduates leave the academy with internationally recognized FAA certifications a
     id: "featured-5",
     country: "United States",
     place: `FLORIDA`,
-    name: `American Aviation Academy`,
+    name: `American Aviation Flight Academy`,
     about: `American Aviation Flight Academy (AAFA) provides professional flight training designed to prepare students for successful careers in commercial aviation. The academy offers comprehensive programs that cover every stage of pilot development, from foundational flight training to advanced commercial certifications.
 
 Students benefit from structured ground school education, hands-on flight instruction, and personalized mentoring by experienced aviation professionals. The academy places strong emphasis on safety, operational discipline, and practical decision-making, ensuring graduates develop the confidence required for professional flying.
@@ -147,7 +147,7 @@ The academy places a strong emphasis on safety, professionalism, and operational
     id: "featured-8",
     country: "New Zealand",
     place: `Auckland`,
-    name: `Airdmore Flying School`,
+    name: `Ardmore Flying School`,
     about: `Ardmore Flying School is one of New Zealand's most respected flight training institutions, with a proud history of training professional pilots since 1961. Located at Ardmore Airport near Auckland, the academy has built an international reputation for delivering high-quality aviation education through experienced instructors, modern aircraft, and structured training programs.
 
 The school offers comprehensive pilot training from Private Pilot Licence (PPL) through Commercial Pilot Licence (CPL), Instrument Rating, Multi-Engine Rating, and Flight Instructor qualifications. Students receive extensive ground school instruction combined with practical flight experience, enabling them to develop strong technical knowledge, operational skills, and professional confidence.
@@ -222,7 +222,7 @@ Zenith Aviation Academy places a strong emphasis on safety, personalized mentors
     id: "featured-13",
     country: "Spain",
     place: `Barcelona`,
-    name: `Barcelona flight School`,
+    name: `Barcelona Flight School`,
     about: `Barcelona Flight School (BFS) is one of Spain's most established EASA-approved flight training organizations, with over 70 years of experience in developing professional pilots. Located at Sabadell Airport near Barcelona, the academy offers internationally recognized pilot training in a modern, multicultural environment. With a fleet of more than 40 aircraft, advanced training facilities, and highly experienced instructors, BFS is committed to delivering high-quality aviation education that meets European and global industry standards.
 
 The academy offers integrated and modular training pathways, including Private Pilot Licence (PPL), Commercial Pilot Licence (CPL), Airline Transport Pilot Licence (ATPL), Instrument Rating (IR), Multi-Engine Rating (ME), Multi-Crew Cooperation (MCC), and Flight Instructor (FI) programs. Students benefit from comprehensive ground school, simulator training, and practical flight instruction designed to develop strong technical knowledge, operational competence, and professional confidence.
@@ -243,7 +243,7 @@ Barcelona Flight School also provides dedicated support for international studen
 The academy offers university-level pilot education supported by state-of-the-art flight simulators, aviation medical services, and research facilities. Students receive comprehensive theoretical instruction and practical training in an environment that combines academic excellence with the latest developments in aviation science and technology. This multidisciplinary approach helps prepare future pilots to meet the evolving demands of the global aviation industry.
 
 PHARMAFLIGHT places a strong emphasis on innovation, safety, and professional development while fostering collaboration between aviation, healthcare, and scientific research. Through its modern infrastructure and internationally oriented programs, the academy equips aspiring aviation professionals with the knowledge, skills, and confidence required for successful careers in commercial aviation.`,
-    website: "https://pharmaflightindia.in/",
+    website: "https://pharmaflight.hu/",
     image: "https://ebxslycxbgvjrkirrizd.supabase.co/storage/v1/object/public/school-photos/featured/featured-14.jpg",
     rating: 4.1,
     mapsUrl: "https://maps.google.com/?cid=9338409075528866467&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
@@ -278,7 +278,7 @@ Skynex Aero emphasizes safety, innovation, and personalized mentorship while pre
     id: "featured-17",
     country: "India",
     place: ``,
-    name: `Asia Pacific flight training school`,
+    name: `Asia Pacific Flight Training Academy`,
     about: `Asia Pacific Flight Training Academy (APFT) is a DGCA-approved Flight Training Organization committed to delivering high-quality pilot training that meets national and international aviation standards. With operations at Kalaburagi Airport in Karnataka, Begumpet Airport, and Rajiv Gandhi International Airport in Hyderabad, APFT provides students with diverse flying environments that help build strong operational skills and real-world experience. Guided by a vision of producing skilled, disciplined, and safety-conscious aviation professionals, the academy has established itself as one of India's trusted pilot training institutions.
 
 APFT offers comprehensive training programs including Private Pilot Licence (PPL), Commercial Pilot Licence (CPL), Instrument Rating (IR), Multi-Engine Rating (ME), and Airline Transport Pilot Licence (ATPL) theory. Students train on a modern fleet of Diamond DA40D and DA42 aircraft, supported by experienced instructors, structured ground school, and advanced training methodologies designed to prepare them for successful airline careers.
@@ -293,7 +293,7 @@ The academy places a strong emphasis on professionalism, technical excellence, a
     id: "featured-18",
     country: "Philippines",
     place: `Dumaguete City`,
-    name: `Royhale flying school`,
+    name: `Royhle Aviation Academy`,
     about: `Royhle Aviation Academy is a CAAP-certified flight training institution based in Dumaguete, Philippines, dedicated to providing high-quality pilot training for aspiring aviation professionals from around the world. Established in 2013, the academy has built a strong reputation for its student-centric approach, modern training methodologies, and commitment to safety and operational excellence. With experienced instructors and a well-maintained training fleet, Royhle offers an ideal learning environment for students pursuing careers in commercial aviation.
 
 The academy offers a comprehensive range of pilot training programs, including Private Pilot Licence (PPL), Commercial Pilot Licence (CPL), Instrument Rating (IR), Multi-Engine Rating (ME), Flight Instructor Rating (FI), Airline Transport Pilot Licence (ATPL) Theory, Multi-Crew Cooperation (MCC), Jet Familiarization, and Foreign Licence Validation. Its structured curriculum combines in-depth ground school, practical flight training, and personalized mentorship to ensure students develop strong technical knowledge, professional discipline, and operational confidence.

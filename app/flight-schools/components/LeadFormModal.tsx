@@ -167,9 +167,6 @@ export default function LeadFormModal({ school, onClose }: Props) {
               {status === "loading" ? "Sending..." : "Request Consultation"}
             </button>
 
-            <p className="text-center text-xs text-white/30">
-              Typically responded to within 24 hours.
-            </p>
           </form>
         )}
       </motion.div>
