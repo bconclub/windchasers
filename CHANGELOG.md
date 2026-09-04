@@ -2,6 +2,10 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-09-04 · flight-schools: Aarna Flying School removed from the featured rail
+
+- **AARNA FLYING SCHOOL is off the list.** Flagged as unverifiable in the 1 Sep audit (no website, no description, not on the DGCA FTO list, absent from our 925-school dataset and the Places import, zero search results). Founder decision: remove. 17 featured schools remain, every one checked. The `featured-16` photo stays in storage but nothing references it.
+
 ## 2026-09-01 · flight-schools: featured list verified, names corrected, order randomised
 
 - **Every featured school was checked against the web.** 17 of 18 are real, licensed schools with the certifications they imply. The one exception is AARNA FLYING SCHOOL: no website, no description, not on the DGCA FTO list, not in our own 925-school dataset, not in the Google Places import, and no search results anywhere. Left in place pending a decision, flagged as unverifiable.
