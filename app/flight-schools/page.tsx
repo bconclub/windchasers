@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getPublicFlightSchools } from "@/lib/flight-schools/queries";
 import FlightSchoolsExperience from "./components/FlightSchoolsExperience";
+import { pickFeaturedOrder } from "./lib/featured-order";
 
 export const metadata: Metadata = {
   title: "International Flight Schools | WindChasers",
@@ -23,9 +24,12 @@ export default async function FlightSchoolsPage() {
     console.error("[/flight-schools] Supabase fetch failed:", err);
   }
 
+  // Chosen here, on the server, once per request. See featured-order.ts.
+  const featured = pickFeaturedOrder();
+
   return (
     <div className="bg-[#060b14] pt-[80px]">
-      <FlightSchoolsExperience schools={schools} />
+      <FlightSchoolsExperience schools={schools} featured={featured} />
     </div>
   );
 }

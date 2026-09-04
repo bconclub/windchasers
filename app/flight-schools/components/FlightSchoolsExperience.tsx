@@ -6,6 +6,7 @@ import { Globe as GlobeIcon, Map as MapIcon } from "lucide-react";
 import type { FlightSchool } from "@/types/flight-school";
 import GlobeHero from "./GlobeHero";
 import FeaturedSchools from "./FeaturedSchools";
+import type { Featured } from "../lib/featured-order";
 import SchoolDrawer from "./SchoolDrawer";
 import LeadFormModal from "./LeadFormModal";
 import {
@@ -17,7 +18,13 @@ import {
   CtaBand,
 } from "./FlightSchoolSections";
 
-export default function FlightSchoolsExperience({ schools }: { schools: FlightSchool[] }) {
+export default function FlightSchoolsExperience({
+  schools,
+  featured,
+}: {
+  schools: FlightSchool[];
+  featured: Featured[];
+}) {
   // Marker/point click opens the left drawer directly (no intermediate card).
   const [selectedSchool, setSelectedSchool] = useState<FlightSchool | null>(null);
   const [showLeadModal, setShowLeadModal] = useState(false);
@@ -99,7 +106,7 @@ export default function FlightSchoolsExperience({ schools }: { schools: FlightSc
         resetKey={resetKey}
       />
 
-      <FeaturedSchools />
+      <FeaturedSchools schools={featured} />
 
       <StatsBand schools={schools} />
       <PartnerCountries

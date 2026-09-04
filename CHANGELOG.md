@@ -2,6 +2,10 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-09-04 · flight-schools: featured shuffle moved to the server (hydration errors fixed)
+
+- **The 1 Sep per-visit shuffle ran twice.** `FeaturedSchools` is rendered inside a `"use client"` tree, so `Math.random()` ran on the server and again in the browser, the two orders disagreed, and React threw hydration errors (#418/#423/#425) on every page load. Caught while testing the Lead event in a real browser. The order is now picked once in `page.tsx` (`pickFeaturedOrder()` in `lib/featured-order.ts`) and passed down as a prop; the component only renders what it is given.
+
 ## 2026-09-04 · flight-schools: Get Details form now fires the Lead event
 
 - **The flight-schools enquiry form never fired `Lead`.** Every other form on the site reports to GA4 and the Meta pixel through `trackLead`; this one only posted to the API. Result: Meta could not optimise flight-school ads for enquiries, only for page views. It now fires `flight_school_lead` with the school name, so the new TOFU Flight Schools campaign can move from landing-page views to lead optimisation once it has data.
