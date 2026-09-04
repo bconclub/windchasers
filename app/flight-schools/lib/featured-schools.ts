@@ -264,17 +264,6 @@ Skynex Aero emphasizes safety, innovation, and personalized mentorship while pre
     mapsUrl: "https://maps.google.com/?cid=6414738671294892484&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
   },
   {
-    id: "featured-16",
-    country: "India",
-    place: ``,
-    name: `AARNA FLYING SCHOOL`,
-    about: ``,
-    website: "",
-    image: "https://ebxslycxbgvjrkirrizd.supabase.co/storage/v1/object/public/school-photos/featured/featured-16.jpg",
-    rating: 4.9,
-    mapsUrl: "https://maps.google.com/?cid=6602884732760180520&g_mp=Cidnb29nbGUubWFwcy5wbGFjZXMudjEuUGxhY2VzLlNlYXJjaFRleHQQAhgEIAA",
-  },
-  {
     id: "featured-17",
     country: "India",
     place: ``,
