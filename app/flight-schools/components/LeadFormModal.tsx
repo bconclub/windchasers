@@ -11,6 +11,7 @@ import {
   getStoredReferrer,
   deriveTrafficSource,
 } from "@/lib/tracking";
+import { trackLead, EVENTS } from "@/lib/analytics/events";
 
 interface Props {
   /**
@@ -63,6 +64,10 @@ export default function LeadFormModal({ school, onClose }: Props) {
         }),
       });
       if (!res.ok) throw new Error("Failed");
+      // Fire the Lead event (GA4 + Meta pixel). Every other form on the site
+      // does this; this one never did, so Meta could not optimise flight-school
+      // ads for enquiries - only for page views.
+      trackLead(EVENTS.FLIGHT_SCHOOL_LEAD, { form_name: "flight_school_details", school: school?.name ?? "" });
       setStatus("success");
     } catch {
       setStatus("error");

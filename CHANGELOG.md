@@ -2,6 +2,11 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-09-04 · flight-schools: Get Details form now fires the Lead event
+
+- **The flight-schools enquiry form never fired `Lead`.** Every other form on the site reports to GA4 and the Meta pixel through `trackLead`; this one only posted to the API. Result: Meta could not optimise flight-school ads for enquiries, only for page views. It now fires `flight_school_lead` with the school name, so the new TOFU Flight Schools campaign can move from landing-page views to lead optimisation once it has data.
+- **Database:** 219 unverifiable rows in `flight_schools` set to `hidden` (rollback snapshot kept). The page now shows 446 schools, all of which passed the website and content check; the 10 partner/curated entries were kept regardless.
+
 ## 2026-09-04 · flight-schools: Aarna Flying School removed from the featured rail
 
 - **AARNA FLYING SCHOOL is off the list.** Flagged as unverifiable in the 1 Sep audit (no website, no description, not on the DGCA FTO list, absent from our 925-school dataset and the Places import, zero search results). Founder decision: remove. 17 featured schools remain, every one checked. The `featured-16` photo stays in storage but nothing references it.
