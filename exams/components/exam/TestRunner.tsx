@@ -8,6 +8,7 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
+  CircleX,
   Flag,
   Loader2,
   Send,
@@ -120,6 +121,29 @@ export function TestRunner({
       submittedRef.current = true;
       setSubmitting(true);
       try {
+        if (current) {
+          const elapsed = Math.max(
+            0,
+            Math.round((Date.now() - questionEnteredAt.current) / 1000)
+          );
+          const existing = answers[current.id] ?? {
+            selected: null,
+            marked: false,
+            timeSpent: 0,
+          };
+          const finalState = {
+            ...existing,
+            timeSpent: existing.timeSpent + elapsed,
+          };
+          const { error: saveError } = await supabase.rpc("save_answer", {
+            p_attempt_id: attempt.id,
+            p_question_id: current.id,
+            p_selected_option: finalState.selected,
+            p_marked_for_review: finalState.marked,
+            p_time_spent_seconds: finalState.timeSpent,
+          });
+          if (saveError) throw saveError;
+        }
         const { error } = await supabase.rpc("submit_attempt", { p_attempt_id: attempt.id });
         if (error) throw error;
       } catch (caught) {
@@ -128,7 +152,7 @@ export function TestRunner({
       }
       leaveAttempt(auto);
     },
-    [supabase, attempt.id, leaveAttempt]
+    [supabase, attempt.id, current, answers, leaveAttempt]
   );
 
   const persist = useCallback(
@@ -200,6 +224,15 @@ export function TestRunner({
     if (!current) return;
     const previous = answers[current.id] ?? { selected: null, marked: false, timeSpent: 0 };
     const next: AnswerState = { ...previous, marked: !previous.marked };
+    setAnswers((prev) => ({ ...prev, [current.id]: next }));
+    void persist(current.id, next);
+  }
+
+  function clearResponse(): void {
+    if (!current) return;
+    const previous = answers[current.id] ?? { selected: null, marked: false, timeSpent: 0 };
+    if (previous.selected === null) return;
+    const next: AnswerState = { ...previous, selected: null };
     setAnswers((prev) => ({ ...prev, [current.id]: next }));
     void persist(current.id, next);
   }
@@ -381,6 +414,12 @@ export function TestRunner({
               <Flag className="h-4 w-4" />
               {currentState?.marked ? "Marked" : "Mark for review"}
             </Button>
+            {currentState?.selected ? (
+              <Button variant="ghost" onClick={clearResponse}>
+                <CircleX className="h-4 w-4" />
+                Clear response
+              </Button>
+            ) : null}
             <Button
               variant="secondary"
               className="ml-auto"

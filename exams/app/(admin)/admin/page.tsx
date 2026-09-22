@@ -177,7 +177,7 @@ export default async function AdminOverviewPage() {
         subtitle="Accuracy by subject across every submitted attempt, weakest first"
       />
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className="grid gap-6 xl:grid-cols-[minmax(18rem,4fr)_minmax(0,6fr)]">
         <Card>
           {subjectPerformance.length === 0 ? (
             <p className="text-sm text-dark-400">
@@ -212,7 +212,7 @@ export default async function AdminOverviewPage() {
           )}
         </Card>
 
-        <Card padded={false}>
+        <Card padded={false} className="min-w-0 overflow-hidden">
           <div className="p-5 pb-0">
             <CardHeader title="Recent activity" subtitle="Latest attempts across all exams" />
           </div>
@@ -234,8 +234,12 @@ export default async function AdminOverviewPage() {
               <tbody>
                 {payload.recent_attempts.map((row) => (
                   <tr key={row.id}>
-                    <Td className="font-medium text-dark">{row.student_name}</Td>
-                    <Td className="text-dark-500">{row.exam_title}</Td>
+                    <Td className="min-w-36 whitespace-nowrap font-medium text-dark">
+                      {row.student_name}
+                    </Td>
+                    <Td className="min-w-44 max-w-64 leading-snug text-dark-500">
+                      {row.exam_title}
+                    </Td>
                     <Td className="tnum whitespace-nowrap">
                       {row.score === null ? (
                         <span className="text-dark-300">-</span>
@@ -246,7 +250,7 @@ export default async function AdminOverviewPage() {
                         </>
                       )}
                     </Td>
-                    <Td>
+                    <Td className="whitespace-nowrap">
                       <StatusBadge value={row.status} />
                     </Td>
                     <Td className="whitespace-nowrap text-dark-400">
