@@ -44,6 +44,7 @@ export async function seminarToProxe(
       event_date: "2026-11-28",
       event_venue: `${SEMINAR.venue}, ${SEMINAR.city}`,
       attendee_type: person.role || undefined,
+      user_type: person.role === "parent" ? "parent" : person.role ? "student" : undefined,
       with_parent: person.with_parent || undefined,
       payment_status: payment.status,
       payment_amount: SEMINAR.feePaise / 100,
@@ -59,7 +60,7 @@ export async function seminarToProxe(
             lead_type: "offline_event",
             offline_event_key: SEMINAR.slug,
             offline_event_name: "Australia Pilot Training Seminar with Basair Aviation College",
-            offline_event_date: "2026-11-28",
+            offline_event_date: "28 November 2026",
             offline_event_location: `${SEMINAR.venue}, ${SEMINAR.city}`,
             offline_event_coming_with: person.with_parent === "yes" ? "parent" : undefined,
           }
