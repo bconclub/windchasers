@@ -59,6 +59,7 @@ export default function Navbar() {
   const isParents = pathname === "/parents";
   const isFlightSchools = pathname === "/flight-schools";
   const isWingsOfFreedom = pathname === "/wings-of-freedom";
+  const isAusSeminar = pathname === "/australia-seminar";
   // The scholarship exam is timed - a nav menu is an invitation to leave
   // mid-paper, and the attempt only counts once.
   const isScholarshipExam = pathname.startsWith("/scholarship/");
@@ -77,6 +78,31 @@ export default function Navbar() {
   // Event landing pages: logo only. The full nav (menu + call + WhatsApp
   // buttons) crowded the logo on mobile, and a menu here just offers exits
   // from a single-purpose page. The footer stays.
+  // Australia seminar: logo plus one WhatsApp button that opens the marketing
+  // WhatsApp agent (PROXe) with the event already named, so the reply is about
+  // this seminar. No menu: it only offers exits from a single-purpose page.
+  if (isAusSeminar) {
+    const waHref = `https://wa.me/919035098424?text=${encodeURIComponent(
+      "Hi WindChasers, I want to know more about the Australia pilot training seminar with Basair Aviation College on Sat 28 Nov at Radisson City Centre, Bengaluru."
+    )}`;
+    return (
+      <nav className="fixed top-0 w-full bg-dark/95 backdrop-blur-sm border-b border-white/10 z-50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            <Link href="/" className="flex items-center">
+              <Image src="/images/White transparent.png" alt="WindChasers" width={180} height={60} className="h-[3.45rem] md:h-12 w-auto" priority />
+            </Link>
+            <a href={waHref} target="_blank" rel="noopener noreferrer" onClick={onWhatsAppClick}
+              className="flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2.5 text-[14px] font-semibold text-white transition-opacity hover:opacity-90">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.8-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.1-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5l-.9-2.2c-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5.1 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.8-.7 2-1.5.2-.7.2-1.3.2-1.5-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.5 1.3 4.9L2 22l5.2-1.4c1.4.8 3.1 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+              <span className="hidden sm:inline">Ask on WhatsApp</span><span className="sm:hidden">WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+    );
+  }
+
   if (isFlightSchools || isWingsOfFreedom || isScholarshipExam) {
     return (
       <nav className="fixed top-0 w-full bg-dark/95 backdrop-blur-sm border-b border-white/10 z-50">

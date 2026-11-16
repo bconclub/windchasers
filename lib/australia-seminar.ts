@@ -13,6 +13,7 @@ export const SEMINAR = {
   venue: "Radisson City Centre",
   city: "Bengaluru",
   feePaise: 9900,
+  capacity: 50,
   feeLabel: "₹99",
   formType: "Australia Seminar 28 Nov",
   speaker: {
@@ -48,6 +49,21 @@ export async function seminarToProxe(
       payment_amount: SEMINAR.feePaise / 100,
       razorpay_order_id: payment.order_id,
       razorpay_payment_id: payment.payment_id || undefined,
+      // Only a PAID registration is tagged as an offline-event registrant in
+      // PROXe: that tag triggers PROXe's "you're registered" WhatsApp and the
+      // event reminders, which must never reach someone who has not paid.
+      // Off until PROXe's offline-event registry has the australia-seminar
+      // entry (set PROXE_SEMINAR_EVENT_TAG=1 on the server to switch it on).
+      ...(payment.status === "paid" && process.env.PROXE_SEMINAR_EVENT_TAG === "1"
+        ? {
+            lead_type: "offline_event",
+            offline_event_key: SEMINAR.slug,
+            offline_event_name: "Australia Pilot Training Seminar with Basair Aviation College",
+            offline_event_date: "2026-11-28",
+            offline_event_location: `${SEMINAR.venue}, ${SEMINAR.city}`,
+            offline_event_coming_with: person.with_parent === "yes" ? "parent" : undefined,
+          }
+        : {}),
     },
   });
 }

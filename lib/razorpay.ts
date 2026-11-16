@@ -58,6 +58,25 @@ export async function fetchOrder(orderId: string): Promise<RazorpayOrder> {
   return json as RazorpayOrder;
 }
 
+/**
+ * Paid orders created by this site for one event (notes.event === key).
+ * Walks the order list newest first, 100 at a time, up to 2,000 orders.
+ * Returns null when Razorpay is not configured.
+ */
+export async function countPaidOrders(eventKey: string): Promise<number | null> {
+  if (!razorpayConfigured()) return null;
+  let paid = 0;
+  for (let skip = 0; skip < 2000; skip += 100) {
+    const res = await fetch(`${API}/orders?count=100&skip=${skip}`, { headers: { Authorization: auth() }, cache: "no-store" });
+    if (!res.ok) throw new Error(`Razorpay ${res.status}`);
+    const json = (await res.json()) as { items?: RazorpayOrder[] };
+    const items = json.items || [];
+    for (const o of items) if (o.status === "paid" && o.notes?.event === eventKey) paid++;
+    if (items.length < 100) break;
+  }
+  return paid;
+}
+
 function safeEqualHex(a: string, b: string): boolean {
   if (!/^[0-9a-f]+$/i.test(a) || a.length !== b.length) return false;
   return timingSafeEqual(Buffer.from(a, "hex"), Buffer.from(b, "hex"));

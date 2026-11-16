@@ -4,7 +4,7 @@
 // POST { name, phone, email, city, role, with_parent, ...attribution }
 //   -> { order_id, amount, currency, key }
 import { NextResponse } from "next/server";
-import { createOrder, razorpayConfigured, razorpayKeyId } from "@/lib/razorpay";
+import { countPaidOrders, createOrder, razorpayConfigured, razorpayKeyId } from "@/lib/razorpay";
 import { ATTR_KEYS, SEMINAR, seminarToProxe } from "@/lib/australia-seminar";
 
 export const dynamic = "force-dynamic";
@@ -27,6 +27,12 @@ export async function POST(request: Request) {
   if (name.length < 2) return NextResponse.json({ error: "Please enter your full name." }, { status: 400 });
   if (!/^(91)?[6-9]\d{9}$/.test(digits)) return NextResponse.json({ error: "Please enter a valid 10-digit mobile number." }, { status: 400 });
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return NextResponse.json({ error: "Please check your email address." }, { status: 400 });
+
+  // Stop taking payments once every seat is paid for.
+  const taken = await countPaidOrders(SEMINAR.slug).catch(() => null);
+  if (taken !== null && taken >= SEMINAR.capacity) {
+    return NextResponse.json({ error: `All ${SEMINAR.capacity} seats are taken. Message us on WhatsApp to join the waiting list.` }, { status: 409 });
+  }
 
   const notes: Record<string, string> = {
     event: SEMINAR.slug, name, phone: digits.slice(-10), email, city, role, with_parent: withParent,
