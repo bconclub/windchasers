@@ -62,6 +62,20 @@ export default function AustraliaSeminarPage() {
   useEffect(() => { captureAndStoreUTMParams(); }, []);
   useEffect(() => { if (typeof window !== "undefined" && window.Razorpay) setRzpReady(true); }, []);
 
+  // Bottom bar: shows once the hero has scrolled away, hides while the form is on screen.
+  const [barVisible, setBarVisible] = useState(false);
+  useEffect(() => {
+    const update = () => {
+      const f = formRef.current?.getBoundingClientRect();
+      const formOnScreen = !!f && f.top < window.innerHeight && f.bottom > 0;
+      setBarVisible(window.scrollY > 480 && !formOnScreen);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => { window.removeEventListener("scroll", update); window.removeEventListener("resize", update); };
+  }, []);
+
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
   const goToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
@@ -195,6 +209,27 @@ export default function AustraliaSeminarPage() {
         </div>
       </section>
 
+      {/* Host */}
+      <section className="border-t border-white/10 px-6 py-16 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-[26px] font-bold tracking-tight sm:text-[32px]">Hosted by Windchasers</h2>
+          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/70">
+            Windchasers runs DGCA ground classes at its campus in Kothanur, Bengaluru, and guides students to flying schools in India and abroad.
+          </p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            {[
+              { src: "/facility/DSC_0549.JPG.webp", alt: "A Windchasers session with students and parents" },
+              { src: "/facility/DSC_0481.JPG.webp", alt: "Students at the Windchasers simulator" },
+              { src: "/facility/DSC05362.JPG.webp", alt: "Windchasers cadets in uniform" },
+            ].map((p) => (
+              <div key={p.src} className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10">
+                <Image src={p.src} alt={p.alt} fill sizes="(min-width: 640px) 33vw, 100vw" className="object-cover" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Register */}
       <section ref={formRef} id="register" className="scroll-mt-20 border-t border-white/10 bg-[#131313] px-6 py-16 lg:px-8 lg:py-20">
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.1fr]">
@@ -250,6 +285,21 @@ export default function AustraliaSeminarPage() {
           </div>
         </div>
       </section>
+
+      {/* Bottom bar */}
+      <div aria-hidden={!barVisible || !!done}
+        className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0E0E0E]/95 backdrop-blur-md transition-transform duration-200 ${barVisible && !done ? "translate-y-0" : "translate-y-full"}`}>
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 py-3 pl-4 pr-[68px] sm:gap-4 sm:px-6 sm:pr-24 lg:px-8">
+          <div className="min-w-0">
+            <p className="truncate text-[13px] font-semibold sm:text-[14px]">{SEMINAR.dateShort} · {SEMINAR.time}</p>
+            <p className="truncate text-[12.5px] text-white/60">{SEMINAR.venue}<span className="hidden sm:inline">, {SEMINAR.city} · Australia seminar with Basair</span></p>
+          </div>
+          <button onClick={goToForm} tabIndex={barVisible && !done ? 0 : -1}
+            className="h-10 shrink-0 rounded-full bg-gold px-4 text-[13px] font-semibold text-[#0E0E0E] transition-opacity hover:opacity-90 sm:h-11 sm:px-5 sm:text-[14px]">
+            Register for {SEMINAR.feeLabel}
+          </button>
+        </div>
+      </div>
     </main>
   );
 }
