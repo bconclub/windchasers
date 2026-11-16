@@ -93,7 +93,7 @@ export default function AustraliaSeminarPage() {
       currency: j.currency,
       name: "Windchasers",
       description: `Australia seminar, ${SEMINAR.dateShort}`,
-      prefill: { name: form.name, contact: form.phone, email: form.email || undefined },
+      prefill: { name: form.name, contact: `+91${form.phone.replace(/\D/g, "").slice(-10)}`, email: form.email || undefined },
       theme: { color: "#C5A572" },
       modal: { ondismiss: () => setBusy(false) },
       handler: async (resp: RazorpayResponse) => {
@@ -135,12 +135,11 @@ export default function AustraliaSeminarPage() {
               <span className="text-[13px] text-white/50">Paid securely through Razorpay</span>
             </div>
           </div>
-          <div className="relative mx-auto w-full max-w-sm">
-            <div className="relative aspect-square overflow-hidden rounded-2xl border border-white/10">
-              <Image src="/australia-seminar/david-trevelyan.webp" alt={SEMINAR.speaker.name} fill priority sizes="(min-width: 1024px) 384px, 90vw" className="object-cover" />
+          <div className="relative mx-auto w-full max-w-[320px]">
+            <div className="relative aspect-[9/16] overflow-hidden rounded-2xl border border-white/10 bg-black">
+              <video src="/australia-seminar/seminar-reel.mp4" poster="/australia-seminar/seminar-reel-poster.jpg"
+                controls playsInline preload="metadata" className="h-full w-full object-cover" aria-label="Seminar video" />
             </div>
-            <p className="mt-4 text-[15px] font-semibold">{SEMINAR.speaker.name}</p>
-            <p className="text-[13px] text-white/60">{SEMINAR.speaker.role}</p>
           </div>
         </div>
       </section>
@@ -165,6 +164,15 @@ export default function AustraliaSeminarPage() {
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2">
           <div>
             <h2 className="text-[26px] font-bold tracking-tight sm:text-[32px]">About the speaker</h2>
+            <div className="mt-6 flex items-center gap-4">
+              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border border-white/10">
+                <Image src="/australia-seminar/david-trevelyan.webp" alt={SEMINAR.speaker.name} fill sizes="80px" className="object-cover" />
+              </div>
+              <div>
+                <p className="text-[17px] font-semibold">{SEMINAR.speaker.name}</p>
+                <p className="text-[13.5px] text-white/60">{SEMINAR.speaker.role}</p>
+              </div>
+            </div>
             <ul className="mt-6 space-y-3">
               {BIO.map((b) => (
                 <li key={b} className="flex gap-3 text-[15px] leading-relaxed text-white/75">
