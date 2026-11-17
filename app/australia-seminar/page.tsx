@@ -57,7 +57,7 @@ const PAGE_URL = "https://windchasers.in/australia-seminar";
 const SHARE_URL = `${PAGE_URL}?utm_source=share&utm_medium=referral&utm_campaign=basair_seminar_28nov`;
 const SHARE_TEXT = `Pilot training in Australia? Seminar with ${SEMINAR.speaker.name}, ${SEMINAR.speaker.role}. ${SEMINAR.dateShort}, ${SEMINAR.time}, ${SEMINAR.venue}, ${SEMINAR.city}. Register for ${SEMINAR.feeLabel}:`;
 // Phones: one swipeable row that peeks the next card. md and up: the normal grid.
-const ROW = "-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 md:mx-0 md:grid md:overflow-visible md:px-0 md:pb-0";
+const ROW = "-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:grid md:overflow-visible md:px-0 md:pb-0";
 const SLIDE = "shrink-0 snap-start md:w-auto";
 const WA_ASK = `https://wa.me/919035098424?text=${encodeURIComponent(`Hi WindChasers, I want to know more about the Australia pilot training seminar with Basair Aviation College on ${SEMINAR.dateShort} at ${SEMINAR.venue}, ${SEMINAR.city}.`)}`;
 const MAP_QUERY = encodeURIComponent(`${SEMINAR.venue} ${SEMINAR.city}`);
@@ -406,7 +406,7 @@ export default function AustraliaSeminarPage() {
               </figure>
             ))}
           </div>
-          <div className="-mx-5 mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 md:mx-0 md:mt-8 md:block md:columns-3 md:overflow-visible md:px-0 md:pb-0">
+          <div className="-mx-5 mt-6 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-8 md:block md:columns-3 md:overflow-visible md:px-0 md:pb-0">
             {PAST_PHOTOS.map((p) => (
               <figure key={p.src} className="w-[78%] shrink-0 snap-start overflow-hidden rounded-xl border border-white/10 md:mb-3 md:w-auto md:break-inside-avoid">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
