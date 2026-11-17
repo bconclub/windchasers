@@ -27,6 +27,8 @@ export default function SiteChrome() {
   // "Book a Demo Class" bar stacks on top of it on mobile, giving two
   // competing primary actions. A set rather than another === so the next
   // event page doesn't have to rediscover this.
+  // Pages with their own WhatsApp button instead of the PROXe chat bubble.
+  const noChatWidget = pathname === "/australia-seminar";
   const NO_STICKY_CTA_ROUTES = ["/wings-of-freedom", "/australia-seminar", "/dgca-demo-class", "/dgca-demo-class-parents", "/scholarship/pilot", "/scholarship/cabin-crew"];
   const hasOwnStickyCta = NO_STICKY_CTA_ROUTES.includes(pathname);
 
@@ -34,7 +36,7 @@ export default function SiteChrome() {
     <>
       <Navbar />
       {!isFlightSchools && !isWebinar && !hasOwnStickyCta && <StickyDemoCTA />}
-      {!isFlightSchools && (
+      {!isFlightSchools && !noChatWidget && (
         <Script
           src="https://proxe.windchasers.in/api/widget/embed.js"
           strategy="afterInteractive"

@@ -56,6 +56,9 @@ const FAQ = [
 const PAGE_URL = "https://windchasers.in/australia-seminar";
 const SHARE_URL = `${PAGE_URL}?utm_source=share&utm_medium=referral&utm_campaign=basair_seminar_28nov`;
 const SHARE_TEXT = `Pilot training in Australia? Seminar with ${SEMINAR.speaker.name}, ${SEMINAR.speaker.role}. ${SEMINAR.dateShort}, ${SEMINAR.time}, ${SEMINAR.venue}, ${SEMINAR.city}. Register for ${SEMINAR.feeLabel}:`;
+// Phones: one swipeable row that peeks the next card. md and up: the normal grid.
+const ROW = "-mx-5 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 md:mx-0 md:grid md:overflow-visible md:px-0 md:pb-0";
+const SLIDE = "shrink-0 snap-start md:w-auto";
 const WA_ASK = `https://wa.me/919035098424?text=${encodeURIComponent(`Hi WindChasers, I want to know more about the Australia pilot training seminar with Basair Aviation College on ${SEMINAR.dateShort} at ${SEMINAR.venue}, ${SEMINAR.city}.`)}`;
 const MAP_QUERY = encodeURIComponent(`${SEMINAR.venue} ${SEMINAR.city}`);
 
@@ -154,36 +157,14 @@ export default function AustraliaSeminarPage() {
 
   const showBar = barVisible && !done && !modalOpen;
 
-  // PROXe chat bubble (iframe #wc-chat-widget from embed.js, fixed bottom-right):
-  // lift it above the bottom bar while the bar shows, and hide it while the
-  // register pop-up is open so it never sits on the pay button. embed.js
-  // re-reads data-bottom-offset-mobile every second (phones and tablets); the
-  // direct style write makes the lift instant and covers desktop. Only the
-  // closed bubble is moved: the open chat panel sets its own bottom and height.
+  // This page has its own WhatsApp button instead of the chat bubble. SiteChrome
+  // skips the chat script here; this also hides a widget an earlier page in
+  // the same visit already loaded.
   useEffect(() => {
-    const LIFT = 76;
-    const apply = () => {
-      const script = document.querySelector('script[src*="/api/widget/embed.js"]');
-      if (script) {
-        if (showBar) script.setAttribute("data-bottom-offset-mobile", String(LIFT));
-        else script.removeAttribute("data-bottom-offset-mobile");
-      }
-      const w = document.getElementById("wc-chat-widget") as HTMLIFrameElement | null;
-      if (!w) return false;
-      w.style.visibility = modalOpen ? "hidden" : "";
-      if (w.style.height === "165px") w.style.bottom = showBar ? `${LIFT}px` : "0px";
-      return true;
-    };
-    // The widget loads after the page, so retry briefly until it exists.
-    let tries = 0;
-    const t = window.setInterval(() => { if (apply() || ++tries > 20) window.clearInterval(t); }, 500);
-    apply();
-    return () => window.clearInterval(t);
-  }, [showBar, modalOpen]);
-  useEffect(() => () => {
-    document.querySelector('script[src*="/api/widget/embed.js"]')?.removeAttribute("data-bottom-offset-mobile");
-    const w = document.getElementById("wc-chat-widget") as HTMLIFrameElement | null;
-    if (w) { w.style.visibility = ""; if (w.style.height === "165px") w.style.bottom = "0px"; }
+    const hide = () => { const w = document.getElementById("wc-chat-widget"); if (w) w.style.display = "none"; };
+    hide();
+    const t = window.setInterval(hide, 1000);
+    return () => { window.clearInterval(t); const w = document.getElementById("wc-chat-widget"); if (w) w.style.display = ""; };
   }, []);
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
@@ -343,9 +324,9 @@ export default function AustraliaSeminarPage() {
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/70">
             That is the question {SEMINAR.speaker.name} will answer in person. A first look at flying in Australia:
           </p>
-          <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+          <div className={`mt-8 ${ROW} md:grid-cols-4`}>
             {AU_CLIPS.map((c) => (
-              <figure key={c.src} className="overflow-hidden rounded-xl border border-white/10 bg-black">
+              <figure key={c.src} className={`${SLIDE} w-[60%] overflow-hidden rounded-xl border border-white/10 bg-black`}>
                 <video src={c.src} poster={c.poster} autoPlay muted loop playsInline preload="metadata" className="aspect-[9/16] w-full object-cover" />
                 <figcaption className="px-3 py-2 text-[12.5px] text-white/60">{c.caption}</figcaption>
               </figure>
@@ -358,9 +339,9 @@ export default function AustraliaSeminarPage() {
       <section className="border-t border-white/10 bg-[#131313] px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-6xl">
           <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">What he will cover</h2>
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <div className={`mt-8 ${ROW} md:grid-cols-3 md:gap-4`}>
             {TOPICS.map((t) => (
-              <div key={t.title} className="rounded-xl border border-white/10 bg-white/[0.03] p-6">
+              <div key={t.title} className={`${SLIDE} w-[82%] rounded-xl border border-white/10 bg-white/[0.03] p-6`}>
                 <h3 className="text-[17px] font-semibold text-gold">{t.title}</h3>
                 <p className="mt-2 text-[14.5px] leading-relaxed text-white/70">{t.text}</p>
               </div>
@@ -393,9 +374,9 @@ export default function AustraliaSeminarPage() {
           </div>
           <div>
             <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">Who should come</h2>
-            <div className="mt-6 grid gap-4">
+            <div className={`mt-6 ${ROW} md:gap-4`}>
               {WHO.map((w) => (
-                <div key={w.title} className="rounded-xl border border-white/10 p-6">
+                <div key={w.title} className={`${SLIDE} w-[82%] rounded-xl border border-white/10 p-6`}>
                   <h3 className="text-[17px] font-semibold">{w.title}</h3>
                   <p className="mt-2 text-[14.5px] leading-relaxed text-white/70">{w.text}</p>
                 </div>
@@ -412,11 +393,11 @@ export default function AustraliaSeminarPage() {
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/70">
             Colleges, students and parents we have met, from Mangalore to Bengaluru.
           </p>
-          <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-3">
+          <div className={`mt-8 ${ROW} md:grid-cols-2 lg:grid-cols-3`}>
             {PAST_EVENTS.map((e) => (
-              <figure key={e.src} className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]">
+              <figure key={e.src} className={`${SLIDE} w-[78%] overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]`}>
                 <div className="relative aspect-[4/3]">
-                  <Image src={e.src} alt={`${e.what}, ${e.place}`} fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" style={e.pos ? { objectPosition: e.pos } : undefined} />
+                  <Image src={e.src} alt={`${e.what}, ${e.place}`} fill sizes="(min-width: 1024px) 33vw, 80vw" className="object-cover" style={e.pos ? { objectPosition: e.pos } : undefined} />
                 </div>
                 <figcaption className="px-3 py-3 sm:px-4">
                   <p className="text-[14px] font-semibold leading-snug sm:text-[15px]">{e.place}</p>
@@ -425,11 +406,11 @@ export default function AustraliaSeminarPage() {
               </figure>
             ))}
           </div>
-          <div className="mt-8 columns-2 gap-3 md:columns-3">
+          <div className="-mx-5 mt-6 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 md:mx-0 md:mt-8 md:block md:columns-3 md:overflow-visible md:px-0 md:pb-0">
             {PAST_PHOTOS.map((p) => (
-              <figure key={p.src} className="mb-3 break-inside-avoid overflow-hidden rounded-xl border border-white/10">
+              <figure key={p.src} className="w-[78%] shrink-0 snap-start overflow-hidden rounded-xl border border-white/10 md:mb-3 md:w-auto md:break-inside-avoid">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.src} alt={p.caption} loading="lazy" className="w-full" />
+                <img src={p.src} alt={p.caption} loading="lazy" className="aspect-[4/3] w-full object-cover md:aspect-auto" />
                 <figcaption className="px-3 py-2 text-[12.5px] text-white/60">{p.caption}</figcaption>
               </figure>
             ))}
@@ -444,14 +425,14 @@ export default function AustraliaSeminarPage() {
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/70">
             Windchasers is a pilot training academy in Kothanur, Bengaluru. We guide students and families from the first question to flying schools in India and abroad.
           </p>
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+          <div className={`mt-8 ${ROW} md:grid-cols-3 md:gap-4`}>
             {[
               { src: "/facility/DSC_0549.JPG.webp", alt: "A Windchasers session with students and parents" },
               { src: "/facility/DSC_0481.JPG.webp", alt: "Students at the Windchasers simulator" },
               { src: "/facility/DSC05362.JPG.webp", alt: "Windchasers cadets in uniform" },
             ].map((p) => (
-              <div key={p.src} className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10">
-                <Image src={p.src} alt={p.alt} fill sizes="(min-width: 640px) 33vw, 100vw" className="object-cover" />
+              <div key={p.src} className={`${SLIDE} relative aspect-[4/3] w-[82%] overflow-hidden rounded-xl border border-white/10`}>
+                <Image src={p.src} alt={p.alt} fill sizes="(min-width: 768px) 33vw, 82vw" className="object-cover" />
               </div>
             ))}
           </div>
@@ -460,9 +441,9 @@ export default function AustraliaSeminarPage() {
               Names and roles only: the bios mention exams this page stays off. */}
           <h3 className="mt-12 text-[20px] font-bold tracking-tight sm:text-[24px]">The people you will meet</h3>
           <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-white/70">The Windchasers team will be at the seminar with {SEMINAR.speaker.name}.</p>
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className={`mt-6 ${ROW} md:grid-cols-3 lg:grid-cols-5`}>
             {TEAM.map((t) => (
-              <figure key={t.name} className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]">
+              <figure key={t.name} className={`${SLIDE} w-[46%] overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]`}>
                 <div className="relative aspect-square">
                   <Image src={t.image} alt={t.name} fill sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw" className="object-cover" />
                 </div>
@@ -537,6 +518,13 @@ export default function AustraliaSeminarPage() {
         </div>
       </section>
 
+      {/* WhatsApp button: sits above the bottom bar while it shows, hidden under the pop-up */}
+      {!modalOpen && (
+        <a href={WA_ASK} target="_blank" rel="noopener noreferrer" aria-label="Ask us on WhatsApp"
+          className={`fixed right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_6px_20px_rgba(0,0,0,0.45)] transition-[bottom] duration-200 hover:brightness-105 sm:right-6 ${showBar ? "bottom-[calc(88px+env(safe-area-inset-bottom))]" : "bottom-[calc(16px+env(safe-area-inset-bottom))]"}`}>
+          <svg viewBox="0 0 24 24" width="30" height="30" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.79-1.47-1.76-1.65-2.06-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.61-.92-2.2-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35zM12.05 21.5h-.01a9.4 9.4 0 0 1-4.8-1.31l-.34-.2-3.57.94.95-3.48-.22-.36a9.4 9.4 0 0 1-1.45-5.02c0-5.2 4.24-9.44 9.45-9.44 2.52 0 4.89.99 6.67 2.77a9.37 9.37 0 0 1 2.77 6.68c0 5.2-4.24 9.43-9.45 9.43zm8.04-17.47A11.3 11.3 0 0 0 12.05.7C5.78.7.68 5.8.68 12.06c0 2 .52 3.96 1.52 5.68L.58 23.7l6.1-1.6a11.33 11.33 0 0 0 5.37 1.37h.01c6.26 0 11.36-5.1 11.37-11.37 0-3.04-1.18-5.89-3.33-8.04z"/></svg>
+        </a>
+      )}
       {/* Bottom bar */}
       <div aria-hidden={!showBar}
         className={`fixed inset-x-0 bottom-0 z-40 border-t border-gold/40 bg-[#0E0E0E]/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_rgba(0,0,0,0.45)] backdrop-blur-md transition-transform duration-200 ${showBar ? "translate-y-0" : "translate-y-full"}`}>
