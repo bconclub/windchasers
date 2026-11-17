@@ -10,7 +10,6 @@ import { TEAM } from "@/lib/team";
 import {
   captureAndStoreUTMParams, deriveTrafficSource, getLandingPage, getStoredClickIds, getStoredReferrer, getStoredUTMParamsFull,
 } from "@/lib/tracking";
-import { trackMetaLead } from "@/lib/metaPixel";
 
 /**
  * Australia seminar landing page and ₹99 registration.
@@ -55,6 +54,32 @@ const ROW = "-mx-5 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto 
 const SLIDE = "shrink-0 snap-start md:w-auto";
 const WA_ASK = `https://wa.me/919035098424?text=${encodeURIComponent(`Hi WindChasers, I want to know more about the Australia pilot training seminar with Basair Aviation College on ${SEMINAR.dateShort} at ${SEMINAR.venue}, ${SEMINAR.city}.`)}`;
 const MAP_QUERY = encodeURIComponent(`${SEMINAR.venue} ${SEMINAR.city}`);
+
+// Funnel tracking: Meta pixel 1097272771358425 and GA4 G-3THNVEDJK8, both loaded
+// site-wide. ViewContent / view_item on load, InitiateCheckout / begin_checkout
+// when Razorpay opens, Purchase / purchase after the server verifies the
+// payment. No pixel Lead here: the Form campaign counts leads from instant forms.
+const VALUE = SEMINAR.feePaise / 100;
+const ITEM = { item_id: SEMINAR.slug, item_name: SEMINAR.formType, price: VALUE, quantity: 1 };
+function fb(event: string, params: Record<string, unknown>, eventID?: string) {
+  if (typeof window.fbq !== "function") return false;
+  if (eventID) window.fbq("track", event, params, { eventID });
+  else window.fbq("track", event, params);
+  return true;
+}
+function ga(event: string, params: Record<string, unknown>) {
+  if (typeof window.gtag !== "function") return false;
+  window.gtag("event", event, params);
+  return true;
+}
+const viewSent = { fb: false, ga: false };
+// Purchase fires once per payment, even if verify is retried or the tab reloads.
+function firePurchaseOnce(orderId: string, paymentId: string, role: string) {
+  const key = `aus_seminar_purchase_${paymentId}`;
+  try { if (localStorage.getItem(key)) return; localStorage.setItem(key, "1"); } catch { /* storage blocked: fire anyway */ }
+  fb("Purchase", { value: VALUE, currency: "INR", content_name: SEMINAR.formType, content_ids: [SEMINAR.slug], content_type: "product", role }, orderId);
+  ga("purchase", { transaction_id: paymentId, value: VALUE, currency: "INR", role, items: [ITEM] });
+}
 
 function Seats({ className = "" }: { className?: string }) {
   const [seats, setSeats] = useState<{ capacity: number; taken: number | null; left: number | null } | null>(null);
@@ -123,7 +148,24 @@ export default function AustraliaSeminarPage() {
   const [rzpReady, setRzpReady] = useState(false);
   const formRef = useRef<HTMLElement>(null);
 
-  useEffect(() => { captureAndStoreUTMParams(); }, []);
+  useEffect(() => {
+    captureAndStoreUTMParams();
+    // utm_content=parents (or parent) opens the form on "I am a parent".
+    const c = new URLSearchParams(window.location.search).get("utm_content")?.toLowerCase() || "";
+    const role = c.startsWith("parent") ? "parent" : "student";
+    if (role === "parent") setForm((f) => ({ ...f, role }));
+    // Pixel and gtag load after the page; retry for a few seconds, fire once each.
+    // Module-level flags: one ViewContent per page view, even if the effect runs twice.
+    let tries = 0;
+    const fire = () => {
+      if (!viewSent.fb) viewSent.fb = fb("ViewContent", { content_name: SEMINAR.formType, content_ids: [SEMINAR.slug], content_type: "product", value: VALUE, currency: "INR", role });
+      if (!viewSent.ga) viewSent.ga = ga("view_item", { value: VALUE, currency: "INR", role, items: [ITEM] });
+      return viewSent.fb && viewSent.ga;
+    };
+    if (fire()) return;
+    const t = window.setInterval(() => { if (fire() || ++tries > 20) window.clearInterval(t); }, 500);
+    return () => window.clearInterval(t);
+  }, []);
   useEffect(() => { if (typeof window !== "undefined" && window.Razorpay) setRzpReady(true); }, []);
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -213,12 +255,13 @@ export default function AustraliaSeminarPage() {
         const vj = v ? await v.json().catch(() => ({})) : {};
         setBusy(false);
         if (!v || !v.ok || !vj.ok) return setErr(vj.error || "We could not confirm the payment. If money left your account, call +91 95910 04043.");
-        trackMetaLead({ content_name: SEMINAR.formType, value: SEMINAR.feePaise / 100, currency: "INR" });
-        if (typeof window.fbq === "function") window.fbq("track", "Purchase", { value: SEMINAR.feePaise / 100, currency: "INR", content_name: SEMINAR.formType });
+        firePurchaseOnce(resp.razorpay_order_id, resp.razorpay_payment_id, form.role);
         setDone({ name: vj.name || form.name.split(" ")[0] });
       },
     });
     rzp.on("payment.failed", () => setErr("The payment did not go through. You can try again; nothing was charged for a failed attempt."));
+    fb("InitiateCheckout", { value: VALUE, currency: "INR", content_name: SEMINAR.formType, content_ids: [SEMINAR.slug], content_type: "product", num_items: 1, role: form.role }, j.order_id);
+    ga("begin_checkout", { value: VALUE, currency: "INR", role: form.role, items: [ITEM] });
     rzp.open();
   }
 
