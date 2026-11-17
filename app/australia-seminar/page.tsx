@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Calendar, CheckCircle2, Clock, Copy, Loader2, MapPin, MessageCircle, Navigation, Share2 } from "lucide-react";
 import { SEMINAR } from "@/lib/australia-seminar";
 import { PAST_PHOTOS } from "@/lib/australia-seminar-past";
+import { TEAM } from "@/lib/team";
 import {
   captureAndStoreUTMParams, deriveTrafficSource, getLandingPage, getStoredClickIds, getStoredReferrer, getStoredUTMParamsFull,
 } from "@/lib/tracking";
@@ -441,6 +442,24 @@ export default function AustraliaSeminarPage() {
               <div key={p.src} className="relative aspect-[4/3] overflow-hidden rounded-xl border border-white/10">
                 <Image src={p.src} alt={p.alt} fill sizes="(min-width: 640px) 33vw, 100vw" className="object-cover" />
               </div>
+            ))}
+          </div>
+
+          {/* The people who run Windchasers (same roster as the homepage, lib/team).
+              Names and roles only: the bios mention exams this page stays off. */}
+          <h3 className="mt-12 text-[20px] font-bold tracking-tight sm:text-[24px]">The people you will meet</h3>
+          <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-white/70">The Windchasers team will be at the seminar with {SEMINAR.speaker.name}.</p>
+          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {TEAM.map((t) => (
+              <figure key={t.name} className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]">
+                <div className="relative aspect-square">
+                  <Image src={t.image} alt={t.name} fill sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw" className="object-cover" />
+                </div>
+                <figcaption className="px-3 py-3">
+                  <p className="text-[14.5px] font-semibold leading-snug">{t.name}</p>
+                  <p className="mt-0.5 text-[12.5px] leading-snug text-white/60">{t.role}</p>
+                </figcaption>
+              </figure>
             ))}
           </div>
         </div>
