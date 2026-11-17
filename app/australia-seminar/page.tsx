@@ -149,7 +149,16 @@ export default function AustraliaSeminarPage() {
   }, []);
 
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
-  const goToForm = () => formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  const [modalOpen, setModalOpen] = useState(false);
+  const goToForm = () => setModalOpen(true);
+  useEffect(() => {
+    if (!modalOpen) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setModalOpen(false); };
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    return () => { document.body.style.overflow = prev; window.removeEventListener("keydown", onKey); };
+  }, [modalOpen]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -199,6 +208,47 @@ export default function AustraliaSeminarPage() {
   }
 
   const input = "h-12 w-full rounded-lg border border-white/15 bg-white/[0.04] px-4 text-[15px] text-white outline-none placeholder:text-white/35 focus:border-gold";
+
+  const formPanel = (
+    done ? (
+              <div className="py-6 text-center">
+                <CheckCircle2 size={44} className="mx-auto text-gold" />
+                <h3 className="mt-4 text-[22px] font-bold">You are registered{done.name ? `, ${done.name}` : ""}</h3>
+                <p className="mx-auto mt-3 max-w-sm text-[15px] leading-relaxed text-white/70">
+                  Your {SEMINAR.feeLabel} payment is confirmed and Razorpay has sent you a receipt. See you on {SEMINAR.dateShort}, {SEMINAR.time}, at {SEMINAR.venue}, {SEMINAR.city}.
+                </p>
+                <ShareRow className="mt-6 justify-center" />
+              </div>
+            ) : (
+              <form onSubmit={submit} noValidate className="space-y-4">
+                <div className="grid grid-cols-2 gap-2 rounded-full border border-white/15 p-1">
+                  {(["student", "parent"] as const).map((r) => (
+                    <button key={r} type="button" onClick={() => setForm((f) => ({ ...f, role: r }))}
+                      className={`h-10 rounded-full text-[14px] font-medium ${form.role === r ? "bg-gold text-[#0E0E0E]" : "text-white/70 hover:text-white"}`}>
+                      I am a {r}
+                    </button>
+                  ))}
+                </div>
+                <input className={input} placeholder="Full name" autoComplete="name" value={form.name} onChange={set("name")} aria-label="Full name" />
+                <input className={input} placeholder="Mobile number" inputMode="tel" autoComplete="tel" value={form.phone} onChange={set("phone")} aria-label="Mobile number" />
+                <input className={input} placeholder="Email (for the receipt)" type="email" autoComplete="email" value={form.email} onChange={set("email")} aria-label="Email" />
+                <input className={input} placeholder="City" autoComplete="address-level2" value={form.city} onChange={set("city")} aria-label="City" />
+                {form.role === "student" && (
+                  <select className={input} value={form.with_parent} onChange={set("with_parent")} aria-label="Coming with a parent?">
+                    <option value="">Coming with a parent?</option>
+                    <option value="yes">Yes, with a parent</option>
+                    <option value="no">No, on my own</option>
+                  </select>
+                )}
+                {err && <p className="text-[13.5px] text-red-400">{err}</p>}
+                <button disabled={busy || !rzpReady}
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-semibold text-[#0E0E0E] transition-opacity hover:opacity-90 disabled:opacity-50">
+                  {busy && <Loader2 size={16} className="animate-spin" />} Pay {SEMINAR.feeLabel} and register
+                </button>
+                <p className="text-center text-[12px] text-white/40">UPI, cards and netbanking through Razorpay</p>
+              </form>
+            )
+  );
 
   return (
     <main className="min-h-screen bg-[#0E0E0E] text-white">
@@ -407,44 +457,7 @@ export default function AustraliaSeminarPage() {
           </div>
 
           <div className="rounded-2xl border border-white/10 bg-[#0E0E0E] p-6 sm:p-8">
-            {done ? (
-              <div className="py-6 text-center">
-                <CheckCircle2 size={44} className="mx-auto text-gold" />
-                <h3 className="mt-4 text-[22px] font-bold">You are registered{done.name ? `, ${done.name}` : ""}</h3>
-                <p className="mx-auto mt-3 max-w-sm text-[15px] leading-relaxed text-white/70">
-                  Your {SEMINAR.feeLabel} payment is confirmed and Razorpay has sent you a receipt. See you on {SEMINAR.dateShort}, {SEMINAR.time}, at {SEMINAR.venue}, {SEMINAR.city}.
-                </p>
-                <ShareRow className="mt-6 justify-center" />
-              </div>
-            ) : (
-              <form onSubmit={submit} noValidate className="space-y-4">
-                <div className="grid grid-cols-2 gap-2 rounded-full border border-white/15 p-1">
-                  {(["student", "parent"] as const).map((r) => (
-                    <button key={r} type="button" onClick={() => setForm((f) => ({ ...f, role: r }))}
-                      className={`h-10 rounded-full text-[14px] font-medium ${form.role === r ? "bg-gold text-[#0E0E0E]" : "text-white/70 hover:text-white"}`}>
-                      I am a {r}
-                    </button>
-                  ))}
-                </div>
-                <input className={input} placeholder="Full name" autoComplete="name" value={form.name} onChange={set("name")} aria-label="Full name" />
-                <input className={input} placeholder="Mobile number" inputMode="tel" autoComplete="tel" value={form.phone} onChange={set("phone")} aria-label="Mobile number" />
-                <input className={input} placeholder="Email (for the receipt)" type="email" autoComplete="email" value={form.email} onChange={set("email")} aria-label="Email" />
-                <input className={input} placeholder="City" autoComplete="address-level2" value={form.city} onChange={set("city")} aria-label="City" />
-                {form.role === "student" && (
-                  <select className={input} value={form.with_parent} onChange={set("with_parent")} aria-label="Coming with a parent?">
-                    <option value="">Coming with a parent?</option>
-                    <option value="yes">Yes, with a parent</option>
-                    <option value="no">No, on my own</option>
-                  </select>
-                )}
-                {err && <p className="text-[13.5px] text-red-400">{err}</p>}
-                <button disabled={busy || !rzpReady}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-semibold text-[#0E0E0E] transition-opacity hover:opacity-90 disabled:opacity-50">
-                  {busy && <Loader2 size={16} className="animate-spin" />} Pay {SEMINAR.feeLabel} and register
-                </button>
-                <p className="text-center text-[12px] text-white/40">UPI, cards and netbanking through Razorpay</p>
-              </form>
-            )}
+            {formPanel}
           </div>
         </div>
       </section>
@@ -463,6 +476,24 @@ export default function AustraliaSeminarPage() {
           </button>
         </div>
       </div>
+      {/* Register pop-up */}
+      {modalOpen && (
+        <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:p-6"
+          onClick={() => setModalOpen(false)} role="dialog" aria-modal="true" aria-label="Register your seat">
+          <div onClick={(e) => e.stopPropagation()}
+            className="max-h-[92vh] w-full overflow-y-auto rounded-t-3xl border border-white/10 bg-[#0E0E0E] p-6 sm:max-w-md sm:rounded-3xl sm:p-8">
+            <div className="mb-5 flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[18px] font-bold">Register your seat</p>
+                <p className="mt-1 text-[13px] text-white/60">{SEMINAR.dateShort} · {SEMINAR.time} · {SEMINAR.venue}</p>
+              </div>
+              <button onClick={() => setModalOpen(false)} aria-label="Close"
+                className="-mr-2 -mt-1 flex h-9 w-9 items-center justify-center rounded-full text-[22px] leading-none text-white/60 hover:bg-white/10 hover:text-white">×</button>
+            </div>
+            {formPanel}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
