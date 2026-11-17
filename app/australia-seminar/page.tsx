@@ -5,7 +5,7 @@ import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Calendar, CheckCircle2, Clock, Copy, Loader2, MapPin, MessageCircle, Navigation, Share2 } from "lucide-react";
 import { SEMINAR } from "@/lib/australia-seminar";
-import { PAST_PHOTOS } from "@/lib/australia-seminar-past";
+import { PAST_EVENTS, PAST_PHOTOS } from "@/lib/australia-seminar-past";
 import { TEAM } from "@/lib/team";
 import {
   captureAndStoreUTMParams, deriveTrafficSource, getLandingPage, getStoredClickIds, getStoredReferrer, getStoredUTMParamsFull,
@@ -406,25 +406,36 @@ export default function AustraliaSeminarPage() {
       </section>
 
       {/* Past seminars */}
-      {PAST_PHOTOS.length > 0 && (
-        <section className="border-t border-white/10 bg-[#131313] px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-          <div className="mx-auto max-w-6xl">
-            <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">Windchasers seminars so far</h2>
-            <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/70">
-              Students and parents at our earlier seminars and sessions.
-            </p>
-            <div className="mt-8 columns-2 gap-3 md:columns-3">
-              {PAST_PHOTOS.map((p) => (
-                <figure key={p.src} className="mb-3 break-inside-avoid overflow-hidden rounded-xl border border-white/10">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={p.src} alt={p.caption} loading="lazy" className="w-full" />
-                  <figcaption className="px-3 py-2 text-[12.5px] text-white/60">{p.caption}</figcaption>
-                </figure>
-              ))}
-            </div>
+      <section className="border-t border-white/10 bg-[#131313] px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">Windchasers seminars so far</h2>
+          <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/70">
+            Colleges, students and parents we have met, from Mangalore to Bengaluru.
+          </p>
+          <div className="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-3">
+            {PAST_EVENTS.map((e) => (
+              <figure key={e.src} className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]">
+                <div className="relative aspect-[4/3]">
+                  <Image src={e.src} alt={`${e.what}, ${e.place}`} fill sizes="(min-width: 1024px) 33vw, 50vw" className="object-cover" style={e.pos ? { objectPosition: e.pos } : undefined} />
+                </div>
+                <figcaption className="px-3 py-3 sm:px-4">
+                  <p className="text-[14px] font-semibold leading-snug sm:text-[15px]">{e.place}</p>
+                  <p className="mt-1 text-[12.5px] leading-snug text-white/60">{e.what}{e.when ? ` · ${e.when}` : ""}</p>
+                </figcaption>
+              </figure>
+            ))}
           </div>
-        </section>
-      )}
+          <div className="mt-8 columns-2 gap-3 md:columns-3">
+            {PAST_PHOTOS.map((p) => (
+              <figure key={p.src} className="mb-3 break-inside-avoid overflow-hidden rounded-xl border border-white/10">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={p.src} alt={p.caption} loading="lazy" className="w-full" />
+                <figcaption className="px-3 py-2 text-[12.5px] text-white/60">{p.caption}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Host */}
       <section className="border-t border-white/10 px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
