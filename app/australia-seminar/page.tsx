@@ -31,12 +31,6 @@ const TOPICS = [
   { title: "Why is Australia the place to fly?", text: "Commercial pilot training in Australia, and what to weigh before you choose a country." },
 ];
 
-const WHO = [
-  { title: "Students who dream of flying", text: "Whether you plan to start next year or want to start right away, and wherever you are in school or college." },
-  { title: "Parents", text: "Hear the route first-hand and ask your questions in person, together with your child." },
-  { title: "Anyone curious about a pilot career", text: "No prerequisites. If you want to fly, you are welcome." },
-];
-
 // Licensed stock (Pexels) of flying in Australia, shown as short silent loops.
 const AU_CLIPS = [
   { src: "/australia-seminar/au/sydney.mp4", poster: "/australia-seminar/au/sydney.jpg", caption: "Sydney from the air" },
@@ -68,21 +62,15 @@ function Seats({ className = "" }: { className?: string }) {
     fetch("/api/australia-seminar/seats", { cache: "no-store" }).then((r) => (r.ok ? r.json() : null)).then(setSeats).catch(() => {});
   }, []);
   const capacity = seats?.capacity ?? SEMINAR.capacity;
-  const taken = seats?.taken ? seats.taken : null; // hide the count until someone has paid
-  const pct = taken === null ? 0 : Math.min(100, Math.round((taken / capacity) * 100));
+  const taken = seats?.taken ? seats.taken : null; // real paid count only; nothing shown until someone has paid
+  if (taken === null) return null;
+  const pct = Math.min(100, Math.round((taken / capacity) * 100));
   return (
     <div className={className}>
-      <div className="flex items-baseline justify-between gap-3 text-[14px]">
-        <span className="font-semibold text-white">{capacity} seats</span>
-        {taken !== null && (
-          <span className="text-white/65">{taken >= capacity ? "All seats taken" : `${taken} taken · ${capacity - taken} left`}</span>
-        )}
+      <p className="text-[14px] text-white/75">{taken >= capacity ? "All seats taken" : `${capacity - taken} of ${capacity} seats left`}</p>
+      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10" role="progressbar" aria-valuenow={taken} aria-valuemin={0} aria-valuemax={capacity}>
+        <div className="h-full rounded-full bg-gold" style={{ width: `${pct}%` }} />
       </div>
-      {taken !== null && (
-        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10" role="progressbar" aria-valuenow={taken} aria-valuemin={0} aria-valuemax={capacity}>
-          <div className="h-full rounded-full bg-gold" style={{ width: `${pct}%` }} />
-        </div>
-      )}
     </div>
   );
 }
@@ -281,34 +269,39 @@ export default function AustraliaSeminarPage() {
     <main className="min-h-screen bg-[#0E0E0E] text-white">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" onLoad={() => setRzpReady(true)} />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden px-5 pb-12 pt-24 sm:px-6 lg:px-8 lg:pb-24 lg:pt-36">
+      {/* Hero: on a phone the whole first screen is what, who, when and one button */}
+      <section className="relative overflow-hidden px-5 pb-14 pt-[88px] sm:px-6 lg:px-8 lg:pb-24 lg:pt-36">
         <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-12">
           <div className="min-w-0">
-            <p className="text-[12.5px] tracking-wide text-gold sm:text-[13px]">Basair Aviation College · Hosted by Windchasers</p>
-            <h1 className="mt-3 text-[34px] font-bold leading-[1.08] tracking-tight sm:text-[48px] lg:text-[56px]">Pilot training in Australia?</h1>
-            <p className="mt-4 max-w-xl text-[16px] leading-relaxed text-white/75 sm:text-[18px]">
-              Hear it from {SEMINAR.speaker.name}, {SEMINAR.speaker.role}, in person in {SEMINAR.city}. Bring your questions, and bring your parents.
+            <p className="text-[12px] font-medium tracking-[0.08em] text-gold sm:text-[13px]">{SEMINAR.city.toUpperCase()} · {SEMINAR.dateShort.toUpperCase()} · IN PERSON</p>
+            <h1 className="mt-3 text-[36px] font-bold leading-[1.08] tracking-tight sm:text-[48px] lg:text-[56px]">Pilot training in Australia?</h1>
+            <p className="mt-3 max-w-xl text-[16px] leading-relaxed text-white/75 sm:text-[18px]">
+              Ask the people who run a flight school there. Training, timelines and what to weigh before you choose a country, answered in person.
             </p>
 
-            <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
-              <ul className="space-y-2.5 text-[15px] text-white/90">
-                <li className="flex items-center gap-3"><Calendar size={17} className="shrink-0 text-gold" /> {SEMINAR.dateLabel}</li>
-                <li className="flex items-center gap-3"><Clock size={17} className="shrink-0 text-gold" /> {SEMINAR.time}</li>
-                <li className="flex items-center gap-3"><MapPin size={17} className="shrink-0 text-gold" /> {SEMINAR.venue}, {SEMINAR.city}</li>
-              </ul>
-              <Seats className="mt-4 border-t border-white/10 pt-4" />
+            <div className="mt-5 flex items-center gap-3">
+              <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-gold/40">
+                <Image src="/australia-seminar/david-trevelyan.webp" alt={SEMINAR.speaker.name} fill sizes="48px" className="object-cover" priority />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[15px] font-semibold leading-tight">{SEMINAR.speaker.name}</p>
+                <p className="text-[13px] leading-snug text-white/60">{SEMINAR.speaker.role}</p>
+              </div>
+            </div>
+
+            <div className="mt-5 grid grid-cols-[auto_1fr] gap-x-2.5 gap-y-1.5 text-[14.5px] text-white/85">
+              <Calendar size={16} className="mt-0.5 text-gold" /><span>{SEMINAR.dateShort} · {SEMINAR.time}</span>
+              <MapPin size={16} className="mt-0.5 text-gold" /><span>{SEMINAR.venue}, {SEMINAR.city}</span>
             </div>
 
             <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
-              <button onClick={goToForm} className="h-12 w-full rounded-full bg-gold px-7 text-[15.5px] font-semibold text-[#0E0E0E] transition-opacity hover:opacity-90 sm:w-auto">
-                Register your seat
+              <button onClick={goToForm} className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-gold px-7 text-[16px] font-semibold text-[#0E0E0E] transition-opacity hover:opacity-90 sm:w-auto">
+                Reserve my seat · {SEMINAR.feeLabel} <ArrowRight size={18} strokeWidth={2.4} />
               </button>
-              <span className="text-center text-[13px] text-white/55 sm:text-left">{SEMINAR.feeLabel} registration · paid securely through Razorpay</span>
+              <span className="text-center text-[12.5px] text-white/50 sm:text-left">Students and parents welcome · Pay by UPI</span>
             </div>
-            <ShareRow className="mt-5" />
           </div>
-          <div className="relative mx-auto w-full max-w-[340px] lg:max-w-[320px]">
+          <div className="relative mx-auto hidden w-full max-w-[320px] lg:block">
             <div className="relative aspect-[9/16] overflow-hidden rounded-2xl border border-white/10 bg-black">
               <video src="/australia-seminar/seminar-reel.mp4" poster="/australia-seminar/seminar-reel-poster.jpg"
                 controls playsInline preload="metadata" className="h-full w-full object-cover" aria-label="Seminar video" />
@@ -317,14 +310,44 @@ export default function AustraliaSeminarPage() {
         </div>
       </section>
 
-      {/* Australia */}
-      <section className="px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      {/* What you will learn: short numbered rows */}
+      <section className="border-t border-white/[0.08] bg-[#131313] px-5 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">Why is Australia the place to fly?</h2>
+          <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">What you will learn</h2>
+          <ol className="mt-6 divide-y divide-white/[0.08] border-y border-white/[0.08] md:grid md:grid-cols-3 md:divide-x md:divide-y-0">
+            {TOPICS.map((t, i) => (
+              <li key={t.title} className="flex gap-4 py-5 md:flex-col md:gap-2 md:px-6 md:first:pl-0">
+                <span className="text-[13px] font-semibold tabular-nums text-gold">0{i + 1}</span>
+                <div>
+                  <h3 className="text-[16.5px] font-semibold leading-snug">{t.title}</h3>
+                  <p className="mt-1 text-[14.5px] leading-relaxed text-white/65">{t.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-6 text-[14.5px] leading-relaxed text-white/70">
+            <span className="font-semibold text-white">Who should come:</span> students who want to fly, from school or college, and parents who want answers. No prerequisites.
+          </p>
+        </div>
+      </section>
+
+      {/* Seminar video, phones only (desktop has it in the hero) */}
+      <section className="px-5 pt-14 lg:hidden">
+        <h2 className="text-[26px] font-bold leading-tight tracking-tight">Watch</h2>
+        <div className="relative mx-auto mt-6 aspect-[9/16] w-full max-w-[300px] overflow-hidden rounded-2xl border border-white/10 bg-black">
+          <video src="/australia-seminar/seminar-reel.mp4" poster="/australia-seminar/seminar-reel-poster.jpg"
+            controls playsInline preload="none" className="h-full w-full object-cover" aria-label="Seminar video" />
+        </div>
+      </section>
+
+      {/* Australia */}
+      <section className="px-5 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-6xl">
+          <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">Why is Australia the place to fly?</h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/70">
             That is the question {SEMINAR.speaker.name} will answer in person. A first look at flying in Australia:
           </p>
-          <div className={`mt-8 ${ROW} md:grid-cols-4`}>
+          <div className={`mt-6 ${ROW} md:grid-cols-4`}>
             {AU_CLIPS.map((c) => (
               <figure key={c.src} className={`${SLIDE} w-[60%] overflow-hidden rounded-xl border border-white/10 bg-black`}>
                 <video src={c.src} poster={c.poster} autoPlay muted loop playsInline preload="metadata" className="aspect-[9/16] w-full object-cover" />
@@ -335,67 +358,39 @@ export default function AustraliaSeminarPage() {
         </div>
       </section>
 
-      {/* Topics */}
-      <section className="border-t border-white/10 bg-[#131313] px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-        <div className="mx-auto max-w-6xl">
-          <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">What he will cover</h2>
-          <div className={`mt-8 ${ROW} md:grid-cols-3 md:gap-4`}>
-            {TOPICS.map((t) => (
-              <div key={t.title} className={`${SLIDE} w-[82%] rounded-xl border border-white/10 bg-white/[0.03] p-6`}>
-                <h3 className="text-[17px] font-semibold text-gold">{t.title}</h3>
-                <p className="mt-2 text-[14.5px] leading-relaxed text-white/70">{t.text}</p>
-              </div>
+      {/* Speaker */}
+      <section className="border-t border-white/[0.08] px-5 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+        <div className="mx-auto max-w-3xl">
+          <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">About the speaker</h2>
+          <div className="mt-6 flex items-center gap-4">
+            <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border border-white/10">
+              <Image src="/australia-seminar/david-trevelyan.webp" alt={SEMINAR.speaker.name} fill sizes="80px" className="object-cover" />
+            </div>
+            <div>
+              <p className="text-[17px] font-semibold">{SEMINAR.speaker.name}</p>
+              <p className="text-[13.5px] text-white/60">{SEMINAR.speaker.role}</p>
+            </div>
+          </div>
+          <ul className="mt-6 space-y-3">
+            {BIO.map((b) => (
+              <li key={b} className="flex gap-3 text-[15px] leading-relaxed text-white/75">
+                <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" /> {b}
+              </li>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Speaker + who */}
-      <section className="px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
-        <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2">
-          <div>
-            <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">About the speaker</h2>
-            <div className="mt-6 flex items-center gap-4">
-              <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-full border border-white/10">
-                <Image src="/australia-seminar/david-trevelyan.webp" alt={SEMINAR.speaker.name} fill sizes="80px" className="object-cover" />
-              </div>
-              <div>
-                <p className="text-[17px] font-semibold">{SEMINAR.speaker.name}</p>
-                <p className="text-[13.5px] text-white/60">{SEMINAR.speaker.role}</p>
-              </div>
-            </div>
-            <ul className="mt-6 space-y-3">
-              {BIO.map((b) => (
-                <li key={b} className="flex gap-3 text-[15px] leading-relaxed text-white/75">
-                  <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" /> {b}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">Who should come</h2>
-            <div className={`mt-6 ${ROW} md:gap-4`}>
-              {WHO.map((w) => (
-                <div key={w.title} className={`${SLIDE} w-[82%] rounded-xl border border-white/10 p-6`}>
-                  <h3 className="text-[17px] font-semibold">{w.title}</h3>
-                  <p className="mt-2 text-[14.5px] leading-relaxed text-white/70">{w.text}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          </ul>
         </div>
       </section>
 
       {/* Past seminars */}
-      <section className="border-t border-white/10 bg-[#131313] px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <section className="border-t border-white/10 bg-[#131313] px-5 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">Windchasers seminars so far</h2>
+          <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">Windchasers seminars so far</h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/70">
             Colleges, students and parents we have met, from Mangalore to Bengaluru.
           </p>
-          <div className={`mt-8 ${ROW} md:grid-cols-2 lg:grid-cols-3`}>
+          <div className={`mt-6 ${ROW} md:grid-cols-2 lg:grid-cols-3`}>
             {PAST_EVENTS.map((e) => (
-              <figure key={e.src} className={`${SLIDE} w-[78%] overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]`}>
+              <figure key={e.src} className={`${SLIDE} w-[78%] overflow-hidden rounded-xl border border-white/[0.08] bg-[#191919]`}>
                 <div className="relative aspect-[4/3]">
                   <Image src={e.src} alt={`${e.what}, ${e.place}`} fill sizes="(min-width: 1024px) 33vw, 80vw" className="object-cover" style={e.pos ? { objectPosition: e.pos } : undefined} />
                 </div>
@@ -406,11 +401,11 @@ export default function AustraliaSeminarPage() {
               </figure>
             ))}
           </div>
-          <div className="-mx-5 mt-6 flex snap-x snap-mandatory scroll-px-5 gap-3 overflow-x-auto px-5 pb-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-6 sm:px-6 sm:scroll-px-6 md:mx-0 md:mt-8 md:block md:columns-3 md:overflow-visible md:px-0 md:pb-0">
+          <div className="mt-8 hidden columns-3 gap-3 md:block">
             {PAST_PHOTOS.map((p) => (
-              <figure key={p.src} className="w-[78%] shrink-0 snap-start overflow-hidden rounded-xl border border-white/10 md:mb-3 md:w-auto md:break-inside-avoid">
+              <figure key={p.src} className="mb-3 break-inside-avoid overflow-hidden rounded-xl border border-white/10">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={p.src} alt={p.caption} loading="lazy" className="aspect-[4/3] w-full object-cover md:aspect-auto" />
+                <img src={p.src} alt={p.caption} loading="lazy" className="w-full" />
                 <figcaption className="px-3 py-2 text-[12.5px] text-white/60">{p.caption}</figcaption>
               </figure>
             ))}
@@ -419,13 +414,13 @@ export default function AustraliaSeminarPage() {
       </section>
 
       {/* Host */}
-      <section className="border-t border-white/10 px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <section className="border-t border-white/10 px-5 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-6xl">
-          <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">Hosted by Windchasers</h2>
+          <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">Hosted by Windchasers</h2>
           <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/70">
             Windchasers is a pilot training academy in Kothanur, Bengaluru. We guide students and families from the first question to flying schools in India and abroad.
           </p>
-          <div className={`mt-8 ${ROW} md:grid-cols-3 md:gap-4`}>
+          <div className={`mt-6 ${ROW} md:grid-cols-3 md:gap-4`}>
             {[
               { src: "/facility/DSC_0549.JPG.webp", alt: "A Windchasers session with students and parents" },
               { src: "/facility/DSC_0481.JPG.webp", alt: "Students at the Windchasers simulator" },
@@ -443,7 +438,7 @@ export default function AustraliaSeminarPage() {
           <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-white/70">The Windchasers team will be at the seminar with {SEMINAR.speaker.name}.</p>
           <div className={`mt-6 ${ROW} md:grid-cols-3 lg:grid-cols-5`}>
             {TEAM.map((t) => (
-              <figure key={t.name} className={`${SLIDE} w-[46%] overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]`}>
+              <figure key={t.name} className={`${SLIDE} w-[46%] overflow-hidden rounded-xl border border-white/[0.08] bg-[#191919]`}>
                 <div className="relative aspect-square">
                   <Image src={t.image} alt={t.name} fill sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw" className="object-cover" />
                 </div>
@@ -458,10 +453,10 @@ export default function AustraliaSeminarPage() {
       </section>
 
       {/* Venue */}
-      <section className="border-t border-white/10 bg-[#131313] px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <section className="border-t border-white/10 bg-[#131313] px-5 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-[1fr_1.3fr]">
           <div>
-            <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">The venue</h2>
+            <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">The venue</h2>
             <p className="mt-4 text-[17px] font-semibold">{SEMINAR.venue}, {SEMINAR.city}</p>
             <p className="mt-1 text-[15px] text-white/70">{SEMINAR.dateLabel}, {SEMINAR.time}</p>
             <a href={`https://www.google.com/maps/search/?api=1&query=${MAP_QUERY}`} target="_blank" rel="noopener noreferrer"
@@ -477,9 +472,9 @@ export default function AustraliaSeminarPage() {
       </section>
 
       {/* FAQ */}
-      <section className="px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <section className="px-5 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="mx-auto max-w-3xl">
-          <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">Questions</h2>
+          <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">Questions</h2>
           <div className="mt-6 divide-y divide-white/10 border-y border-white/10">
             {FAQ.map((f) => (
               <details key={f.q} className="group py-4">
@@ -498,15 +493,16 @@ export default function AustraliaSeminarPage() {
       </section>
 
       {/* Register */}
-      <section ref={formRef} id="register" className="scroll-mt-20 border-t border-white/10 bg-[#131313] px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <section ref={formRef} id="register" className="scroll-mt-20 border-t border-white/10 bg-[#131313] px-5 py-14 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1fr_1.1fr]">
           <div>
-            <h2 className="text-[24px] font-bold leading-tight tracking-tight sm:text-[32px]">Register your seat</h2>
+            <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">Register your seat</h2>
             <p className="mt-4 max-w-md text-[15px] leading-relaxed text-white/70">
               The {SEMINAR.feeLabel} registration confirms your place at the seminar. Students and parents are both welcome.
             </p>
             <Facts className="mt-6 flex-col !gap-y-3" />
             <Seats className="mt-6 max-w-sm" />
+            <ShareRow className="mt-6" />
             <p className="mt-8 text-[13.5px] text-white/50">
               Questions? Call <a href="tel:+919591004043" className="text-white/80 underline-offset-4 hover:underline">+91 95910 04043</a>.
             </p>
