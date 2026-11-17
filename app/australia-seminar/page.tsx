@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
-import { Calendar, CheckCircle2, Clock, Copy, Loader2, MapPin, MessageCircle, Navigation, Share2 } from "lucide-react";
+import { ArrowRight, Calendar, CheckCircle2, Clock, Copy, Loader2, MapPin, MessageCircle, Navigation, Share2 } from "lucide-react";
 import { SEMINAR } from "@/lib/australia-seminar";
 import { PAST_PHOTOS } from "@/lib/australia-seminar-past";
 import {
@@ -134,6 +134,9 @@ export default function AustraliaSeminarPage() {
   useEffect(() => { captureAndStoreUTMParams(); }, []);
   useEffect(() => { if (typeof window !== "undefined" && window.Razorpay) setRzpReady(true); }, []);
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const goToForm = () => setModalOpen(true);
+
   // Bottom bar: shows once the hero has scrolled away, hides while the form is on screen.
   const [barVisible, setBarVisible] = useState(false);
   useEffect(() => {
@@ -148,9 +151,41 @@ export default function AustraliaSeminarPage() {
     return () => { window.removeEventListener("scroll", update); window.removeEventListener("resize", update); };
   }, []);
 
+  const showBar = barVisible && !done && !modalOpen;
+
+  // PROXe chat bubble (iframe #wc-chat-widget from embed.js, fixed bottom-right):
+  // lift it above the bottom bar while the bar shows, and hide it while the
+  // register pop-up is open so it never sits on the pay button. embed.js
+  // re-reads data-bottom-offset-mobile every second (phones and tablets); the
+  // direct style write makes the lift instant and covers desktop. Only the
+  // closed bubble is moved: the open chat panel sets its own bottom and height.
+  useEffect(() => {
+    const LIFT = 76;
+    const apply = () => {
+      const script = document.querySelector('script[src*="/api/widget/embed.js"]');
+      if (script) {
+        if (showBar) script.setAttribute("data-bottom-offset-mobile", String(LIFT));
+        else script.removeAttribute("data-bottom-offset-mobile");
+      }
+      const w = document.getElementById("wc-chat-widget") as HTMLIFrameElement | null;
+      if (!w) return false;
+      w.style.visibility = modalOpen ? "hidden" : "";
+      if (w.style.height === "165px") w.style.bottom = showBar ? `${LIFT}px` : "0px";
+      return true;
+    };
+    // The widget loads after the page, so retry briefly until it exists.
+    let tries = 0;
+    const t = window.setInterval(() => { if (apply() || ++tries > 20) window.clearInterval(t); }, 500);
+    apply();
+    return () => window.clearInterval(t);
+  }, [showBar, modalOpen]);
+  useEffect(() => () => {
+    document.querySelector('script[src*="/api/widget/embed.js"]')?.removeAttribute("data-bottom-offset-mobile");
+    const w = document.getElementById("wc-chat-widget") as HTMLIFrameElement | null;
+    if (w) { w.style.visibility = ""; if (w.style.height === "165px") w.style.bottom = "0px"; }
+  }, []);
+
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => setForm((f) => ({ ...f, [k]: e.target.value }));
-  const [modalOpen, setModalOpen] = useState(false);
-  const goToForm = () => setModalOpen(true);
   useEffect(() => {
     if (!modalOpen) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setModalOpen(false); };
@@ -190,6 +225,16 @@ export default function AustraliaSeminarPage() {
       description: `Australia seminar, ${SEMINAR.dateShort}`,
       prefill: { name: form.name, contact: `+91${form.phone.replace(/\D/g, "").slice(-10)}`, email: form.email || undefined },
       theme: { color: "#C5A572" },
+      // Lead with UPI apps (Google Pay, PhonePe, Paytm) so a phone user pays in one tap.
+      config: {
+        display: {
+          blocks: {
+            upi: { name: "Pay with UPI", instruments: [{ method: "upi", flows: ["intent"], apps: ["google_pay", "phonepe", "paytm"] }, { method: "upi" }] },
+          },
+          sequence: ["block.upi"],
+          preferences: { show_default_blocks: true },
+        },
+      },
       modal: { ondismiss: () => setBusy(false) },
       handler: async (resp: RazorpayResponse) => {
         const v = await fetch("/api/australia-seminar/verify", {
@@ -231,8 +276,8 @@ export default function AustraliaSeminarPage() {
                 </div>
                 <input className={input} placeholder="Full name" autoComplete="name" value={form.name} onChange={set("name")} aria-label="Full name" />
                 <input className={input} placeholder="Mobile number" inputMode="tel" autoComplete="tel" value={form.phone} onChange={set("phone")} aria-label="Mobile number" />
-                <input className={input} placeholder="Email (for the receipt)" type="email" autoComplete="email" value={form.email} onChange={set("email")} aria-label="Email" />
-                <input className={input} placeholder="City" autoComplete="address-level2" value={form.city} onChange={set("city")} aria-label="City" />
+                <input className={input} placeholder="Email (optional, for the receipt)" type="email" autoComplete="email" value={form.email} onChange={set("email")} aria-label="Email" />
+                <input className={input} placeholder="City (optional)" autoComplete="address-level2" value={form.city} onChange={set("city")} aria-label="City" />
                 {form.role === "student" && (
                   <select className={input} value={form.with_parent} onChange={set("with_parent")} aria-label="Coming with a parent?">
                     <option value="">Coming with a parent?</option>
@@ -245,7 +290,7 @@ export default function AustraliaSeminarPage() {
                   className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-gold text-[15px] font-semibold text-[#0E0E0E] transition-opacity hover:opacity-90 disabled:opacity-50">
                   {busy && <Loader2 size={16} className="animate-spin" />} Pay {SEMINAR.feeLabel} and register
                 </button>
-                <p className="text-center text-[12px] text-white/40">UPI, cards and netbanking through Razorpay</p>
+                <p className="text-center text-[12px] text-white/40">Pay by UPI (Google Pay, PhonePe, Paytm), card or netbanking through Razorpay</p>
               </form>
             )
   );
@@ -463,16 +508,18 @@ export default function AustraliaSeminarPage() {
       </section>
 
       {/* Bottom bar */}
-      <div aria-hidden={!barVisible || !!done}
-        className={`fixed inset-x-0 bottom-0 z-40 border-t border-white/10 bg-[#0E0E0E]/95 backdrop-blur-md transition-transform duration-200 ${barVisible && !done ? "translate-y-0" : "translate-y-full"}`}>
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 py-3 pl-4 pr-[68px] sm:gap-4 sm:px-6 sm:pr-24 lg:px-8">
+      <div aria-hidden={!showBar}
+        className={`fixed inset-x-0 bottom-0 z-40 border-t border-gold/40 bg-[#0E0E0E]/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_rgba(0,0,0,0.45)] backdrop-blur-md transition-transform duration-200 ${showBar ? "translate-y-0" : "translate-y-full"}`}>
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-3 sm:gap-6 sm:px-6 lg:px-8">
           <div className="min-w-0">
-            <p className="truncate text-[13px] font-semibold sm:text-[14px]">{SEMINAR.dateShort} · {SEMINAR.time}</p>
-            <p className="truncate text-[12.5px] text-white/60">{SEMINAR.venue}<span className="hidden sm:inline">, {SEMINAR.city} · Australia seminar with Basair</span></p>
+            <p className="whitespace-nowrap text-[16px] font-bold leading-tight sm:text-[18px]">Register for <span className="text-gold">{SEMINAR.feeLabel}</span></p>
+            <p className="mt-0.5 truncate text-[12.5px] leading-snug text-white/60 sm:text-[13.5px]">
+              {SEMINAR.dateShort} · {SEMINAR.time}<span className="hidden sm:inline"> · {SEMINAR.venue}, {SEMINAR.city}</span>
+            </p>
           </div>
-          <button onClick={goToForm} tabIndex={barVisible && !done ? 0 : -1}
-            className="h-10 shrink-0 rounded-full bg-gold px-4 text-[13px] font-semibold text-[#0E0E0E] transition-opacity hover:opacity-90 sm:h-11 sm:px-5 sm:text-[14px]">
-            Register
+          <button onClick={goToForm} tabIndex={showBar ? 0 : -1}
+            className="flex h-12 shrink-0 items-center gap-1.5 rounded-full bg-gold px-5 text-[15px] font-semibold text-[#0E0E0E] transition-opacity hover:opacity-90 sm:px-7 sm:text-[16px]">
+            Register now <ArrowRight size={17} strokeWidth={2.4} />
           </button>
         </div>
       </div>
@@ -481,10 +528,10 @@ export default function AustraliaSeminarPage() {
         <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/70 backdrop-blur-sm sm:items-center sm:p-6"
           onClick={() => setModalOpen(false)} role="dialog" aria-modal="true" aria-label="Register your seat">
           <div onClick={(e) => e.stopPropagation()}
-            className="max-h-[92vh] w-full overflow-y-auto rounded-t-3xl border border-white/10 bg-[#0E0E0E] p-6 sm:max-w-md sm:rounded-3xl sm:p-8">
+            className="max-h-[92dvh] w-full overflow-y-auto overscroll-contain rounded-t-3xl border border-white/10 bg-[#0E0E0E] p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:max-w-md sm:rounded-3xl sm:p-8">
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
-                <p className="text-[18px] font-bold">Register your seat</p>
+                <p className="text-[18px] font-bold">{done ? "Registration confirmed" : "Register your seat"}</p>
                 <p className="mt-1 text-[13px] text-white/60">{SEMINAR.dateShort} · {SEMINAR.time} · {SEMINAR.venue}</p>
               </div>
               <button onClick={() => setModalOpen(false)} aria-label="Close"
