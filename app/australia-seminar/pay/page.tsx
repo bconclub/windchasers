@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Script from "next/script";
 import { useEffect, useState } from "react";
 import { Calendar, CheckCircle2, Clock, Loader2, MapPin } from "lucide-react";
@@ -99,6 +100,11 @@ export default function SeminarPayPage() {
     <main className="flex min-h-screen items-center justify-center bg-[#0E0E0E] px-5 pb-16 pt-[96px] text-white">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" onLoad={() => setReady(true)} />
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
+        <div className="mb-6 flex items-center justify-center gap-3 border-b border-white/10 pb-6 sm:gap-4">
+          <Image src="/Windchasers-Logo.png" alt="Windchasers" width={500} height={134} className="h-auto w-[44%] max-w-[170px] min-w-0" priority />
+          <span className="shrink-0 text-[16px] text-white/35" aria-hidden>×</span>
+          <Image src="/australia-seminar/basair-logo.png" alt="Basair Aviation College" width={553} height={142} className="h-auto w-[38%] max-w-[150px] min-w-0" priority />
+        </div>
         {paid ? (
           <div className="py-4 text-center">
             <CheckCircle2 size={44} className="mx-auto text-gold" />
