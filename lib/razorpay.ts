@@ -58,6 +58,18 @@ export async function fetchOrder(orderId: string): Promise<RazorpayOrder> {
   return json as RazorpayOrder;
 }
 
+export type RazorpayPayment = { id: string; order_id: string; amount: number; status: string; contact?: string; email?: string; notes?: Record<string, string> };
+
+export async function fetchPayment(paymentId: string): Promise<RazorpayPayment> {
+  const res = await fetch(`${API}/payments/${encodeURIComponent(paymentId)}`, {
+    headers: { Authorization: auth() },
+    cache: "no-store",
+  });
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(json?.error?.description || `Razorpay ${res.status}`);
+  return json as RazorpayPayment;
+}
+
 /**
  * Paid orders created by this site for one event (notes.event === key).
  * Walks the order list newest first, 100 at a time, up to 2,000 orders.

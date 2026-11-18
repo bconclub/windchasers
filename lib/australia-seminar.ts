@@ -82,5 +82,21 @@ export function personFromOrder(order: RazorpayOrder) {
   };
 }
 
+/**
+ * Orders from the pay-only page (/australia-seminar/pay) carry no name or phone:
+ * Razorpay Checkout collects the phone and email, so fill them in from the payment.
+ */
+export function fillFromPayment<T extends { name: string; phone: string; email?: string }>(
+  person: T,
+  payment: { contact?: string; email?: string } | null | undefined,
+): T {
+  if (person.phone || !payment) return person;
+  const phone = String(payment.contact || "").replace(/\D/g, "").slice(-10);
+  const email = person.email || (payment.email && !/void@razorpay/.test(payment.email) ? payment.email : undefined);
+  // PROXe needs a name; a phone number in its place is dropped there, so an
+  // existing lead keeps its real name and a new one shows by number.
+  return { ...person, phone, email, name: person.name || phone };
+}
+
 /** Attribution fields we keep in the order notes so the paid update keeps the ad source. */
 export const ATTR_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "fbclid"] as const;

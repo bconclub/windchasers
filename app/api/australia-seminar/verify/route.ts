@@ -5,8 +5,8 @@
 //
 // POST { razorpay_order_id, razorpay_payment_id, razorpay_signature } -> { ok, name }
 import { NextResponse } from "next/server";
-import { fetchOrder, verifyPaymentSignature } from "@/lib/razorpay";
-import { SEMINAR, personFromOrder, seminarToProxe } from "@/lib/australia-seminar";
+import { fetchOrder, fetchPayment, verifyPaymentSignature } from "@/lib/razorpay";
+import { SEMINAR, fillFromPayment, personFromOrder, seminarToProxe } from "@/lib/australia-seminar";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +22,8 @@ export async function POST(request: Request) {
     if (order.notes?.event !== SEMINAR.slug || order.amount !== SEMINAR.feePaise) {
       return NextResponse.json({ ok: false, error: "That payment is not for this seminar." }, { status: 400 });
     }
-    const person = personFromOrder(order);
+    let person = personFromOrder(order);
+    if (!person.phone) person = fillFromPayment(person, await fetchPayment(paymentId).catch(() => null));
     const proxe = await seminarToProxe(person, { status: "paid", order_id: orderId, payment_id: paymentId }, order.notes);
     if (!proxe.ok) console.error("Australia seminar: PROXe (paid) failed", proxe.error);
     return NextResponse.json({ ok: true, name: person.name.split(" ")[0] });

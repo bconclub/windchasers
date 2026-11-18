@@ -16,6 +16,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Payments are not switched on yet. Please call us on +91 95910 04043." }, { status: 503 });
   }
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+  const quick = body.quick === true; // the pay-only page: Razorpay collects phone and email
   const name = s(body.name, 80);
   const phone = s(body.phone, 20).replace(/[^\d+]/g, "");
   const email = s(body.email, 120);
@@ -24,8 +25,8 @@ export async function POST(request: Request) {
   const withParent = s(body.with_parent, 10);
 
   const digits = phone.replace(/\D/g, "");
-  if (name.length < 2) return NextResponse.json({ error: "Please enter your full name." }, { status: 400 });
-  if (!/^(91)?[6-9]\d{9}$/.test(digits)) return NextResponse.json({ error: "Please enter a valid 10-digit mobile number." }, { status: 400 });
+  if (!quick && name.length < 2) return NextResponse.json({ error: "Please enter your full name." }, { status: 400 });
+  if (!quick && !/^(91)?[6-9]\d{9}$/.test(digits)) return NextResponse.json({ error: "Please enter a valid 10-digit mobile number." }, { status: 400 });
   if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return NextResponse.json({ error: "Please check your email address." }, { status: 400 });
 
   // Stop taking payments once every seat is paid for.
@@ -35,8 +36,9 @@ export async function POST(request: Request) {
   }
 
   const notes: Record<string, string> = {
-    event: SEMINAR.slug, name, phone: digits.slice(-10), email, city, role, with_parent: withParent,
+    event: SEMINAR.slug, name, phone: digits.slice(-10), email, city, role: quick ? "" : role, with_parent: withParent,
   };
+  if (quick) notes.channel = "pay-link";
   for (const k of ATTR_KEYS) {
     const v = s(body[k], 200);
     if (v) notes[k] = v;
@@ -49,6 +51,8 @@ export async function POST(request: Request) {
     console.error("Australia seminar: order failed", (e as Error).message);
     return NextResponse.json({ error: "Could not start the payment. Please try again in a minute." }, { status: 502 });
   }
+
+  if (quick) return NextResponse.json({ order_id: order.id, amount: order.amount, currency: order.currency, key: razorpayKeyId() });
 
   // Record the person even if they never pay, so the team can follow up.
   const proxe = await seminarToProxe(

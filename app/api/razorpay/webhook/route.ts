@@ -8,11 +8,11 @@
 // site created (notes.event) are acted on; everything else is acknowledged.
 import { NextResponse } from "next/server";
 import { verifyWebhookSignature, type RazorpayOrder } from "@/lib/razorpay";
-import { SEMINAR, personFromOrder, seminarToProxe } from "@/lib/australia-seminar";
+import { SEMINAR, fillFromPayment, personFromOrder, seminarToProxe } from "@/lib/australia-seminar";
 
 export const dynamic = "force-dynamic";
 
-type Payment = { id: string; order_id: string; amount: number; status: string; notes?: Record<string, string> };
+type Payment = { id: string; order_id: string; amount: number; status: string; contact?: string; email?: string; notes?: Record<string, string> };
 
 export async function POST(request: Request) {
   const raw = await request.text();
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
   if (!status || !payment) return NextResponse.json({ ok: true, ignored: true });
   if (status === "paid" && payment.amount !== SEMINAR.feePaise) return NextResponse.json({ ok: true, ignored: true });
 
-  const person = personFromOrder({ ...(order || ({} as RazorpayOrder)), notes } as RazorpayOrder);
+  const person = fillFromPayment(personFromOrder({ ...(order || ({} as RazorpayOrder)), notes } as RazorpayOrder), payment);
   if (!person.phone) return NextResponse.json({ ok: true, ignored: true });
   const res = await seminarToProxe(person, { status, order_id: payment.order_id, payment_id: payment.id }, notes);
   if (!res.ok) {
