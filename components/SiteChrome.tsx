@@ -28,7 +28,7 @@ export default function SiteChrome() {
   // competing primary actions. A set rather than another === so the next
   // event page doesn't have to rediscover this.
   // Pages with their own WhatsApp button instead of the PROXe chat bubble.
-  const noChatWidget = pathname === "/australia-seminar";
+  const noChatWidget = pathname === "/australia-seminar" || pathname === "/australia-seminar/pay";
   const NO_STICKY_CTA_ROUTES = ["/wings-of-freedom", "/australia-seminar", "/dgca-demo-class", "/dgca-demo-class-parents", "/scholarship/pilot", "/scholarship/cabin-crew"];
   const hasOwnStickyCta = NO_STICKY_CTA_ROUTES.includes(pathname);
 
