@@ -2,6 +2,12 @@
 
 Batch-by-batch record of changes that ship via `git push` to `main`. Newest at top.
 
+## 2026-11-25 · australia-seminar: 100 seats, sold-out state on the pay page
+
+- **Seats raised from 50 to 100** (founder decision, 25 Nov). All 50 were paid, so the order route was refusing every new payment.
+- **/australia-seminar/pay checks seats before showing Pay.** When every seat is taken, Pay is replaced by a "Join the waiting list on WhatsApp" button and a sold-out pill, instead of red error text after a click. A 409 from the order route switches to the same view.
+- Chat bubble no longer loads on the pay page (it covered the payment note); duplicate date dropped from the eyebrow line.
+
 ## 2026-09-04 · flight-schools: featured shuffle moved to the server (hydration errors fixed)
 
 - **The 1 Sep per-visit shuffle ran twice.** `FeaturedSchools` is rendered inside a `"use client"` tree, so `Math.random()` ran on the server and again in the browser, the two orders disagreed, and React threw hydration errors (#418/#423/#425) on every page load. Caught while testing the Lead event in a real browser. The order is now picked once in `page.tsx` (`pickFeaturedOrder()` in `lib/featured-order.ts`) and passed down as a prop; the component only renders what it is given.

@@ -13,7 +13,7 @@ export const SEMINAR = {
   venue: "Radisson City Centre",
   city: "Bengaluru",
   feePaise: 9900,
-  capacity: 50,
+  capacity: 100,
   feeLabel: "₹99",
   formType: "Australia Seminar 28 Nov",
   speaker: {
