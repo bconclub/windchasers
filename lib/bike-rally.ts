@@ -19,6 +19,17 @@ export const RALLY = {
   startTime: null as string | null,
 } as const;
 
+// PROXe files a lead under an offline event only when lead_type is
+// "offline_event", and finds the event by offline_event_key. The key must match
+// PROXe's registry entry "bike-rally" exactly (PROXe feat/windchasers-bike-rally).
+export const RALLY_PROXE_EVENT = {
+  lead_type: "offline_event",
+  offline_event_key: "bike-rally",
+  offline_event_name: "Aviators of Bengaluru Bike Rally",
+  offline_event_date: "13 December 2026",
+  offline_event_location: "Moxy Hotel, Bengaluru",
+} as const;
+
 export const ROLES = ["Airline pilot", "General aviation pilot", "Student pilot", "Flight instructor", "Engineer", "Ground professional", "Aviation enthusiast"];
 export const RALLY_WA = `https://wa.me/919035098424?text=${encodeURIComponent(`Hi WindChasers, I want to know more about the aviators bike rally on ${RALLY.dateShort}.`)}`;
 // Step 1 -> step 2 hand-off (name, mobile, role), kept in sessionStorage, never in the URL.
@@ -128,6 +139,7 @@ export async function rallyInterestToProxe(r: { name: string; phone: string; rol
     formType: RALLY.formType,
     data,
     fields: {
+      ...RALLY_PROXE_EVENT,
       event: RALLY.slug,
       event_date: RALLY.dateIso,
       event_venue: RALLY.finish,
@@ -151,6 +163,7 @@ export async function rallyToProxe(c: RallyClean, stage: { done: number; registe
     formType: RALLY.formType,
     data,
     fields: {
+      ...RALLY_PROXE_EVENT,
       event: RALLY.slug,
       event_date: RALLY.dateIso,
       event_venue: RALLY.finish,
