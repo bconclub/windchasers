@@ -159,7 +159,7 @@ export default function BikeRallyPage() {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <Image src="/bike-rally/riders-group.webp" alt="" fill priority sizes="100vw" className="object-cover object-[50%_70%] opacity-50" />
+          <Image src="/bike-rally/captain-smiling.webp" alt="" fill priority sizes="100vw" className="object-cover object-[50%_20%] opacity-55" />
           <div className="absolute inset-0 bg-gradient-to-b from-[#0E0E0E]/70 via-[#0E0E0E]/55 to-[#0E0E0E]" />
         </div>
         <div className="relative mx-auto max-w-3xl px-5 pb-14 pt-[96px] sm:px-6 lg:pb-20 lg:pt-36">
@@ -231,7 +231,7 @@ export default function BikeRallyPage() {
             <p className="mt-5 text-[15px] leading-relaxed text-white/70">Talk flying outside the usual work environment, with people from every corner of aviation in Bengaluru.</p>
           </div>
           <div className="relative mx-auto aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-2xl border border-white/10">
-            <Image src="/bike-rally/c1046.webp" alt="A Windchasers pilot in uniform on her bike" fill sizes="(min-width: 1024px) 420px, 100vw" className="object-cover" />
+            <Image src="/bike-rally/captain-riding.webp" alt="A Windchasers captain in uniform riding her bike through Bengaluru" fill sizes="(min-width: 1024px) 420px, 100vw" className="object-cover" />
           </div>
         </div>
       </section>
