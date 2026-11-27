@@ -19,6 +19,11 @@ export const RALLY = {
   startTime: null as string | null,
 } as const;
 
+export const ROLES = ["Airline pilot", "General aviation pilot", "Student pilot", "Flight instructor", "Engineer", "Ground professional", "Aviation enthusiast"];
+export const RALLY_WA = `https://wa.me/919035098424?text=${encodeURIComponent(`Hi WindChasers, I want to know more about the aviators bike rally on ${RALLY.dateShort}.`)}`;
+// Step 1 -> step 2 hand-off (name, mobile, role), kept in sessionStorage, never in the URL.
+export const INTEREST_KEY = "bike_rally_interest";
+
 export const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] as const;
 export const TSHIRT_SIZES = ["XS", "S", "M", "L", "XL", "XXL", "3XL"] as const;
 
@@ -40,6 +45,26 @@ export type RallyRegistration = {
   role: string;
 };
 
+// Step 1 on /bike-rally: name, mobile, role. PROXe keys leads on phone, so the
+// full registration (step 2) later updates this same lead to "registered".
+export async function rallyInterestToProxe(r: { name: string; phone: string; role: string }, data: Record<string, unknown> = {}) {
+  return forwardLeadToProxe({
+    name: r.name,
+    phone: r.phone,
+    source: "event",
+    formType: RALLY.formType,
+    data,
+    fields: {
+      event: RALLY.slug,
+      event_date: RALLY.dateIso,
+      event_venue: RALLY.finish,
+      attendee_type: r.role,
+      rally_stage: "interested",
+    },
+  });
+}
+
+// Step 2 on /bike-rally/register: the full rider registration.
 export async function rallyToProxe(r: RallyRegistration, data: Record<string, unknown> = {}) {
   return forwardLeadToProxe({
     name: r.name,
@@ -54,6 +79,7 @@ export async function rallyToProxe(r: RallyRegistration, data: Record<string, un
       event_date: RALLY.dateIso,
       event_venue: RALLY.finish,
       attendee_type: r.role,
+      rally_stage: "registered",
       age: r.age,
       blood_group: r.blood_group,
       emergency_contact_name: r.emergency_name,

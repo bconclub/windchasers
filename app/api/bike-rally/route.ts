@@ -1,4 +1,4 @@
-// Aviators bike rally registration. Validates the form and records the rider in
+// Aviators bike rally registration (step 2, /bike-rally/register). Validates the form and records the rider in
 // PROXe (source "event", same place as the seminar leads), with the utm and
 // click attribution from the page. Free, open event: no payment. No file uploads:
 // licence and ID copies are collected on WhatsApp after registration.
@@ -8,13 +8,12 @@
 //        riding_years, tshirt, role, consent, participate, ...attribution }
 //   -> { ok: true, name }
 import { NextResponse } from "next/server";
-import { BLOOD_GROUPS, RALLY, TSHIRT_SIZES, rallyToProxe } from "@/lib/bike-rally";
+import { BLOOD_GROUPS, RALLY, ROLES, TSHIRT_SIZES, rallyToProxe } from "@/lib/bike-rally";
 
 export const dynamic = "force-dynamic";
 
 const s = (v: unknown, max = 120) => (typeof v === "string" ? v.trim().replace(/\s+/g, " ").slice(0, max) : "");
 const phone10 = (v: unknown) => s(v, 20).replace(/\D/g, "").replace(/^91(?=\d{10}$)/, "");
-const ROLES = ["Airline pilot", "General aviation pilot", "Student pilot", "Flight instructor", "Engineer", "Ground professional", "Aviation enthusiast"];
 
 export async function POST(request: Request) {
   const b = (await request.json().catch(() => ({}))) as Record<string, unknown>;
