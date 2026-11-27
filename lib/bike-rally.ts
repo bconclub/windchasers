@@ -16,8 +16,13 @@ export const RALLY = {
   // NOT CONFIRMED yet: start point, start time, fee.
   start: null as string | null,
   startTime: null as string | null,
-  feeLabel: null as string | null, // e.g. "₹499" once confirmed; null = no fee shown or asked
+  // Registration fee in paise. null = free registration (no payment step).
+  // Set a number (e.g. 49900 for ₹499) to switch on Razorpay checkout; the
+  // page, the API and the tracking all follow this one value.
+  feePaise: null as number | null,
 } as const;
+
+export const rallyFeeLabel = () => (RALLY.feePaise ? `₹${RALLY.feePaise / 100}` : null);
 
 export const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] as const;
 export const TSHIRT_SIZES = ["XS", "S", "M", "L", "XL", "XXL", "3XL"] as const;
@@ -40,7 +45,9 @@ export type RallyRegistration = {
   role: string;
 };
 
-export async function rallyToProxe(r: RallyRegistration, data: Record<string, unknown> = {}) {
+export type RallyPayment = { status: "free" | "pending" | "paid"; order_id?: string; payment_id?: string };
+
+export async function rallyToProxe(r: Pick<RallyRegistration, "name" | "phone"> & Partial<RallyRegistration>, payment: RallyPayment, data: Record<string, unknown> = {}) {
   return forwardLeadToProxe({
     name: r.name,
     phone: r.phone,
@@ -64,9 +71,13 @@ export async function rallyToProxe(r: RallyRegistration, data: Record<string, un
       driving_licence_valid_till: r.licence_valid_till,
       riding_experience_years: r.riding_years,
       tshirt_size: r.tshirt,
-      safety_declaration: "accepted",
-      rally_participation: "confirmed",
-      documents: "to collect on WhatsApp",
+      safety_declaration: r.licence_no ? "accepted" : undefined,
+      rally_participation: r.licence_no ? "confirmed" : undefined,
+      documents: r.licence_no ? "licence and ID to collect on WhatsApp" : undefined,
+      payment_status: payment.status,
+      payment_amount: RALLY.feePaise ? RALLY.feePaise / 100 : 0,
+      razorpay_order_id: payment.order_id,
+      razorpay_payment_id: payment.payment_id,
     },
   });
 }

@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Bike, Calendar, CheckCircle2, Coffee, Loader2, MapPin, Users } from "lucide-react";
-import { BLOOD_GROUPS, RALLY, TSHIRT_SIZES } from "@/lib/bike-rally";
+import { BLOOD_GROUPS, RALLY, TSHIRT_SIZES, rallyFeeLabel } from "@/lib/bike-rally";
 import {
   captureAndStoreUTMParams, deriveTrafficSource, getLandingPage, getStoredClickIds, getStoredReferrer, getStoredUTMParamsFull,
 } from "@/lib/tracking";
@@ -24,12 +25,20 @@ const PLAN = [
   { icon: Users, title: "Meet aviation people", text: "Pilots, instructors, students, engineers and ground crew, outside the usual work setting." },
 ];
 
+type RazorpayResponse = { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string };
+const FEE = rallyFeeLabel(); // null = free registration
+const VALUE = RALLY.feePaise ? RALLY.feePaise / 100 : 0;
+const ITEM = { item_id: RALLY.slug, item_name: RALLY.formType, price: VALUE, quantity: 1 };
+
+// DRAFT, for Z to approve: a short standard rider declaration.
 const DECLARATION = [
   "I am 18 or older and hold a valid driving licence for the bike I will ride.",
   "My bike is registered, insured and roadworthy, and I will wear a helmet and riding gear for the whole ride.",
   "I will follow traffic rules and the ride marshals' instructions, and ride at a safe speed.",
   "I take part at my own risk and am responsible for myself and my bike.",
 ];
+
+const viewSent = { fb: false, ga: false };
 
 const EMPTY = {
   name: "", phone: "", email: "", age: "", blood_group: "", area: "", emergency_name: "", emergency_phone: "",
@@ -45,7 +54,19 @@ export default function BikeRallyPage() {
   const formRef = useRef<HTMLElement>(null);
   const [barVisible, setBarVisible] = useState(false);
 
-  useEffect(() => { captureAndStoreUTMParams(); }, []);
+  useEffect(() => {
+    captureAndStoreUTMParams();
+    // ViewContent / view_item once per page view; pixel and gtag load late, so retry briefly.
+    let tries = 0;
+    const fire = () => {
+      if (!viewSent.fb && typeof window.fbq === "function") { window.fbq("track", "ViewContent", { content_name: RALLY.formType, content_ids: [RALLY.slug], content_type: "product", value: VALUE, currency: "INR" }); viewSent.fb = true; }
+      if (!viewSent.ga && typeof window.gtag === "function") { window.gtag("event", "view_item", { value: VALUE, currency: "INR", items: [ITEM] }); viewSent.ga = true; }
+      return viewSent.fb && viewSent.ga;
+    };
+    if (fire()) return;
+    const t = window.setInterval(() => { if (fire() || ++tries > 20) window.clearInterval(t); }, 500);
+    return () => window.clearInterval(t);
+  }, []);
   useEffect(() => {
     const update = () => {
       const f = formRef.current?.getBoundingClientRect();
@@ -85,12 +106,46 @@ export default function BikeRallyPage() {
       }),
     }).catch(() => null);
     const j = r ? await r.json().catch(() => ({})) : {};
-    setBusy(false);
-    if (!r || !r.ok) return setErr(j.error || "Could not register. Please try again.");
-    if (typeof window.fbq === "function") window.fbq("track", "CompleteRegistration", { content_name: RALLY.formType });
-    if (typeof window.gtag === "function") window.gtag("event", "sign_up", { method: RALLY.slug });
-    setDone(j.name || form.name.split(" ")[0]);
-    formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (!r || !r.ok) { setBusy(false); return setErr(j.error || "Could not register. Please try again."); }
+    const firstName = form.name.trim().split(" ")[0];
+    const finish = (name: string) => { setDone(name || firstName); formRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); };
+
+    if (!j.order_id) { // free registration
+      setBusy(false);
+      if (typeof window.fbq === "function") window.fbq("track", "CompleteRegistration", { content_name: RALLY.formType, value: 0, currency: "INR" });
+      if (typeof window.gtag === "function") window.gtag("event", "sign_up", { method: RALLY.slug });
+      return finish(j.name);
+    }
+
+    // Paid registration (RALLY.feePaise set): Razorpay Checkout, UPI first.
+    if (!window.Razorpay) { setBusy(false); return setErr("The payment window is still loading. Try again in a moment."); }
+    const rzp = new window.Razorpay({
+      key: j.key, order_id: j.order_id, amount: j.amount, currency: j.currency,
+      name: "Windchasers", description: `Aviators bike rally, ${RALLY.dateShort}`,
+      prefill: { name: form.name, contact: `+91${form.phone.replace(/\D/g, "").slice(-10)}`, email: form.email || undefined },
+      theme: { color: "#C5A572" },
+      config: { display: { blocks: { upi: { name: "Pay with UPI", instruments: [{ method: "upi", flows: ["intent"], apps: ["google_pay", "phonepe", "paytm"] }, { method: "upi" }] } }, sequence: ["block.upi"], preferences: { show_default_blocks: true } } },
+      modal: { ondismiss: () => setBusy(false) },
+      handler: async (resp: RazorpayResponse) => {
+        const v = await fetch("/api/bike-rally/verify", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(resp) }).catch(() => null);
+        const vj = v ? await v.json().catch(() => ({})) : {};
+        setBusy(false);
+        if (!v || !v.ok || !vj.ok) return setErr(vj.error || "We could not confirm the payment. If money left your account, message us on WhatsApp.");
+        // Purchase once per payment, even if verify is retried.
+        const key = `bike_rally_purchase_${resp.razorpay_payment_id}`;
+        let fresh = true;
+        try { fresh = !localStorage.getItem(key); localStorage.setItem(key, "1"); } catch { /* fire anyway */ }
+        if (fresh) {
+          if (typeof window.fbq === "function") window.fbq("track", "Purchase", { value: VALUE, currency: "INR", content_name: RALLY.formType, content_ids: [RALLY.slug], content_type: "product" }, { eventID: resp.razorpay_order_id });
+          if (typeof window.gtag === "function") window.gtag("event", "purchase", { transaction_id: resp.razorpay_payment_id, value: VALUE, currency: "INR", items: [ITEM] });
+        }
+        finish(vj.name);
+      },
+    });
+    rzp.on("payment.failed", () => setErr("The payment did not go through. You can try again; nothing was charged for a failed attempt."));
+    if (typeof window.fbq === "function") window.fbq("track", "InitiateCheckout", { value: VALUE, currency: "INR", content_name: RALLY.formType, content_ids: [RALLY.slug], content_type: "product", num_items: 1 }, { eventID: j.order_id });
+    if (typeof window.gtag === "function") window.gtag("event", "begin_checkout", { value: VALUE, currency: "INR", items: [ITEM] });
+    rzp.open();
   }
 
   const input = "h-12 w-full rounded-lg border border-white/15 bg-white/[0.04] px-4 text-[15px] text-white outline-none placeholder:text-white/35 focus:border-gold";
@@ -100,6 +155,7 @@ export default function BikeRallyPage() {
 
   return (
     <main className="min-h-screen bg-[#0E0E0E] text-white">
+      {FEE && <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />}
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
@@ -120,7 +176,7 @@ export default function BikeRallyPage() {
             className="mt-7 flex h-14 w-full items-center justify-center gap-2 rounded-full bg-gold px-8 text-[16px] font-semibold text-[#0E0E0E] transition-opacity hover:opacity-90 sm:w-auto">
             Register to ride <ArrowRight size={18} strokeWidth={2.4} />
           </button>
-          <p className="mt-2 text-center text-[12.5px] text-white/55 sm:text-left">Bring your bike. Riders 18 and over with a valid licence.</p>
+          <p className="mt-2 text-center text-[12.5px] text-white/55 sm:text-left">Bring your bike. Riders 18 and over with a valid licence.{FEE ? ` Registration ${FEE}.` : ""}</p>
         </div>
       </section>
 
@@ -142,7 +198,7 @@ export default function BikeRallyPage() {
           <dl className="mt-8 grid gap-4 text-[15px] sm:grid-cols-2">
             <div className="rounded-xl border border-white/[0.08] bg-[#191919] p-5">
               <dt className="text-[13px] text-white/55">Start point and ride-out time</dt>
-              <dd className="mt-1 font-semibold">{RALLY.start ? `${RALLY.start}${RALLY.startTime ? `, ${RALLY.startTime}` : ""}` : "To be announced. We will send it to registered riders."}</dd>
+              <dd className="mt-1 font-semibold">{RALLY.start ? `${RALLY.start}${RALLY.startTime ? `, ${RALLY.startTime}` : ""}` : "Shared on WhatsApp after registration"}</dd>
             </div>
             <div className="rounded-xl border border-white/[0.08] bg-[#191919] p-5">
               <dt className="text-[13px] text-white/55">Finish and breakfast</dt>
@@ -189,7 +245,7 @@ export default function BikeRallyPage() {
               <CheckCircle2 size={44} className="mx-auto text-gold" />
               <p className="mt-4 text-[18px] font-semibold">Thanks, {done}. See you on {RALLY.dateShort}.</p>
               <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-white/70">
-                We will message you on WhatsApp with the start point and ride details, and ask for a copy of your driving licence and ID proof there.
+                {FEE ? `Your ${FEE} payment is confirmed. ` : ""}We will message you on WhatsApp with the start point and ride details, and ask for a copy of your driving licence and ID proof there.
               </p>
             </div>
           ) : (
@@ -258,12 +314,13 @@ export default function BikeRallyPage() {
                   <input type="checkbox" className="mt-1 h-5 w-5 shrink-0 accent-[#C5A572]" checked={form.participate} onChange={set("participate")} />
                   <span>I confirm I will ride in the rally on {RALLY.dateLabel}.</span>
                 </label>
+                {FEE && <p className="text-[13.5px] text-white/60">The {FEE} registration fee is paid on the next step through Razorpay (UPI, card or netbanking). Your registration is confirmed once it is paid.</p>}
               </fieldset>
 
               {err && <p className="text-[14px] text-red-400">{err}</p>}
               <button disabled={busy}
                 className="flex h-14 w-full items-center justify-center gap-2 rounded-full bg-gold text-[16px] font-semibold text-[#0E0E0E] transition-opacity hover:opacity-90 disabled:opacity-50">
-                {busy && <Loader2 size={17} className="animate-spin" />} Register to ride
+                {busy && <Loader2 size={17} className="animate-spin" />} {FEE ? `Pay ${FEE} and register` : "Register to ride"}
               </button>
               <p className="text-center text-[13px] text-white/50">
                 Questions? <a href={WA} target="_blank" rel="noopener noreferrer" className="text-white/80 underline-offset-4 hover:underline">Message us on WhatsApp</a>
