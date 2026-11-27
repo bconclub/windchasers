@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     title: "Aviators of Bengaluru, let's meet!",
     description: "Bike rally and networking breakfast, Sunday 13 Dec, 10 am, Moxy Hotel, Bengaluru. By Windchasers.",
     url: "https://windchasers.in/bike-rally",
-    images: [{ url: "https://windchasers.in/bike-rally/bikes-coffee.webp", width: 941, height: 636, alt: "Bikes, coffee and aviators at sunrise" }],
+    images: [{ url: "https://windchasers.in/bike-rally/riders-group.webp", width: 1080, height: 1344, alt: "Windchasers pilots with their bikes" }],
     type: "website",
   },
 };
