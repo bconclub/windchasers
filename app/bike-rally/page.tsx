@@ -182,7 +182,7 @@ export default function BikeRallyPage() {
         <div className="mx-auto max-w-5xl">
           <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">Hear it from our pilots</h2>
           <div className="relative mx-auto mt-6 aspect-[9/16] w-full max-w-[320px] overflow-hidden rounded-2xl border border-white/10 bg-black">
-            <video src="/bike-rally/announcement.mp4" poster="/bike-rally/announcement.jpg" controls playsInline preload="none" className="h-full w-full object-cover" aria-label="Windchasers pilots announce the bike rally" />
+            <video src="/bike-rally/invite.mp4" poster="/bike-rally/invite.jpg" controls playsInline preload="none" className="h-full w-full object-cover" aria-label="Windchasers pilots invite the Bengaluru aviation community to the bike rally" />
           </div>
         </div>
       </section>
