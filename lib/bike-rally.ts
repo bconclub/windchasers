@@ -13,16 +13,11 @@ export const RALLY = {
   dateIso: "2026-12-13",
   time: "10 am",
   finish: "Moxy Hotel, Bengaluru",
-  // NOT CONFIRMED yet: start point, start time, fee.
+  // Free, open event (Z, 27 Nov): registration required, no fee.
+  // NOT CONFIRMED yet: start point and start time (shared on WhatsApp).
   start: null as string | null,
   startTime: null as string | null,
-  // Registration fee in paise. null = free registration (no payment step).
-  // Set a number (e.g. 49900 for ₹499) to switch on Razorpay checkout; the
-  // page, the API and the tracking all follow this one value.
-  feePaise: null as number | null,
 } as const;
-
-export const rallyFeeLabel = () => (RALLY.feePaise ? `₹${RALLY.feePaise / 100}` : null);
 
 export const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] as const;
 export const TSHIRT_SIZES = ["XS", "S", "M", "L", "XL", "XXL", "3XL"] as const;
@@ -45,9 +40,7 @@ export type RallyRegistration = {
   role: string;
 };
 
-export type RallyPayment = { status: "free" | "pending" | "paid"; order_id?: string; payment_id?: string };
-
-export async function rallyToProxe(r: Pick<RallyRegistration, "name" | "phone"> & Partial<RallyRegistration>, payment: RallyPayment, data: Record<string, unknown> = {}) {
+export async function rallyToProxe(r: RallyRegistration, data: Record<string, unknown> = {}) {
   return forwardLeadToProxe({
     name: r.name,
     phone: r.phone,
@@ -71,13 +64,9 @@ export async function rallyToProxe(r: Pick<RallyRegistration, "name" | "phone"> 
       driving_licence_valid_till: r.licence_valid_till,
       riding_experience_years: r.riding_years,
       tshirt_size: r.tshirt,
-      safety_declaration: r.licence_no ? "accepted" : undefined,
-      rally_participation: r.licence_no ? "confirmed" : undefined,
-      documents: r.licence_no ? "licence and ID to collect on WhatsApp" : undefined,
-      payment_status: payment.status,
-      payment_amount: RALLY.feePaise ? RALLY.feePaise / 100 : 0,
-      razorpay_order_id: payment.order_id,
-      razorpay_payment_id: payment.payment_id,
+      safety_declaration: "accepted",
+      rally_participation: "confirmed",
+      documents: "licence and ID to collect on WhatsApp",
     },
   });
 }

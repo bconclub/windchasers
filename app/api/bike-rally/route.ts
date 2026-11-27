@@ -1,7 +1,6 @@
 // Aviators bike rally registration. Validates the form and records the rider in
-// PROXe (source "event"). If RALLY.feePaise is set, it also opens a Razorpay
-// order and the rider is "pending" until /api/bike-rally/verify marks them
-// paid; otherwise the registration is free and done here. No file uploads:
+// PROXe (source "event", same place as the seminar leads), with the utm and
+// click attribution from the page. Free, open event: no payment. No file uploads:
 // licence and ID copies are collected on WhatsApp after registration.
 //
 // POST { name, phone, email, age, blood_group, area, emergency_name,
@@ -10,7 +9,6 @@
 //   -> { ok: true, name }
 import { NextResponse } from "next/server";
 import { BLOOD_GROUPS, RALLY, TSHIRT_SIZES, rallyToProxe } from "@/lib/bike-rally";
-import { createOrder, razorpayConfigured, razorpayKeyId } from "@/lib/razorpay";
 
 export const dynamic = "force-dynamic";
 
@@ -58,21 +56,7 @@ export async function POST(request: Request) {
 
   const reg = { name, phone, email, age, blood_group, area, emergency_name, emergency_phone, bike, bike_reg, licence_no, licence_valid_till, riding_years, tshirt, role };
 
-  if (RALLY.feePaise) {
-    if (!razorpayConfigured()) return NextResponse.json({ error: "Payments are not switched on yet. Please message us on WhatsApp." }, { status: 503 });
-    let order;
-    try {
-      order = await createOrder(RALLY.feePaise, `rally-${Date.now()}`, { event: RALLY.slug, name, phone, email, area });
-    } catch (e) {
-      console.error("Bike rally: order failed", (e as Error).message);
-      return NextResponse.json({ error: "Could not start the payment. Please try again in a minute." }, { status: 502 });
-    }
-    const pending = await rallyToProxe(reg, { status: "pending", order_id: order.id }, b);
-    if (!pending.ok) console.error("Bike rally: PROXe (pending) failed", pending.error);
-    return NextResponse.json({ order_id: order.id, amount: order.amount, currency: order.currency, key: razorpayKeyId() });
-  }
-
-  const proxe = await rallyToProxe(reg, { status: "free" }, b);
+  const proxe = await rallyToProxe(reg, b);
   if (!proxe.ok) {
     console.error("Bike rally: PROXe failed", proxe.error);
     return NextResponse.json({ error: "We could not save your registration. Please try again, or message us on WhatsApp." }, { status: 502 });
