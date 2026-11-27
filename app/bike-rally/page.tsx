@@ -22,14 +22,37 @@ const WHO = ["Airline pilots", "General aviation pilots", "Student pilots", "Fli
 // Real photos from the Windchasers shoot (no stock, no AI).
 const PHOTOS = [
   { src: "/bike-rally/riders-group.webp", alt: "Three riders standing with their bikes in Bengaluru" },
-  { src: "/bike-rally/captain-riding.webp", alt: "A Windchasers captain in uniform riding her bike through Bengaluru" },
+  { src: "/bike-rally/bikes-on-road.webp", alt: "A group of riders on their bikes on a Bengaluru road" },
   { src: "/bike-rally/pilot-with-bike.webp", alt: "A Windchasers pilot in uniform beside his bike, helmet on the tank" },
-  { src: "/bike-rally/captain-seated.webp", alt: "A Windchasers captain in uniform seated on her bike" },
 ];
 
 // Free, open event: no payment step.
 const ITEM = { item_id: RALLY.slug, item_name: RALLY.formType, quantity: 1 };
 const viewSent = { fb: false, ga: false };
+
+// Hero background: a short muted loop of the bikes together (many bikes on the
+// road, then the riders lined up). Phones get a tall cut, desktop a wide one.
+// The poster shows first and is all that shows with reduced motion or data saver.
+function HeroLoop() {
+  const [src, setSrc] = useState("");
+  const [playing, setPlaying] = useState(false);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if ((navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData) return;
+    setSrc(window.matchMedia("(min-width: 1024px)").matches ? "/bike-rally/hero-loop-wide.mp4" : "/bike-rally/hero-loop-portrait.mp4");
+  }, []);
+  const fit = "absolute inset-0 h-full w-full object-cover";
+  return (
+    <div className="absolute inset-0 opacity-60 lg:opacity-30">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/bike-rally/hero-loop-portrait.jpg" alt="" fetchPriority="high" className={`${fit} lg:hidden`} />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src="/bike-rally/hero-loop-wide.jpg" alt="" className={`${fit} hidden lg:block`} />
+      {src && <video key={src} src={src} autoPlay muted loop playsInline preload="auto" aria-hidden="true" tabIndex={-1}
+        onPlaying={() => setPlaying(true)} className={`absolute inset-0 h-full w-full object-cover ${playing ? "" : "opacity-0"}`} />}
+    </div>
+  );
+}
 
 function InviteVideo({ className = "" }: { className?: string }) {
   return (
@@ -124,8 +147,8 @@ export default function BikeRallyPage() {
       {/* Hero: text on the left; on desktop the invite video sits on the right */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0">
-          <Image src="/bike-rally/captain-smiling.webp" alt="" fill priority sizes="100vw" className="object-cover object-[50%_20%] opacity-55 lg:opacity-25" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0E0E0E]/70 via-[#0E0E0E]/55 to-[#0E0E0E]" />
+          <HeroLoop />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0E0E0E]/75 via-[#0E0E0E]/45 via-70% to-[#0E0E0E]" />
         </div>
         <div className="relative mx-auto max-w-3xl px-5 pb-14 pt-[96px] sm:px-6 lg:grid lg:max-w-6xl lg:grid-cols-[1fr_340px] lg:items-center lg:gap-16 lg:pb-20 lg:pt-32">
           <div>
@@ -174,11 +197,11 @@ export default function BikeRallyPage() {
             ))}
           </ul>
           <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/70">Talk flying outside the usual work environment, with people from every corner of aviation in Bengaluru.</p>
-          {/* Photos from the shoot: swipe on phones, a row of four on desktop */}
-          <ul className="-mx-5 mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
+          {/* Photos from the shoot: swipe on phones, a row of three on desktop */}
+          <ul className="-mx-5 mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-3 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
             {PHOTOS.map((p) => (
               <li key={p.src} className="relative aspect-[4/5] w-[68%] shrink-0 snap-center overflow-hidden rounded-2xl border border-white/10 sm:w-[42%] lg:w-auto">
-                <Image src={p.src} alt={p.alt} fill sizes="(min-width: 1024px) 240px, 70vw" className="object-cover" />
+                <Image src={p.src} alt={p.alt} fill sizes="(min-width: 1024px) 330px, 70vw" className="object-cover" />
               </li>
             ))}
           </ul>

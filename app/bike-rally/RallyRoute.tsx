@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Bike, Flag, MapPin, Users } from "lucide-react";
+import { Bike, Check, Flag, MapPin, Users } from "lucide-react";
 import { RALLY } from "@/lib/bike-rally";
 
 /**
@@ -132,9 +132,71 @@ function Road({ geo, className = "" }: { geo: Geo; className?: string }) {
   );
 }
 
+const startPlace = RALLY.start ?? "Shared on WhatsApp after you register";
+const rideTime = RALLY.rideMinutes ? (RALLY.rideMinutes >= 60 ? `${Math.floor(RALLY.rideMinutes / 60)} h${RALLY.rideMinutes % 60 ? ` ${RALLY.rideMinutes % 60} min` : ""}` : `${RALLY.rideMinutes} min`) : null;
+
+const FACTS: { label: string; value: string; note?: string; maps?: string | null }[] = [
+  { label: "Start", value: startPlace, note: RALLY.startTime ? `Ride-out at ${RALLY.startTime}` : RALLY.start ? "Ride-out time shared on WhatsApp" : undefined, maps: RALLY.startMapsUrl },
+  { label: "Finish", value: RALLY.finish, note: `Breakfast at ${RALLY.time}`, maps: RALLY.finishMapsUrl },
+  ...(RALLY.distanceKm ? [{ label: "Distance", value: `About ${RALLY.distanceKm} km` }] : []),
+  ...(rideTime ? [{ label: "Ride time", value: `About ${rideTime}` }] : []),
+];
+
+const RIDER_INFO = [
+  { title: "Who can ride", items: ["Riders 18 and over", "A valid driving licence", "Your own bike"] },
+  { title: "What to bring", items: ["Helmet", "Riding gear", "Your driving licence"] },
+  { title: "Documents", items: ["Licence and ID copies are collected on WhatsApp after you register"] },
+];
+
 export default function RallyRoute() {
   return (
     <div className="mt-8">
+      {RALLY.routeMapImage ? (
+        /* eslint-disable-next-line @next/next/no-img-element */
+        <img src={RALLY.routeMapImage} alt={`Route map from ${startPlace} to ${RALLY.finish}`} loading="lazy" className="w-full rounded-2xl border border-white/10" />
+      ) : (
+        <DrawnRoute />
+      )}
+
+      {/* Route card: the facts, straight from lib/bike-rally.ts */}
+      <dl className="mt-8 grid divide-y divide-white/[0.08] rounded-2xl border border-white/[0.08] bg-[#151515] sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+        {FACTS.map((f) => (
+          <div key={f.label} className="p-5">
+            <dt className="text-[13px] font-medium text-gold">{f.label}</dt>
+            <dd className="mt-1.5">
+              <span className="block text-[16px] font-semibold leading-snug">{f.value}</span>
+              {f.note && <span className="mt-1 block text-[14.5px] text-white/65">{f.note}</span>}
+              {f.maps && (
+                <a href={f.maps} target="_blank" rel="noopener noreferrer" className="mt-3 inline-flex items-center gap-1.5 text-[14px] font-medium text-gold underline-offset-4 hover:underline">
+                  <MapPin size={15} /> Open in Maps
+                </a>
+              )}
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="mt-8 grid gap-7 sm:grid-cols-3 sm:gap-6">
+        {RIDER_INFO.map((b) => (
+          <div key={b.title}>
+            <h3 className="text-[15.5px] font-semibold">{b.title}</h3>
+            <ul className="mt-2.5 space-y-2">
+              {b.items.map((i) => (
+                <li key={i} className="flex gap-2.5 text-[14.5px] leading-relaxed text-white/70">
+                  <Check size={16} className="mt-[3px] shrink-0 text-gold" />{i}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function DrawnRoute() {
+  return (
+    <div>
       {/* Phones: road down the left, stops beside it */}
       <div className="flex gap-4 md:hidden">
         <Road geo={VERTICAL} className="shrink-0" />

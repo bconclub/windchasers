@@ -17,6 +17,15 @@ export const RALLY = {
   // NOT CONFIRMED yet: start point and start time (shared on WhatsApp).
   start: null as string | null,
   startTime: null as string | null,
+  // Route facts for "The day". Each shows on the page only once it is set here;
+  // nothing is guessed. Maps links: a Google Maps URL for the exact place.
+  startMapsUrl: null as string | null,
+  finishMapsUrl: null as string | null, // which Moxy: not confirmed yet
+  distanceKm: null as number | null,
+  rideMinutes: null as number | null,
+  // A real map of the route (image in /public, start and finish pins, route
+  // line). When set it replaces the drawn path.
+  routeMapImage: null as string | null,
 } as const;
 
 // PROXe files a lead under an offline event only when lead_type is
