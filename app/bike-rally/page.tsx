@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Bike, Calendar, Coffee, Loader2, MapPin, Users } from "lucide-react";
+import { ArrowRight, Calendar, Loader2, MapPin } from "lucide-react";
 import { INTEREST_KEY, RALLY, RALLY_WA, ROLES } from "@/lib/bike-rally";
+import RallyRoute from "./RallyRoute";
 import {
   captureAndStoreUTMParams, deriveTrafficSource, getLandingPage, getStoredClickIds, getStoredReferrer, getStoredUTMParamsFull,
 } from "@/lib/tracking";
@@ -18,10 +19,12 @@ import {
 
 const WHO = ["Airline pilots", "General aviation pilots", "Student pilots", "Flight instructors", "Engineers", "Ground professionals", "Aviation enthusiasts"];
 
-const PLAN = [
-  { icon: Bike, title: "Ride together", text: "A relaxed group ride across Bengaluru, ending at the Moxy Hotel." },
-  { icon: Coffee, title: "Breakfast at 10 am", text: "Breakfast and good conversations once everyone rolls in." },
-  { icon: Users, title: "Meet aviation people", text: "Pilots, instructors, students, engineers and ground crew, outside the usual work setting." },
+// Real photos from the Windchasers shoot (no stock, no AI).
+const PHOTOS = [
+  { src: "/bike-rally/riders-group.webp", alt: "Three riders standing with their bikes in Bengaluru" },
+  { src: "/bike-rally/captain-riding.webp", alt: "A Windchasers captain in uniform riding her bike through Bengaluru" },
+  { src: "/bike-rally/pilot-with-bike.webp", alt: "A Windchasers pilot in uniform beside his bike, helmet on the tank" },
+  { src: "/bike-rally/captain-seated.webp", alt: "A Windchasers captain in uniform seated on her bike" },
 ];
 
 // Free, open event: no payment step.
@@ -149,27 +152,7 @@ export default function BikeRallyPage() {
       <section className="border-t border-white/[0.08] px-5 py-14 sm:px-6 lg:py-20">
         <div className="mx-auto max-w-5xl">
           <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">The day</h2>
-          <ol className="mt-6 divide-y divide-white/[0.08] border-y border-white/[0.08] md:grid md:grid-cols-3 md:divide-x md:divide-y-0">
-            {PLAN.map((p) => (
-              <li key={p.title} className="flex gap-4 py-5 md:flex-col md:gap-3 md:px-6 md:first:pl-0">
-                <p.icon size={22} className="mt-0.5 shrink-0 text-gold" />
-                <div>
-                  <h3 className="text-[16.5px] font-semibold">{p.title}</h3>
-                  <p className="mt-1 text-[14.5px] leading-relaxed text-white/65">{p.text}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-          <dl className="mt-8 grid gap-4 text-[15px] sm:grid-cols-2">
-            <div className="rounded-xl border border-white/[0.08] bg-[#191919] p-5">
-              <dt className="text-[13px] text-white/55">Start point and ride-out time</dt>
-              <dd className="mt-1 font-semibold">{RALLY.start ? `${RALLY.start}${RALLY.startTime ? `, ${RALLY.startTime}` : ""}` : "Shared on WhatsApp after registration"}</dd>
-            </div>
-            <div className="rounded-xl border border-white/[0.08] bg-[#191919] p-5">
-              <dt className="text-[13px] text-white/55">Finish and breakfast</dt>
-              <dd className="mt-1 font-semibold">{RALLY.finish}, {RALLY.time}</dd>
-            </div>
-          </dl>
+          <RallyRoute />
         </div>
       </section>
 
@@ -183,19 +166,22 @@ export default function BikeRallyPage() {
 
       {/* Who */}
       <section className="border-t border-white/[0.08] bg-[#131313] px-5 py-14 sm:px-6 lg:py-20">
-        <div className="mx-auto grid max-w-5xl items-center gap-10 lg:grid-cols-2">
-          <div>
-            <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">You are welcome</h2>
-            <ul className="mt-6 flex flex-wrap gap-2">
-              {WHO.map((w) => (
-                <li key={w} className="rounded-full border border-gold/30 px-3.5 py-1.5 text-[14px] text-white/85">{w}</li>
-              ))}
-            </ul>
-            <p className="mt-5 text-[15px] leading-relaxed text-white/70">Talk flying outside the usual work environment, with people from every corner of aviation in Bengaluru.</p>
-          </div>
-          <div className="relative mx-auto aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-2xl border border-white/10">
-            <Image src="/bike-rally/captain-riding.webp" alt="A Windchasers captain in uniform riding her bike through Bengaluru" fill sizes="(min-width: 1024px) 420px, 100vw" className="object-cover" />
-          </div>
+        <div className="mx-auto max-w-5xl">
+          <h2 className="text-[26px] font-bold leading-tight tracking-tight sm:text-[32px]">You are welcome</h2>
+          <ul className="mt-6 flex flex-wrap gap-2">
+            {WHO.map((w) => (
+              <li key={w} className="rounded-full border border-gold/30 px-3.5 py-1.5 text-[14px] text-white/85">{w}</li>
+            ))}
+          </ul>
+          <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/70">Talk flying outside the usual work environment, with people from every corner of aviation in Bengaluru.</p>
+          {/* Photos from the shoot: swipe on phones, a row of four on desktop */}
+          <ul className="-mx-5 mt-8 flex snap-x snap-mandatory gap-3 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:-mx-6 sm:px-6 lg:mx-0 lg:grid lg:grid-cols-4 lg:gap-4 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden">
+            {PHOTOS.map((p) => (
+              <li key={p.src} className="relative aspect-[4/5] w-[68%] shrink-0 snap-center overflow-hidden rounded-2xl border border-white/10 sm:w-[42%] lg:w-auto">
+                <Image src={p.src} alt={p.alt} fill sizes="(min-width: 1024px) 240px, 70vw" className="object-cover" />
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
