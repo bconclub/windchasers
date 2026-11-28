@@ -194,7 +194,7 @@ export default function BikeRallyRegisterPage() {
             <h1 className="mt-4 text-[24px] font-bold">You are registered</h1>
             <p className="mt-2 text-[17px] font-semibold">Thanks, {done}. See you on {RALLY.dateShort}.</p>
             <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-white/70">
-              We will message you on WhatsApp with the start point and ride details, and ask for a copy of your driving licence and ID proof there.
+              We will message you on WhatsApp with the meeting spot, ride-out time and ride details, and ask for a copy of your driving licence and ID proof there.
             </p>
           </div>
         ) : (

@@ -14,8 +14,9 @@ export const RALLY = {
   time: "10 am",
   finish: "Moxy Hotel, Bengaluru",
   // Free, open event (Z, 27 Nov): registration required, no fee.
-  // NOT CONFIRMED yet: start point and start time (shared on WhatsApp).
-  start: null as string | null,
+  // Start: Cubbon Park (Z, 28 Nov). NOT CONFIRMED yet: the meeting spot inside
+  // the park and the ride-out time (shared on WhatsApp), and which Moxy.
+  start: "Cubbon Park, Bengaluru" as string | null,
   startTime: null as string | null,
   // Route facts for "The day". Each shows on the page only once it is set here;
   // nothing is guessed. Maps links: a Google Maps URL for the exact place.

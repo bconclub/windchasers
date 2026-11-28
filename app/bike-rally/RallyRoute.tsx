@@ -136,7 +136,7 @@ const startPlace = RALLY.start ?? "Shared on WhatsApp after you register";
 const rideTime = RALLY.rideMinutes ? (RALLY.rideMinutes >= 60 ? `${Math.floor(RALLY.rideMinutes / 60)} h${RALLY.rideMinutes % 60 ? ` ${RALLY.rideMinutes % 60} min` : ""}` : `${RALLY.rideMinutes} min`) : null;
 
 const FACTS: { label: string; value: string; note?: string; maps?: string | null }[] = [
-  { label: "Start", value: startPlace, note: RALLY.startTime ? `Ride-out at ${RALLY.startTime}` : RALLY.start ? "Ride-out time shared on WhatsApp" : undefined, maps: RALLY.startMapsUrl },
+  { label: "Start", value: startPlace, note: RALLY.startTime ? `Ride-out at ${RALLY.startTime}` : RALLY.start ? "Meeting spot and ride-out time shared on WhatsApp after you register" : undefined, maps: RALLY.startMapsUrl },
   { label: "Finish", value: RALLY.finish, note: `Breakfast at ${RALLY.time}`, maps: RALLY.finishMapsUrl },
   ...(RALLY.distanceKm ? [{ label: "Distance", value: `About ${RALLY.distanceKm} km` }] : []),
   ...(rideTime ? [{ label: "Ride time", value: `About ${rideTime}` }] : []),
